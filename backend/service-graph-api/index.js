@@ -82,7 +82,7 @@ router
 
 // GET an entity
 router
-  .get("/entities/:key", function(req, res) {
+  .get("/entity/:key", function(req, res) {
     try {
       const data = entColl.document(req.pathParams.key);
       res.send(data);
@@ -90,23 +90,23 @@ router
       if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
         throw e;
       }
-      res.throw(404, "The entry does not exist", e);
+      res.throw(404, "The entity does not exist", e);
     }
   })
-  .pathParam("key", joi.string().required(), "Key of the entry.")
+  .pathParam("key", joi.string().required(), "Key of the entity.")
   .response(joi.object().required(), "Entry stored in the collection.")
-  .summary("Retrieve an entry")
+  .summary("Retrieve an entity")
   .description(
-    'Retrieves an entry from the "myFoxxCollection" collection by key.'
+    'Retrieves an entity from the "myFoxxCollection" collection by key.'
   );
 
 // GET the list of entity IDs
 router
   .get("/entities", function(req, res) {
     const keys = db._query(aql`
-    FOR entry IN ${entColl}
+    FOR entity IN ${entColl}
     LIMIT 1000
-    RETURN entry._key
+    RETURN entity._key
   `);
     res.send(keys);
   })
@@ -115,7 +115,118 @@ router
       .array()
       .items(joi.string().required())
       .required(),
-    "List of entry keys."
+    "List of entity keys."
   )
-  .summary("List entry keys")
+  .summary("List entity keys")
   .description("Assembles a list of keys of entities in the collection.");
+
+// GET the list of entity IDs
+router
+  .get("/entities/names", function(req, res) {
+    const keys = db._query(aql`
+    FOR entity IN ${entColl}
+    LIMIT 1000
+    RETURN entity.name
+  `);
+    res.send(keys);
+  })
+  .response(
+    joi
+      .array()
+      .items(joi.string().required())
+      .required(),
+    "List of entity keys."
+  )
+  .summary("List entity keys")
+  .description("Assembles a list of keys of entities in the collection.");
+
+// POST new relations
+router
+  .post("/relations", function(req, res) {
+    const multiple = Array.isArray(req.body);
+    const body = multiple ? req.body : [req.body];
+
+    let data = [];
+    for (var doc of body) {
+      const meta = relColl.save(doc);
+      data.push(Object.assign(doc, meta));
+    }
+    res.send(multiple ? data : data[0]);
+  })
+  .body(
+    joi.alternatives().try(relSchema, joi.array().items(relSchema)),
+    "The new relation to establish in the database."
+  )
+  .response(
+    joi
+      .alternatives()
+      .try(joi.object().required(), joi.array().items(joi.object().required())),
+    "The new added objects, with their meta-information."
+  )
+  .summary("Creates one or many new relations")
+  .description("Link two entities in the database with a new edge.");
+
+// GET a relation
+router
+  .get("/relations/:key", function(req, res) {
+    try {
+      const data = relColl.document(req.pathParams.key);
+      res.send(data);
+    } catch (e) {
+      if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
+        throw e;
+      }
+      res.throw(404, "The relation does not exist", e);
+    }
+  })
+  .pathParam("key", joi.string().required(), "Key of the relation.")
+  .response(joi.object().required(), "Entry stored in the collection.")
+  .summary("Retrieve a relation")
+  .description("Retrieves a relation from the collection by key.");
+
+// GET the list of relation IDs
+router
+  .get("/relations", function(req, res) {
+    const keys = db._query(aql`
+          FOR relation IN ${relColl}
+          LIMIT 1000
+          RETURN relation._key
+          `);
+    res.send(keys);
+  })
+  .response(
+    joi
+      .array()
+      .items(joi.string().required())
+      .required(),
+    "List of relation keys, up to 1000."
+  )
+  .summary("List relation keys")
+  .description("Returns a list of relation keys");
+
+// GET all relations between two persons
+router
+  .get("/relations/all/:entity1/:entity2", function(req, res) {
+    const relations = db._query(aql`
+            FOR v,e
+              IN 1
+              ANY '${CONST.entCollectionName}/${req.pathParam.entity1}'
+              ${relColl}
+              FILTER v._key == '${req.pathParam.entity2}'
+              RETURN relation
+            `);
+    res.send(relations);
+  })
+  .pathParam("entity1", joi.number().required(), "Key of the first entity")
+  .pathParam("entity2", joi.number().required(), "Key of the second entity")
+  .response(
+    joi
+      .array()
+      .items(joi.object().required())
+      .required(),
+    "List of relations"
+  )
+  .summary("All relations between two persons")
+  .description(
+    "Looks for all edges between entity1 and entity2 and returns them"
+  );
