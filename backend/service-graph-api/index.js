@@ -82,7 +82,7 @@ router
 
 // GET an entity
 router
-  .get("/entity/:key", function(req, res) {
+  .get("/entities/:key", function(req, res) {
     try {
       const data = entColl.document(req.pathParams.key);
       res.send(data);
@@ -210,11 +210,11 @@ router
     const relations = db._query(aql`
             FOR v,e
               IN 1
-              ANY '${CONST.entCollectionName}/${req.pathParam.entity1}'
+              ANY '${CONST.entCollectionName}/${req.pathParams.entity1}'
               ${relColl}
-              FILTER v._key == '${req.pathParam.entity2}'
+              FILTER v._key == '${req.pathParams.entity2}'
               RETURN relation
-            `);
+    `);
     res.send(relations);
   })
   .pathParam("entity1", joi.number().required(), "Key of the first entity")
@@ -230,3 +230,28 @@ router
   .description(
     "Looks for all edges between entity1 and entity2 and returns them"
   );
+
+// GET entity suggestions for autocomplete
+router
+  .get("/entities/autocomplete/:searchTerm", function(req, res) {
+    const entities = db._query(
+      `
+        FOR entity IN FULLTEXT("entities", "name", CONCAT("prefix:", @searchTerm),  6)
+          RETURN {"name": entity.name, "_key:": entity._key }
+      `,
+      {
+        searchTerm: req.pathParams.searchTerm
+      }
+    );
+    res.send(entities);
+  })
+  .pathParam("searchTerm", joi.string().required(), "Search field content")
+  .response(
+    joi
+      .array()
+      .items(joi.object().required())
+      .required(),
+    "List of matched entities"
+  )
+  .summary("Autocomplete entities")
+  .description("Searches names for autocomplete suggestions.");

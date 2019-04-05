@@ -9,3 +9,6 @@ if (!db._collection(CONST.relCollectionName)) {
 if (!db._collection(CONST.entCollectionName)) {
   db._createDocumentCollection(CONST.entCollectionName);
 }
+
+const entities = db._collection(CONST.entCollectionName);
+entities.ensureIndex({ type: "fulltext", fields: ["name"], minLength: 3 });
