@@ -237,7 +237,7 @@ router
     const entities = db._query(
       `
         FOR entity IN FULLTEXT("entities", "name", CONCAT("prefix:", @searchTerm),  6)
-          RETURN {"name": entity.name, "_key:": entity._key }
+          RETURN {"name": entity.name, "_key": entity._key }
       `,
       {
         searchTerm: req.pathParams.searchTerm
