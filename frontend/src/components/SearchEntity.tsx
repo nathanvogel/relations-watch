@@ -22,7 +22,7 @@ export interface ReactSelectInputValue {
 
 const promiseAutocomplete = async (inputValue: string) => {
   // No need to query the server too fast
-  if (!inputValue || inputValue.length <= 2) return;
+  if (!inputValue || inputValue.length <= 1) return;
   // Query our beautiful API
   const response = await suggestionsApi.get(
     "/entities/autocomplete/" + inputValue
@@ -73,7 +73,7 @@ class SearchEntity extends React.Component<Props, object> {
         classNamePrefix="rs"
         onChange={this.onChange}
         noOptionsMessage={(d: ReactSelectInputValue) => {
-          return d.inputValue && d.inputValue.length > 2
+          return d.inputValue && d.inputValue.length > 1
             ? "No corresponding person"
             : null;
         }}
