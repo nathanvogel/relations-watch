@@ -120,25 +120,25 @@ router
   .summary("List entity keys")
   .description("Assembles a list of keys of entities in the collection.");
 
-// GET the list of entity IDs
+// GET the list of entity names
 router
   .get("/entities/names", function(req, res) {
-    const keys = db._query(aql`
+    const names = db._query(aql`
     FOR entity IN ${entColl}
     LIMIT 1000
     RETURN entity.name
   `);
-    res.send(keys);
+    res.send(names);
   })
   .response(
     joi
       .array()
       .items(joi.string().required())
       .required(),
-    "List of entity keys."
+    "List of entity names."
   )
-  .summary("List entity keys")
-  .description("Assembles a list of keys of entities in the collection.");
+  .summary("List entity names")
+  .description("Assembles a list of names of entities in the collection.");
 
 // POST new relations
 router
@@ -210,10 +210,10 @@ router
     const relations = db._query(aql`
             FOR v,e
               IN 1
-              ANY '${CONST.entCollectionName}/${req.pathParams.entity1}'
+              ANY '${entColl.name()}/${req.pathParams.entity1}'
               ${relColl}
               FILTER v._key == '${req.pathParams.entity2}'
-              RETURN relation
+              RETURN e
     `);
     res.send(relations);
   })
@@ -236,10 +236,11 @@ router
   .get("/entities/autocomplete/:searchTerm", function(req, res) {
     const entities = db._query(
       `
-        FOR entity IN FULLTEXT("entities", "name", CONCAT("prefix:", @searchTerm),  6)
+        FOR entity IN FULLTEXT(@@collection, "name", CONCAT("prefix:", @searchTerm),  6)
           RETURN {"name": entity.name, "_key": entity._key }
       `,
       {
+        "@collection": entColl.name(),
         searchTerm: req.pathParams.searchTerm
       }
     );
@@ -255,3 +256,27 @@ router
   )
   .summary("Autocomplete entities")
   .description("Searches names for autocomplete suggestions.");
+
+router
+  .get("/entities/:key/relations", function(req, res) {
+    const relations = db._query(
+      `
+        FOR v,rel
+          IN 1..2
+          ANY '${entColl.name()}/${req.pathParams.key}'
+          ${relColl.name()}
+          RETURN KEEP(rel, "_key", "_from", "_to", "type")
+      `
+    );
+    res.send(relations);
+  })
+  .pathParam("key", joi.string().required(), "Key of the central entity")
+  .response(
+    joi
+      .array()
+      .items(joi.object().required())
+      .required(),
+    "List of matched relations"
+  )
+  .summary("Entity Graph")
+  .description("Returns all the relations linked to an entity.");
