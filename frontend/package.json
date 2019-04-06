@@ -9,6 +9,7 @@
     "@types/react-dom": "16.8.3",
     "@types/react-redux": "^7.0.6",
     "@types/react-router-dom": "^4.3.1",
+    "@types/react-select": "^2.0.15",
     "@types/styled-components": "^4.1.13",
     "axios": "^0.18.0",
     "immutability-helper": "^3.0.0",
@@ -17,15 +18,16 @@
     "react-redux": "^6.0.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "react-select": "^2.4.2",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.2.0",
     "typescript": "3.4.2"
   },
   "scripts": {
-    "start": "NODE_PATH=./src react-scripts start",
-    "build": "NODE_PATH=./src react-scripts build",
-    "test": "NODE_PATH=./src react-scripts test",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
