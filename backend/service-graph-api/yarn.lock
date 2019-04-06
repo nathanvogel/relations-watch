@@ -18,6 +18,29 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@types/arangodb@^3.4.9":
+  version "3.4.9"
+  resolved "https://registry.yarnpkg.com/@types/arangodb/-/arangodb-3.4.9.tgz#352d9731452c5bc67a360ffd7b9b6a337fe9d5a1"
+  integrity sha512-iqCQoW+F1/gNnpK6b8n7d9pIYnLwplLPmomscNkkYELFU+OyTJs6WalUjlJIGyZCiRJnBRnYm9ju1f+1Yijl0A==
+  dependencies:
+    "@types/graphql" "*"
+    "@types/node" "*"
+
+"@types/graphql@*":
+  version "14.2.0"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.0.tgz#74e1da5f2a4a744ac6eb3ed57b48242ea9367202"
+  integrity sha512-lELg5m6eBOmATWyCZl8qULEOvnPIUG6B443yXKj930glXIgwQirIBPp5rthP2amJW0YSzUg2s5sfgba4mRRCNw==
+
+"@types/joi@^14.3.2":
+  version "14.3.2"
+  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-14.3.2.tgz#eff771f0b19698b8e6e7c6fe6b625e07e2618fe9"
+  integrity sha512-riJTpNwDOoRgRrrOjfcjwMBYJLVg8rzwMEAAcZ2JBvdmYWCLIsbzTFXHV517terbYzGmdzkwFYeXUem7eXVNoQ==
+
+"@types/node@*":
+  version "11.13.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.0.tgz#b0df8d6ef9b5001b2be3a94d909ce3c29a80f9e1"
+  integrity sha512-rx29MMkRdVmzunmiA4lzBYJNnXsW/PhG4kMBy2ATsYaDjGGR75dCFEVVROKpNwlVdcUX3xxlghKQOeDPBJobng==
+
 acorn-jsx@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.0.1.tgz#32a064fd925429216a09b141102bfdd185fae40e"

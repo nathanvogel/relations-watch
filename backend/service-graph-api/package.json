@@ -5,6 +5,8 @@
   "author": "Nathan Vogel",
   "license": "MIT",
   "devDependencies": {
+    "@types/arangodb": "^3.4.9",
+    "@types/joi": "^14.3.2",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
