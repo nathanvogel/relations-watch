@@ -39,7 +39,6 @@ class HomeScreen extends Component<RouterProps> {
       <Header>
         <CentralTitle>Explore the relation graph</CentralTitle>
         <CentralSearch onChange={this.onSearch} />
-        <Button>Button test</Button>
       </Header>
     );
   }

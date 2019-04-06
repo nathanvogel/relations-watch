@@ -1,5 +1,7 @@
 const ROUTES = {
-  entity: "e"
+  entity: "e",
+  relation: "r",
+  new: "new"
 };
 
 export default ROUTES;

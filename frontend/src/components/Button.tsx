@@ -1,21 +1,38 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 export interface Props {
   children: string;
+  to?: string;
 }
 
-const StyledLink = styled("a")`
+const style = css`
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 
   &:hover {
     opacity: 0.7;
   }
 `;
 
-function Button({ children }: Props) {
-  return <StyledLink role="button">{children}</StyledLink>;
+const StyledLink = styled(Link)`
+  ${style}
+`;
+const StyledA = styled("a")`
+  ${style}
+`;
+
+function Button(props: Props) {
+  return props.to ? (
+    <StyledLink role="button" to={props.to}>
+      {props.children}
+    </StyledLink>
+  ) : (
+    <StyledA role="button">{props.children}</StyledA>
+  );
 }
 
 export default Button;
