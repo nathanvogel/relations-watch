@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router";
 import styled from "styled-components";
+import { connect } from "react-redux";
 
 import Button from "../components/Button";
 import ROUTES from "../utils/ROUTES";
@@ -23,11 +24,24 @@ export interface EntityMatch {
   entityKey: string;
 }
 
-class EntityScreen extends Component<RouteComponentProps> {
+export interface Props {
+  entityKey: string;
+}
+
+const mapStateToProps = (
+  state: object = {},
+  props: RouteComponentProps
+): Props => {
+  const params = props.match.params as EntityMatch;
+  const entityKey: string = params["entityKey"];
+  return {
+    entityKey
+  };
+};
+
+class EntityScreen extends Component<Props> {
   componentDidMount() {
-    const params = this.props.match.params as EntityMatch;
-    const key: string = params["entityKey"];
-    if (key) console.log("props", this.props);
+    console.log("props", this.props.entityKey);
   }
 
   render() {
@@ -40,4 +54,7 @@ class EntityScreen extends Component<RouteComponentProps> {
   }
 }
 
-export default EntityScreen;
+export default connect(
+  mapStateToProps,
+  () => {}
+)(EntityScreen);
