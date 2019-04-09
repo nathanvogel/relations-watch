@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { RouterProps } from "react-router";
 import styled from "styled-components";
 
-import Button from "../components/Button";
 import SearchEntity from "../components/SearchEntity";
 import ROUTES from "../utils/ROUTES";
 
