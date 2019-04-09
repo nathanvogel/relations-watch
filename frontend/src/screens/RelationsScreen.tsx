@@ -1,13 +1,25 @@
 import React from "react";
 import { RouteComponentProps } from "react-router";
+import styled from "styled-components";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
 import { getRelationId } from "../utils/utils";
-import { Relation } from "../utils/types";
+import { Relation, Status } from "../utils/types";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
+import Meta from "../components/Meta";
+import EntityDetails from "../components/EntityDetails";
+import SearchEntity from "../components/SearchEntity";
+
+const Content = styled.div`
+  width: 250px;
+  max-width: calc(100% - 64px);
+  margin-top: 32px;
+  margin-left: 32px;
+  margin-right: 32px;
+`;
 
 interface RelationMatch {
   entity1Key: string;
@@ -45,17 +57,43 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     relationId,
     relations,
     relationsStatus,
-    relationsError
+    relationsError,
+    history: props.history
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators({}, dispatch);
 
-class RelationsScreen extends React.Component<OwnProps> {
+class RelationsScreen extends React.Component<Props> {
+  onSecondEntitySelected = (value: string) => {
+    this.props.history.push(
+      `/${ROUTES.relation}/${ROUTES.add}/${this.props.entity1Key}/${value}`
+    );
+  };
+
   render() {
-    console.log("do add:", this.props.add);
-    return <p>Relations</p>;
+    const { relations, relationsStatus, relationsError } = this.props;
+    const { entity1Key, entity2Key } = this.props;
+
+    // Render loading status and error.
+    // if (relationsStatus !== Status.Ok)
+    //   return (
+    //     <Content>
+    //       <Meta status={relationsStatus} error={relationsError} />
+    //     </Content>
+    //   );
+
+    return (
+      <Content>
+        <EntityDetails entityKey={entity1Key} />
+        {entity2Key ? (
+          <EntityDetails entityKey={entity2Key} />
+        ) : (
+          <SearchEntity onChange={this.onSecondEntitySelected} />
+        )}
+      </Content>
+    );
   }
 }
 

@@ -16,16 +16,12 @@ class App extends Component {
           component={EntityScreen}
         />
         <Route
-          path={`/${ROUTES.relation}/${ROUTES.add}/:entity1Key?`}
+          path={`/${ROUTES.relation}/${ROUTES.add}/:entity1Key?/:entity2Key?`}
           render={props => <RelationsScreen {...props} add={true} />}
         />
         <Route
           path={`/${ROUTES.relation}/:entity1Key?/:entity2Key?`}
           render={props => <RelationsScreen {...props} add={false} />}
-        />
-        <Route
-          path={`/${ROUTES.relation}/:entity1Key?/:entity2Key?/${ROUTES.add}`}
-          render={props => <RelationsScreen {...props} add={true} />}
         />
         <Route component={HomeScreen} />
       </Switch>

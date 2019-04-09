@@ -11,14 +11,17 @@ import { Status, ErrorPayload, Entity, Relation } from "./utils/types";
 // const logger = createLogger();
 // const debounceNotify = debounce(notify => notify());
 
-const enhancer = compose(
+const reduxWindow = window as any;
+const composeEnhancers =
+  reduxWindow.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const enhancer = composeEnhancers(
   applyMiddleware(thunk)
   // applyMiddleware(thunk, logger),
   // batchedSubscribe(debounceNotify)
 );
 
-const initialState = {};
-const store = createStore(rootReducer, initialState, enhancer);
+const store = createStore(rootReducer, {}, enhancer);
 
 export default store;
 
