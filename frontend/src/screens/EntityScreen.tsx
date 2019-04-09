@@ -30,10 +30,7 @@ interface EntityMatch {
 }
 
 type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps> & {
-    label: string;
-    entityKey: string;
-  };
+  ReturnType<typeof mapDispatchToProps>;
 
 const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
   // Get the entityKey from the Router props
@@ -68,6 +65,7 @@ class EntityScreen extends Component<Props> {
   getMeta = (status: Status, error: ErrorPayload) => {
     switch (status) {
       case undefined:
+      case null:
         return <p>Initializing...</p>;
       case Status.Requested:
         return <p>Loading...</p>;
@@ -90,7 +88,11 @@ class EntityScreen extends Component<Props> {
     return (
       <Content>
         <PersonName>{entity.name}</PersonName>
-        <Button to={`/${ROUTES.relation}/${ROUTES.new}`}>New relation</Button>
+        <Button
+          to={`/${ROUTES.relation}/${ROUTES.add}/${this.props.entityKey}`}
+        >
+          New relation
+        </Button>
       </Content>
     );
   }
