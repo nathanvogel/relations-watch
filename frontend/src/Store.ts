@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
+
 import rootReducer from "./features/app";
+import { Status, ErrorPayload, Entity } from "./utils/types";
 
 // import { createLogger } from "redux-logger";
 // import { batchedSubscribe } from "redux-batched-subscribe";
@@ -20,15 +22,10 @@ const store = createStore(rootReducer, initialState, enhancer);
 
 export default store;
 
-export interface Entity {
-  type: string;
-  status: string;
-  payload: { name: string };
-  meta: object;
-}
-
 export interface RootStore {
   entities: {
-    [key: string]: Entity;
+    data: { [key: string]: Entity };
+    errors: { [key: string]: ErrorPayload };
+    status: { [key: string]: Status };
   };
 }

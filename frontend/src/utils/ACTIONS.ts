@@ -1,5 +1,12 @@
 const ACTIONS = {
-  EntityRequested: "EntityRequested"
+  EntityRequested: "EntityRequested",
+  EntityReceived: "EntityReceived",
+  EntityError: "EntityError",
+  status: {
+    ok: "ok",
+    error: "error",
+    requested: "requested"
+  }
 };
 
 export default ACTIONS;

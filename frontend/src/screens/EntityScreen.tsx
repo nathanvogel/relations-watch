@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 
-import { RootStore, Entity } from "../Store";
+import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
 import { loadEntity } from "../features/entitiesActionCreators";
 import Button from "../components/Button";
 import ROUTES from "../utils/ROUTES";
+import { Status, ErrorPayload } from "../utils/types";
 
 const Content = styled.div`
   width: 960px;
@@ -39,11 +40,15 @@ const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
   const params = props.match.params as EntityMatch;
   const entityKey: string = params["entityKey"];
   // Get the entity from the Redux Store
-  const entity = state.entities[entityKey];
+  const entity = state.entities.data[entityKey];
+  const status = state.entities.status[entityKey];
+  const error = state.entities.errors[entityKey];
   // Return everything.
   return {
     entityKey,
-    entity
+    entity,
+    status,
+    error
   };
 };
 
@@ -55,28 +60,36 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
     dispatch
   );
 
-// const mapDispatchToProps = dispatch => ({
-//   startAuthUI: () => dispatch(startAuthUI())
-// });
-
 class EntityScreen extends Component<Props> {
   componentDidMount() {
-    console.log("Key: ", this.props.entityKey);
     this.props.loadEntity(this.props.entityKey);
   }
 
+  getMeta = (status: Status, error: ErrorPayload) => {
+    switch (status) {
+      case undefined:
+        return <p>Initializing...</p>;
+      case Status.Requested:
+        return <p>Loading...</p>;
+      case Status.Error:
+        return <p>Error: {error.eMessage}</p>;
+      default:
+        return null;
+    }
+  };
+
   render() {
-    const { entity } = this.props;
-    console.log("render: ", entity);
+    const { entity, status, error } = this.props;
+
+    // Render loading status and error.
+    const meta = this.getMeta(status, error);
+    if (meta) {
+      return <Content>{meta}</Content>;
+    }
+
     return (
       <Content>
-        {!entity ? (
-          <p>Nothing yet</p>
-        ) : entity.status === "ok" ? (
-          <PersonName>{entity.payload.name}</PersonName>
-        ) : (
-          <p>Loading...</p>
-        )}
+        <PersonName>{entity.name}</PersonName>
         <Button to={`/${ROUTES.relation}/${ROUTES.new}`}>New relation</Button>
       </Content>
     );

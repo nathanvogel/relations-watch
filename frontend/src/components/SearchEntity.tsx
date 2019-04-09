@@ -1,12 +1,7 @@
 import styled from "styled-components";
 import * as React from "react";
 import AsyncSelect from "react-select/lib/Async";
-import axios from "axios";
-
-const suggestionsApi = axios.create({
-  baseURL: "http://127.0.0.1:8529/_db/_system/api1",
-  headers: {}
-});
+import api from "../utils/api";
 
 export interface Suggestion {
   _key: string;
@@ -24,9 +19,7 @@ const promiseAutocomplete = async (inputValue: string) => {
   // No need to query the server too fast
   if (!inputValue || inputValue.length <= 1) return;
   // Query our beautiful API
-  const response = await suggestionsApi.get(
-    "/entities/autocomplete/" + inputValue
-  );
+  const response = await api.get("/entities/autocomplete/" + inputValue);
   if (response.status === 200) {
     // Convert the API data to react-select format.
     const suggestions: Array<ReactSelectOption> = [];
