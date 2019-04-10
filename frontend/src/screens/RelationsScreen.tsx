@@ -5,14 +5,14 @@ import styled from "styled-components";
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
 import { getRelationId } from "../utils/utils";
-import { Relation, Status } from "../utils/types";
 import { media } from "../utils/media-styles";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
-import Meta from "../components/Meta";
 import EntityDetails from "../components/EntityDetails";
 import SearchEntity from "../components/SearchEntity";
+import RelationEdgesList from "../components/RelationEdgesList";
+import EdgeEditor from "../components/EdgeEditor";
 
 const Content = styled.div`
   display: flex;
@@ -55,23 +55,11 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const add = props.add;
   const relationId = getRelationId(entity1Key, entity2Key);
 
-  // Get the entity from the Redux Store
-  const relations: Relation = relationId
-    ? state.relations.data[relationId]
-    : {};
-  const relationsStatus = relationId
-    ? state.relations.status[relationId]
-    : null;
-  const relationsError = relationId ? state.relations.errors[relationId] : null;
-
   return {
     entity1Key,
     entity2Key,
     add,
     relationId,
-    relations,
-    relationsStatus,
-    relationsError,
     history: props.history
   };
 };
@@ -87,16 +75,7 @@ class RelationsScreen extends React.Component<Props> {
   };
 
   render() {
-    const { relations, relationsStatus, relationsError } = this.props;
     const { entity1Key, entity2Key } = this.props;
-
-    // Render loading status and error.
-    // if (relationsStatus !== Status.Ok)
-    //   return (
-    //     <Content>
-    //       <Meta status={relationsStatus} error={relationsError} />
-    //     </Content>
-    //   );
 
     return (
       <Content>
@@ -104,13 +83,21 @@ class RelationsScreen extends React.Component<Props> {
           <EntityDetails entityKey={entity1Key} />
         </EntityColumn>
         <RelationsColumn>
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum."
+          {this.props.add && entity2Key ? (
+            <EdgeEditor
+              newEdge
+              entity1Key={entity1Key}
+              entity2Key={entity2Key}
+            />
+          ) : null}
+          {entity2Key ? (
+            <RelationEdgesList
+              entity1Key={entity1Key}
+              entity2Key={entity2Key}
+            />
+          ) : (
+            <p>Select another entity to show their relationships</p>
+          )}
         </RelationsColumn>
         <EntityColumn>
           {entity2Key ? (
