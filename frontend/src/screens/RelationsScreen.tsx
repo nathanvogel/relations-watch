@@ -1,12 +1,13 @@
 import React from "react";
 import { RouteComponentProps } from "react-router";
+import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
+import cuid from "cuid";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
 import { getRelationId } from "../utils/utils";
 import { media } from "../utils/media-styles";
-import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
@@ -67,7 +68,15 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators({}, dispatch);
 
+type State = {
+  edgeEditorId: string;
+};
+
 class RelationsScreen extends React.Component<Props> {
+  readonly state: State = {
+    edgeEditorId: cuid.slug()
+  };
+
   onSecondEntitySelected = (value: string) => {
     this.props.history.push(
       `/${ROUTES.relation}/${ROUTES.add}/${this.props.entity1Key}/${value}`
@@ -88,6 +97,7 @@ class RelationsScreen extends React.Component<Props> {
               newEdge
               entity1Key={entity1Key}
               entity2Key={entity2Key}
+              editorId={this.state.edgeEditorId}
             />
           ) : null}
           {entity2Key ? (

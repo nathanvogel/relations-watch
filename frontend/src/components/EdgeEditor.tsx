@@ -1,5 +1,6 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import { RootStore } from "../Store";
@@ -11,6 +12,8 @@ import { connect } from "react-redux";
 import CONSTS from "../utils/consts";
 import EntityName from "./EntityName";
 import { RELATION_TYPES } from "../strings/strings";
+import { postEdge } from "../features/relationsActionCreators";
+import { Edge, Status } from "../utils/types";
 
 const Content = styled.div`
   display: block;
@@ -32,6 +35,7 @@ const Label = styled.label`
 type OwnProps = {
   entity1Key: string;
   entity2Key: string;
+  editorId: string;
   newEdge: boolean;
 };
 
@@ -43,21 +47,35 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const entity1Key = props.entity1Key;
   const entity2Key = props.entity2Key;
   const newEdge = props.newEdge;
-  const relationId = getRelationId(entity1Key, entity2Key);
+  const editorId = props.editorId;
+  // It's safe to assume we'll get an ID because entity1Key and entity2Key
+  // are not nullable.
+  const relationId = getRelationId(entity1Key, entity2Key) as string;
+  // Get the POST request state from the Redux Store
+  const status = state.requests.status[editorId];
+  const error = state.requests.errors[editorId];
 
   return {
     entity1Key,
     entity2Key,
     newEdge,
-    relationId
+    editorId,
+    relationId,
+    status,
+    error
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
-  bindActionCreators({}, dispatch);
+  bindActionCreators(
+    {
+      postEdge
+    },
+    dispatch
+  );
 
 type State = {
-  description: string;
+  text: string;
   type: number | undefined;
   amount: number;
   exactAmount: boolean;
@@ -67,7 +85,7 @@ type State = {
 
 class RelationsScreen extends React.Component<Props> {
   readonly state: State = {
-    description: "",
+    text: "",
     type: undefined,
     amount: 0,
     exactAmount: false,
@@ -75,14 +93,12 @@ class RelationsScreen extends React.Component<Props> {
     invertDirection: false
   };
 
-  onSecondEntitySelected = (value: string) => {};
-
   onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.setState({ description: event.target.value });
+    this.setState({ text: event.target.value });
   };
 
   onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ type: event.target.value });
+    this.setState({ type: +event.target.value });
   };
 
   onJobChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,13 +114,37 @@ class RelationsScreen extends React.Component<Props> {
   };
 
   onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    alert("An edge was submitted: " + this.state.description);
     event.preventDefault();
+    if (!this.state.type) return;
+
+    const { entity1Key, entity2Key } = this.props;
+    const invert = this.state.invertDirection;
+    const edge: Edge = {
+      _from: invert ? entity2Key : entity1Key,
+      _to: invert ? entity1Key : entity2Key,
+      text: this.state.text,
+      type: this.state.type,
+      amount: this.state.amount,
+      exactAmount: this.state.exactAmount,
+      job: this.state.jobInvolved,
+      sources: []
+    };
+    this.props.postEdge(edge, this.props.editorId);
   };
 
   render() {
     const { entity1Key, entity2Key } = this.props;
     const invert = this.state.invertDirection;
+    const { status, error } = this.props;
+
+    // Render loading status and error.
+    if (status === Status.Ok)
+      return (
+        <Content>
+          <p>Saved!</p>
+          <Link to={`/${ROUTES.relation}/${entity1Key}/${entity2Key}`}>Ok</Link>
+        </Content>
+      );
 
     return (
       <Content>
@@ -113,7 +153,7 @@ class RelationsScreen extends React.Component<Props> {
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
             <select value={this.state.type} onChange={this.onTypeChange}>
               {Object.keys(CONSTS.RELATION_TYPES).map(key => (
-                <option value={"" + CONSTS.RELATION_TYPES[key]}>
+                <option key={key} value={CONSTS.RELATION_TYPES[key]}>
                   {RELATION_TYPES[key]}
                 </option>
               ))}
@@ -124,7 +164,7 @@ class RelationsScreen extends React.Component<Props> {
           <Label>
             Brief and neutral description of this information:
             <TextArea
-              value={this.state.description}
+              value={this.state.text}
               onChange={this.onDescriptionChange}
             />
           </Label>
@@ -156,6 +196,8 @@ class RelationsScreen extends React.Component<Props> {
           </Label>
           <button type="submit">Save</button>
           <button type="button">Cancel</button>
+          {status === Status.Requested ? <p>Saving...</p> : null}
+          {status === Status.Error ? <p>Error: {error.eMessage}</p> : null}
         </form>
       </Content>
     );

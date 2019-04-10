@@ -9,6 +9,7 @@ export type Action = {
   status: Status;
   meta: {
     entityKey?: string;
+    requestId?: string;
     error?: ErrorPayload;
   };
   payload?: object;
@@ -25,7 +26,6 @@ export interface Entity {
 }
 
 export interface Edge {
-  name: string;
   _from: string;
   _to: string;
   text: string;
@@ -33,6 +33,7 @@ export interface Edge {
   amount?: number;
   exactAmount?: boolean;
   job?: boolean;
+  sources: Array<object>;
 }
 
 export interface Relation {

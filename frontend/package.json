@@ -12,6 +12,7 @@
     "@types/react-select": "^2.0.15",
     "@types/styled-components": "^4.1.13",
     "axios": "^0.18.0",
+    "cuid": "^2.1.6",
     "immutability-helper": "^3.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

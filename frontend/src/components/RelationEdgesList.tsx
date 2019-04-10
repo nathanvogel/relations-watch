@@ -8,6 +8,7 @@ import { Relation, Status } from "../utils/types";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
+import EdgeDetails from "./EdgeDetails";
 
 const Content = styled.div`
   width: 100%;
@@ -72,9 +73,18 @@ class RelationsScreen extends React.Component<Props> {
     //     </Content>
     //   );
 
+    if (!relations)
+      return (
+        <Content>
+          <p>The list of edges is empty.</p>
+        </Content>
+      );
+
     return (
       <Content>
-        {relations ? <p>Not empty</p> : <p>The list of edges is empty.</p>}
+        {Object.keys(relations).map(key => (
+          <EdgeDetails key={key} edge={relations[key]} />
+        ))}
       </Content>
     );
   }

@@ -51,7 +51,7 @@ const relSchema = joi
     amount: joi.number(),
     exactAmount: joi.boolean(),
     job: joi.boolean(),
-    sources: joi.array().items(joi.string().required())
+    sources: joi.array().items(joi.string())
   });
 
 // POST a new entity
@@ -141,6 +141,7 @@ router
   .description("Assembles a list of names of entities in the collection.");
 
 // POST new relations
+// TODO : validate input.
 router
   .post("/relations", function(req, res) {
     const multiple = Array.isArray(req.body);
@@ -148,6 +149,8 @@ router
 
     let data = [];
     for (var doc of body) {
+      doc._to = "entities/" + doc._to;
+      doc._from = "entities/" + doc._from;
       const meta = relColl.save(doc);
       data.push(Object.assign(doc, meta));
     }
