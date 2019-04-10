@@ -6,6 +6,7 @@ import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
 import { getRelationId } from "../utils/utils";
 import { Relation, Status } from "../utils/types";
+import { media } from "../utils/media-styles";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
@@ -14,9 +15,22 @@ import EntityDetails from "../components/EntityDetails";
 import SearchEntity from "../components/SearchEntity";
 
 const Content = styled.div`
-  width: 250px;
-  max-width: calc(100% - 64px);
+  display: flex;
+  ${media.mobile`display: block;`}
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1440px;
+  margin: auto;
   margin-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+`;
+
+const EntityColumn = styled.div`
+  flex: 1;
+`;
+const RelationsColumn = styled.div`
+  flex: 2;
   margin-left: 32px;
   margin-right: 32px;
 `;
@@ -86,12 +100,25 @@ class RelationsScreen extends React.Component<Props> {
 
     return (
       <Content>
-        <EntityDetails entityKey={entity1Key} />
-        {entity2Key ? (
-          <EntityDetails entityKey={entity2Key} />
-        ) : (
-          <SearchEntity onChange={this.onSecondEntitySelected} />
-        )}
+        <EntityColumn>
+          <EntityDetails entityKey={entity1Key} />
+        </EntityColumn>
+        <RelationsColumn>
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum."
+        </RelationsColumn>
+        <EntityColumn>
+          {entity2Key ? (
+            <EntityDetails entityKey={entity2Key} />
+          ) : (
+            <SearchEntity onChange={this.onSecondEntitySelected} />
+          )}
+        </EntityColumn>
       </Content>
     );
   }
