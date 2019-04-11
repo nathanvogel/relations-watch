@@ -17,7 +17,7 @@ export default (state = defaultState, action: Action) => {
         return state;
       }
       return update(state, {
-        [relationId]: { $set: action.payload }
+        data: { [relationId]: { $push: [action.payload] } }
       });
     case ACTIONS.RelationRequested:
       const key1 = action.meta.relationId as string;
