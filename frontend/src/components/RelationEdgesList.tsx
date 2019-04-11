@@ -1,13 +1,13 @@
 import React from "react";
 import { RouteComponentProps, RouterProps, withRouter } from "react-router";
+import { bindActionCreators, Dispatch } from "redux";
+import { connect } from "react-redux";
 import styled from "styled-components";
 
 import { RootStore } from "../Store";
 import { getRelationId } from "../utils/utils";
 import { Relation, Status } from "../utils/types";
-import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
-import { connect } from "react-redux";
 import EdgeDetails from "./EdgeDetails";
 import { loadRelation } from "../features/relationsActionCreators";
 import Meta from "./Meta";
@@ -71,7 +71,7 @@ class RelationsScreen extends React.Component<Props> {
   render() {
     const { relations, relationsStatus, relationsError } = this.props;
     const { entity1Key, entity2Key } = this.props;
-    console.log(relationsStatus);
+
     // Render loading status and error.
     if (relationsStatus !== Status.Ok)
       return (

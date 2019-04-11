@@ -14,6 +14,7 @@ import EntityDetails from "../components/EntityDetails";
 import SearchEntity from "../components/SearchEntity";
 import RelationEdgesList from "../components/RelationEdgesList";
 import EdgeEditor from "../components/EdgeEditor";
+import Button from "../components/Button";
 
 const Content = styled.div`
   display: flex;
@@ -99,7 +100,15 @@ class RelationsScreen extends React.Component<Props> {
               entity2Key={entity2Key}
               editorId={this.state.edgeEditorId}
             />
-          ) : null}
+          ) : (
+            <Button
+              to={`/${ROUTES.relation}/${
+                ROUTES.add
+              }/${entity1Key}/${entity2Key}`}
+            >
+              Add a relation element
+            </Button>
+          )}
           {entity2Key ? (
             <RelationEdgesList
               entity1Key={entity1Key}

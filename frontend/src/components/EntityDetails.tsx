@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
+import { Link } from "react-router-dom";
 
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
@@ -61,7 +62,9 @@ class EntityDetails extends Component<Props> {
 
     return (
       <Content>
-        <PersonName>{entity.name}</PersonName>
+        <Link to={`/e/${this.props.entityKey}`}>
+          <PersonName>{entity.name}</PersonName>
+        </Link>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad

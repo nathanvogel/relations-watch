@@ -14,6 +14,7 @@ import EntityName from "./EntityName";
 import { RELATION_TYPES } from "../strings/strings";
 import { postEdge } from "../features/relationsActionCreators";
 import { Edge, Status } from "../utils/types";
+import Button from "./Button";
 
 const Content = styled.div`
   display: block;
@@ -99,6 +100,10 @@ class RelationsScreen extends React.Component<Props> {
     this.setState({ type: +event.target.value });
   };
 
+  toggleInvert = (event: React.MouseEvent<HTMLButtonElement>) => {
+    this.setState({ invertDirection: !this.state.invertDirection });
+  };
+
   onExactAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ exactAmount: event.target.checked });
   };
@@ -145,6 +150,7 @@ class RelationsScreen extends React.Component<Props> {
           <div>
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
             <select value={this.state.type} onChange={this.onTypeChange}>
+              <option key="empty" value="empty" />
               {Object.keys(CONSTS.RELATION_TYPES).map(key => (
                 <option key={key} value={CONSTS.RELATION_TYPES[key]}>
                   {RELATION_TYPES[key]}
@@ -152,7 +158,9 @@ class RelationsScreen extends React.Component<Props> {
               ))}
             </select>
             <EntityName entityKey={invert ? entity1Key : entity2Key} />
-            <button type="button">Invert direction</button>
+            <button type="button" onClick={this.toggleInvert}>
+              Invert direction
+            </button>
           </div>
           <Label>
             Brief and neutral description of this information:
@@ -178,7 +186,9 @@ class RelationsScreen extends React.Component<Props> {
             />
           </Label>
           <button type="submit">Save</button>
-          <button type="button">Cancel</button>
+          <Button to={`/${ROUTES.relation}/${entity1Key}/${entity2Key}`}>
+            Cancel
+          </Button>
           {status === Status.Requested ? <p>Saving...</p> : null}
           {status === Status.Error ? <p>Error: {error.eMessage}</p> : null}
         </form>
