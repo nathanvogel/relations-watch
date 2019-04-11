@@ -12,7 +12,10 @@ import { connect } from "react-redux";
 import CONSTS from "../utils/consts";
 import EntityName from "./EntityName";
 import { RELATION_TYPES } from "../strings/strings";
-import { postEdge } from "../features/relationsActionCreators";
+import {
+  postEdge,
+  clearPostRequest
+} from "../features/relationsActionCreators";
 import { Edge, Status } from "../utils/types";
 import Button from "./Button";
 
@@ -70,7 +73,8 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators(
     {
-      postEdge
+      postEdge,
+      clearPostRequest
     },
     dispatch
   );
@@ -130,6 +134,10 @@ class RelationsScreen extends React.Component<Props> {
     this.props.postEdge(edge, this.props.editorId);
   };
 
+  clearPostRequest = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    this.props.clearPostRequest(this.props.relationId, this.props.editorId);
+  };
+
   render() {
     const { entity1Key, entity2Key } = this.props;
     const invert = this.state.invertDirection;
@@ -140,7 +148,12 @@ class RelationsScreen extends React.Component<Props> {
       return (
         <Content>
           <p>Saved!</p>
-          <Link to={`/${ROUTES.relation}/${entity1Key}/${entity2Key}`}>Ok</Link>
+          <Link
+            onClick={this.clearPostRequest}
+            to={`/${ROUTES.relation}/${entity1Key}/${entity2Key}`}
+          >
+            Ok
+          </Link>
         </Content>
       );
 
@@ -150,7 +163,7 @@ class RelationsScreen extends React.Component<Props> {
           <div>
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
             <select value={this.state.type} onChange={this.onTypeChange}>
-              <option key="empty" value="empty" />
+              <option key="empty" />
               {Object.keys(CONSTS.RELATION_TYPES).map(key => (
                 <option key={key} value={CONSTS.RELATION_TYPES[key]}>
                   {RELATION_TYPES[key]}

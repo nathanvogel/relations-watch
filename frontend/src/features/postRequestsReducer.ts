@@ -11,6 +11,13 @@ export default (state = defaultState, action: Action) => {
       return update(state, {
         status: { [key1]: { $set: action.status } }
       });
+    case ACTIONS.EdgePostClear:
+      const key4 = action.meta.requestId as string;
+      return update(state, {
+        data: { $unset: [key4] },
+        status: { $unset: [key4] },
+        errors: { $unset: [key4] }
+      });
     case ACTIONS.EdgePostSuccess:
       const key2 = action.meta.requestId as string;
       return update(state, {

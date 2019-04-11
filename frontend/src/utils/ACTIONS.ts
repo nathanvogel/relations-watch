@@ -6,6 +6,7 @@ const ACTIONS = {
   RelationReceived: "RelationReceived",
   RelationError: "RelationError",
   EdgePostSent: "EdgePostSent",
+  EdgePostClear: "EdgePostClear",
   EdgePostSuccess: "EdgePostSuccess",
   EdgePostError: "EdgePostError",
   status: {

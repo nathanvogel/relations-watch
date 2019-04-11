@@ -19,6 +19,7 @@ export type Action = {
 export enum Status {
   Requested,
   Ok,
+  Clear,
   Error
 }
 

@@ -67,7 +67,6 @@ export const postEdge = (edge: Edge, requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
   dispatch(actionRequest(requestId));
-  console.log(edge);
   api
     .post(`/relations`, edge)
     .then(res => {
@@ -90,11 +89,26 @@ export const postEdge = (edge: Edge, requestId: string) => async (
     });
 };
 
+export const clearPostRequest = (
+  relationId: string,
+  requestId: string
+) => async (dispatch: Dispatch): Promise<void> => {
+  dispatch(actionClearRequest(relationId, requestId));
+};
+
 function actionRequest(requestId: string): Action {
   return {
     type: ACTIONS.EdgePostSent,
     status: Status.Requested,
     meta: { requestId: requestId }
+  };
+}
+
+function actionClearRequest(relationId: string, requestId: string): Action {
+  return {
+    type: ACTIONS.EdgePostClear,
+    status: Status.Clear,
+    meta: { requestId, relationId }
   };
 }
 
