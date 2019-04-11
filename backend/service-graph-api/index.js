@@ -210,18 +210,19 @@ router
 // GET all relations between two persons
 router
   .get("/relations/all/:entity1/:entity2", function(req, res) {
-    const relations = db._query(aql`
+    const query = aql`
             FOR v,e
               IN 1
-              ANY '${entColl.name()}/${req.pathParams.entity1}'
+              ANY CONCAT(${entColl.name()}, '/', ${req.pathParams.entity1})
               ${relColl}
-              FILTER v._key == '${req.pathParams.entity2}'
+              FILTER v._key == ${req.pathParams.entity2}
               RETURN e
-    `);
+    `;
+    const relations = db._query(query);
     res.send(relations);
   })
-  .pathParam("entity1", joi.number().required(), "Key of the first entity")
-  .pathParam("entity2", joi.number().required(), "Key of the second entity")
+  .pathParam("entity1", joi.string().required(), "Key of the first entity")
+  .pathParam("entity2", joi.string().required(), "Key of the second entity")
   .response(
     joi
       .array()
