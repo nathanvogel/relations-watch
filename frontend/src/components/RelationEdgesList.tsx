@@ -9,6 +9,8 @@ import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
 import EdgeDetails from "./EdgeDetails";
+import { loadRelation } from "../features/relationsActionCreators";
+import Meta from "./Meta";
 
 const Content = styled.div`
   width: 100%;
@@ -48,11 +50,16 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
-  bindActionCreators({}, dispatch);
+  bindActionCreators(
+    {
+      loadRelation
+    },
+    dispatch
+  );
 
 class RelationsScreen extends React.Component<Props> {
   componentDidMount() {
-    // TODO : get edges
+    this.props.loadRelation(this.props.entity1Key, this.props.entity2Key);
   }
 
   onSecondEntitySelected = (value: string) => {
@@ -64,14 +71,14 @@ class RelationsScreen extends React.Component<Props> {
   render() {
     const { relations, relationsStatus, relationsError } = this.props;
     const { entity1Key, entity2Key } = this.props;
-
+    console.log(relationsStatus);
     // Render loading status and error.
-    // if (relationsStatus !== Status.Ok)
-    //   return (
-    //     <Content>
-    //       <Meta status={relationsStatus} error={relationsError} />
-    //     </Content>
-    //   );
+    if (relationsStatus !== Status.Ok)
+      return (
+        <Content>
+          <Meta status={relationsStatus} error={relationsError} />
+        </Content>
+      );
 
     if (!relations)
       return (

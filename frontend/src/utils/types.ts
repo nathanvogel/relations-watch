@@ -10,6 +10,7 @@ export type Action = {
   meta: {
     entityKey?: string;
     requestId?: string;
+    relationId?: string;
     error?: ErrorPayload;
   };
   payload?: object;

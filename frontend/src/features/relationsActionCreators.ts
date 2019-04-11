@@ -5,8 +5,64 @@ import ACTIONS from "../utils/ACTIONS";
 import { Action, ErrorPayload, Edge } from "../utils/types";
 import { Status } from "../utils/types";
 import { AxiosError } from "axios";
+import { getRelationId } from "../utils/utils";
 
-// Thunk Action
+/**
+ * Load all edges between 2 entities to
+ * /relations/data/[relationId]/[edgeId]
+ */
+export const loadRelation = (entity1Key: string, entity2Key: string) => async (
+  dispatch: Dispatch
+): Promise<void> => {
+  // Safe because 2 non-null args
+  const relationId = getRelationId(entity1Key, entity2Key) as string;
+  dispatch(actionLoadRequest(relationId));
+  api
+    .get(`/relations/all/${entity1Key}/${entity2Key}`)
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        dispatch(actionLoadError(relationId, potentialError));
+        return;
+      }
+      // Everything is fine, we got the data, send it!
+      dispatch(actionLoadReceived(relationId, res.data));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error("Error getting relation ", relationId, errorPayload);
+      dispatch(actionLoadError(relationId, errorPayload));
+    });
+};
+
+function actionLoadRequest(relationId: string): Action {
+  return {
+    type: ACTIONS.RelationRequested,
+    status: Status.Requested,
+    meta: { relationId: relationId }
+  };
+}
+
+function actionLoadError(relationId: string, error: ErrorPayload): Action {
+  return {
+    type: ACTIONS.RelationError,
+    status: Status.Error,
+    meta: { relationId: relationId, error: error }
+  };
+}
+
+function actionLoadReceived(relationId: string, payload: object): Action {
+  return {
+    type: ACTIONS.RelationReceived,
+    payload,
+    status: Status.Ok,
+    meta: { relationId: relationId }
+  };
+}
+
+/**
+ * Given an new relation element, upload it as an edge to the database.
+ */
 export const postEdge = (edge: Edge, requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
