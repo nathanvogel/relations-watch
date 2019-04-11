@@ -8,9 +8,9 @@ export const RELATION_TYPES: MyStringRes = {
   ENABLES_A_JOB: "enables a job for",
   ENABLES_A_CONTRACT: "enables a contract for",
   INFLUENCES_IDEAS: "influences the ideas of",
-  EXCHANGES_VALUES: "has values exchanges with",
-  COMMON_ACTIVITES: "has common activities with",
-  FAMILY: "is a related of",
+  FAMILY: "is in the same family as",
   FRIENDSHIP: "is friends with",
-  LOVES: "loves"
+  LOVES: "loves",
+  COMMON_ACTIVITES: "did something with",
+  EXCHANGES_VALUES: "traded with"
 };
