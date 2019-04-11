@@ -79,7 +79,6 @@ type State = {
   type: number | undefined;
   amount: number;
   exactAmount: boolean;
-  jobInvolved: boolean;
   invertDirection: boolean;
 };
 
@@ -89,7 +88,6 @@ class RelationsScreen extends React.Component<Props> {
     type: undefined,
     amount: 0,
     exactAmount: false,
-    jobInvolved: false,
     invertDirection: false
   };
 
@@ -99,10 +97,6 @@ class RelationsScreen extends React.Component<Props> {
 
   onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({ type: +event.target.value });
-  };
-
-  onJobChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ jobInvolved: event.target.checked });
   };
 
   onExactAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +120,6 @@ class RelationsScreen extends React.Component<Props> {
       type: this.state.type,
       amount: this.state.amount,
       exactAmount: this.state.exactAmount,
-      job: this.state.jobInvolved,
       sources: []
     };
     this.props.postEdge(edge, this.props.editorId);
@@ -166,16 +159,6 @@ class RelationsScreen extends React.Component<Props> {
             <TextArea
               value={this.state.text}
               onChange={this.onDescriptionChange}
-            />
-          </Label>
-          <Label>
-            <EntityName entityKey={invert ? entity2Key : entity1Key} /> helps{" "}
-            <EntityName entityKey={invert ? entity1Key : entity2Key} /> to have
-            a job.
-            <input
-              type="checkbox"
-              checked={this.state.jobInvolved}
-              onChange={this.onJobChange}
             />
           </Label>
           <Label>

@@ -50,7 +50,6 @@ const relSchema = joi
       .required(),
     amount: joi.number(),
     exactAmount: joi.boolean(),
-    job: joi.boolean(),
     sources: joi.array().items(joi.string())
   });
 

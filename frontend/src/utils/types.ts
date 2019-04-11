@@ -24,6 +24,8 @@ export enum Status {
 
 export interface Entity {
   name: string;
+  type: number;
+  imageId?: string;
 }
 
 export interface Edge {
@@ -33,7 +35,6 @@ export interface Edge {
   type: number;
   amount?: number;
   exactAmount?: boolean;
-  job?: boolean;
   sources: Array<object>;
 }
 
