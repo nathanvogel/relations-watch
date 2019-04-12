@@ -9,7 +9,7 @@ import ROUTES from "../utils/ROUTES";
 import { Link } from "react-router-dom";
 
 type OwnProps = {
-  linkData: EdgePreview;
+  entityKey: string;
   baseEntityKey: string;
 };
 
@@ -18,22 +18,14 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const baseEntityKey = props.baseEntityKey;
-  const linkData = props.linkData;
-  const thisEntityKey =
-    props.linkData._to === baseEntityKey
-      ? props.linkData._from
-      : props.linkData._to;
+  const entityKey = props.entityKey;
   // Get the entity from the Redux Store
-  // TODO : will change to custom loading of a subset of attributes.
-  const entity = state.entities.datapreview[thisEntityKey];
-  const status = state.entities.status[thisEntityKey];
+  const entity = state.entities.datapreview[entityKey];
   // Return everything.
   return {
     entity,
-    status,
-    thisEntityKey,
-    baseEntityKey,
-    linkData
+    entityKey,
+    baseEntityKey
   };
 };
 
@@ -42,11 +34,11 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
 
 class LinkedEntityPreview extends Component<Props> {
   render() {
-    const { entity, status, thisEntityKey, baseEntityKey } = this.props;
+    const { entity, entityKey, baseEntityKey } = this.props;
 
     return (
-      <Link to={`/${ROUTES.relation}/${baseEntityKey}/${thisEntityKey}`}>
-        <li>{entity ? entity.name : `Loading ${thisEntityKey}...`}</li>
+      <Link to={`/${ROUTES.relation}/${baseEntityKey}/${entityKey}`}>
+        <li>{entity ? entity.name : `Loading ${entityKey}...`}</li>
       </Link>
     );
   }

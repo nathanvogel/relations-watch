@@ -47,6 +47,7 @@ export interface RootStore {
   };
   links: {
     data: {
+      // bylinkedentities: { [key: string]: [string, number][] };
       byentity: { [key: string]: ConnectedEntities };
       bykey: { [key: string]: EdgePreview }; // EntityId -> EdgePreview
     };

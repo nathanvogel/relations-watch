@@ -25,7 +25,6 @@ export default (state = defaultState, action: Action) => {
         errors: { [key3]: { $set: action.meta.error } }
       });
     case ACTIONS.LinksReceived:
-      console.log(action);
       if (!action.payload || !action.payload.vertices) {
         console.error(
           "Invalid action (entitiesReducer): " + ACTIONS.LinksReceived

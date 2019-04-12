@@ -4,13 +4,15 @@ import {
   EdgePreview,
   Edge,
   ConnectedEntities,
-  CommonEdge
+  CommonEdge,
+  LinkedEntities
 } from "../utils/types";
 import update from "immutability-helper";
 import { simplifyEdge, getEdgePreview } from "../utils/utils";
 
 interface SubState {
   data: {
+    bylinkedentities: { [key: string]: [string, number][] };
     byentity: { [key: string]: ConnectedEntities };
     bykey: { [key: string]: EdgePreview };
   };
@@ -19,6 +21,7 @@ interface SubState {
 }
 const defaultState: SubState = {
   data: {
+    bylinkedentities: {},
     byentity: {},
     bykey: {}
   },
@@ -66,7 +69,8 @@ export default (state = defaultState, action: Action) => {
       const edges = action.payload.edges as Array<EdgePreview>;
       const edgesMap: { [key: string]: EdgePreview } = {};
       const entityKey = action.meta.entityKey as string;
-      const updates: { [key: string]: ConnectedEntities } = {};
+      const listByEntity: { [key: string]: ConnectedEntities } = {};
+      const linkedEntities: LinkedEntities = {};
       for (let edge of edges) {
         // Pre-process the edge
         edge = simplifyEdge(edge);
@@ -74,11 +78,23 @@ export default (state = defaultState, action: Action) => {
         edgesMap[edge._key] = edge;
         // To be saved in /data/byentity/:fromKey and
         //                /data/byentity/:toKey
-        makeUpdates(updates, edge);
+        addEdgeToBothEntities(listByEntity, edge);
+        // Count the number of element between each persons (both ways)
+        addLinkToEntityList(linkedEntities, edge._from, edge._to);
+        addLinkToEntityList(linkedEntities, edge._to, edge._from);
+      }
+      // For each entry that contains the list of entries it's connected
+      // to and the number of connections
+      for (let fKey in linkedEntities) {
+        // Get an array that contains all inforamtion and sort it.
+        let entries = Object.entries(linkedEntities[fKey]).sort((a, b) => {
+          return b[1] - a[1];
+        });
+        listByEntity[fKey].entities = entries;
       }
       return update(state, {
         data: {
-          byentity: { $merge: updates },
+          byentity: { $merge: listByEntity },
           bykey: { $merge: edgesMap }
         },
         status: { [entityKey]: { $set: action.status } },
@@ -96,12 +112,19 @@ export default (state = defaultState, action: Action) => {
   }
 };
 
-function makeUpdates(
+function addEdgeToBothEntities(
   updates: { [key: string]: ConnectedEntities },
   edge: EdgePreview
 ) {
-  if (!updates[edge._from]) updates[edge._from] = { array: [edge] };
-  else updates[edge._from].array.push(edge);
-  if (!updates[edge._to]) updates[edge._to] = { array: [edge] };
-  else updates[edge._to].array.push(edge);
+  if (!updates[edge._from])
+    updates[edge._from] = { edges: [edge], entities: [] };
+  else updates[edge._from].edges.push(edge);
+  if (!updates[edge._to]) updates[edge._to] = { edges: [edge], entities: [] };
+  else updates[edge._to].edges.push(edge);
+}
+
+function addLinkToEntityList(list: LinkedEntities, k1: string, k2: string) {
+  if (!list[k1]) list[k1] = {};
+  if (!list[k1][k2]) list[k1][k2] = 1;
+  else list[k1][k2] += 1;
 }

@@ -61,5 +61,10 @@ export interface Relation {
 }
 
 export type ConnectedEntities = {
-  array: Array<EdgePreview>;
+  edges: Array<EdgePreview>;
+  entities: [string, number][];
+};
+
+export type LinkedEntities = {
+  [key: string]: { [key: string]: number };
 };
