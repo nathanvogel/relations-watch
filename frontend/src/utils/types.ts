@@ -24,12 +24,14 @@ export enum Status {
 }
 
 export interface Entity {
+  _key: string;
   name: string;
   type: number;
   imageId?: string;
 }
 
 export interface Edge {
+  _key?: string;
   _from: string;
   _to: string;
   text: string;
@@ -39,6 +41,19 @@ export interface Edge {
   sources: Array<object>;
 }
 
+export interface EdgePreview {
+  _key: string;
+  _from: string;
+  _to: string;
+  type: number;
+}
+
+export type CommonEdge = Edge | EdgePreview;
+
 export interface Relation {
   [key: string]: Edge;
 }
+
+export type ConnectedEntities = {
+  array: Array<EdgePreview>;
+};

@@ -13,7 +13,9 @@ class App extends Component {
       <Switch>
         <Route
           path={`/${ROUTES.entity}/:entityKey?`}
-          component={EntityScreen}
+          render={props => (
+            <EntityScreen {...props} key={props.match.params.entityKey} />
+          )}
         />
         <Route
           path={`/${ROUTES.relation}/${ROUTES.add}/:entity1Key?/:entity2Key?`}

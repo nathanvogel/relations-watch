@@ -1,3 +1,5 @@
+import { EdgePreview, Edge, CommonEdge } from "./types";
+
 // CONVENTION:
 // - relationId is the alphabetically sorted combination of both entities
 // - edgeKey is the _key of this relation in the database.
@@ -10,4 +12,26 @@ export function getRelationId(
       ? entity1Key + entity2Key
       : entity2Key + entity1Key
     : null;
+}
+
+/**
+ * Mutate the Edge or EdgePreview to remove collection names.
+ * @param  edge        The edge to be mutated.
+ * @return             A ref to the same edge object, for convienience
+ */
+export function simplifyEdge<E extends CommonEdge>(edge: E): E {
+  edge._from = edge._from.replace("entities/", "");
+  edge._to = edge._to.replace("entities/", "");
+  return edge;
+}
+
+export function getEdgePreview(edge: Edge): EdgePreview {
+  if (!edge._key)
+    throw new Error("Edge doesn't have a key. Can't create EdgePreview");
+  return {
+    _key: edge._key,
+    _from: edge._from,
+    _to: edge._to,
+    type: edge.type
+  };
 }

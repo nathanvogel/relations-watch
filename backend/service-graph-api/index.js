@@ -262,15 +262,14 @@ router
 
 router
   .get("/entities/:key/relations", function(req, res) {
-    const relations = db._query(
-      `
-        FOR v,rel
+    const relations = db._query(aql`
+        FOR v,e
           IN 1..2
-          ANY '${entColl.name()}/${req.pathParams.key}'
-          ${relColl.name()}
-          RETURN KEEP(rel, "_key", "_from", "_to", "type")
-      `
-    );
+          ANY CONCAT(${entColl.name()}, '/', ${req.pathParams.key})
+          ${relColl}
+          OPTIONS { uniqueEdges: "path", bfs: true }
+          RETURN DISTINCT KEEP(e, "_key", "_from", "_to", "type")
+      `);
     res.send(relations);
   })
   .pathParam("key", joi.string().required(), "Key of the central entity")

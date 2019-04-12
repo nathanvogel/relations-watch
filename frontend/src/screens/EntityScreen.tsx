@@ -11,6 +11,8 @@ import Button from "../components/Button";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/Meta";
 import { Status } from "../utils/types";
+import { loadLinks } from "../features/linksActionCreators";
+import LinkedEntityPreview from "../components/LinkedEntityPreview";
 
 const Content = styled.div`
   width: 960px;
@@ -41,19 +43,28 @@ const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
   const entity = state.entities.data[entityKey];
   const status = state.entities.status[entityKey];
   const error = state.entities.errors[entityKey];
+  const entityLinks = state.links.data.byentity[entityKey]
+    ? state.links.data.byentity[entityKey].array
+    : [];
+  const linksStatus = state.links.status[entityKey];
+  const linksError = state.links.errors[entityKey];
   // Return everything.
   return {
     entityKey,
     entity,
     status,
-    error
+    error,
+    entityLinks,
+    linksStatus,
+    linksError
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators(
     {
-      loadEntity: loadEntity
+      loadEntity,
+      loadLinks
     },
     dispatch
   );
@@ -62,10 +73,14 @@ class EntityScreen extends Component<Props> {
   componentDidMount() {
     if (!this.props.status || this.props.status === Status.Error)
       this.props.loadEntity(this.props.entityKey);
+    if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
+      this.props.loadLinks(this.props.entityKey);
   }
 
   render() {
     const { entity, status, error } = this.props;
+    const entityLinks = this.props.entityLinks;
+    console.log(entityLinks);
 
     // Render loading status and error.
     if (status !== Status.Ok)
@@ -83,6 +98,19 @@ class EntityScreen extends Component<Props> {
         >
           New relation
         </Button>
+        {entityLinks ? (
+          <ul>
+            {entityLinks.map(link => (
+              <LinkedEntityPreview
+                key={link._key}
+                baseEntityKey={entity._key}
+                linkData={link}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p>No relations to show</p>
+        )}
       </Content>
     );
   }

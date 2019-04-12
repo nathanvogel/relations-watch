@@ -7,6 +7,9 @@ const defaultState = { data: {}, status: {}, errors: {} };
 
 export default (state = defaultState, action: Action) => {
   switch (action.type) {
+    // When a new relation element is added, we get the new edge as a
+    // confirmation back from the server, so we add it to the store at this
+    // point. The data is also separately saved under /requests/...
     case ACTIONS.EdgePostSuccess:
       const edge = action.payload as Edge;
       edge._from = edge._from.replace("entities/", "");
@@ -19,6 +22,7 @@ export default (state = defaultState, action: Action) => {
       return update(state, {
         data: { [relationId]: { $push: [action.payload] } }
       });
+    // Regular status/error/data actions.
     case ACTIONS.RelationRequested:
       const key1 = action.meta.relationId as string;
       return update(state, {

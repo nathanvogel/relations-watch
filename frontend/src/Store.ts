@@ -2,7 +2,14 @@ import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 
 import rootReducer from "./features/app";
-import { Status, ErrorPayload, Entity, Relation } from "./utils/types";
+import {
+  Status,
+  ErrorPayload,
+  Entity,
+  Relation,
+  ConnectedEntities,
+  EdgePreview
+} from "./utils/types";
 
 // import { createLogger } from "redux-logger";
 // import { batchedSubscribe } from "redux-batched-subscribe";
@@ -33,6 +40,14 @@ export interface RootStore {
   };
   relations: {
     data: { [key: string]: Relation };
+    errors: { [key: string]: ErrorPayload };
+    status: { [key: string]: Status };
+  };
+  links: {
+    data: {
+      byentity: { [key: string]: ConnectedEntities };
+      bykey: { [key: string]: EdgePreview }; // EntityId -> EdgePreview
+    };
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };
   };
