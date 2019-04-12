@@ -13,7 +13,7 @@ export type Action = {
     relationId?: string;
     error?: ErrorPayload;
   };
-  payload?: object;
+  payload?: any;
 };
 
 export enum Status {
@@ -27,6 +27,12 @@ export interface Entity {
   _key: string;
   name: string;
   type: number;
+  imageId?: string;
+}
+
+export interface EntityPreview {
+  _key: string;
+  name: string;
   imageId?: string;
 }
 

@@ -25,7 +25,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
       : props.linkData._to;
   // Get the entity from the Redux Store
   // TODO : will change to custom loading of a subset of attributes.
-  const entity = state.entities.data[thisEntityKey];
+  const entity = state.entities.datapreview[thisEntityKey];
   const status = state.entities.status[thisEntityKey];
   // Return everything.
   return {
@@ -44,16 +44,9 @@ class LinkedEntityPreview extends Component<Props> {
   render() {
     const { entity, status, thisEntityKey, baseEntityKey } = this.props;
 
-    if (status !== Status.Ok)
-      return (
-        <Link to={`/${ROUTES.relation}/${baseEntityKey}/${thisEntityKey}`}>
-          <li>{thisEntityKey}</li>
-        </Link>
-      );
-
     return (
       <Link to={`/${ROUTES.relation}/${baseEntityKey}/${thisEntityKey}`}>
-        <li>{entity ? entity.name : ""}</li>
+        <li>{entity ? entity.name : `Loading ${thisEntityKey}...`}</li>
       </Link>
     );
   }

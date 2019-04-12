@@ -59,7 +59,11 @@ export default (state = defaultState, action: Action) => {
         status: { [key1]: { $set: action.status } }
       });
     case ACTIONS.LinksReceived:
-      const edges = action.payload as Array<EdgePreview>;
+      if (!action.payload || !action.payload.edges) {
+        console.error("Invalid action: " + ACTIONS.LinksReceived);
+        return state;
+      }
+      const edges = action.payload.edges as Array<EdgePreview>;
       const edgesMap: { [key: string]: EdgePreview } = {};
       const entityKey = action.meta.entityKey as string;
       const updates: { [key: string]: ConnectedEntities } = {};

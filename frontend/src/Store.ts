@@ -8,7 +8,8 @@ import {
   Entity,
   Relation,
   ConnectedEntities,
-  EdgePreview
+  EdgePreview,
+  EntityPreview
 } from "./utils/types";
 
 // import { createLogger } from "redux-logger";
@@ -34,6 +35,7 @@ export default store;
 
 export interface RootStore {
   entities: {
+    datapreview: { [key: string]: EntityPreview };
     data: { [key: string]: Entity };
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };

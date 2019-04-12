@@ -1,8 +1,8 @@
 import ACTIONS from "../utils/ACTIONS";
-import { Action } from "../utils/types";
+import { Action, EntityPreview } from "../utils/types";
 import update from "immutability-helper";
 
-const defaultState = { data: {}, status: {}, errors: {} };
+const defaultState = { datapreview: {}, data: {}, status: {}, errors: {} };
 
 export default (state = defaultState, action: Action) => {
   switch (action.type) {
@@ -24,6 +24,20 @@ export default (state = defaultState, action: Action) => {
         status: { [key3]: { $set: action.status } },
         errors: { [key3]: { $set: action.meta.error } }
       });
+    case ACTIONS.LinksReceived:
+      console.log(action);
+      if (!action.payload || !action.payload.vertices) {
+        console.error(
+          "Invalid action (entitiesReducer): " + ACTIONS.LinksReceived
+        );
+        return state;
+      }
+      const entities = action.payload.vertices as Array<EntityPreview>;
+      const entitiesMap: { [key: string]: EntityPreview } = {};
+      for (let entityPreview of entities) {
+        entitiesMap[entityPreview._key] = entityPreview;
+      }
+      return update(state, { datapreview: { $merge: entitiesMap } });
     default:
       return state;
   }

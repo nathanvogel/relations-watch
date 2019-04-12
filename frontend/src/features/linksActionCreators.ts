@@ -24,7 +24,7 @@ export const loadLinks = (entityKey: string) => async (
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionLLReceived(entityKey, res.data));
+      dispatch(actionLLReceived(entityKey, res.data[0]));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
