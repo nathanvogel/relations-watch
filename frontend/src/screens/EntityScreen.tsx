@@ -14,14 +14,7 @@ import { Status } from "../utils/types";
 import { loadLinks } from "../features/linksActionCreators";
 import LinkedEntityPreview from "../components/LinkedEntityPreview";
 
-const Content = styled.div`
-  width: 960px;
-  max-width: calc(100% - 64px);
-  margin-top: 32px;
-  margin-left: 32px;
-  margin-right: 32px;
-  // box-sizing: border-box;
-`;
+const Content = styled.div``;
 
 const PersonName = styled.h2`
   text-align: left;
@@ -92,11 +85,6 @@ class EntityScreen extends Component<Props> {
     return (
       <Content>
         <PersonName>{entity.name}</PersonName>
-        <Button
-          to={`/${ROUTES.relation}/${ROUTES.add}/${this.props.entityKey}`}
-        >
-          New relation
-        </Button>
         {linkedEntities ? (
           <ul>
             {linkedEntities.map(e => (
@@ -110,6 +98,11 @@ class EntityScreen extends Component<Props> {
         ) : (
           <p>No relations to show</p>
         )}
+        <Button
+          to={`/${ROUTES.relation}/${ROUTES.add}/${this.props.entityKey}`}
+        >
+          New relation
+        </Button>
       </Content>
     );
   }

@@ -39,10 +39,18 @@ const promiseAutocomplete = async (inputValue: string) => {
 };
 
 const StyledSelect = styled(AsyncSelect)`
-  min-width: 240px;
+  min-width: 150px;
+  display: inline-block;
 
   .rs__indicators {
     display: none;
+  }
+  .rs__control {
+    min-height: 22px;
+    border-radius: 0px;
+  }
+  .rs__control--is-focused {
+    border-radius: 0px;
   }
 `;
 

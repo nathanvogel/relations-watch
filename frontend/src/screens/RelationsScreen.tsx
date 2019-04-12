@@ -19,13 +19,6 @@ import Button from "../components/Button";
 const Content = styled.div`
   display: flex;
   ${media.mobile`display: block;`}
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 1440px;
-  margin: auto;
-  margin-top: 32px;
-  padding-left: 32px;
-  padding-right: 32px;
 `;
 
 const EntityColumn = styled.div`
@@ -33,8 +26,8 @@ const EntityColumn = styled.div`
 `;
 const RelationsColumn = styled.div`
   flex: 2;
-  margin-left: 32px;
-  margin-right: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
 `;
 
 interface RelationMatch {

@@ -5,24 +5,19 @@ import styled from "styled-components";
 import SearchEntity from "../components/SearchEntity";
 import ROUTES from "../utils/ROUTES";
 
-const CentralSearch = styled(SearchEntity)`
-  font-size: 22px;
-  width: 330px;
-  max-width: 100%;
-  display: block;
-  margin: 20px auto;
+const Header = styled.header`
+  margin-top: 20vh;
 `;
 
-const Header = styled.header`
-  width: 960px;
-  max-width: calc(100% - 64px);
-  margin-top: 20vh;
-  margin-left: 32px;
-  margin-right: 32px;
+const CentralSearch = styled(SearchEntity)`
+  font-size: 22px;
+  display: block;
+  width: 330px;
+  max-width: 100%;
+  margin: 0 auto;
 `;
 
 const CentralTitle = styled.h2`
-  width: 100%;
   text-align: center;
   font-size: 24px;
 `;
