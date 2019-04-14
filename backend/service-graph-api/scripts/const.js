@@ -1,6 +1,7 @@
 module.exports = {
   relCollectionName: "relations",
   entCollectionName: "entities",
+  souCollectionName: "sources",
   ENTITY_TYPES: {
     PHYSICAL_PERSON: 1,
     MORAL_PERSON: 2,

@@ -14,3 +14,10 @@ export const RELATION_TYPES: MyStringRes = {
   COMMON_ACTIVITES: "did something with",
   EXCHANGES_VALUES: "traded with"
 };
+
+export const ENTITY_TYPES: MyStringRes = {
+  PHYSICAL_PERSON: "Personne physique",
+  MORAL_PERSON: "Personne morale",
+  EVENT: "Evénement",
+  SPECIAL_GROUP: "Groupe spécial"
+};

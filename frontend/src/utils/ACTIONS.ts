@@ -12,6 +12,10 @@ const ACTIONS = {
   EdgePostClear: "EdgePostClear",
   EdgePostSuccess: "EdgePostSuccess",
   EdgePostError: "EdgePostError",
+  EntityPostSent: "EntityPostSent",
+  EntityPostClear: "EntityPostClear",
+  EntityPostSuccess: "EntityPostSuccess",
+  EntityPostError: "EntityPostError",
   status: {
     ok: "ok",
     error: "error",

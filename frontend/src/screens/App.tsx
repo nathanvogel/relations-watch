@@ -9,6 +9,7 @@ import RelationsScreen from "./RelationsScreen";
 import "./App.css";
 import ROUTES from "../utils/ROUTES";
 import { Theme } from "../utils/media-styles";
+import EntityEditor from "../components/EntityEditor";
 
 const MainContent = styled.main`
   width: calc(100% - ${Theme.MAIN_PADDING} - ${Theme.MAIN_PADDING});
@@ -31,6 +32,10 @@ class App extends Component {
               render={props => (
                 <EntityScreen {...props} key={props.match.params.entityKey} />
               )}
+            />
+            <Route
+              path={`/${ROUTES.add}/${ROUTES.entity}`}
+              render={props => <EntityEditor {...props} add={true} />}
             />
             <Route
               path={`/${ROUTES.relation}/${

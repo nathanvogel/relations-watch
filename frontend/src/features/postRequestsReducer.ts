@@ -6,11 +6,13 @@ const defaultState = { data: {}, status: {}, errors: {} };
 
 export default (state = defaultState, action: Action) => {
   switch (action.type) {
+    case ACTIONS.EntityPostSent:
     case ACTIONS.EdgePostSent:
       const key1 = action.meta.requestId as string;
       return update(state, {
         status: { [key1]: { $set: action.status } }
       });
+    case ACTIONS.EntityPostClear:
     case ACTIONS.EdgePostClear:
       const key4 = action.meta.requestId as string;
       return update(state, {
@@ -18,12 +20,14 @@ export default (state = defaultState, action: Action) => {
         status: { $unset: [key4] },
         errors: { $unset: [key4] }
       });
+    case ACTIONS.EntityPostSuccess:
     case ACTIONS.EdgePostSuccess:
       const key2 = action.meta.requestId as string;
       return update(state, {
         data: { [key2]: { $set: action.payload } },
         status: { [key2]: { $set: action.status } }
       });
+    case ACTIONS.EntityPostError:
     case ACTIONS.EdgePostError:
       const key3 = action.meta.requestId as string;
       return update(state, {

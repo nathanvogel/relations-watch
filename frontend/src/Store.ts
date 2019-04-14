@@ -55,6 +55,7 @@ export interface RootStore {
     status: { [key: string]: Status };
   };
   requests: {
+    data: { [key: string]: any };
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };
   };

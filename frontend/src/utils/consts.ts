@@ -18,14 +18,21 @@ const RELATION_TYPES: RelationTypes = {
   COMMON_ACTIVITES: 110
 };
 
+type EntityType = number;
+type EntityTypes = {
+  [key: string]: EntityType;
+};
+
+const ENTITY_TYPES: EntityTypes = {
+  PHYSICAL_PERSON: 1,
+  MORAL_PERSON: 2,
+  EVENT: 10,
+  SPECIAL_GROUP: 100
+};
+
 export default {
   relCollectionName: "relations",
   entCollectionName: "entities",
-  ENTITY_TYPES: {
-    PHYSICAL_PERSON: 1,
-    MORAL_PERSON: 2,
-    EVENT: 10,
-    SPECIAL_GROUP: 100
-  },
+  ENTITY_TYPES,
   RELATION_TYPES
 };

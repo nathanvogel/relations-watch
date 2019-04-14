@@ -28,6 +28,24 @@ export interface Entity {
   name: string;
   type: number;
   imageId?: string;
+  linkWikipedia?: string;
+  linkCrunchbase?: string;
+  linkTwitter?: string;
+  linkFacebook?: string;
+  linkYoutube?: string;
+  linkWebsite?: string;
+}
+
+export interface EntityForUpload {
+  name: string;
+  type: number;
+  imageId?: string;
+  linkWikipedia?: string;
+  linkCrunchbase?: string;
+  linkTwitter?: string;
+  linkFacebook?: string;
+  linkYoutube?: string;
+  linkWebsite?: string;
 }
 
 export interface EntityPreview {

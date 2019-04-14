@@ -5,6 +5,7 @@ import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import SearchEntity from "./SearchEntity";
 import ROUTES from "../utils/ROUTES";
 import { Theme } from "../utils/media-styles";
+import Button from "./Button";
 
 const Bar = styled.nav`
   display: block;
@@ -49,6 +50,7 @@ class AppBar extends React.Component<RouteComponentProps> {
           <HomeLink to="/">Home</HomeLink>
           <ActionBar>
             <StyledSearch onChange={this.onSearch} />
+            <Button to={`/${ROUTES.add}/${ROUTES.entity}`}>+</Button>
           </ActionBar>
         </BarContent>
       </Bar>
