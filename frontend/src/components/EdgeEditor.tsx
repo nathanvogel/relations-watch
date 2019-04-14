@@ -84,6 +84,7 @@ type State = {
   type: number | undefined;
   amount: number;
   exactAmount: boolean;
+  sourceText: string;
   invertDirection: boolean;
 };
 
@@ -93,6 +94,7 @@ class RelationsScreen extends React.Component<Props> {
     type: undefined,
     amount: 0,
     exactAmount: false,
+    sourceText: "",
     invertDirection: false
   };
 
@@ -116,6 +118,10 @@ class RelationsScreen extends React.Component<Props> {
     this.setState({ amount: event.target.value });
   };
 
+  onSourceTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ sourceText: event.target.value });
+  };
+
   onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!this.state.type) return;
@@ -129,6 +135,7 @@ class RelationsScreen extends React.Component<Props> {
       type: this.state.type,
       amount: this.state.amount,
       exactAmount: this.state.exactAmount,
+      sourceText: this.state.sourceText,
       sources: []
     };
     this.props.postEdge(edge, this.props.editorId);
@@ -196,6 +203,14 @@ class RelationsScreen extends React.Component<Props> {
               type="checkbox"
               checked={this.state.exactAmount}
               onChange={this.onExactAmountChange}
+            />
+          </Label>
+          <Label>
+            Source:
+            <input
+              type="string"
+              value={this.state.sourceText}
+              onChange={this.onSourceTextChange}
             />
           </Label>
           <button type="submit">Save</button>

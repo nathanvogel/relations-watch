@@ -63,6 +63,7 @@ export interface Edge {
   amount?: number;
   exactAmount?: boolean;
   sources: Array<object>;
+  sourceText?: string;
 }
 
 export interface EdgePreview {
