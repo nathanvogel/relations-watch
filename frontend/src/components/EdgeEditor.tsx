@@ -1,10 +1,8 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import { RootStore } from "../Store";
-import ROUTES from "../utils/ROUTES";
 import { getRelationId, shouldLoad } from "../utils/utils";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
@@ -115,6 +113,7 @@ class EdgeEditor extends React.Component<Props> {
     // Render loading status and error.
     if (postStatus === Status.Ok) {
       // If we're successfully editing an edge, no need to show the confirmation
+      // TODO : Change, this is NOT a good React practice at all...
       if (edgeKey) {
         this.clearPostRequest(true);
         return null;

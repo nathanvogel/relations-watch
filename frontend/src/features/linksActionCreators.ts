@@ -35,7 +35,7 @@ export const loadLinks = (entityKey: string) => async (
 
 function actionLLRequest(entityKey: string): Action {
   return {
-    type: ACTIONS.LinksRequested,
+    type: ACTIONS.LinksLoadRequested,
     status: Status.Requested,
     meta: { entityKey }
   };
@@ -43,7 +43,7 @@ function actionLLRequest(entityKey: string): Action {
 
 function actionLLError(entityKey: string, error: ErrorPayload): Action {
   return {
-    type: ACTIONS.LinksError,
+    type: ACTIONS.LinksLoadError,
     status: Status.Error,
     meta: { entityKey, error }
   };
@@ -51,7 +51,7 @@ function actionLLError(entityKey: string, error: ErrorPayload): Action {
 
 function actionLLReceived(entityKey: string, payload: object): Action {
   return {
-    type: ACTIONS.LinksReceived,
+    type: ACTIONS.LinksLoadSuccess,
     payload,
     status: Status.Ok,
     meta: { entityKey }
@@ -96,7 +96,7 @@ export const clearPostRequest = (
 
 function actionRequest(requestId: string): Action {
   return {
-    type: ACTIONS.EdgePostSent,
+    type: ACTIONS.EdgeSaveSent,
     status: Status.Requested,
     meta: { requestId: requestId }
   };
@@ -104,7 +104,7 @@ function actionRequest(requestId: string): Action {
 
 function actionClearRequest(relationId: string, requestId: string): Action {
   return {
-    type: ACTIONS.EdgePostClear,
+    type: ACTIONS.EdgeSaveClear,
     status: Status.Clear,
     meta: { requestId, relationId }
   };
@@ -112,7 +112,7 @@ function actionClearRequest(relationId: string, requestId: string): Action {
 
 function actionError(requestId: string, error: ErrorPayload): Action {
   return {
-    type: ACTIONS.EdgePostError,
+    type: ACTIONS.EdgeSaveError,
     status: Status.Error,
     meta: { requestId: requestId, error: error }
   };
@@ -120,7 +120,7 @@ function actionError(requestId: string, error: ErrorPayload): Action {
 
 function actionReceived(requestId: string, payload: object): Action {
   return {
-    type: ACTIONS.EdgePostSuccess,
+    type: ACTIONS.EdgeSaveSuccess,
     payload,
     status: Status.Ok,
     meta: { requestId: requestId }

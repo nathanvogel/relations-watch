@@ -26,7 +26,7 @@ export const loadRelation = (entity1Key: string, entity2Key: string) => async (
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionLoadReceived(relationId, res.data));
+      dispatch(actionLoadSuccess(relationId, res.data));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
@@ -37,7 +37,7 @@ export const loadRelation = (entity1Key: string, entity2Key: string) => async (
 
 function actionLoadRequest(relationId: string): Action {
   return {
-    type: ACTIONS.RelationRequested,
+    type: ACTIONS.RelationLoadRequested,
     status: Status.Requested,
     meta: { relationId: relationId }
   };
@@ -45,15 +45,15 @@ function actionLoadRequest(relationId: string): Action {
 
 function actionLoadError(relationId: string, error: ErrorPayload): Action {
   return {
-    type: ACTIONS.RelationError,
+    type: ACTIONS.RelationLoadError,
     status: Status.Error,
     meta: { relationId: relationId, error: error }
   };
 }
 
-function actionLoadReceived(relationId: string, payload: object): Action {
+function actionLoadSuccess(relationId: string, payload: object): Action {
   return {
-    type: ACTIONS.RelationReceived,
+    type: ACTIONS.RelationLoadSuccess,
     payload,
     status: Status.Ok,
     meta: { relationId: relationId }
@@ -66,44 +66,44 @@ function actionLoadReceived(relationId: string, payload: object): Action {
 export const loadEdge = (edgeKey: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
-  dispatch(actionLoadEdgeRequest(edgeKey));
+  dispatch(actionEdgeLoadRequest(edgeKey));
   api
     .get(`/relations/${edgeKey}`)
     .then(res => {
       const potentialError = checkResponse(res);
       if (potentialError) {
-        dispatch(actionLoadEdgeError(edgeKey, potentialError));
+        dispatch(actionEdgeLoadError(edgeKey, potentialError));
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionLoadEdgeReceived(edgeKey, res.data));
+      dispatch(actionEdgeLoadSuccess(edgeKey, res.data));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
       console.error("Error getting edge ", edgeKey, errorPayload);
-      dispatch(actionLoadEdgeError(edgeKey, errorPayload));
+      dispatch(actionEdgeLoadError(edgeKey, errorPayload));
     });
 };
 
-function actionLoadEdgeRequest(edgeKey: string): Action {
+function actionEdgeLoadRequest(edgeKey: string): Action {
   return {
-    type: ACTIONS.EdgeRequested,
+    type: ACTIONS.EdgeLoadRequested,
     status: Status.Requested,
     meta: { edgeKey: edgeKey }
   };
 }
 
-function actionLoadEdgeError(edgeKey: string, error: ErrorPayload): Action {
+function actionEdgeLoadError(edgeKey: string, error: ErrorPayload): Action {
   return {
-    type: ACTIONS.EdgeError,
+    type: ACTIONS.EdgeLoadError,
     status: Status.Error,
     meta: { edgeKey: edgeKey, error: error }
   };
 }
 
-function actionLoadEdgeReceived(edgeKey: string, payload: object): Action {
+function actionEdgeLoadSuccess(edgeKey: string, payload: object): Action {
   return {
-    type: ACTIONS.EdgeReceived,
+    type: ACTIONS.EdgeLoadSuccess,
     payload,
     status: Status.Ok,
     meta: { edgeKey: edgeKey }
@@ -116,17 +116,17 @@ function actionLoadEdgeReceived(edgeKey: string, payload: object): Action {
 export const postEdge = (edge: Edge, requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
-  dispatch(actionRequest(requestId));
+  dispatch(actionSaveRequest(requestId));
   api
     .post(`/relations`, edge)
     .then(res => {
       const potentialError = checkResponse(res);
       if (potentialError) {
-        dispatch(actionError(requestId, potentialError));
+        dispatch(actionSaveError(requestId, potentialError));
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionReceived(requestId, res.data));
+      dispatch(actionSaveSuccess(requestId, res.data));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
@@ -135,25 +135,24 @@ export const postEdge = (edge: Edge, requestId: string) => async (
         requestId,
         errorPayload
       );
-      dispatch(actionError(requestId, errorPayload));
+      dispatch(actionSaveError(requestId, errorPayload));
     });
 };
 
 export const patchEdge = (edge: Edge, requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
-  dispatch(actionRequest(requestId));
-  console.log(edge);
+  dispatch(actionSaveRequest(requestId));
   api
     .patch(`/relations`, edge)
     .then(res => {
       const potentialError = checkResponse(res);
       if (potentialError) {
-        dispatch(actionError(requestId, potentialError));
+        dispatch(actionSaveError(requestId, potentialError));
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionReceived(requestId, res.data));
+      dispatch(actionSaveSuccess(requestId, res.data));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
@@ -162,43 +161,43 @@ export const patchEdge = (edge: Edge, requestId: string) => async (
         requestId,
         errorPayload
       );
-      dispatch(actionError(requestId, errorPayload));
+      dispatch(actionSaveError(requestId, errorPayload));
     });
 };
 
 export const clearPostRequest = (requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
-  dispatch(actionClearRequest(requestId));
+  dispatch(actionClearSaveRequest(requestId));
 };
 
-function actionRequest(requestId: string): Action {
+function actionSaveRequest(requestId: string): Action {
   return {
-    type: ACTIONS.EdgePostSent,
+    type: ACTIONS.EdgeSaveSent,
     status: Status.Requested,
     meta: { requestId: requestId }
   };
 }
 
-function actionClearRequest(requestId: string): Action {
+function actionClearSaveRequest(requestId: string): Action {
   return {
-    type: ACTIONS.EdgePostClear,
+    type: ACTIONS.EdgeSaveClear,
     status: Status.Clear,
     meta: { requestId }
   };
 }
 
-function actionError(requestId: string, error: ErrorPayload): Action {
+function actionSaveError(requestId: string, error: ErrorPayload): Action {
   return {
-    type: ACTIONS.EdgePostError,
+    type: ACTIONS.EdgeSaveError,
     status: Status.Error,
     meta: { requestId: requestId, error: error }
   };
 }
 
-function actionReceived(requestId: string, payload: object): Action {
+function actionSaveSuccess(requestId: string, payload: object): Action {
   return {
-    type: ACTIONS.EdgePostSuccess,
+    type: ACTIONS.EdgeSaveSuccess,
     payload,
     status: Status.Ok,
     meta: { requestId: requestId }

@@ -7,26 +7,26 @@ const defaultState = { data: {}, status: {}, errors: {} };
 
 export default (state = defaultState, action: Action) => {
   switch (action.type) {
-    case ACTIONS.EdgeRequested:
+    case ACTIONS.EdgeLoadRequested:
       const key1 = action.meta.edgeKey as string;
       return update(state, {
         status: { [key1]: { $set: action.status } }
       });
-    case ACTIONS.EdgeReceived:
+    case ACTIONS.EdgeLoadSuccess:
       const key2 = action.meta.edgeKey as string;
       const edge1 = getSimplifiedEdge(action.payload as Edge);
       return update(state, {
         data: { [key2]: { $set: edge1 } },
         status: { [key2]: { $set: action.status } }
       });
-    case ACTIONS.EdgeError:
+    case ACTIONS.EdgeLoadError:
       const key3 = action.meta.edgeKey as string;
       return update(state, {
         data: { [key3]: { $set: null } },
         status: { [key3]: { $set: action.status } },
         errors: { [key3]: { $set: action.meta.error } }
       });
-    case ACTIONS.EdgePostSuccess:
+    case ACTIONS.EdgeSaveSuccess:
       const key4 = action.payload._key as string;
       const edge2 = getSimplifiedEdge(action.payload as Edge);
       return update(state, {

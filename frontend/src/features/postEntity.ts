@@ -69,7 +69,7 @@ export const clearPostRequest = (requestId: string) => (dispatch: Dispatch) => {
 
 function actionRequest(requestId: string): Action {
   return {
-    type: ACTIONS.EntityPostSent,
+    type: ACTIONS.EntitySaveSent,
     status: Status.Requested,
     meta: { requestId: requestId }
   };
@@ -77,7 +77,7 @@ function actionRequest(requestId: string): Action {
 
 function actionClearRequest(requestId: string): Action {
   return {
-    type: ACTIONS.EntityPostClear,
+    type: ACTIONS.EntitySaveClear,
     status: Status.Clear,
     meta: { requestId }
   };
@@ -85,7 +85,7 @@ function actionClearRequest(requestId: string): Action {
 
 function actionError(requestId: string, error: ErrorPayload): Action {
   return {
-    type: ACTIONS.EntityPostError,
+    type: ACTIONS.EntitySaveError,
     status: Status.Error,
     meta: { requestId: requestId, error: error }
   };
@@ -93,7 +93,7 @@ function actionError(requestId: string, error: ErrorPayload): Action {
 
 function actionReceived(requestId: string, payload: object): Action {
   return {
-    type: ACTIONS.EntityPostSuccess,
+    type: ACTIONS.EntitySaveSuccess,
     payload,
     status: Status.Ok,
     meta: { requestId: requestId }

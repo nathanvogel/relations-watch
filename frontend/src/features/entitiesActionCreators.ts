@@ -31,7 +31,7 @@ export const loadEntity = (entityKey: string) => async (
 
 function actionRequest(entityKey: string): Action {
   return {
-    type: ACTIONS.EntityRequested,
+    type: ACTIONS.EntityLoadRequested,
     status: Status.Requested,
     meta: { entityKey: entityKey }
   };
@@ -39,7 +39,7 @@ function actionRequest(entityKey: string): Action {
 
 function actionError(entityKey: string, error: ErrorPayload): Action {
   return {
-    type: ACTIONS.EntityError,
+    type: ACTIONS.EntityLoadError,
     status: Status.Error,
     meta: { entityKey: entityKey, error: error }
   };
@@ -47,7 +47,7 @@ function actionError(entityKey: string, error: ErrorPayload): Action {
 
 function actionReceived(entityKey: string, payload: object): Action {
   return {
-    type: ACTIONS.EntityReceived,
+    type: ACTIONS.EntityLoadSuccess,
     payload,
     status: Status.Ok,
     meta: { entityKey: entityKey }

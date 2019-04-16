@@ -6,25 +6,25 @@ const defaultState = { datapreview: {}, data: {}, status: {}, errors: {} };
 
 export default (state = defaultState, action: Action) => {
   switch (action.type) {
-    case ACTIONS.EntityRequested:
+    case ACTIONS.EntityLoadRequested:
       const key1 = action.meta.entityKey as string;
       return update(state, {
         status: { [key1]: { $set: action.status } }
       });
-    case ACTIONS.EntityReceived:
+    case ACTIONS.EntityLoadSuccess:
       const key2 = action.meta.entityKey as string;
       return update(state, {
         data: { [key2]: { $set: action.payload } },
         status: { [key2]: { $set: action.status } }
       });
-    case ACTIONS.EntityError:
+    case ACTIONS.EntityLoadError:
       const key3 = action.meta.entityKey as string;
       return update(state, {
         data: { [key3]: { $set: null } },
         status: { [key3]: { $set: action.status } },
         errors: { [key3]: { $set: action.meta.error } }
       });
-    case ACTIONS.EntityPostSuccess:
+    case ACTIONS.EntitySaveSuccess:
       const key4 = action.payload._key as string;
       const fullEntity = action.payload as Entity;
       const entityPreview: EntityPreview = {
@@ -37,10 +37,10 @@ export default (state = defaultState, action: Action) => {
         data: { [key4]: { $set: action.payload } },
         status: { [key4]: { $set: action.status } }
       });
-    case ACTIONS.LinksReceived:
+    case ACTIONS.LinksLoadSuccess:
       if (!action.payload || !action.payload.vertices) {
         console.error(
-          "Invalid action (entitiesReducer): " + ACTIONS.LinksReceived
+          "Invalid action (entitiesReducer): " + ACTIONS.LinksLoadSuccess
         );
         return state;
       }

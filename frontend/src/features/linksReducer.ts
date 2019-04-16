@@ -33,7 +33,7 @@ export default (state = defaultState, action: Action) => {
     // When a new relation element is added, we get the new edge as a
     // confirmation back from the server, so we add it to the store at this
     // point.
-    case ACTIONS.EdgePostSuccess:
+    case ACTIONS.EdgeSaveSuccess:
       // Just invalidate to cause a refetch for now.
       const edge = getSimplifiedEdge(action.payload as Edge);
       return update(state, {
@@ -55,14 +55,14 @@ export default (state = defaultState, action: Action) => {
     //       bykey: { [edgePreview._key]: edgePreview }
     //     }
     //   });
-    case ACTIONS.LinksRequested:
+    case ACTIONS.LinksLoadRequested:
       const key1 = action.meta.entityKey as string;
       return update(state, {
         status: { [key1]: { $set: action.status } }
       });
-    case ACTIONS.LinksReceived:
+    case ACTIONS.LinksLoadSuccess:
       if (!action.payload || !action.payload.edges) {
-        console.error("Invalid action: " + ACTIONS.LinksReceived);
+        console.error("Invalid action: " + ACTIONS.LinksLoadSuccess);
         return state;
       }
       const edges = action.payload.edges as Array<EdgePreview>;
@@ -99,7 +99,7 @@ export default (state = defaultState, action: Action) => {
         status: { [entityKey]: { $set: action.status } },
         errors: { [entityKey]: { $set: action.meta.error } }
       });
-    case ACTIONS.LinksError:
+    case ACTIONS.LinksLoadError:
       const key3 = action.meta.relationId as string;
       return update(state, {
         data: { [key3]: { $set: null } },

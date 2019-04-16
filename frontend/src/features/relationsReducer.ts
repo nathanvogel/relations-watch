@@ -16,11 +16,11 @@ export default (state = defaultState, action: Action) => {
     // confirmation back from the server, so we add it to the store at this
     // point. The data is also separately saved under /requests/...
     // Note: this is also called when an edge is patched.
-    case ACTIONS.EdgePostSuccess:
+    case ACTIONS.EdgeSaveSuccess:
       const edge = getSimplifiedEdge(action.payload as Edge);
       const relationId = getRelationId(edge._from, edge._to);
       if (!relationId) {
-        console.error("Invalid Edge received on " + ACTIONS.EdgePostSuccess);
+        console.error("Invalid Edge received on " + ACTIONS.EdgeSaveSuccess);
         return state;
       }
 
@@ -38,12 +38,12 @@ export default (state = defaultState, action: Action) => {
         data: { [relationId]: { $push: [edge] } }
       });
     // Regular status/error/data actions.
-    case ACTIONS.RelationRequested:
+    case ACTIONS.RelationLoadRequested:
       const key1 = action.meta.relationId as string;
       return update(state, {
         status: { [key1]: { $set: action.status } }
       });
-    case ACTIONS.RelationReceived:
+    case ACTIONS.RelationLoadSuccess:
       const serverEdges = action.payload as Array<Edge>;
       const relation: Array<Edge> = [];
       for (let e of serverEdges) {
@@ -51,7 +51,7 @@ export default (state = defaultState, action: Action) => {
       }
       const relationId2 = action.meta.relationId;
       if (!relationId2) {
-        console.error("Invalid edges received on " + ACTIONS.RelationReceived);
+        console.error("Invalid edges received on " + ACTIONS.RelationLoadSuccess);
         return state;
       }
       return update(state, {
@@ -59,7 +59,7 @@ export default (state = defaultState, action: Action) => {
         status: { [relationId2]: { $set: action.status } },
         errors: { [relationId2]: { $set: action.meta.error } }
       });
-    case ACTIONS.RelationError:
+    case ACTIONS.RelationLoadError:
       const key3 = action.meta.relationId as string;
       return update(state, {
         data: { $unset: [key3] },
