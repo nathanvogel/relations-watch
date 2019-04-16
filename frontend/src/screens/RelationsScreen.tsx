@@ -70,7 +70,7 @@ class RelationsScreen extends React.Component<Props> {
 
   onSecondEntitySelected = (value: string) => {
     this.props.history.push(
-      `/${ROUTES.relation}/${ROUTES.add}/${this.props.entity1Key}/${value}`
+      `/${ROUTES.add}/${ROUTES.relation}/${this.props.entity1Key}/${value}`
     );
   };
 
@@ -91,8 +91,8 @@ class RelationsScreen extends React.Component<Props> {
             />
           ) : (
             <Button
-              to={`/${ROUTES.relation}/${
-                ROUTES.add
+              to={`/${ROUTES.add}/${
+                ROUTES.relation
               }/${entity1Key}/${entity2Key}`}
             >
               Add a relation element

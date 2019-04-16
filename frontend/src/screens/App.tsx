@@ -7,9 +7,9 @@ import HomeScreen from "./HomeScreen";
 import EntityScreen from "./EntityScreen";
 import RelationsScreen from "./RelationsScreen";
 import "./App.css";
-import ROUTES from "../utils/ROUTES";
+import RT from "../utils/ROUTES";
 import { Theme } from "../utils/media-styles";
-import EntityEditor from "../components/EntityEditor";
+import { CreateEntityScreen } from "./CreateEntityScreen";
 
 const MainContent = styled.main`
   width: calc(100% - ${Theme.MAIN_PADDING} - ${Theme.MAIN_PADDING});
@@ -28,37 +28,25 @@ class App extends Component {
         <MainContent>
           <Switch>
             <Route
-              path={`/${ROUTES.entity}/:entityKey?`}
+              path={`/${RT.entity}/:entityKey?`}
               render={props => (
                 <EntityScreen {...props} key={props.match.params.entityKey} />
               )}
             />
             <Route
-              path={`/${ROUTES.add}/${ROUTES.entity}`}
-              render={props => (
-                <EntityEditor
-                  {...props}
-                  entityKey={props.match.params.entityKey}
-                />
-              )}
+              path={`/${RT.add}/${RT.entity}`}
+              component={CreateEntityScreen}
             />
             <Route
-              path={`/${ROUTES.edit}/${ROUTES.entity}/:entityKey?`}
-              render={props => (
-                <EntityEditor
-                  {...props}
-                  entityKey={props.match.params.entityKey}
-                />
-              )}
+              path={`/${RT.edit}/${RT.entity}/:entityKey?`}
+              component={CreateEntityScreen}
             />
             <Route
-              path={`/${ROUTES.relation}/${
-                ROUTES.add
-              }/:entity1Key?/:entity2Key?`}
+              path={`/${RT.add}/${RT.relation}/:entity1Key?/:entity2Key?`}
               render={props => <RelationsScreen {...props} add={true} />}
             />
             <Route
-              path={`/${ROUTES.relation}/:entity1Key?/:entity2Key?`}
+              path={`/${RT.relation}/:entity1Key?/:entity2Key?`}
               render={props => <RelationsScreen {...props} add={false} />}
             />
             <Route component={HomeScreen} />

@@ -122,7 +122,7 @@ class EdgeEditor extends React.Component<Props> {
           </Link>
         </Content>
       );
-    // TODO : watch out for the inversion of the sens of _from _to
+
     return (
       <Content>
         <EdgeForm

@@ -102,7 +102,7 @@ class EntityScreen extends Component<Props> {
           <p>No relations to show</p>
         )}
         <Button
-          to={`/${ROUTES.relation}/${ROUTES.add}/${this.props.entityKey}`}
+          to={`/${ROUTES.add}/${ROUTES.relation}/${this.props.entityKey}`}
         >
           New relation
         </Button>
