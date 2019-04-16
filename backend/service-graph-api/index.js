@@ -227,7 +227,27 @@ router
     "The updated objects, with their meta-information."
   )
   .summary("Updates (merges) relation(s)")
-  .description("Updates (merges) on or many edges.");
+  .description("Updates (merges) one or many edges.");
+
+router
+  .delete("/relations/:key", function(req, res) {
+    try {
+      const oldDocument = relColl.remove(req.pathParams.key);
+      res.send(oldDocument);
+    } catch (e) {
+      if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
+        throw e;
+      }
+      res.throw(404, "The relation does not exist", e);
+    }
+  })
+  .pathParam("key", joi.string().required(), "Key of the edge.")
+  .response(
+    joi.object().required(),
+    "Metadata of the edge stored in the collection."
+  )
+  .summary("Delete a relation")
+  .description("Delete an edge.");
 
 // GET a relation
 router
