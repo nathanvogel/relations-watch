@@ -42,7 +42,6 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   return {
     entity1Key,
     entity2Key,
-    relationId,
     relations,
     relationsStatus,
     relationsError
@@ -70,7 +69,6 @@ class RelationsScreen extends React.Component<Props> {
 
   render() {
     const { relations, relationsStatus, relationsError } = this.props;
-    const { entity1Key, entity2Key } = this.props;
 
     // Render loading status and error.
     if (relationsStatus !== Status.Ok)

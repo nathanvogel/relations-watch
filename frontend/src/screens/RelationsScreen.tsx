@@ -6,7 +6,6 @@ import cuid from "cuid";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
-import { getRelationId } from "../utils/utils";
 import { media } from "../utils/media-styles";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
@@ -48,13 +47,11 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const entity1Key = params.entity1Key;
   const entity2Key = params.entity2Key;
   const add = props.add;
-  const relationId = getRelationId(entity1Key, entity2Key);
 
   return {
     entity1Key,
     entity2Key,
     add,
-    relationId,
     history: props.history
   };
 };

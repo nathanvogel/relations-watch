@@ -3,14 +3,22 @@ import { EdgePreview, Edge, CommonEdge } from "./types";
 // CONVENTION:
 // - relationId is the alphabetically sorted combination of both entities
 // - edgeKey is the _key of this relation in the database.
+
+/**
+ * Generates the alphabetically sorted combination of both entities
+ * It is only for local use in Redux, not communication with the server!
+ * @param  entity1Key Key 1
+ * @param  entity2Key Key 2
+ * @return
+ */
 export function getRelationId(
   entity1Key?: string,
   entity2Key?: string
 ): string | null {
   return entity1Key && entity2Key
     ? entity1Key > entity2Key
-      ? entity1Key + entity2Key
-      : entity2Key + entity1Key
+      ? entity1Key + "_" + entity2Key
+      : entity2Key + "_" + entity1Key
     : null;
 }
 

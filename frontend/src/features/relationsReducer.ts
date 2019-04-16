@@ -1,7 +1,7 @@
 import ACTIONS from "../utils/ACTIONS";
 import { Action, Edge, Relation } from "../utils/types";
 import update from "immutability-helper";
-import { getRelationId } from "../utils/utils";
+import { getRelationId, simplifyEdge } from "../utils/utils";
 
 const defaultState = { data: {}, status: {}, errors: {} };
 
@@ -11,9 +11,7 @@ export default (state = defaultState, action: Action) => {
     // confirmation back from the server, so we add it to the store at this
     // point. The data is also separately saved under /requests/...
     case ACTIONS.EdgePostSuccess:
-      const edge = action.payload as Edge;
-      edge._from = edge._from.replace("entities/", "");
-      edge._to = edge._to.replace("entities/", "");
+      const edge = simplifyEdge(action.payload as Edge);
       const relationId = getRelationId(edge._from, edge._to);
       if (!relationId) {
         console.error("Invalid Edge received on " + ACTIONS.EdgePostSuccess);
