@@ -19,6 +19,7 @@ import { Edge, Status } from "../utils/types";
 import MetaPostStatus from "./MetaPostStatus";
 import Meta from "./Meta";
 import EdgeForm from "./EdgeForm";
+import Button from "./Button";
 
 const Content = styled.div`
   display: block;
@@ -93,14 +94,13 @@ class EdgeEditor extends React.Component<Props> {
     }
   };
 
-  clearPostRequest = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  clearPostRequest = (doDismiss: boolean) => {
     this.props.clearPostRequest(this.props.editorId);
-    if (this.props.dismiss) this.props.dismiss();
+    if (doDismiss && this.props.dismiss) this.props.dismiss();
   };
 
   render() {
     const { entity1Key, entity2Key } = this.props;
-    const relationRoute = `/${ROUTES.relation}/${entity1Key}/${entity2Key}`;
     const { postStatus, postError } = this.props;
     const { edgeKey, edge, edgeStatus, edgeError } = this.props;
 
@@ -113,15 +113,21 @@ class EdgeEditor extends React.Component<Props> {
       );
 
     // Render loading status and error.
-    if (postStatus === Status.Ok)
+    if (postStatus === Status.Ok) {
+      // If we're successfully editing an edge, no need to show the confirmation
+      if (edgeKey) {
+        this.clearPostRequest(true);
+        return null;
+      }
+      // If we're adding an edge: show a confirmation + offer back/new choice
       return (
         <Content>
           <p>Saved!</p>
-          <Link onClick={this.clearPostRequest} to={relationRoute}>
-            Ok
-          </Link>
+          <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
+          <Button onClick={this.clearPostRequest.bind(this, false)}>New</Button>
         </Content>
       );
+    }
 
     return (
       <Content>
@@ -133,7 +139,6 @@ class EdgeEditor extends React.Component<Props> {
           onFormSubmit={this.onFormSubmit}
           disabled={postStatus === Status.Requested}
         />
-        {/* <Button onClick={this.props.dismiss}>Cancel</Button> */}
         <MetaPostStatus status={postStatus} error={postError} />
       </Content>
     );

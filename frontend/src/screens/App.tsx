@@ -42,12 +42,14 @@ class App extends Component {
               component={CreateEntityScreen}
             />
             <Route
-              path={`/${RT.add}/${RT.relation}/:entity1Key?/:entity2Key?`}
-              render={props => <RelationsScreen {...props} add={true} />}
-            />
-            <Route
               path={`/${RT.relation}/:entity1Key?/:entity2Key?`}
-              render={props => <RelationsScreen {...props} add={false} />}
+              render={props => (
+                <RelationsScreen
+                  {...props}
+                  entity1Key={props.match.params.entity1Key}
+                  entity2Key={props.match.params.entity2Key}
+                />
+              )}
             />
             <Route component={HomeScreen} />
           </Switch>

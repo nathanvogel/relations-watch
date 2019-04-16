@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, withRouter } from "react-router";
 import { bindActionCreators, Dispatch } from "redux";
 import styled from "styled-components";
 import cuid from "cuid";
@@ -14,6 +14,7 @@ import SearchEntity from "../components/SearchEntity";
 import RelationEdgesList from "../components/RelationEdgesList";
 import EdgeEditor from "../components/EdgeEditor";
 import Button from "../components/Button";
+import { emptyOrRealKey, keyForUrl } from "../utils/utils";
 
 const Content = styled.div`
   display: flex;
@@ -29,89 +30,105 @@ const RelationsColumn = styled.div`
   padding-right: 32px;
 `;
 
-interface RelationMatch {
-  entity1Key: string;
+type OwnProps = {
+  entity1Key?: string;
   entity2Key?: string;
-  add: boolean;
-}
-
-type OwnProps = RouteComponentProps & {
-  add: boolean;
 };
 
-type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
-
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const params = props.match.params as RelationMatch;
-  const entity1Key = params.entity1Key;
-  const entity2Key = params.entity2Key;
-  const add = props.add;
+  const { entity1Key, entity2Key } = props;
+  const realKey1 = emptyOrRealKey(entity1Key);
+  const realKey2 = emptyOrRealKey(entity2Key);
+  const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
 
   return {
     entity1Key,
     entity2Key,
-    add,
-    history: props.history
+    realKey1,
+    realKey2,
+    hasBothSelection
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators({}, dispatch);
 
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps> &
+  RouteComponentProps;
+
 type State = {
-  edgeEditorId: string;
+  addEdgeEditorId: string;
+  adding: boolean;
 };
 
 class RelationsScreen extends React.Component<Props> {
   readonly state: State = {
-    edgeEditorId: cuid.slug()
+    addEdgeEditorId: cuid.slug(),
+    adding: false
   };
 
-  onSecondEntitySelected = (value: string) => {
-    this.props.history.push(
-      `/${ROUTES.add}/${ROUTES.relation}/${this.props.entity1Key}/${value}`
-    );
+  onAddClick = () => {
+    this.setState({ adding: true });
+  };
+  onCancelAddClick = () => {
+    this.setState({ adding: false });
+  };
+
+  onEntity1Selected = (entity1Key: string) => {
+    const k1 = keyForUrl(entity1Key);
+    const k2 = keyForUrl(this.props.entity2Key);
+    this.props.history.push(`/${ROUTES.relation}/${k1}/${k2}`);
+  };
+
+  onEntity2Selected = (entity2Key: string) => {
+    const k1 = keyForUrl(this.props.entity1Key);
+    const k2 = keyForUrl(entity2Key);
+    this.props.history.push(`/${ROUTES.relation}/${k1}/${k2}`);
   };
 
   render() {
     const { entity1Key, entity2Key } = this.props;
+    const { realKey1, realKey2, hasBothSelection } = this.props;
 
     return (
       <Content>
         <EntityColumn>
-          <EntityDetails entityKey={entity1Key} />
+          {realKey1 ? (
+            <EntityDetails entityKey={realKey1} />
+          ) : (
+            <SearchEntity onChange={this.onEntity1Selected} />
+          )}
         </EntityColumn>
         <RelationsColumn>
-          {this.props.add && entity2Key ? (
-            <EdgeEditor
-              entity1Key={entity1Key}
-              entity2Key={entity2Key}
-              editorId={this.state.edgeEditorId}
-            />
-          ) : (
-            <Button
-              to={`/${ROUTES.add}/${
-                ROUTES.relation
-              }/${entity1Key}/${entity2Key}`}
-            >
-              Add a relation element
-            </Button>
-          )}
-          {entity2Key ? (
+          {hasBothSelection &&
+            (this.state.adding ? (
+              <React.Fragment>
+                <EdgeEditor
+                  entity1Key={realKey1}
+                  entity2Key={realKey2}
+                  editorId={this.state.addEdgeEditorId}
+                  dismiss={this.onCancelAddClick}
+                />
+                <Button onClick={this.onCancelAddClick}>Cancel</Button>
+              </React.Fragment>
+            ) : (
+              <Button onClick={this.onAddClick}>Add a relation element</Button>
+            ))}
+          {hasBothSelection ? (
             <RelationEdgesList
-              entity1Key={entity1Key}
-              entity2Key={entity2Key}
+              entity1Key={entity1Key as string}
+              entity2Key={entity2Key as string}
             />
           ) : (
             <p>Select another entity to show their relationships</p>
           )}
         </RelationsColumn>
         <EntityColumn>
-          {entity2Key ? (
-            <EntityDetails entityKey={entity2Key} />
+          {realKey2 ? (
+            <EntityDetails entityKey={realKey2} />
           ) : (
-            <SearchEntity onChange={this.onSecondEntitySelected} />
+            <SearchEntity onChange={this.onEntity2Selected} />
           )}
         </EntityColumn>
       </Content>
@@ -119,7 +136,9 @@ class RelationsScreen extends React.Component<Props> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RelationsScreen);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(RelationsScreen)
+);

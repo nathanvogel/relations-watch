@@ -13,6 +13,7 @@ import Meta from "../components/Meta";
 import { Status } from "../utils/types";
 import { loadLinks } from "../features/linksActionCreators";
 import LinkedEntityPreview from "../components/LinkedEntityPreview";
+import CONSTS from "../utils/consts";
 
 const Content = styled.div``;
 
@@ -101,9 +102,7 @@ class EntityScreen extends Component<Props> {
         ) : (
           <p>No relations to show</p>
         )}
-        <Button
-          to={`/${ROUTES.add}/${ROUTES.relation}/${this.props.entityKey}`}
-        >
+        <Button to={`/${ROUTES.relation}/${entityKey}/${CONSTS.EMPTY_KEY}`}>
           New relation
         </Button>
       </Content>

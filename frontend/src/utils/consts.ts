@@ -32,9 +32,12 @@ const ENTITY_TYPES: EntityTypes = {
   SPECIAL_GROUP: 100
 };
 
-export default {
+const CONSTS = {
   relCollectionName: "relations",
   entCollectionName: "entities",
+  EMPTY_KEY: "_",
   ENTITY_TYPES,
   RELATION_TYPES
 };
+
+export default CONSTS;

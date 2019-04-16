@@ -1,5 +1,7 @@
-import { EdgePreview, Edge, CommonEdge, Status } from "./types";
 import update from "immutability-helper";
+
+import { EdgePreview, Edge, CommonEdge, Status } from "./types";
+import CONSTS from "./consts";
 
 // CONVENTION:
 // - relationId is the alphabetically sorted combination of both entities
@@ -78,4 +80,15 @@ export function getEdgePreview(edge: Edge): EdgePreview {
  */
 export function shouldLoad(status: Status | undefined | null) {
   return Boolean(!status || status === Status.Error);
+}
+
+export function emptyOrRealKey(key?: string): string {
+  if (key === CONSTS.EMPTY_KEY) return "";
+  else if (key) return key;
+  else return "";
+}
+
+export function keyForUrl(key?: string): string {
+  if (key) return key;
+  return CONSTS.EMPTY_KEY;
 }
