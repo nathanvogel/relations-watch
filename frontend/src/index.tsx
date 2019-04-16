@@ -5,6 +5,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 // Data
 import { Provider } from "react-redux";
 import Store from "./Store"; // Use a Maj to let CRA's typescript find it.
+// Styles
+import "normalize.css";
 // My files
 import "./index.css";
 import App from "./screens/App";

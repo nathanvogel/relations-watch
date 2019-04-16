@@ -14,6 +14,7 @@
     "axios": "^0.18.0",
     "cuid": "^2.1.6",
     "immutability-helper": "^3.0.0",
+    "normalize.css": "^8.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^6.0.1",
