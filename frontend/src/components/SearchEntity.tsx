@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import * as React from "react";
 import AsyncSelect from "react-select/lib/Async";
+// import AsyncCreatable from "react-select/lib/AsyncCreatable";
 import api from "../utils/api";
 
 export interface Suggestion {
@@ -56,6 +57,8 @@ const StyledSelect = styled(AsyncSelect)`
 
 export interface Props {
   onChange?: (value: string) => void;
+  onInputChange?: (value: string) => void;
+  inputValue?: string;
   className?: string;
 }
 
@@ -63,6 +66,14 @@ export interface Props {
 class SearchEntity extends React.Component<Props, object> {
   onChange = (object: any) => {
     if (this.props.onChange) this.props.onChange(object.value);
+  };
+
+  onInputChange = (text: any, a: any) => {
+    const action: string = a.action;
+    if (action === "menu-close" || action === "input-blur") return;
+    else if (this.props.onInputChange) {
+      this.props.onInputChange(text);
+    }
   };
 
   render() {
@@ -73,6 +84,10 @@ class SearchEntity extends React.Component<Props, object> {
         defaultOptions
         classNamePrefix="rs"
         onChange={this.onChange}
+        onInputChange={this.onInputChange}
+        inputValue={
+          this.props.onInputChange ? this.props.inputValue : undefined
+        }
         noOptionsMessage={(d: ReactSelectInputValue) => {
           return d.inputValue && d.inputValue.length > 1
             ? "No corresponding person"

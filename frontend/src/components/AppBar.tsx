@@ -37,7 +37,19 @@ const StyledSearch = styled(SearchEntity)`
   max-width: 100px;
 `;
 
+type State = {
+  searchValue: string;
+};
+
 class AppBar extends React.Component<RouteComponentProps> {
+  readonly state: State = {
+    searchValue: ""
+  };
+
+  onInputChange = (value: string) => {
+    this.setState({ searchValue: value });
+  };
+
   onSearch = (entityKey: string) => {
     const url = `/${ROUTES.entity}/${entityKey}`;
     this.props.history.push(url);
@@ -49,7 +61,11 @@ class AppBar extends React.Component<RouteComponentProps> {
         <BarContent>
           <HomeLink to="/">Home</HomeLink>
           <ActionBar>
-            <StyledSearch onChange={this.onSearch} />
+            <StyledSearch
+              onChange={this.onSearch}
+              onInputChange={this.onInputChange}
+              inputValue={this.state.searchValue}
+            />
             <Button to={`/${ROUTES.add}/${ROUTES.entity}`}>+</Button>
           </ActionBar>
         </BarContent>
