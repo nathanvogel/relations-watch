@@ -1,5 +1,5 @@
 import ACTIONS from "../utils/ACTIONS";
-import { Action, EntityPreview } from "../utils/types";
+import { Action, EntityPreview, Entity } from "../utils/types";
 import update from "immutability-helper";
 
 const defaultState = { datapreview: {}, data: {}, status: {}, errors: {} };
@@ -23,6 +23,19 @@ export default (state = defaultState, action: Action) => {
         data: { [key3]: { $set: null } },
         status: { [key3]: { $set: action.status } },
         errors: { [key3]: { $set: action.meta.error } }
+      });
+    case ACTIONS.EntityPostSuccess:
+      const key4 = action.payload._key as string;
+      const fullEntity = action.payload as Entity;
+      const entityPreview: EntityPreview = {
+        _key: fullEntity._key,
+        name: fullEntity.name,
+        imageId: fullEntity.imageId
+      };
+      return update(state, {
+        datapreview: { [key4]: { $set: entityPreview } },
+        data: { [key4]: { $set: action.payload } },
+        status: { [key4]: { $set: action.status } }
       });
     case ACTIONS.LinksReceived:
       if (!action.payload || !action.payload.vertices) {

@@ -36,6 +36,33 @@ export const postEntity = (
     });
 };
 
+export const patchEntity = (
+  entity: EntityForUpload,
+  requestId: string
+) => async (dispatch: Dispatch): Promise<void> => {
+  dispatch(actionRequest(requestId));
+  api
+    .patch(`/entities`, entity)
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        dispatch(actionError(requestId, potentialError));
+        return;
+      }
+      // Everything is fine, we got the data, send it!
+      dispatch(actionReceived(requestId, res.data));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error(
+        `Error patching entity ${entity.name}`,
+        requestId,
+        errorPayload
+      );
+      dispatch(actionError(requestId, errorPayload));
+    });
+};
+
 export const clearPostRequest = (requestId: string) => (dispatch: Dispatch) => {
   dispatch(actionClearRequest(requestId));
 };

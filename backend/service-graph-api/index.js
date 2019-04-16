@@ -54,6 +54,11 @@ const relSchema = joi
     sources: joi.array().items(joi.string())
   });
 
+function prefixToFromWithCollectionName(doc) {
+  if (doc._to.indexOf("entities/") >= 0) doc._to = "entities/" + doc._to;
+  if (doc._from.indexOf("entities/") >= 0) doc._from = "entities/" + doc._from;
+}
+
 // POST a new entity
 router
   .post("/entities", function(req, res) {
@@ -77,8 +82,37 @@ router
       .try(joi.object().required(), joi.array().items(joi.object().required())),
     "Entity or entities stored in the collection."
   )
-  .summary("Store entity or entities")
-  .description("Store a single entity or multiple entities in the collection.");
+  .summary("Stores entity or entities")
+  .description(
+    "Stores a single entity or multiple entities in the collection."
+  );
+
+router
+  .patch("/entities", function(req, res) {
+    const multiple = Array.isArray(req.body);
+    const body = multiple ? req.body : [req.body];
+
+    let data = [];
+    for (var doc of body) {
+      const meta = entColl.update(doc._key, doc);
+      data.push(Object.assign(doc, meta));
+    }
+    res.send(multiple ? data : data[0]);
+  })
+  .body(
+    joi.alternatives().try(entSchema, joi.array().items(entSchema)),
+    "Entity or entities to patch in the collection."
+  )
+  .response(
+    joi
+      .alternatives()
+      .try(joi.object().required(), joi.array().items(joi.object().required())),
+    "Entity or entities stored in the collection."
+  )
+  .summary("Updates (merges) entity or entities")
+  .description(
+    "Updates (merges) a single entity or multiple entities in the collection."
+  );
 
 // GET an entity
 router
@@ -167,7 +201,33 @@ router
     "The new added objects, with their meta-information."
   )
   .summary("Creates one or many new relations")
-  .description("Link two entities in the database with a new edge.");
+  .description("Links two entities in the database with a new edge.");
+
+router
+  .patch("/relations", function(req, res) {
+    const multiple = Array.isArray(req.body);
+    const body = multiple ? req.body : [req.body];
+
+    let data = [];
+    for (var doc of body) {
+      prefixToFromWithCollectionName(doc);
+      const meta = relColl.update(doc, doc);
+      data.push(Object.assign(doc, meta));
+    }
+    res.send(multiple ? data : data[0]);
+  })
+  .body(
+    joi.alternatives().try(relSchema, joi.array().items(relSchema)),
+    "The updated relations objects"
+  )
+  .response(
+    joi
+      .alternatives()
+      .try(joi.object().required(), joi.array().items(joi.object().required())),
+    "The updated objects, with their meta-information."
+  )
+  .summary("Updates (merges) relation(s)")
+  .description("Updates (merges) on or many edges.");
 
 // GET a relation
 router

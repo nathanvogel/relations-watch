@@ -35,7 +35,21 @@ class App extends Component {
             />
             <Route
               path={`/${ROUTES.add}/${ROUTES.entity}`}
-              render={props => <EntityEditor {...props} add={true} />}
+              render={props => (
+                <EntityEditor
+                  {...props}
+                  entityKey={props.match.params.entityKey}
+                />
+              )}
+            />
+            <Route
+              path={`/${ROUTES.edit}/${ROUTES.entity}/:entityKey?`}
+              render={props => (
+                <EntityEditor
+                  {...props}
+                  entityKey={props.match.params.entityKey}
+                />
+              )}
             />
             <Route
               path={`/${ROUTES.relation}/${

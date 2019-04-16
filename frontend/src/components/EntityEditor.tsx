@@ -11,94 +11,82 @@ import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
 import CONSTS from "../utils/consts";
 import { ENTITY_TYPES } from "../strings/strings";
-import { postEntity, clearPostRequest } from "../features/postEntity";
+import {
+  postEntity,
+  clearPostRequest,
+  patchEntity
+} from "../features/postEntity";
+import { loadEntity } from "../features/entitiesActionCreators";
 import { Status, EntityForUpload } from "../utils/types";
+import EntityForm from "./EntityForm";
+import Meta from "./Meta";
 
 const Content = styled.div`
   display: block;
-  border: grey 1px dotted;
   padding: 12px;
 `;
 
-const Label = styled.label`
-  display: block;
-`;
-
 type OwnProps = {
-  add: boolean;
-};
+  entityKey?: string;
+} & RouteComponentProps;
 
 type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps> &
-  RouteComponentProps;
+  ReturnType<typeof mapDispatchToProps>;
 
+// It's hard to control when they're re-created through the React lifecycle
+// so the user just manually clears it when it's okay.
 const editorId = cuid.slug();
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const add = props.add;
+  const entityKey = props.entityKey;
+  // Get the entity (if any) from the Redux Store
+  const entity = entityKey ? state.entities.data[entityKey] : undefined;
+  const entityStatus = entityKey ? state.entities.status[entityKey] : undefined;
+  const entityError = entityKey ? state.entities.errors[entityKey] : undefined;
   // Get the POST request state from the Redux Store
   const data = state.requests.data[editorId];
-  const status = state.requests.status[editorId];
-  const error = state.requests.errors[editorId];
+  const postStatus = state.requests.status[editorId];
+  const postError = state.requests.errors[editorId];
 
   return {
     data,
-    add,
     editorId,
-    status,
-    error
+    postStatus,
+    postError,
+    entityKey,
+    entity,
+    entityStatus,
+    entityError,
+    history: props.history
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators(
     {
+      loadEntity,
       postEntity,
+      patchEntity,
       clearPostRequest
     },
     dispatch
   );
 
-type State = {
-  name: string;
-  type: number;
-  linkWikipedia?: string;
-  linkCrunchbase?: string;
-  linkTwitter?: string;
-  linkFacebook?: string;
-  linkYoutube?: string;
-  linkWebsite?: string;
-};
+class EntityEditor extends React.Component<Props> {
+  componentDidMount() {
+    if (
+      this.props.entityKey &&
+      (!this.props.entityStatus || this.props.entityStatus === Status.Error)
+    )
+      this.props.loadEntity(this.props.entityKey);
+  }
 
-class RelationsScreen extends React.Component<Props> {
-  readonly state: State = {
-    name: "",
-    type: CONSTS.ENTITY_TYPES.PHYSICAL_PERSON,
-    linkWikipedia: "",
-    linkCrunchbase: "",
-    linkTwitter: "",
-    linkFacebook: "",
-    linkYoutube: "",
-    linkWebsite: ""
-  };
-
-  onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ name: event.target.value });
-  };
-
-  onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ type: +event.target.value });
-  };
-
-  onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!this.state.name || this.state.name.length < 3) return;
-
-    const entity: EntityForUpload = {
-      name: this.state.name,
-      type: this.state.type
-    };
-    this.props.postEntity(entity, this.props.editorId);
+  onFormSubmit = (entity: EntityForUpload) => {
+    if (this.props.entityKey) {
+      this.props.patchEntity(entity, this.props.editorId);
+    } else {
+      this.props.postEntity(entity, this.props.editorId);
+    }
   };
 
   clearPostRequest = (_event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -109,11 +97,26 @@ class RelationsScreen extends React.Component<Props> {
     this.props.history.goBack();
   };
 
-  render() {
-    const { status, error } = this.props;
+  isEditMode = () => {
+    return Boolean(this.props.entityKey);
+  };
 
-    // Render loading status and error.
-    if (status === Status.Ok)
+  render() {
+    const { postStatus, postError } = this.props;
+    const { entityStatus, entityError } = this.props;
+
+    // First of all, we need to load the entity to edit (if any)
+    if (this.props.entityKey && entityStatus !== Status.Ok)
+      return (
+        <Content>
+          <Meta status={entityStatus} error={entityError} />
+        </Content>
+      );
+
+    console.log("Post status: ", postStatus);
+
+    // Once successfuly updated in the server, we let the user know about it.
+    if (postStatus === Status.Ok)
       return (
         <Content>
           <p>Saved!</p>
@@ -128,29 +131,14 @@ class RelationsScreen extends React.Component<Props> {
 
     return (
       <Content>
-        <form onSubmit={this.onSubmit}>
-          <div>
-            <Label>
-              Name
-              <input
-                type="text"
-                maxLength={200}
-                value={this.state.name}
-                onChange={this.onNameChange}
-              />
-            </Label>
-            <select value={this.state.type} onChange={this.onTypeChange}>
-              {Object.keys(CONSTS.ENTITY_TYPES).map(key => (
-                <option key={key} value={CONSTS.ENTITY_TYPES[key]}>
-                  {ENTITY_TYPES[key]}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button type="submit">Save</button>
-          {status === Status.Requested ? <p>Saving...</p> : null}
-          {status === Status.Error ? <p>Error: {error.eMessage}</p> : null}
-        </form>
+        <EntityForm
+          key={this.props.entityKey}
+          initialEntity={this.props.entity}
+          onFormSubmit={this.onFormSubmit}
+          disabled={postStatus === Status.Requested}
+        />
+        {postStatus === Status.Requested && <p>Saving...</p>}
+        {postStatus === Status.Error && <p>Error: {postError.eMessage}</p>}
       </Content>
     );
   }
@@ -160,5 +148,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(RelationsScreen)
+  )(EntityEditor)
 );

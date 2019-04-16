@@ -23,7 +23,7 @@ export enum Status {
   Error
 }
 
-export interface Entity {
+export type Entity = {
   _key: string;
   name: string;
   type: number;
@@ -34,7 +34,7 @@ export interface Entity {
   linkFacebook?: string;
   linkYoutube?: string;
   linkWebsite?: string;
-}
+};
 
 export interface EntityForUpload {
   name: string;

@@ -85,6 +85,9 @@ class EntityScreen extends Component<Props> {
     return (
       <Content>
         <PersonName>{entity.name}</PersonName>
+        <Button to={`/${ROUTES.edit}/${ROUTES.entity}/${this.props.entityKey}`}>
+          Edit
+        </Button>
         {linkedEntities ? (
           <ul>
             {linkedEntities.map(e => (
