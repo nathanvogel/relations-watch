@@ -61,11 +61,11 @@ class AppBar extends React.Component<RouteComponentProps> {
         <BarContent>
           <HomeLink to="/">Home</HomeLink>
           <ActionBar>
-            <StyledSearch
+            {/* <StyledSearch
               onChange={this.onSearch}
               onInputChange={this.onInputChange}
               inputValue={this.state.searchValue}
-            />
+            /> */}
             <Button to={`/${ROUTES.add}/${ROUTES.entity}`}>+</Button>
           </ActionBar>
         </BarContent>

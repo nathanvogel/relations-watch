@@ -56,7 +56,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
     dispatch
   );
 
-class RelationsScreen extends React.Component<Props> {
+class RelationEdgesList extends React.Component<Props> {
   componentDidMount() {
     this.props.loadRelation(this.props.entity1Key, this.props.entity2Key);
   }
@@ -99,5 +99,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(RelationsScreen)
+  )(RelationEdgesList)
 );

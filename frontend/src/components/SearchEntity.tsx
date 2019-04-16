@@ -88,9 +88,10 @@ class SearchEntity extends React.Component<Props, object> {
         inputValue={
           this.props.onInputChange ? this.props.inputValue : undefined
         }
+        autoFocus
         noOptionsMessage={(d: ReactSelectInputValue) => {
           return d.inputValue && d.inputValue.length > 1
-            ? "No corresponding person"
+            ? "Nothing found"
             : null;
         }}
         placeholder="Search..."

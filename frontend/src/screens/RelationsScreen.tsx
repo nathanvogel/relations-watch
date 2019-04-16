@@ -14,7 +14,7 @@ import SearchEntity from "../components/SearchEntity";
 import RelationEdgesList from "../components/RelationEdgesList";
 import EdgeEditor from "../components/EdgeEditor";
 import Button from "../components/Button";
-import { emptyOrRealKey, keyForUrl } from "../utils/utils";
+import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
 
 const Content = styled.div`
   display: flex;
@@ -40,12 +40,14 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const realKey1 = emptyOrRealKey(entity1Key);
   const realKey2 = emptyOrRealKey(entity2Key);
   const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
+  const relationId = getRelationId(realKey1, realKey2) as string;
 
   return {
     entity1Key,
     entity2Key,
     realKey1,
     realKey2,
+    relationId,
     hasBothSelection
   };
 };
@@ -95,7 +97,12 @@ class RelationsScreen extends React.Component<Props> {
       <Content>
         <EntityColumn>
           {realKey1 ? (
-            <EntityDetails entityKey={realKey1} />
+            <div>
+              <EntityDetails key={realKey1} entityKey={realKey1} />
+              <Button onClick={this.onEntity1Selected.bind(this, "")}>
+                Clear
+              </Button>
+            </div>
           ) : (
             <SearchEntity onChange={this.onEntity1Selected} />
           )}
@@ -117,8 +124,9 @@ class RelationsScreen extends React.Component<Props> {
             ))}
           {hasBothSelection ? (
             <RelationEdgesList
-              entity1Key={entity1Key as string}
-              entity2Key={entity2Key as string}
+              key={this.props.relationId}
+              entity1Key={realKey1}
+              entity2Key={realKey2}
             />
           ) : (
             <p>Select another entity to show their relationships</p>
@@ -126,7 +134,12 @@ class RelationsScreen extends React.Component<Props> {
         </RelationsColumn>
         <EntityColumn>
           {realKey2 ? (
-            <EntityDetails entityKey={realKey2} />
+            <div>
+              <EntityDetails key={realKey2} entityKey={realKey2} />
+              <Button onClick={this.onEntity2Selected.bind(this, "")}>
+                Clear
+              </Button>
+            </div>
           ) : (
             <SearchEntity onChange={this.onEntity2Selected} />
           )}

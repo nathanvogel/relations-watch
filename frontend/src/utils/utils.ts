@@ -89,6 +89,5 @@ export function emptyOrRealKey(key?: string): string {
 }
 
 export function keyForUrl(key?: string): string {
-  if (key) return key;
-  return CONSTS.EMPTY_KEY;
+  return key || CONSTS.EMPTY_KEY;
 }
