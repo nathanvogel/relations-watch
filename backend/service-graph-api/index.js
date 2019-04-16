@@ -52,11 +52,12 @@ const relSchema = joi
     exactAmount: joi.boolean(),
     sourceText: joi.string(),
     sources: joi.array().items(joi.string())
-  });
+  })
+  .unknown(); // allow additional attributes
 
 function prefixToFromWithCollectionName(doc) {
-  if (doc._to.indexOf("entities/") >= 0) doc._to = "entities/" + doc._to;
-  if (doc._from.indexOf("entities/") >= 0) doc._from = "entities/" + doc._from;
+  if (doc._to.indexOf("entities/") < 0) doc._to = "entities/" + doc._to;
+  if (doc._from.indexOf("entities/") < 0) doc._from = "entities/" + doc._from;
 }
 
 // POST a new entity
@@ -183,8 +184,7 @@ router
 
     let data = [];
     for (var doc of body) {
-      doc._to = "entities/" + doc._to;
-      doc._from = "entities/" + doc._from;
+      prefixToFromWithCollectionName(doc);
       const meta = relColl.save(doc);
       data.push(Object.assign(doc, meta));
     }
@@ -242,10 +242,10 @@ router
       res.throw(404, "The relation does not exist", e);
     }
   })
-  .pathParam("key", joi.string().required(), "Key of the relation.")
-  .response(joi.object().required(), "Entry stored in the collection.")
-  .summary("Retrieve a relation")
-  .description("Retrieves a relation from the collection by key.");
+  .pathParam("key", joi.string().required(), "Key of the edge.")
+  .response(joi.object().required(), "Edge stored in the collection.")
+  .summary("Retrieves an edge")
+  .description("Retrieves an edge from the collection by key.");
 
 // GET the list of relation IDs
 router

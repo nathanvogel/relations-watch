@@ -61,6 +61,56 @@ function actionLoadReceived(relationId: string, payload: object): Action {
 }
 
 /**
+ * Loads a single edge
+ */
+export const loadEdge = (edgeKey: string) => async (
+  dispatch: Dispatch
+): Promise<void> => {
+  dispatch(actionLoadEdgeRequest(edgeKey));
+  api
+    .get(`/relations/${edgeKey}`)
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        dispatch(actionLoadEdgeError(edgeKey, potentialError));
+        return;
+      }
+      // Everything is fine, we got the data, send it!
+      dispatch(actionLoadEdgeReceived(edgeKey, res.data));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error("Error getting edge ", edgeKey, errorPayload);
+      dispatch(actionLoadEdgeError(edgeKey, errorPayload));
+    });
+};
+
+function actionLoadEdgeRequest(edgeKey: string): Action {
+  return {
+    type: ACTIONS.EdgeRequested,
+    status: Status.Requested,
+    meta: { edgeKey: edgeKey }
+  };
+}
+
+function actionLoadEdgeError(edgeKey: string, error: ErrorPayload): Action {
+  return {
+    type: ACTIONS.EdgeError,
+    status: Status.Error,
+    meta: { edgeKey: edgeKey, error: error }
+  };
+}
+
+function actionLoadEdgeReceived(edgeKey: string, payload: object): Action {
+  return {
+    type: ACTIONS.EdgeReceived,
+    payload,
+    status: Status.Ok,
+    meta: { edgeKey: edgeKey }
+  };
+}
+
+/**
  * Given an new relation element, upload it as an edge to the database.
  */
 export const postEdge = (edge: Edge, requestId: string) => async (
@@ -89,11 +139,37 @@ export const postEdge = (edge: Edge, requestId: string) => async (
     });
 };
 
-export const clearPostRequest = (
-  relationId: string,
-  requestId: string
-) => async (dispatch: Dispatch): Promise<void> => {
-  dispatch(actionClearRequest(relationId, requestId));
+export const patchEdge = (edge: Edge, requestId: string) => async (
+  dispatch: Dispatch
+): Promise<void> => {
+  dispatch(actionRequest(requestId));
+  console.log(edge);
+  api
+    .patch(`/relations`, edge)
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        dispatch(actionError(requestId, potentialError));
+        return;
+      }
+      // Everything is fine, we got the data, send it!
+      dispatch(actionReceived(requestId, res.data));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error(
+        `Error patching edge from ${edge._from} to ${edge._to}`,
+        requestId,
+        errorPayload
+      );
+      dispatch(actionError(requestId, errorPayload));
+    });
+};
+
+export const clearPostRequest = (requestId: string) => async (
+  dispatch: Dispatch
+): Promise<void> => {
+  dispatch(actionClearRequest(requestId));
 };
 
 function actionRequest(requestId: string): Action {
@@ -104,11 +180,11 @@ function actionRequest(requestId: string): Action {
   };
 }
 
-function actionClearRequest(relationId: string, requestId: string): Action {
+function actionClearRequest(requestId: string): Action {
   return {
     type: ACTIONS.EdgePostClear,
     status: Status.Clear,
-    meta: { requestId, relationId }
+    meta: { requestId }
   };
 }
 

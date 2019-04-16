@@ -12,6 +12,7 @@ export type Action = {
     requestId?: string;
     relationId?: string;
     error?: ErrorPayload;
+    edgeKey?: string;
   };
   payload?: any;
 };

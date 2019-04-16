@@ -4,11 +4,10 @@ import {
   EdgePreview,
   Edge,
   ConnectedEntities,
-  CommonEdge,
   LinkedEntities
 } from "../utils/types";
 import update from "immutability-helper";
-import { simplifyEdge, getEdgePreview } from "../utils/utils";
+import { getSimplifiedEdge } from "../utils/utils";
 
 interface SubState {
   data: {
@@ -36,11 +35,11 @@ export default (state = defaultState, action: Action) => {
     // point.
     case ACTIONS.EdgePostSuccess:
       // Just invalidate to cause a refetch for now.
-      const edge = simplifyEdge(action.payload as Edge);
+      const edge = getSimplifiedEdge(action.payload as Edge);
       return update(state, {
         status: { $unset: [edge._from, edge._to] }
       });
-    //   const edge = simplifyEdge(action.payload as Edge);
+    //   const edge = getSimplifiedEdge(action.payload as Edge);
     //   const edgePreview = getEdgePreview(edge);
     //
     //   const hasFromState = Boolean(state.data.byentity[edge._from]);
@@ -71,9 +70,9 @@ export default (state = defaultState, action: Action) => {
       const entityKey = action.meta.entityKey as string;
       const listByEntity: { [key: string]: ConnectedEntities } = {};
       const linkedEntities: LinkedEntities = {};
-      for (let edge of edges) {
+      for (let e of edges) {
         // Pre-process the edge
-        edge = simplifyEdge(edge);
+        const edge = getSimplifiedEdge(e);
         // To be saved in /data/bykey
         edgesMap[edge._key] = edge;
         // To be saved in /data/byentity/:fromKey and

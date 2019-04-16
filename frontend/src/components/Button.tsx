@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 export interface Props {
   children: string;
   to?: string;
+  onClick?: (event: React.MouseEvent) => void;
 }
 
 const style = css`
@@ -31,7 +32,9 @@ function Button(props: Props) {
       {props.children}
     </StyledLink>
   ) : (
-    <StyledA role="button">{props.children}</StyledA>
+    <StyledA role="button" onClick={props.onClick}>
+      {props.children}
+    </StyledA>
   );
 }
 

@@ -1,4 +1,5 @@
-import { EdgePreview, Edge, CommonEdge } from "./types";
+import { EdgePreview, Edge, CommonEdge, Status } from "./types";
+import update from "immutability-helper";
 
 // CONVENTION:
 // - relationId is the alphabetically sorted combination of both entities
@@ -22,15 +23,40 @@ export function getRelationId(
     : null;
 }
 
+interface IHasFoo {
+  foo: string;
+}
+interface IHasBar {
+  bar?: number;
+}
+update<IHasFoo & IHasBar>({ foo: "FOO" }, { $merge: { bar: 42 } });
+
 /**
- * Mutate the Edge or EdgePreview to remove collection names.
- * @param  edge        The edge to be mutated.
- * @return             A ref to the same edge object, for convienience
+ * Convert the Edge or EdgePreview to remove collection names.
+ * @param  edge        The edge to be copied and processed
+ * @return             A new edge object, for convienience
  */
-export function simplifyEdge<E extends CommonEdge>(edge: E): E {
-  edge._from = edge._from.replace("entities/", "");
-  edge._to = edge._to.replace("entities/", "");
-  return edge;
+export function getSimplifiedEdge<E extends CommonEdge>(edge: E): E {
+  const newEdge = update<CommonEdge>(edge, {
+    $merge: {
+      _from: edge._from.replace("entities/", ""),
+      _to: edge._to.replace("entities/", "")
+    }
+  });
+  return newEdge as E;
+}
+
+/**
+ * Convert an array of edges to remove the collection names from _form and _to
+ * @param  serverEdges [description]
+ * @return             [description]
+ */
+export function getSimplifiedEdges(serverEdges: Array<Edge>) {
+  const relation: Array<Edge> = [];
+  for (let e of serverEdges) {
+    relation.push(getSimplifiedEdge(e));
+  }
+  return relation;
 }
 
 export function getEdgePreview(edge: Edge): EdgePreview {
@@ -42,4 +68,14 @@ export function getEdgePreview(edge: Edge): EdgePreview {
     _to: edge._to,
     type: edge.type
   };
+}
+
+/**
+ * Given a Status, determines if the data should be requested (again).
+ * This is intended for use in componentDidMount().
+ * @param  status The current status
+ * @return        boolean indicating wether to load
+ */
+export function shouldLoad(status: Status | undefined | null) {
+  return Boolean(!status || status === Status.Error);
 }

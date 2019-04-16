@@ -85,7 +85,6 @@ class RelationsScreen extends React.Component<Props> {
         <RelationsColumn>
           {this.props.add && entity2Key ? (
             <EdgeEditor
-              newEdge
               entity1Key={entity1Key}
               entity2Key={entity2Key}
               editorId={this.state.edgeEditorId}

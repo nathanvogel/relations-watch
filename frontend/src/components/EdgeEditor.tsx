@@ -5,42 +5,32 @@ import styled from "styled-components";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
-import { getRelationId } from "../utils/utils";
+import { getRelationId, shouldLoad } from "../utils/utils";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
-import CONSTS from "../utils/consts";
-import EntityName from "./EntityName";
-import { RELATION_TYPES } from "../strings/strings";
 import {
   postEdge,
-  clearPostRequest
+  clearPostRequest,
+  patchEdge,
+  loadEdge
 } from "../features/relationsActionCreators";
 import { Edge, Status } from "../utils/types";
-import Button from "./Button";
+import MetaPostStatus from "./MetaPostStatus";
+import Meta from "./Meta";
+import EdgeForm from "./EdgeForm";
 
 const Content = styled.div`
   display: block;
-  border: grey 1px dotted;
   padding: 12px;
-`;
-
-const TextArea = styled.textarea`
-  display: block;
-  width: 100%;
-  min-height: 3em;
-  box-sizing: border-box;
-`;
-
-const Label = styled.label`
-  display: block;
 `;
 
 type OwnProps = {
   entity1Key: string;
   entity2Key: string;
   editorId: string;
-  newEdge: boolean;
+  edgeKey?: string;
+  dismiss?: () => void;
 };
 
 type Props = ReturnType<typeof mapStateToProps> &
@@ -48,178 +38,103 @@ type Props = ReturnType<typeof mapStateToProps> &
   RouteComponentProps;
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const entity1Key = props.entity1Key;
-  const entity2Key = props.entity2Key;
-  const newEdge = props.newEdge;
-  const editorId = props.editorId;
+  const { entity1Key, entity2Key, editorId, edgeKey } = props;
+  if (!entity1Key)
+    console.warn("EdgeEditor: Invalid entity1Key parameter:", entity1Key);
+  if (!entity2Key)
+    console.warn("EdgeEditor: Invalid entity2Key parameter:", entity2Key);
   // It's safe to assume we'll get an ID because entity1Key and entity2Key
   // are not nullable.
-  const relationId = getRelationId(entity1Key, entity2Key) as string;
+  const relationId = getRelationId(entity1Key, entity2Key);
+  // Get the edge (if any) from the Redux Store
+  const edge = edgeKey ? state.edges.data[edgeKey] : undefined;
+  const edgeStatus = edgeKey ? state.edges.status[edgeKey] : undefined;
+  const edgeError = edgeKey ? state.edges.errors[edgeKey] : undefined;
   // Get the POST request state from the Redux Store
-  const status = state.requests.status[editorId];
-  const error = state.requests.errors[editorId];
+  const postData = state.requests.data[editorId];
+  const postStatus = state.requests.status[editorId];
+  const postError = state.requests.errors[editorId];
 
   return {
-    entity1Key,
-    entity2Key,
-    newEdge,
-    editorId,
+    ...props,
     relationId,
-    status,
-    error
+    postData,
+    postStatus,
+    postError,
+    edge,
+    edgeStatus,
+    edgeError
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators(
     {
+      loadEdge,
       postEdge,
+      patchEdge,
       clearPostRequest
     },
     dispatch
   );
 
-type State = {
-  text: string;
-  type: number | undefined;
-  amount: number;
-  exactAmount: boolean;
-  sourceText: string;
-  invertDirection: boolean;
-};
+class EdgeEditor extends React.Component<Props> {
+  componentDidMount() {
+    // If we're in "add new edge" mode and the inital edge isn't loaded:
+    if (this.props.edgeKey && shouldLoad(this.props.edgeStatus))
+      this.props.loadEdge(this.props.edgeKey);
+  }
 
-class RelationsScreen extends React.Component<Props> {
-  readonly state: State = {
-    text: "",
-    type: undefined,
-    amount: 0,
-    exactAmount: false,
-    sourceText: "",
-    invertDirection: false
-  };
-
-  onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.setState({ text: event.target.value });
-  };
-
-  onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ type: +event.target.value });
-  };
-
-  toggleInvert = (event: React.MouseEvent<HTMLButtonElement>) => {
-    this.setState({ invertDirection: !this.state.invertDirection });
-  };
-
-  onExactAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ exactAmount: event.target.checked });
-  };
-
-  onAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ amount: event.target.value });
-  };
-
-  onSourceTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ sourceText: event.target.value });
-  };
-
-  onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!this.state.type) return;
-
-    const { entity1Key, entity2Key } = this.props;
-    const invert = this.state.invertDirection;
-    const edge: Edge = {
-      _from: invert ? entity2Key : entity1Key,
-      _to: invert ? entity1Key : entity2Key,
-      text: this.state.text,
-      type: this.state.type,
-      amount: this.state.amount,
-      exactAmount: this.state.exactAmount,
-      sourceText: this.state.sourceText,
-      sources: []
-    };
-    this.props.postEdge(edge, this.props.editorId);
+  onFormSubmit = (edge: Edge) => {
+    if (this.props.edgeKey) {
+      this.props.patchEdge(edge, this.props.editorId);
+    } else {
+      this.props.postEdge(edge, this.props.editorId);
+    }
   };
 
   clearPostRequest = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    this.props.clearPostRequest(this.props.relationId, this.props.editorId);
+    this.props.clearPostRequest(this.props.editorId);
+    if (this.props.dismiss) this.props.dismiss();
   };
 
   render() {
     const { entity1Key, entity2Key } = this.props;
-    const invert = this.state.invertDirection;
-    const { status, error } = this.props;
+    const relationRoute = `/${ROUTES.relation}/${entity1Key}/${entity2Key}`;
+    const { postStatus, postError } = this.props;
+    const { edgeKey, edge, edgeStatus, edgeError } = this.props;
+
+    // First of all, we need to load the edge to edit (if any)
+    if (edgeKey && edgeStatus !== Status.Ok)
+      return (
+        <Content>
+          <Meta status={edgeStatus} error={edgeError} />
+        </Content>
+      );
 
     // Render loading status and error.
-    if (status === Status.Ok)
+    if (postStatus === Status.Ok)
       return (
         <Content>
           <p>Saved!</p>
-          <Link
-            onClick={this.clearPostRequest}
-            to={`/${ROUTES.relation}/${entity1Key}/${entity2Key}`}
-          >
+          <Link onClick={this.clearPostRequest} to={relationRoute}>
             Ok
           </Link>
         </Content>
       );
-
+    // TODO : watch out for the inversion of the sens of _from _to
     return (
       <Content>
-        <form onSubmit={this.onSubmit}>
-          <div>
-            <EntityName entityKey={invert ? entity2Key : entity1Key} />
-            <select value={this.state.type} onChange={this.onTypeChange}>
-              <option key="empty" />
-              {Object.keys(CONSTS.RELATION_TYPES).map(key => (
-                <option key={key} value={CONSTS.RELATION_TYPES[key]}>
-                  {RELATION_TYPES[key]}
-                </option>
-              ))}
-            </select>
-            <EntityName entityKey={invert ? entity1Key : entity2Key} />
-            <button type="button" onClick={this.toggleInvert}>
-              Invert direction
-            </button>
-          </div>
-          <Label>
-            Brief and neutral description of this information:
-            <TextArea
-              value={this.state.text}
-              onChange={this.onDescriptionChange}
-            />
-          </Label>
-          <Label>
-            Amount involved (in US$):
-            <input
-              type="number"
-              value={this.state.amount}
-              onChange={this.onAmountChange}
-            />
-          </Label>
-          <Label>
-            Exact amount known
-            <input
-              type="checkbox"
-              checked={this.state.exactAmount}
-              onChange={this.onExactAmountChange}
-            />
-          </Label>
-          <Label>
-            Source:
-            <input
-              type="string"
-              value={this.state.sourceText}
-              onChange={this.onSourceTextChange}
-            />
-          </Label>
-          <button type="submit">Save</button>
-          <Button to={`/${ROUTES.relation}/${entity1Key}/${entity2Key}`}>
-            Cancel
-          </Button>
-          {status === Status.Requested ? <p>Saving...</p> : null}
-          {status === Status.Error ? <p>Error: {error.eMessage}</p> : null}
-        </form>
+        <EdgeForm
+          entity1Key={entity1Key}
+          entity2Key={entity2Key}
+          key={edgeKey}
+          initialEdge={edge}
+          onFormSubmit={this.onFormSubmit}
+          disabled={postStatus === Status.Requested}
+        />
+        {/* <Button onClick={this.props.dismiss}>Cancel</Button> */}
+        <MetaPostStatus status={postStatus} error={postError} />
       </Content>
     );
   }
@@ -229,5 +144,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(RelationsScreen)
+  )(EdgeEditor)
 );

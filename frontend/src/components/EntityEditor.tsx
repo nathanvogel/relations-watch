@@ -9,8 +9,6 @@ import ROUTES from "../utils/ROUTES";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
-import CONSTS from "../utils/consts";
-import { ENTITY_TYPES } from "../strings/strings";
 import {
   postEntity,
   clearPostRequest,
@@ -20,6 +18,8 @@ import { loadEntity } from "../features/entitiesActionCreators";
 import { Status, EntityForUpload } from "../utils/types";
 import EntityForm from "./EntityForm";
 import Meta from "./Meta";
+import MetaPostStatus from "./MetaPostStatus";
+import { shouldLoad } from "../utils/utils";
 
 const Content = styled.div`
   display: block;
@@ -74,10 +74,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
 
 class EntityEditor extends React.Component<Props> {
   componentDidMount() {
-    if (
-      this.props.entityKey &&
-      (!this.props.entityStatus || this.props.entityStatus === Status.Error)
-    )
+    // If we're in "add new entity" mode and the inital entity isn't loaded:
+    if (this.props.entityKey && shouldLoad(this.props.entityStatus))
       this.props.loadEntity(this.props.entityKey);
   }
 
@@ -97,10 +95,6 @@ class EntityEditor extends React.Component<Props> {
     this.props.history.goBack();
   };
 
-  isEditMode = () => {
-    return Boolean(this.props.entityKey);
-  };
-
   render() {
     const { postStatus, postError } = this.props;
     const { entityStatus, entityError } = this.props;
@@ -112,8 +106,6 @@ class EntityEditor extends React.Component<Props> {
           <Meta status={entityStatus} error={entityError} />
         </Content>
       );
-
-    console.log("Post status: ", postStatus);
 
     // Once successfuly updated in the server, we let the user know about it.
     if (postStatus === Status.Ok)
@@ -137,8 +129,7 @@ class EntityEditor extends React.Component<Props> {
           onFormSubmit={this.onFormSubmit}
           disabled={postStatus === Status.Requested}
         />
-        {postStatus === Status.Requested && <p>Saving...</p>}
-        {postStatus === Status.Error && <p>Error: {postError.eMessage}</p>}
+        <MetaPostStatus status={postStatus} error={postError} />
       </Content>
     );
   }

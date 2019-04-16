@@ -9,6 +9,7 @@ import {
   Relation,
   ConnectedEntities,
   EdgePreview,
+  Edge,
   EntityPreview
 } from "./utils/types";
 
@@ -37,6 +38,11 @@ export interface RootStore {
   entities: {
     datapreview: { [key: string]: EntityPreview };
     data: { [key: string]: Entity };
+    errors: { [key: string]: ErrorPayload };
+    status: { [key: string]: Status };
+  };
+  edges: {
+    data: { [key: string]: Edge };
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };
   };
