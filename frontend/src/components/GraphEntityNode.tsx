@@ -47,14 +47,28 @@ class GraphEntityNode extends React.Component<OwnProps> {
           width={size}
           height={size}
         />
+        {/* Print a first time the text with a big stroke, it's a hack
+            to display a background the size of the text. */}
         <text
-          dx="15.5"
-          dy=".35em"
+          textAnchor="middle"
+          dy="1.0em"
+          fontSize={fontSize}
+          fontWeight={primary ? "bold" : "normal"}
+          stroke="#ffffff"
+          strokeWidth="0.6em"
+          opacity="0.8"
+          transform={`translate(${size / 2},${size})`}
+        >
+          {entity.name}
+        </text>
+        <text
+          textAnchor="middle"
+          dy="1.0em"
           fill="black"
           fontSize={fontSize}
           fontWeight={primary ? "bold" : "normal"}
           opacity="1"
-          transform={`translate(${-size / 2},${size + 8})`}
+          transform={`translate(${size / 2},${size})`}
         >
           {entity.name}
         </text>

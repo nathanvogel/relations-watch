@@ -87,3 +87,13 @@ export type ConnectedEntities = {
 export type LinkedEntities = {
   [key: string]: { [key: string]: number };
 };
+
+export type LinkRenderData = {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  angle: number;
+  entityKey: string;
+  types: number[];
+};

@@ -9,10 +9,11 @@ import { loadEntity } from "../features/entitiesLoadAC";
 import Button from "../components/Button";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/Meta";
-import { Status } from "../utils/types";
+import { Status, LinkRenderData } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import GraphEntityNode from "../components/GraphEntityNode";
 import CONSTS from "../utils/consts";
+import GraphLink from "./GraphLink";
 
 const Content = styled.div``;
 
@@ -34,6 +35,9 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const linkedEntities = state.links.data.byentity[baseEntityKey]
     ? state.links.data.byentity[baseEntityKey].entities
     : [];
+  const linkedEdges = state.links.data.byentity[baseEntityKey]
+    ? state.links.data.byentity[baseEntityKey].edges
+    : [];
   const linksStatus = state.links.status[baseEntityKey];
   const linksError = state.links.errors[baseEntityKey];
 
@@ -46,6 +50,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     status,
     error,
     linkedEntities,
+    linkedEdges,
     linksStatus,
     linksError,
     entityPreviews
@@ -87,9 +92,12 @@ class EntityGraph extends Component<Props> {
         </Content>
       );
 
+    // Calculate entity positions
     const linkedEntities = this.props.linkedEntities;
     const entityCount = linkedEntities.length;
     const nodeData = [];
+    // const nodeDataByEntity:{[key:string]:{}} = {};
+    const renderedLinks: { [key: string]: LinkRenderData } = {};
     const minDist = 150;
     const maxDist = W / 2 - minDist - 40;
     const maxEdgeCount = entityCount > 0 ? linkedEntities[0][1] : 1;
@@ -111,6 +119,31 @@ class EntityGraph extends Component<Props> {
         entity: this.props.entityPreviews[entityKey]
       };
       nodeData.push(datapoint);
+      // nodeDataByEntity[entityKey] = datapoint;
+      // Already to start to build edge data, we will complete it with
+      // types afterwards.
+      renderedLinks[entityKey] = {
+        x1: CX,
+        y1: CY,
+        x2: x,
+        y2: y,
+        angle,
+        entityKey,
+        types: []
+      };
+    }
+
+    const linkedEdges = this.props.linkedEdges;
+    const linkCount = linkedEdges.length;
+    for (let i = 0; i < linkCount; i++) {
+      const link = linkedEdges[i];
+      const other = link._from === baseEntityKey ? link._to : link._from;
+      const t = renderedLinks[other].types;
+      if (t.indexOf(link.type) < 0) t.push(link.type);
+    }
+    // Sort the types simply for consistency across relations.
+    for (let key in renderedLinks) {
+      renderedLinks[key].types.sort((a, b) => a - b);
     }
 
     return (
@@ -118,7 +151,10 @@ class EntityGraph extends Component<Props> {
         <Button to={`/${ROUTES.relation}/${baseEntityKey}/${CONSTS.EMPTY_KEY}`}>
           New relation
         </Button>
-        <GraphSVG width={W} height={H}>
+        <GraphSVG width={W} height={H} xmlns="http://www.w3.org/2000/svg">
+          {Object.keys(renderedLinks).map(entityKey => (
+            <GraphLink key={entityKey} data={renderedLinks[entityKey]} />
+          ))}
           {nodeData.map(datapoint => (
             <GraphEntityNode
               key={datapoint.entity._key}
