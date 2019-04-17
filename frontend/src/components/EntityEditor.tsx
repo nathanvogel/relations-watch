@@ -13,8 +13,8 @@ import {
   postEntity,
   clearPostRequest,
   patchEntity
-} from "../features/postEntity";
-import { loadEntity } from "../features/entitiesActionCreators";
+} from "../features/entitiesSaveAC";
+import { loadEntity } from "../features/entitiesLoadAC";
 import { Status, EntityForUpload } from "../utils/types";
 import EntityForm from "./EntityForm";
 import Meta from "./Meta";

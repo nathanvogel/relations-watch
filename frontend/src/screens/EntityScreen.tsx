@@ -6,12 +6,12 @@ import { bindActionCreators, Dispatch } from "redux";
 
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
-import { loadEntity } from "../features/entitiesActionCreators";
+import { loadEntity } from "../features/entitiesLoadAC";
 import Button from "../components/Button";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/Meta";
 import { Status } from "../utils/types";
-import { loadLinks } from "../features/linksActionCreators";
+import { loadEntityGraph } from "../features/linksLoadAC";
 import LinkedEntityPreview from "../components/LinkedEntityPreview";
 import CONSTS from "../utils/consts";
 
@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators(
     {
       loadEntity,
-      loadLinks
+      loadEntityGraph
     },
     dispatch
   );
@@ -68,7 +68,7 @@ class EntityScreen extends Component<Props> {
     if (!this.props.status || this.props.status === Status.Error)
       this.props.loadEntity(this.props.entityKey);
     if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
-      this.props.loadLinks(this.props.entityKey);
+      this.props.loadEntityGraph(this.props.entityKey);
   }
 
   render() {

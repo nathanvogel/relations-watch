@@ -90,7 +90,6 @@ class RelationsScreen extends React.Component<Props> {
   };
 
   render() {
-    const { entity1Key, entity2Key } = this.props;
     const { realKey1, realKey2, hasBothSelection } = this.props;
 
     return (

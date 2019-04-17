@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps, RouterProps, withRouter } from "react-router";
+import { RouteComponentProps, withRouter } from "react-router";
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -9,7 +9,7 @@ import { getRelationId } from "../utils/utils";
 import { Relation, Status } from "../utils/types";
 import { RootAction } from "../utils/ACTIONS";
 import EdgeDetails from "./EdgeDetails";
-import { loadRelation } from "../features/relationsActionCreators";
+import { loadRelation } from "../features/edgesLoadAC";
 import Meta from "./Meta";
 
 const Content = styled.div`
@@ -60,12 +60,6 @@ class RelationEdgesList extends React.Component<Props> {
   componentDidMount() {
     this.props.loadRelation(this.props.entity1Key, this.props.entity2Key);
   }
-
-  onSecondEntitySelected = (value: string) => {
-    // this.props.history.push(
-    //   `/${ROUTES.relation}/${ROUTES.add}/${this.props.entity1Key}/${value}`
-    // );
-  };
 
   render() {
     const { relations, relationsStatus, relationsError } = this.props;

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 
 import { RootStore } from "../Store";
-import { Status, EdgePreview } from "../utils/types";
 import { RootAction } from "../utils/ACTIONS";
 import ROUTES from "../utils/ROUTES";
 import { Link } from "react-router-dom";

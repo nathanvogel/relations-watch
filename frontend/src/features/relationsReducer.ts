@@ -1,5 +1,5 @@
 import ACTIONS from "../utils/ACTIONS";
-import { Action, Edge, Relation } from "../utils/types";
+import { Action, Edge } from "../utils/types";
 import update from "immutability-helper";
 import { getRelationId, getSimplifiedEdge } from "../utils/utils";
 
@@ -51,7 +51,9 @@ export default (state = defaultState, action: Action) => {
       }
       const relationId2 = action.meta.relationId;
       if (!relationId2) {
-        console.error("Invalid edges received on " + ACTIONS.RelationLoadSuccess);
+        console.error(
+          "Invalid edges received on " + ACTIONS.RelationLoadSuccess
+        );
         return state;
       }
       return update(state, {

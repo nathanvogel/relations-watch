@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import CONSTS from "../utils/consts";
 import { ENTITY_TYPES } from "../strings/strings";
-import { EntityForUpload, Entity } from "../utils/types";
+import { Entity } from "../utils/types";
 
 const Content = styled.div`
   display: block;

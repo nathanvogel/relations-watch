@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
-import { loadEntity } from "../features/entitiesActionCreators";
+import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/Meta";
 import { Status } from "../utils/types";
 

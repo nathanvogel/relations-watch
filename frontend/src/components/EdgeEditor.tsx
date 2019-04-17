@@ -7,12 +7,8 @@ import { getRelationId, shouldLoad } from "../utils/utils";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
-import {
-  postEdge,
-  clearPostRequest,
-  patchEdge,
-  loadEdge
-} from "../features/relationsActionCreators";
+import { postEdge, clearPostRequest, patchEdge } from "../features/edgesSaveAC";
+import { loadEdge } from "../features/edgesLoadAC";
 import { Edge, Status } from "../utils/types";
 import MetaPostStatus from "./MetaPostStatus";
 import Meta from "./Meta";
