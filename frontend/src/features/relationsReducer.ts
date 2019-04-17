@@ -37,6 +37,21 @@ export default (state = defaultState, action: Action) => {
       return update(state, {
         data: { [relationId]: { $push: [edge] } }
       });
+    case ACTIONS.EdgeDeleteSuccess:
+      const relationId3 = getRelationId(action.meta._from, action.meta._to);
+      if (!relationId3) {
+        console.error("Invalid Edge received on " + ACTIONS.EdgeDeleteSuccess);
+        return state;
+      }
+      // Finds the edge we're deleting.
+      const storeEdges2: Edge[] = state.data[relationId3] as Edge[];
+      var index = storeEdges2.findIndex(e => e._key === action.meta._key);
+      // If we couldn't find the edge, the store is already fine.
+      if (index < 0) return state;
+      // Otherwise, remove it from the array.
+      return update(state, {
+        data: { [relationId3]: { $splice: [[index, 1]] } }
+      });
     // Regular status/error/data actions.
     case ACTIONS.RelationLoadRequested:
       const key1 = action.meta.relationId as string;

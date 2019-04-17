@@ -33,6 +33,12 @@ export default (state = defaultState, action: Action) => {
         data: { [key4]: { $set: edge2 } },
         status: { [key4]: { $set: action.status } }
       });
+    case ACTIONS.EdgeDeleteSuccess:
+      const key5 = action.meta._key as string;
+      return update(state, {
+        data: { $unset: [key5] },
+        status: { $unset: [key5] }
+      });
     default:
       return state;
   }

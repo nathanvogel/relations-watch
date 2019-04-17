@@ -35,6 +35,12 @@ export default (state = defaultState, action: Action) => {
         status: { [key3]: { $set: action.status } },
         errors: { [key3]: { $set: action.meta.error } }
       });
+    case ACTIONS.EdgeDeleteSuccess:
+      const key5 = action.meta.requestId as string;
+      return update(state, {
+        data: { $unset: [key5] },
+        status: { [key5]: { $set: action.status } }
+      });
     default:
       return state;
   }

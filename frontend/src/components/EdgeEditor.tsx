@@ -7,7 +7,12 @@ import { getRelationId, shouldLoad } from "../utils/utils";
 import { bindActionCreators, Dispatch } from "redux";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
-import { postEdge, clearPostRequest, patchEdge } from "../features/edgesSaveAC";
+import {
+  postEdge,
+  clearPostRequest,
+  patchEdge,
+  deleteEdge
+} from "../features/edgesSaveAC";
 import { loadEdge } from "../features/edgesLoadAC";
 import { Edge, Status } from "../utils/types";
 import MetaPostStatus from "./MetaPostStatus";
@@ -68,6 +73,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
       loadEdge,
       postEdge,
       patchEdge,
+      deleteEdge,
       clearPostRequest
     },
     dispatch
@@ -86,6 +92,12 @@ class EdgeEditor extends React.Component<Props> {
     } else {
       this.props.postEdge(edge, this.props.editorId);
     }
+  };
+
+  onDelete = () => {
+    if (this.props.edge)
+      this.props.deleteEdge(this.props.edge, this.props.editorId);
+    else console.warn("Can't delete an edge that doesn't exist yet");
   };
 
   clearPostRequest = (doDismiss: boolean) => {
@@ -119,7 +131,11 @@ class EdgeEditor extends React.Component<Props> {
         <Content>
           <p>Saved!</p>
           <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
-          <Button onClick={this.clearPostRequest.bind(this, false)}>New</Button>
+          {edgeKey || (
+            <Button onClick={this.clearPostRequest.bind(this, false)}>
+              New
+            </Button>
+          )}
         </Content>
       );
     }
@@ -132,6 +148,7 @@ class EdgeEditor extends React.Component<Props> {
           key={edgeKey}
           initialEdge={edge}
           onFormSubmit={this.onFormSubmit}
+          onDelete={this.onDelete}
           disabled={postStatus === Status.Requested}
         />
         <MetaPostStatus status={postStatus} error={postError} />

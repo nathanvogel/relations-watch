@@ -15,6 +15,7 @@ const ACTIONS = {
   EdgeSaveClear: "EdgeSaveClear",
   EdgeSaveSuccess: "EdgeSaveSuccess",
   EdgeSaveError: "EdgeSaveError",
+  EdgeDeleteSuccess: "EdgeDeleteSuccess",
   EntitySaveSent: "EntitySaveSent",
   EntitySaveClear: "EntitySaveClear",
   EntitySaveSuccess: "EntitySaveSuccess",

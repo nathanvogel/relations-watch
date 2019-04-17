@@ -34,7 +34,7 @@ export default (state = defaultState, action: Action) => {
     // confirmation back from the server, so we add it to the store at this
     // point.
     case ACTIONS.EdgeSaveSuccess:
-      // Just invalidate to cause a refetch for now.
+      // Just invalidate to cause a refetch for now. // TODO: Avoid
       const edge = getSimplifiedEdge(action.payload as Edge);
       return update(state, {
         status: { $unset: [edge._from, edge._to] }
@@ -55,6 +55,11 @@ export default (state = defaultState, action: Action) => {
     //       bykey: { [edgePreview._key]: edgePreview }
     //     }
     //   });
+    case ACTIONS.EdgeDeleteSuccess:
+      // Just invalidate to cause a refetch for now. // TODO: Avoid
+      return update(state, {
+        status: { $unset: [action.meta._from, action.meta._to] }
+      });
     case ACTIONS.LinksLoadRequested:
       const key1 = action.meta.entityKey as string;
       return update(state, {

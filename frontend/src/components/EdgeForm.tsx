@@ -5,6 +5,7 @@ import CONSTS from "../utils/consts";
 import EntityName from "./EntityName";
 import { RELATION_TYPES } from "../strings/strings";
 import { Edge } from "../utils/types";
+import ButtonWithConfirmation from "./ButtonWithConfirmation";
 
 const Content = styled.div`
   display: block;
@@ -27,6 +28,7 @@ type Props = {
   entity1Key: string;
   entity2Key: string;
   onFormSubmit: (edge: Edge) => void;
+  onDelete: () => void;
   disabled: boolean;
   initialEdge: Edge;
 };
@@ -107,6 +109,7 @@ class EdgeForm extends React.Component<Props> {
   render() {
     const { entity1Key, entity2Key } = this.props;
     const invert = this.state.invertDirection;
+    const isNew = !Boolean(this.props.initialEdge._key);
 
     return (
       <Content>
@@ -158,6 +161,11 @@ class EdgeForm extends React.Component<Props> {
             />
           </Label>
           <button type="submit">Save</button>
+          {!isNew && (
+            <ButtonWithConfirmation onAction={this.props.onDelete}>
+              Delete
+            </ButtonWithConfirmation>
+          )}
         </form>
       </Content>
     );

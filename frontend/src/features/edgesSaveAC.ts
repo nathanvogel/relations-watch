@@ -61,6 +61,42 @@ export const patchEdge = (edge: Edge, requestId: string) => async (
     });
 };
 
+export const deleteEdge = (edge: Edge, requestId: string) => async (
+  dispatch: Dispatch
+): Promise<void> => {
+  // Check that we have an edgeKey
+  const edgeKey = edge._key;
+  const edgeFrom = edge._from;
+  const edgeTo = edge._to;
+  if (!edgeKey) {
+    dispatch(
+      actionSaveError(requestId, {
+        eData: null,
+        eMessage: "Invalid edge: can't delete without _key!",
+        eStatus: Status.Error
+      } as ErrorPayload)
+    );
+    return;
+  }
+  dispatch(actionSaveRequest(requestId));
+  api
+    .delete(`/relations/${edgeKey}`)
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        dispatch(actionSaveError(requestId, potentialError));
+        return;
+      }
+      // Everything is fine, we successfully deleted it.
+      dispatch(actionDeleteSuccess(requestId, edgeKey, edgeFrom, edgeTo));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error(`Error deleting edge ${edgeKey}`, requestId, errorPayload);
+      dispatch(actionSaveError(requestId, errorPayload));
+    });
+};
+
 export const clearPostRequest = (requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
@@ -97,5 +133,21 @@ function actionSaveSuccess(requestId: string, payload: object): Action {
     payload,
     status: Status.Ok,
     meta: { requestId: requestId }
+  };
+}
+
+// We can reuse the Save pipeline for the delete request, but this one
+// as such different effects (need to use $unset in reducers, etc.)
+// that I'd rather keep the action small and explicit.
+function actionDeleteSuccess(
+  requestId: string,
+  _key: string,
+  _from: string,
+  _to: string
+): Action {
+  return {
+    type: ACTIONS.EdgeDeleteSuccess,
+    status: Status.Ok,
+    meta: { requestId, _key, _from, _to }
   };
 }

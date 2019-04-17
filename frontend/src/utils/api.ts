@@ -27,8 +27,9 @@ export function checkError(error: AxiosError): ErrorPayload {
       eStatus: error.response.status
     };
   } else {
+    console.error(error);
     return {
-      eData: null,
+      eData: error,
       eMessage: error.message,
       eStatus: error.code ? error.code : "UNKNOWN"
     };
