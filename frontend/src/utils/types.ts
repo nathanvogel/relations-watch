@@ -13,6 +13,9 @@ export type Action = {
     relationId?: string;
     error?: ErrorPayload;
     edgeKey?: string;
+    _key?: string;
+    _from?: string;
+    _to?: string;
   };
   payload?: any;
 };
@@ -75,10 +78,6 @@ export interface EdgePreview {
 }
 
 export type CommonEdge = Edge | EdgePreview;
-
-export interface Relation {
-  [key: string]: Edge;
-}
 
 export type ConnectedEntities = {
   edges: Array<EdgePreview>;

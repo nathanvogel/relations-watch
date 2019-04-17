@@ -6,7 +6,6 @@ import {
   Status,
   ErrorPayload,
   Entity,
-  Relation,
   ConnectedEntities,
   EdgePreview,
   Edge,
@@ -47,7 +46,7 @@ export interface RootStore {
     status: { [key: string]: Status };
   };
   relations: {
-    data: { [key: string]: Relation };
+    data: { [key: string]: Edge[] };
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };
   };

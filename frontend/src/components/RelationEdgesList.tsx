@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { RootStore } from "../Store";
 import { getRelationId } from "../utils/utils";
-import { Relation, Status } from "../utils/types";
+import { Status, Edge } from "../utils/types";
 import { RootAction } from "../utils/ACTIONS";
 import EdgeDetails from "./EdgeDetails";
 import { loadRelation } from "../features/edgesLoadAC";
@@ -31,9 +31,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const relationId = getRelationId(entity1Key, entity2Key);
 
   // Get the entity from the Redux Store
-  const relations: Relation = relationId
-    ? state.relations.data[relationId]
-    : {};
+  const relations: Edge[] = relationId ? state.relations.data[relationId] : [];
   const relationsStatus = relationId
     ? state.relations.status[relationId]
     : null;
@@ -81,8 +79,8 @@ class RelationEdgesList extends React.Component<Props> {
 
     return (
       <Content>
-        {Object.keys(relations).map(key => (
-          <EdgeDetails key={key} edge={relations[key]} />
+        {relations.map(relation => (
+          <EdgeDetails key={relation._key} edge={relation} />
         ))}
       </Content>
     );
