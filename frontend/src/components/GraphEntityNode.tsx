@@ -2,8 +2,8 @@ import React from "react";
 import { EntityPreview } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { Link } from "react-router-dom";
-import DefaultPerson from "../assets/person-default_48.png";
-import PrimaryDefaultPerson from "../assets/person-default_56.png";
+import DefaultPerson from "../assets/physical_p_default_preview_48.png";
+import PrimaryDefaultPerson from "../assets/physical_p_default_preview_56.png";
 
 type OwnProps = {
   entity: EntityPreview;
@@ -51,8 +51,8 @@ class GraphEntityNode extends React.Component<OwnProps> {
           dx="15.5"
           dy=".35em"
           fill="black"
-          font-size={fontSize}
-          font-weight={primary ? "bold" : "normal"}
+          fontSize={fontSize}
+          fontWeight={primary ? "bold" : "normal"}
           opacity="1"
           transform={`translate(${-size / 2},${size + 8})`}
         >

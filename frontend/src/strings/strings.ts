@@ -18,8 +18,8 @@ export const RELATION_TYPES: MyStringRes = {
 };
 
 export const ENTITY_TYPES: MyStringRes = {
-  PHYSICAL_PERSON: "Personne physique",
-  MORAL_PERSON: "Personne morale",
-  EVENT: "Evénement",
-  SPECIAL_GROUP: "Groupe"
+  PHYSICAL_PERSON: "Natural person",
+  MORAL_PERSON: "Moral person",
+  EVENT: "Event",
+  SPECIAL_GROUP: "Group"
 };

@@ -12,15 +12,9 @@ import ROUTES from "../utils/ROUTES";
 import Meta from "../components/Meta";
 import { Status } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
-import LinkedEntityPreview from "../components/LinkedEntityPreview";
 import EntityGraph from "../components/EntityGraph";
 
 const Content = styled.div``;
-
-const PersonName = styled.h2`
-  text-align: left;
-  font-size: 24px;
-`;
 
 interface EntityMatch {
   entityKey: string;
@@ -73,7 +67,6 @@ class EntityScreen extends Component<Props> {
 
   render() {
     const { entity, status, error, entityKey } = this.props;
-    const linkedEntities = this.props.linkedEntities;
 
     // Render loading status and error.
     if (status !== Status.Ok)
@@ -85,23 +78,9 @@ class EntityScreen extends Component<Props> {
 
     return (
       <Content>
-        {/* <PersonName>{entity.name}</PersonName> */}
         <Button to={`/${ROUTES.edit}/${ROUTES.entity}/${this.props.entityKey}`}>
-          Edit
+          Edit {entity.name}
         </Button>
-        {/* {linkedEntities ? (
-          <ul>
-            {linkedEntities.map(e => (
-              <LinkedEntityPreview
-                key={e[0]}
-                entityKey={e[0]}
-                baseEntityKey={entityKey}
-              />
-            ))}
-          </ul>
-        ) : (
-          <p>No relations to show</p>
-        )} */}
         <EntityGraph entityKey={entityKey} />
       </Content>
     );

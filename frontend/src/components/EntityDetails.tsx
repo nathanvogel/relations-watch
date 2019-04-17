@@ -9,14 +9,25 @@ import { RootAction } from "../utils/ACTIONS";
 import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/Meta";
 import { Status } from "../utils/types";
+import DefaultPerson from "../assets/physical_p_default_full_512.png";
+import CONSTS from "../utils/consts";
 
 const Content = styled.div`
   width: 100%;
 `;
 
 const PersonName = styled.h5`
-  text-align: left;
-  font-size: 14px;
+  text-align: center;
+  font-size: 18px;
+  text-decoration: none;
+  color: #001144;
+`;
+
+const PersonImage = styled.img`
+  display: block;
+  max-width: 100%;
+  width: 180px;
+  margin: 0 auto;
 `;
 
 type OwnProps = { entityKey: string };
@@ -63,16 +74,13 @@ class EntityDetails extends Component<Props> {
     return (
       <Content>
         <Link to={`/e/${this.props.entityKey}`}>
+          <PersonImage src={DefaultPerson} />
           <PersonName>{entity.name}</PersonName>
         </Link>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          {entity.type === CONSTS.ENTITY_TYPES.PHYSICAL_PERSON
+            ? "Physical person"
+            : "Legal person"}
         </p>
       </Content>
     );

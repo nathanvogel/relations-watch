@@ -16,6 +16,11 @@ import CONSTS from "../utils/consts";
 
 const Content = styled.div``;
 
+const GraphSVG = styled.svg`
+  display: block;
+  margin: 0 auto;
+`;
+
 type OwnProps = {
   entityKey: string;
 };
@@ -110,9 +115,13 @@ class EntityGraph extends Component<Props> {
 
     return (
       <Content>
-        <svg width={W} height={H}>
+        <Button to={`/${ROUTES.relation}/${baseEntityKey}/${CONSTS.EMPTY_KEY}`}>
+          New relation
+        </Button>
+        <GraphSVG width={W} height={H}>
           {nodeData.map(datapoint => (
             <GraphEntityNode
+              key={datapoint.entity._key}
               entity={datapoint.entity}
               x={datapoint.x}
               y={datapoint.y}
@@ -120,10 +129,7 @@ class EntityGraph extends Component<Props> {
             />
           ))}
           <GraphEntityNode entity={entity} x={CX} y={CY} primary />
-        </svg>
-        <Button to={`/${ROUTES.relation}/${baseEntityKey}/${CONSTS.EMPTY_KEY}`}>
-          New relation
-        </Button>
+        </GraphSVG>
       </Content>
     );
   }
