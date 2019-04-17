@@ -1,13 +1,10 @@
 import React from "react";
 import { EntityPreview } from "../utils/types";
-import ROUTES from "../utils/ROUTES";
-import { Link } from "react-router-dom";
 import DefaultPerson from "../assets/physical_p_default_preview_48.png";
 import PrimaryDefaultPerson from "../assets/physical_p_default_preview_56.png";
 
 type OwnProps = {
   entity: EntityPreview;
-  baseEntityKey?: string;
   x: number;
   y: number;
   scale: number;
@@ -23,19 +20,11 @@ class GraphEntityNode extends React.Component<OwnProps> {
   };
 
   render() {
-    const {
-      entity,
-      x,
-      y,
-      scale,
-      textScale,
-      baseEntityKey,
-      primary
-    } = this.props;
+    const { entity, x, y, scale, textScale, primary } = this.props;
     const size = primary ? 52 : 40 * scale;
     const fontSize = 12 * textScale;
 
-    const svgNode = (
+    return (
       <g
         className="node"
         id={entity._key}
@@ -73,15 +62,6 @@ class GraphEntityNode extends React.Component<OwnProps> {
           {entity.name}
         </text>
       </g>
-    );
-
-    // Only wrap in a link if we aren't the base entity.
-    return baseEntityKey ? (
-      <Link to={`/${ROUTES.relation}/${baseEntityKey}/${entity._key}`}>
-        {svgNode}
-      </Link>
-    ) : (
-      svgNode
     );
   }
 }

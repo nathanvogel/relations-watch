@@ -14,6 +14,7 @@ import { loadEntityGraph } from "../features/linksLoadAC";
 import GraphEntityNode from "../components/GraphEntityNode";
 import CONSTS from "../utils/consts";
 import GraphLink from "./GraphLink";
+import { Link } from "react-router-dom";
 
 const Content = styled.div``;
 
@@ -153,16 +154,24 @@ class EntityGraph extends Component<Props> {
         </Button>
         <GraphSVG width={W} height={H} xmlns="http://www.w3.org/2000/svg">
           {Object.keys(renderedLinks).map(entityKey => (
-            <GraphLink key={entityKey} data={renderedLinks[entityKey]} />
+            <Link
+              key={entityKey}
+              to={`/${ROUTES.relation}/${baseEntityKey}/${entityKey}`}
+            >
+              <GraphLink data={renderedLinks[entityKey]} />
+            </Link>
           ))}
           {nodeData.map(datapoint => (
-            <GraphEntityNode
+            <Link
               key={datapoint.entity._key}
-              entity={datapoint.entity}
-              x={datapoint.x}
-              y={datapoint.y}
-              baseEntityKey={baseEntityKey}
-            />
+              to={`/${ROUTES.entity}/${datapoint.entity._key}`}
+            >
+              <GraphEntityNode
+                entity={datapoint.entity}
+                x={datapoint.x}
+                y={datapoint.y}
+              />
+            </Link>
           ))}
           <GraphEntityNode entity={entity} x={CX} y={CY} primary />
         </GraphSVG>
