@@ -13,7 +13,7 @@ import Meta from "../components/Meta";
 import { Status } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import LinkedEntityPreview from "../components/LinkedEntityPreview";
-import CONSTS from "../utils/consts";
+import EntityGraph from "../components/EntityGraph";
 
 const Content = styled.div``;
 
@@ -85,11 +85,11 @@ class EntityScreen extends Component<Props> {
 
     return (
       <Content>
-        <PersonName>{entity.name}</PersonName>
+        {/* <PersonName>{entity.name}</PersonName> */}
         <Button to={`/${ROUTES.edit}/${ROUTES.entity}/${this.props.entityKey}`}>
           Edit
         </Button>
-        {linkedEntities ? (
+        {/* {linkedEntities ? (
           <ul>
             {linkedEntities.map(e => (
               <LinkedEntityPreview
@@ -101,10 +101,8 @@ class EntityScreen extends Component<Props> {
           </ul>
         ) : (
           <p>No relations to show</p>
-        )}
-        <Button to={`/${ROUTES.relation}/${entityKey}/${CONSTS.EMPTY_KEY}`}>
-          New relation
-        </Button>
+        )} */}
+        <EntityGraph entityKey={entityKey} />
       </Content>
     );
   }
