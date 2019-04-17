@@ -29,6 +29,7 @@
     "typescript": "3.4.2"
   },
   "scripts": {
+    "deploy": "cp build/index.html build/200.html && surge --domain diploma-nathan.surge.sh ./build/",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
