@@ -10,6 +10,7 @@ import "./App.css";
 import RT from "../utils/ROUTES";
 import { Theme } from "../utils/media-styles";
 import { CreateEntityScreen } from "./CreateEntityScreen";
+import { getRelationId } from "../utils/utils";
 
 const MainContent = styled.main`
   width: calc(100% - ${Theme.MAIN_PADDING} - ${Theme.MAIN_PADDING});
@@ -43,13 +44,17 @@ class App extends Component {
             />
             <Route
               path={`/${RT.relation}/:entity1Key?/:entity2Key?`}
-              render={props => (
-                <RelationsScreen
-                  {...props}
-                  entity1Key={props.match.params.entity1Key}
-                  entity2Key={props.match.params.entity2Key}
-                />
-              )}
+              render={props => {
+                const { entity1Key, entity2Key } = props.match.params;
+                return (
+                  <RelationsScreen
+                    {...props}
+                    key={getRelationId(entity1Key, entity2Key) || undefined}
+                    entity1Key={entity1Key}
+                    entity2Key={entity2Key}
+                  />
+                );
+              }}
             />
             <Route component={HomeScreen} />
           </Switch>

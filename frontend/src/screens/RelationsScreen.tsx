@@ -16,6 +16,10 @@ import EdgeEditor from "../components/EdgeEditor";
 import Button from "../components/Button";
 import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
 import MainPersonImage from "../components/MainPersonImage";
+import { Edge, Status } from "../utils/types";
+import { loadRelation } from "../features/edgesLoadAC";
+import Meta from "../components/Meta";
+import BigLinksPreview from "../components/BigLinksPreview";
 
 const Content = styled.div`
   display: flex;
@@ -47,18 +51,31 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
   const relationId = getRelationId(realKey1, realKey2) as string;
 
+  // Get the entity from the Redux Store
+  const relations: Edge[] =
+    relationId && state.relations.data[relationId]
+      ? state.relations.data[relationId]
+      : [];
+  const relationsStatus = relationId
+    ? state.relations.status[relationId]
+    : null;
+  const relationsError = relationId ? state.relations.errors[relationId] : null;
+
   return {
     entity1Key,
     entity2Key,
     realKey1,
     realKey2,
     relationId,
+    relations,
+    relationsStatus,
+    relationsError,
     hasBothSelection
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
-  bindActionCreators({}, dispatch);
+  bindActionCreators({ loadRelation }, dispatch);
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps> &
@@ -74,6 +91,16 @@ class RelationsScreen extends React.Component<Props> {
     addEdgeEditorId: cuid.slug(),
     adding: false
   };
+
+  componentDidMount() {
+    const { realKey1, realKey2, relationsStatus } = this.props;
+    if (
+      realKey1 &&
+      realKey2 &&
+      (!relationsStatus || relationsStatus === Status.Error)
+    )
+      this.props.loadRelation(realKey1, realKey2);
+  }
 
   onAddClick = () => {
     this.setState({ adding: true });
@@ -96,6 +123,7 @@ class RelationsScreen extends React.Component<Props> {
 
   render() {
     const { realKey1, realKey2, hasBothSelection } = this.props;
+    const { relations, relationsStatus, relationsError } = this.props;
 
     return (
       <Content>
@@ -112,28 +140,38 @@ class RelationsScreen extends React.Component<Props> {
           )}
         </EntityColumn>
         <RelationsColumn>
-          {hasBothSelection &&
-            (this.state.adding ? (
-              <React.Fragment>
-                <EdgeEditor
-                  entity1Key={realKey1}
-                  entity2Key={realKey2}
-                  editorId={this.state.addEdgeEditorId}
-                  dismiss={this.onCancelAddClick}
-                />
-                <Button onClick={this.onCancelAddClick}>Cancel</Button>
-              </React.Fragment>
-            ) : (
-              <Button onClick={this.onAddClick}>Add a relation element</Button>
-            ))}
-          {hasBothSelection ? (
-            <RelationEdgesList
-              key={this.props.relationId}
-              entity1Key={realKey1}
-              entity2Key={realKey2}
-            />
-          ) : (
+          {!hasBothSelection ? (
             <p>Select another entity to show their relationships</p>
+          ) : (
+            <React.Fragment>
+              {/* PART links preview */}
+              <BigLinksPreview relations={relations} />
+              {/* PART adding */}
+              {this.state.adding ? (
+                <React.Fragment>
+                  <EdgeEditor
+                    entity1Key={realKey1}
+                    entity2Key={realKey2}
+                    editorId={this.state.addEdgeEditorId}
+                    dismiss={this.onCancelAddClick}
+                  />
+                  <Button onClick={this.onCancelAddClick}>Cancel</Button>
+                </React.Fragment>
+              ) : (
+                <Button onClick={this.onAddClick}>
+                  Add a relation element
+                </Button>
+              )}
+              {/* PART edge list */}
+              {relationsStatus !== Status.Ok ? (
+                <Meta status={relationsStatus} error={relationsError} />
+              ) : (
+                <RelationEdgesList
+                  key={this.props.relationId}
+                  relations={relations}
+                />
+              )}
+            </React.Fragment>
           )}
         </RelationsColumn>
         <EntityColumn>

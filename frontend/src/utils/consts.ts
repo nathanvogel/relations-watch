@@ -51,6 +51,7 @@ const CONSTS = {
   relCollectionName: "relations",
   entCollectionName: "entities",
   EMPTY_KEY: "_",
+  RELATION_COLORS,
   ENTITY_TYPES,
   RELATION_TYPES
 };
