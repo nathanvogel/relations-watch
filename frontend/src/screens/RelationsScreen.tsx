@@ -15,7 +15,6 @@ import RelationEdgesList from "../components/RelationEdgesList";
 import EdgeEditor from "../components/EdgeEditor";
 import Button from "../components/Button";
 import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
-import MainPersonImage from "../components/MainPersonImage";
 import { Edge, Status } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
 import Meta from "../components/Meta";

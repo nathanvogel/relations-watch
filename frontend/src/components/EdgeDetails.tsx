@@ -4,12 +4,24 @@ import styled from "styled-components";
 import { Edge } from "../utils/types";
 import Button from "./Button";
 import EdgeEditor from "./EdgeEditor";
+import Sources from "./Sources";
+import { RELATION_COLORS } from "../utils/consts";
 
 const Content = styled.section`
-  border: 1px dotted ${props => props.color};
+  border: 1px dotted black;
+  border-bottom: 4px solid ${props => props.color}33;
+  &:hover {
+    border-bottom: 4px solid ${props => props.color}dd;
+  }
+  // background-color: #f4f4f4;
   padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const EdgeText = styled.p`
+  font-size: 16px;
+  margin-top: 0px;
 `;
 
 const Actions = styled.div`
@@ -54,11 +66,15 @@ class EdgeDetails extends React.Component<Props> {
         />
       </div>
     ) : (
-      <Content>
+      <Content color={RELATION_COLORS[edge.type]}>
         <Actions>
           <Button onClick={this.onEditClick}>Edit</Button>
         </Actions>
-        <p>{edge.text}</p>
+        <EdgeText>{edge.text}</EdgeText>
+        <Sources
+          confirmSources={edge.sourceText ? [edge.sourceText] : []}
+          refuteSources={[]}
+        />
       </Content>
     );
   }
