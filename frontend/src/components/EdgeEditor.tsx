@@ -129,13 +129,15 @@ class EdgeEditor extends React.Component<Props> {
       // If we're adding an edge: show a confirmation + offer back/new choice
       return (
         <Content>
-          <p>Saved!</p>
-          <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
-          {edgeKey || (
+          <p>
+            Saved!{" "}
+            <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
+          </p>
+          {/*edgeKey || (
             <Button onClick={this.clearPostRequest.bind(this, false)}>
               New
             </Button>
-          )}
+          )*/}
         </Content>
       );
     }

@@ -13,7 +13,7 @@ class GraphLink extends React.Component<OwnProps> {
     const dx: number[] = [];
     const dy: number[] = [];
     for (let i = 0; i < types.length; i += 1) {
-      const offset = i - (types.length - 1) / 2; // % 2 === 0 ? -i / 2 : (i + 1) / 2;
+      const offset = i - (types.length - 1) / 2;
       dx.push(Math.sin(angle + 90) * offset * 3);
       dy.push(Math.cos(angle + 90) * offset * 3);
     }

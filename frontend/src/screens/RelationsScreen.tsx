@@ -15,6 +15,7 @@ import RelationEdgesList from "../components/RelationEdgesList";
 import EdgeEditor from "../components/EdgeEditor";
 import Button from "../components/Button";
 import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
+import MainPersonImage from "../components/MainPersonImage";
 
 const Content = styled.div`
   display: flex;
@@ -28,6 +29,10 @@ const RelationsColumn = styled.div`
   flex: 2;
   padding-left: 32px;
   padding-right: 32px;
+`;
+
+const InvisiblePersonImage = styled(MainPersonImage)`
+  visibility: hidden;
 `;
 
 type OwnProps = {
@@ -99,7 +104,7 @@ class RelationsScreen extends React.Component<Props> {
             <div>
               <EntityDetails key={realKey1} entityKey={realKey1} />
               <Button onClick={this.onEntity1Selected.bind(this, "")}>
-                Clear
+                Search another entity
               </Button>
             </div>
           ) : (
@@ -136,7 +141,7 @@ class RelationsScreen extends React.Component<Props> {
             <div>
               <EntityDetails key={realKey2} entityKey={realKey2} />
               <Button onClick={this.onEntity2Selected.bind(this, "")}>
-                Clear
+                Search another entity
               </Button>
             </div>
           ) : (

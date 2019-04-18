@@ -105,7 +105,7 @@ class EntityGraph extends Component<Props> {
     for (let i = 0; i < entityCount; i++) {
       const entityKey = linkedEntities[i][0];
       const edgeCount = linkedEntities[i][1];
-      const angle = i * ((Math.PI * 2) / entityCount) + Math.PI;
+      const angle = -i * ((Math.PI * 2) / entityCount) + Math.PI;
       const distance =
         minDist + ((maxEdgeCount - edgeCount) / maxEdgeCount) * maxDist;
       const x = CX + Math.sin(angle) * distance;

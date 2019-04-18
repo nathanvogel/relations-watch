@@ -11,6 +11,7 @@ import Meta from "../components/Meta";
 import { Status } from "../utils/types";
 import DefaultPerson from "../assets/physical_p_default_full_512.png";
 import CONSTS from "../utils/consts";
+import MainPersonImage from "./MainPersonImage";
 
 const Content = styled.div`
   width: 100%;
@@ -21,13 +22,6 @@ const PersonName = styled.h5`
   font-size: 18px;
   text-decoration: none;
   color: #001144;
-`;
-
-const PersonImage = styled.img`
-  display: block;
-  max-width: 100%;
-  width: 180px;
-  margin: 0 auto;
 `;
 
 type OwnProps = { entityKey: string };
@@ -74,7 +68,7 @@ class EntityDetails extends Component<Props> {
     return (
       <Content>
         <Link to={`/e/${this.props.entityKey}`}>
-          <PersonImage src={DefaultPerson} />
+          <MainPersonImage src={DefaultPerson} />
           <PersonName>{entity.name}</PersonName>
         </Link>
         <p>
