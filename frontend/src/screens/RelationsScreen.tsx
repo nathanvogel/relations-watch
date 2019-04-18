@@ -35,10 +35,6 @@ const RelationsColumn = styled.div`
   padding-right: 32px;
 `;
 
-const InvisiblePersonImage = styled(MainPersonImage)`
-  visibility: hidden;
-`;
-
 type OwnProps = {
   entity1Key?: string;
   entity2Key?: string;

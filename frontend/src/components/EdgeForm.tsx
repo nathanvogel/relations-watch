@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import CONSTS from "../utils/consts";
 import EntityName from "./EntityName";
-import { RELATION_TYPES } from "../strings/strings";
+import { RELATION_TYPES_STRRES } from "../strings/strings";
 import { Edge } from "../utils/types";
 import ButtonWithConfirmation from "./ButtonWithConfirmation";
 
@@ -120,7 +120,7 @@ class EdgeForm extends React.Component<Props> {
               <option key="empty" />
               {Object.keys(CONSTS.RELATION_TYPES).map(key => (
                 <option key={key} value={CONSTS.RELATION_TYPES[key]}>
-                  {RELATION_TYPES[key]}
+                  {RELATION_TYPES_STRRES[key]}
                 </option>
               ))}
             </select>
