@@ -60,7 +60,6 @@ class BigLinksPreview extends React.Component<OwnProps> {
       if (types.indexOf(link.type) < 0) types.push(link.type);
     }
     types.sort((a, b) => a - b);
-    console.log(types);
 
     return (
       <Header>

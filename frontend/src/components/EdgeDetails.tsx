@@ -1,8 +1,20 @@
 import React from "react";
+import styled from "styled-components";
 
 import { Edge } from "../utils/types";
 import Button from "./Button";
 import EdgeEditor from "./EdgeEditor";
+
+const Content = styled.section`
+  border: 1px dotted ${props => props.color};
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
+const Actions = styled.div`
+  float: right;
+`;
 
 type Props = {
   edge: Edge;
@@ -29,6 +41,9 @@ class EdgeDetails extends React.Component<Props> {
     const { edge } = this.props;
     return this.state.editing ? (
       <div>
+        <Actions>
+          <Button onClick={this.onDoneEditing}>Cancel</Button>
+        </Actions>
         <EdgeEditor
           key={edge._key}
           edgeKey={edge._key}
@@ -37,12 +52,14 @@ class EdgeDetails extends React.Component<Props> {
           dismiss={this.onDoneEditing}
           editorId={edge._key || "theid"}
         />
-        <Button onClick={this.onDoneEditing}>Cancel</Button>
       </div>
     ) : (
-      <div>
-        {edge.text} <Button onClick={this.onEditClick}>Edit</Button>
-      </div>
+      <Content>
+        <Actions>
+          <Button onClick={this.onEditClick}>Edit</Button>
+        </Actions>
+        <p>{edge.text}</p>
+      </Content>
     );
   }
 }
