@@ -3,6 +3,7 @@ import { ErrorPayload } from "./types";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
+  // baseURL: "https://diploman.westeurope.cloudapp.azure.com/api1", // Azure VM
   // baseURL: "http://104.45.2.92:8529/_db/_system/api1", // Azure machine
   // baseURL: "http://diploma1.azureedge.net:8529/_db/_system/api1",
   // baseURL: "http://127.0.0.1:8529/_db/_system/api1", // local dev
