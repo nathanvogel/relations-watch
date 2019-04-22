@@ -2,15 +2,14 @@
 const joi = require("joi");
 const createRouter = require("@arangodb/foxx/router");
 const db = require("@arangodb").db;
-const errors = require("@arangodb").errors;
 const aql = require("@arangodb").aql;
 
+const apiFactory = require("../utils/apiFactory");
 const utils = require("../utils/utils");
 const relSchema = require("../utils/schemas.js").relSchema;
 const CONST = require("../utils/const.js");
 const entColl = db._collection(CONST.entCollectionName);
 const relColl = db._collection(CONST.relCollectionName);
-const DOC_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
 
 const router = createRouter();
 module.exports = router;
@@ -71,17 +70,7 @@ router
 
 // GET a relation
 router
-  .get("/:key", function(req, res) {
-    try {
-      const data = relColl.document(req.pathParams.key);
-      res.send(data);
-    } catch (e) {
-      if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
-        throw e;
-      }
-      res.throw(404, "The relation does not exist", e);
-    }
-  })
+  .get("/:key", apiFactory.get.bind(this, relColl))
   .pathParam("key", joi.string().required(), "Key of the edge.")
   .response(joi.object().required(), "Edge stored in the collection.")
   .summary("Retrieves an edge")
@@ -89,17 +78,7 @@ router
 
 // Delete a relation
 router
-  .delete("/:key", function(req, res) {
-    try {
-      const oldDocument = relColl.remove(req.pathParams.key);
-      res.send(oldDocument);
-    } catch (e) {
-      if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
-        throw e;
-      }
-      res.throw(404, "The relation does not exist", e);
-    }
-  })
+  .delete("/:key", apiFactory.remove.bind(this, relColl))
   .pathParam("key", joi.string().required(), "Key of the edge.")
   .response(
     joi.object().required(),

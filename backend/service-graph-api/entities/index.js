@@ -2,31 +2,20 @@
 const joi = require("joi");
 const createRouter = require("@arangodb/foxx/router");
 const db = require("@arangodb").db;
-const errors = require("@arangodb").errors;
 const aql = require("@arangodb").aql;
 
+const apiFactory = require("../utils/apiFactory");
 const entSchema = require("../utils/schemas").entSchema;
 const CONST = require("../utils/const.js");
 const entColl = db._collection(CONST.entCollectionName);
 const relColl = db._collection(CONST.relCollectionName);
-const DOC_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
 
 const router = createRouter();
 module.exports = router;
 
 // POST a new entity
 router
-  .post("/", function(req, res) {
-    const multiple = Array.isArray(req.body);
-    const body = multiple ? req.body : [req.body];
-
-    let data = [];
-    for (var doc of body) {
-      const meta = entColl.save(doc);
-      data.push(Object.assign(doc, meta));
-    }
-    res.send(multiple ? data : data[0]);
-  })
+  .post("/", apiFactory.post.bind(this, entColl))
   .body(
     joi.alternatives().try(entSchema, joi.array().items(entSchema)),
     "Entity or entities to store in the collection."
@@ -44,17 +33,7 @@ router
 
 // PATCH an entity
 router
-  .patch("/", function(req, res) {
-    const multiple = Array.isArray(req.body);
-    const body = multiple ? req.body : [req.body];
-
-    let data = [];
-    for (var doc of body) {
-      const meta = entColl.update(doc._key, doc);
-      data.push(Object.assign(doc, meta));
-    }
-    res.send(multiple ? data : data[0]);
-  })
+  .patch("/", apiFactory.patch.bind(this, entColl))
   .body(
     joi.alternatives().try(entSchema, joi.array().items(entSchema)),
     "Entity or entities to patch in the collection."
@@ -72,17 +51,7 @@ router
 
 // GET an entity
 router
-  .get("/:key", function(req, res) {
-    try {
-      const data = entColl.document(req.pathParams.key);
-      res.send(data);
-    } catch (e) {
-      if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
-        throw e;
-      }
-      res.throw(404, "The entity does not exist", e);
-    }
-  })
+  .get("/:key", apiFactory.get.bind(this, entColl))
   .pathParam("key", joi.string().required(), "Key of the entity.")
   .response(joi.object().required(), "Entry stored in the collection.")
   .summary("Retrieve an entity")
