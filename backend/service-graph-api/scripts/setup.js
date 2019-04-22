@@ -1,6 +1,6 @@
 "use strict";
 const db = require("@arangodb").db;
-const CONST = require("./const.js");
+const CONST = require("../utils/const.js");
 
 if (!db._collection(CONST.relCollectionName)) {
   db._createEdgeCollection(CONST.relCollectionName);
