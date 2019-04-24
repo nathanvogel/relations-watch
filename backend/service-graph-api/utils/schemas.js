@@ -41,7 +41,27 @@ const relSchema = joi
   })
   .unknown(); // allow additional attributes
 
+const souSchema = joi
+  .object()
+  .required()
+  .keys({
+    ref: joi.string().required(), // Simplified URL or text
+    type: joi
+      .number()
+      .integer()
+      .required(), // Is it a LINK or REF ?
+    authors: joi.array().items(joi.string()), // Entity keys
+    // LINK-only
+    fullUrl: joi.string(),
+    description: joi.string(),
+    title: joi.string(),
+    rootDomain: joi.string(),
+    domain: joi.string()
+  })
+  .unknown(); // allow additional attributes
+
 module.exports = {
   entSchema,
-  relSchema
+  relSchema,
+  souSchema
 };

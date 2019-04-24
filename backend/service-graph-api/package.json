@@ -11,5 +11,9 @@
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
     "prettier": "^1.16.4"
+  },
+  "dependencies": {
+    "@types/validator": "^10.11.0",
+    "validator": "^10.11.0"
   }
 }

@@ -55,9 +55,7 @@ router
   .pathParam("key", joi.string().required(), "Key of the entity.")
   .response(joi.object().required(), "Entry stored in the collection.")
   .summary("Retrieve an entity")
-  .description(
-    'Retrieves an entity from the "myFoxxCollection" collection by key.'
-  );
+  .description("Retrieves an entity by key.");
 
 // GET the list of entity IDs
 router

@@ -19,5 +19,9 @@ module.exports = {
     FAMILY: 300,
     FRIENDSHIP: 310,
     LOVES: 400
+  },
+  SOURCE_TYPES: {
+    LINK: 1,
+    REF: 2
   }
 };
