@@ -77,7 +77,7 @@ router
 // GET source suggestions for autocomplete
 router
   .get("/autocomplete", function(req, res) {
-    var searchTerm = req.body.search;
+    var searchTerm = req.queryParams.search;
     if (!searchTerm || typeof searchTerm !== "string") {
       res.throw(400, "Please indicate the fullRef parameter as a string");
     }
@@ -95,14 +95,7 @@ router
     `;
     res.send(entities);
   })
-  .body(
-    joi
-      .object()
-      .required()
-      .keys({
-        search: joi.string().required()
-      })
-  )
+  .queryParam("search", joi.string().required(), "The user input")
   .response(
     joi
       .array()
@@ -118,7 +111,7 @@ router
 // Else -> returns a new pre-filled source.
 router
   .get("/ref", function(req, res) {
-    var fullRef = req.body.fullRef;
+    var fullRef = req.queryParams.fullRef;
     if (!fullRef || typeof fullRef !== "string") {
       res.throw(400, "Please indicate the fullRef parameter as a string");
       return;
@@ -153,14 +146,7 @@ router
     };
     res.send(newRef);
   })
-  .body(
-    joi
-      .object()
-      .required()
-      .keys({
-        fullRef: joi.string().required()
-      })
-  )
+  .queryParam("fullRef", joi.string().required(), "The user input")
   .response(souSchema, "The source, existing or a new one (without _key)")
   .summary("Get a source object from a ref")
   .description(`Searches for existing sources corresponding to the ref.
