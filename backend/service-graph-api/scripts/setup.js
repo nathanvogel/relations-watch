@@ -16,6 +16,3 @@ if (!db._collection(CONST.souCollectionName)) {
 
 const entities = db._collection(CONST.entCollectionName);
 entities.ensureIndex({ type: "fulltext", fields: ["name"], minLength: 3 });
-
-const sources = db._collection(CONST.souCollectionName);
-sources.ensureIndex({ type: "fulltext", fields: ["ref"], minLength: 3 });

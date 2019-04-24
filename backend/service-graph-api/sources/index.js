@@ -88,16 +88,11 @@ router
       dbSearchTerm = getSimplifiedLink(searchTerm);
     }
 
-    const entities = db._query(
-      `
-            FOR source IN FULLTEXT(@@collection, "ref", CONCAT("prefix:", @searchTerm),  6)
-              RETURN {"ref": source.ref, "_key": source._key, "title": source.title }
-          `,
-      {
-        "@collection": souColl.name(),
-        searchTerm: dbSearchTerm
-      }
-    );
+    const entities = query`
+      FOR source IN ${souColl}
+        FILTER source.ref LIKE ${"%" + dbSearchTerm + "%"}
+        RETURN {"ref": source.ref, "_key": source._key, "title": source.title }
+    `;
     res.send(entities);
   })
   .body(
