@@ -2,8 +2,8 @@ import { Dispatch } from "redux";
 
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
-import { Action, ErrorPayload, EntityForUpload } from "../utils/types";
-import { Status } from "../utils/types";
+import { Action, ErrorPayload, Status } from "../utils/types";
+import { EntityForUpload } from "../utils/types";
 import { AxiosError } from "axios";
 
 /**
