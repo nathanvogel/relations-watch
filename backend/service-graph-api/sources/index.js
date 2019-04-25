@@ -5,9 +5,11 @@ const db = require("@arangodb").db;
 const errors = require("@arangodb").errors;
 const query = require("@arangodb").query;
 const validator = require("validator");
+const Url = require("url-parse");
 
 const apiFactory = require("../utils/apiFactory");
 const souSchema = require("../utils/schemas").souSchema;
+const getRootDomain = require("../utils/utils").getRootDomain;
 const CONST = require("../utils/const.js");
 const souColl = db._collection(CONST.souCollectionName);
 const DOC_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
@@ -118,9 +120,14 @@ router
     }
     fullRef = fullRef.trim();
     const type = getRefType(fullRef);
+    const isLink = type === CONST.SOURCE_TYPES.LINK;
     var ref = fullRef;
-    if (type === CONST.SOURCE_TYPES.LINK) {
+    var domain, rootDomain;
+    if (isLink) {
       ref = getSimplifiedLink(fullRef);
+      const url = new Url(fullRef);
+      domain = url.hostname;
+      rootDomain = getRootDomain(domain);
     }
 
     const cursor = query`
@@ -141,6 +148,9 @@ router
     // to start with when creating the source.
     const newRef = {
       ref: ref,
+      fullUrl: isLink ? fullRef : null,
+      domain: domain,
+      rootDomain: rootDomain,
       type: type,
       authors: []
     };
