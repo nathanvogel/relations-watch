@@ -104,7 +104,9 @@ export type Source = {
   authors: string[];
   fullUrl?: string;
   description?: string;
-  title?: string;
+  pAuthor?: string;
+  pTitle?: string;
+  pDescription?: string;
   rootDomain?: string;
   domain?: string;
 };

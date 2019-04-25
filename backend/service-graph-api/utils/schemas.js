@@ -54,7 +54,9 @@ const souSchema = joi
     // LINK-only
     fullUrl: joi.string(),
     description: joi.string(),
-    title: joi.string(),
+    pTitle: joi.string(),
+    pDescription: joi.string(),
+    pAuthor: joi.string(),
     rootDomain: joi.string(),
     domain: joi.string()
   })

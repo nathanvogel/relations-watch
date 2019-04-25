@@ -73,6 +73,10 @@ class SourceEditor extends React.Component<Props> {
     this.setState({ editingRef: false });
   };
 
+  onCancelSourceFormClick = () => {
+    this.setState({ editingRef: true });
+  };
+
   render() {
     const { editingRef, sourceRef } = this.state;
     const { refGetData, refGetStatus, refGetError } = this.props;
@@ -93,7 +97,10 @@ class SourceEditor extends React.Component<Props> {
         {refGetStatus !== Status.Ok ? (
           <MetaPostStatus status={refGetStatus} error={refGetError} />
         ) : (
-          <SourceForm initialSource={refGetData as Source} />
+          <SourceForm
+            initialSource={refGetData as Source}
+            onCancelClick={this.onCancelSourceFormClick}
+          />
         )}
       </Content>
     );
