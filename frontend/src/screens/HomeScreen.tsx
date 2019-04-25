@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { RouterProps } from "react-router";
 import styled from "styled-components";
 
-import SearchEntity from "../components/SearchEntity";
+import EntitySearch from "../components/EntitySearch";
 import ROUTES from "../utils/ROUTES";
 
 const Header = styled.header`
   margin-top: 20vh;
 `;
 
-const CentralSearch = styled(SearchEntity)`
+const CentralSearch = styled(EntitySearch)`
   font-size: 22px;
   display: block;
   width: 330px;
@@ -23,7 +23,8 @@ const CentralTitle = styled.h2`
 `;
 
 class HomeScreen extends Component<RouterProps> {
-  onSearch = (entityKey: string) => {
+  onSearch = (searchSelection: any) => {
+    const entityKey = searchSelection.value;
     const url = `/${ROUTES.entity}/${entityKey}`;
     this.props.history.push(url);
   };

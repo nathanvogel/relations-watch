@@ -1,5 +1,4 @@
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import cuid from "cuid";
@@ -15,11 +14,13 @@ import {
   patchEntity
 } from "../features/entitiesSaveAC";
 import { loadEntity } from "../features/entitiesLoadAC";
-import { Status, EntityForUpload } from "../utils/types";
+import { Status, Entity } from "../utils/types";
 import EntityForm from "./EntityForm";
 import Meta from "./Meta";
 import MetaPostStatus from "./MetaPostStatus";
 import { shouldLoad } from "../utils/utils";
+import CONSTS from "../utils/consts";
+import Button from "./Button";
 
 const Content = styled.div`
   display: block;
@@ -28,7 +29,9 @@ const Content = styled.div`
 
 type OwnProps = {
   entityKey?: string;
-} & RouteComponentProps;
+  initialName?: string;
+  onDone?: (entity?: Entity) => void;
+};
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
@@ -38,9 +41,16 @@ type Props = ReturnType<typeof mapStateToProps> &
 const editorId = cuid.slug();
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const entityKey = props.entityKey;
+  const { entityKey, initialName, onDone } = props;
   // Get the entity (if any) from the Redux Store
-  const entity = entityKey ? state.entities.data[entityKey] : undefined;
+  const entity: Entity | null | undefined = entityKey
+    ? state.entities.data[entityKey]
+    : initialName
+    ? {
+        name: initialName,
+        type: CONSTS.ENTITY_TYPES.PHYSICAL_PERSON
+      }
+    : undefined;
   const entityStatus = entityKey ? state.entities.status[entityKey] : undefined;
   const entityError = entityKey ? state.entities.errors[entityKey] : undefined;
   // Get the POST request state from the Redux Store
@@ -57,7 +67,8 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     entity,
     entityStatus,
     entityError,
-    history: props.history
+    initialName,
+    onDone
   };
 };
 
@@ -79,7 +90,7 @@ class EntityEditor extends React.Component<Props> {
       this.props.loadEntity(this.props.entityKey);
   }
 
-  onFormSubmit = (entity: EntityForUpload) => {
+  onFormSubmit = (entity: Entity) => {
     if (this.props.entityKey) {
       this.props.patchEntity(entity, this.props.editorId);
     } else {
@@ -87,12 +98,13 @@ class EntityEditor extends React.Component<Props> {
     }
   };
 
-  clearPostRequest = (_event: React.MouseEvent<HTMLAnchorElement>) => {
+  onClearClick = () => {
     this.props.clearPostRequest(this.props.editorId);
+    if (this.props.onDone) this.props.onDone(this.props.data);
   };
 
   onCancelClick = () => {
-    this.props.history.goBack();
+    if (this.props.onDone) this.props.onDone();
   };
 
   render() {
@@ -112,12 +124,16 @@ class EntityEditor extends React.Component<Props> {
       return (
         <Content>
           <p>Saved!</p>
-          <Link
-            onClick={this.clearPostRequest}
-            to={`/${ROUTES.entity}/${this.props.data._key}`}
-          >
-            Ok
-          </Link>
+          {this.props.onDone ? (
+            <Button onClick={this.onClearClick}>Ok</Button>
+          ) : (
+            <Link
+              onClick={this.onClearClick}
+              to={`/${ROUTES.entity}/${this.props.data._key}`}
+            >
+              Ok
+            </Link>
+          )}
         </Content>
       );
 
@@ -127,6 +143,7 @@ class EntityEditor extends React.Component<Props> {
           key={this.props.entityKey}
           initialEntity={this.props.entity}
           onFormSubmit={this.onFormSubmit}
+          onFormCancel={this.onCancelClick}
           disabled={postStatus === Status.Requested}
         />
         <MetaPostStatus status={postStatus} error={postError} />
@@ -135,9 +152,7 @@ class EntityEditor extends React.Component<Props> {
   }
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(EntityEditor)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EntityEditor);

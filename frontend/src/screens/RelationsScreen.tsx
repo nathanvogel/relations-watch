@@ -10,7 +10,7 @@ import { media } from "../utils/media-styles";
 import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
-import SearchEntity from "../components/SearchEntity";
+import EntitySearch from "../components/EntitySearch";
 import RelationEdgesList from "../components/RelationEdgesList";
 import EdgeEditor from "../components/EdgeEditor";
 import Button from "../components/Button";
@@ -131,7 +131,7 @@ class RelationsScreen extends React.Component<Props> {
               </Button>
             </div>
           ) : (
-            <SearchEntity onChange={this.onEntity1Selected} />
+            <EntitySearch onChange={this.onEntity1Selected} />
           )}
         </EntityColumn>
         <RelationsColumn>
@@ -178,7 +178,7 @@ class RelationsScreen extends React.Component<Props> {
               </Button>
             </div>
           ) : (
-            <SearchEntity onChange={this.onEntity2Selected} />
+            <EntitySearch onChange={this.onEntity2Selected} />
           )}
         </EntityColumn>
       </Content>

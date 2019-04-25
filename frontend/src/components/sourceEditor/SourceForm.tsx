@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Source } from "../../utils/types";
 import Button from "../Button";
 import CONSTS from "../../utils/consts";
-import SearchEntity from "../SearchEntity";
+import EntitySearch from "../EntitySearch";
 
 type Props = {
   initialSource: Source;
@@ -24,6 +24,7 @@ class SourceForm extends React.Component<Props> {
     initialSource: {
       ref: "",
       type: 1,
+      // Corresponds to the react-select value
       authors: [],
       fullUrl: "",
       description: "",
@@ -55,6 +56,13 @@ class SourceForm extends React.Component<Props> {
 
   onConfirmationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ confirmation: parseInt(event.target.value) });
+  };
+
+  onAuthorsChange = (selection: any) => {
+    console.log(selection);
+    this.setState({
+      authors: selection
+    });
   };
 
   render() {
@@ -97,7 +105,11 @@ class SourceForm extends React.Component<Props> {
         {isLink && initialSource.pAuthor && (
           <div>Detected author(s): {initialSource.pAuthor}</div>
         )}
-        <SearchEntity />
+        <EntitySearch
+          selection={this.state.authors}
+          onChange={this.onAuthorsChange}
+          isMulti={true}
+        />
         <Label>
           Optional comment to summarize or nuance the source
           <textarea
@@ -108,7 +120,6 @@ class SourceForm extends React.Component<Props> {
         This source
         <span>
           <Label>
-            supports
             <input
               type="radio"
               name="confirmation"
@@ -116,9 +127,9 @@ class SourceForm extends React.Component<Props> {
               checked={Boolean(confirms)}
               onChange={this.onConfirmationChange}
             />
+            supports
           </Label>
           <Label>
-            refutes
             <input
               type="radio"
               name="confirmation"
@@ -126,6 +137,7 @@ class SourceForm extends React.Component<Props> {
               checked={!confirms}
               onChange={this.onConfirmationChange}
             />
+            refutes
           </Label>
         </span>
         the affirmation.

@@ -4,6 +4,8 @@ import styled from "styled-components";
 import CONSTS from "../utils/consts";
 import { ENTITY_TYPES } from "../strings/strings";
 import { Entity } from "../utils/types";
+import Button from "./Button";
+import cuid from "cuid";
 
 const Content = styled.div`
   display: block;
@@ -17,8 +19,9 @@ const Label = styled.label`
 
 type Props = {
   onFormSubmit: (entity: Entity) => void;
+  onFormCancel?: () => void;
   disabled: boolean;
-  initialEntity: Entity;
+  initialEntity: Entity | Entity;
 };
 
 type State = {
@@ -30,6 +33,7 @@ type State = {
   linkFacebook?: string;
   linkYoutube?: string;
   linkWebsite?: string;
+  formId: string;
 };
 
 class EntityForm extends React.Component<Props> {
@@ -54,8 +58,13 @@ class EntityForm extends React.Component<Props> {
     linkTwitter: this.props.initialEntity.linkTwitter,
     linkFacebook: this.props.initialEntity.linkFacebook,
     linkYoutube: this.props.initialEntity.linkYoutube,
-    linkWebsite: this.props.initialEntity.linkWebsite
+    linkWebsite: this.props.initialEntity.linkWebsite,
+    formId: "entity-" + cuid.slug()
   };
+
+  componentDidMount() {
+    this.setState({ formId: "entity-" + cuid.slug() });
+  }
 
   onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ name: event.target.value });
@@ -65,8 +74,7 @@ class EntityForm extends React.Component<Props> {
     this.setState({ type: +event.target.value });
   };
 
-  onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  onSubmit = () => {
     if (!this.state.name || this.state.name.length < 3) return;
 
     const entity: Entity = {
@@ -80,29 +88,35 @@ class EntityForm extends React.Component<Props> {
   render() {
     return (
       <Content>
-        <form onSubmit={this.onSubmit}>
-          <fieldset disabled={this.props.disabled}>
-            <div>
-              <Label>
-                Name
-                <input
-                  type="text"
-                  maxLength={200}
-                  value={this.state.name}
-                  onChange={this.onNameChange}
-                />
-              </Label>
-              <select value={this.state.type} onChange={this.onTypeChange}>
-                {Object.keys(CONSTS.ENTITY_TYPES).map(key => (
-                  <option key={key} value={CONSTS.ENTITY_TYPES[key]}>
-                    {ENTITY_TYPES[key]}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button type="submit">Save</button>
-          </fieldset>
-        </form>
+        <fieldset disabled={this.props.disabled}>
+          <div>
+            <Label>
+              Name
+              <input
+                type="text"
+                maxLength={200}
+                value={this.state.name}
+                onChange={this.onNameChange}
+                form={this.state.formId}
+              />
+            </Label>
+            <select
+              value={this.state.type}
+              onChange={this.onTypeChange}
+              form={this.state.formId}
+            >
+              {Object.keys(CONSTS.ENTITY_TYPES).map(key => (
+                <option key={key} value={CONSTS.ENTITY_TYPES[key]}>
+                  {ENTITY_TYPES[key]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Button onClick={this.onSubmit}>Save</Button>
+          {this.props.onFormCancel && (
+            <Button onClick={this.props.onFormCancel}>Cancel</Button>
+          )}
+        </fieldset>
       </Content>
     );
   }

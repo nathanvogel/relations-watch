@@ -28,7 +28,7 @@ export enum Status {
 }
 
 export type Entity = {
-  _key: string;
+  _key?: string;
   name: string;
   type: number;
   imageId?: string;
@@ -39,18 +39,6 @@ export type Entity = {
   linkYoutube?: string;
   linkWebsite?: string;
 };
-
-export interface EntityForUpload {
-  name: string;
-  type: number;
-  imageId?: string;
-  linkWikipedia?: string;
-  linkCrunchbase?: string;
-  linkTwitter?: string;
-  linkFacebook?: string;
-  linkYoutube?: string;
-  linkWebsite?: string;
-}
 
 export interface EntityPreview {
   _key: string;
@@ -103,7 +91,7 @@ export type Source = {
   type: number;
   authors: string[];
   fullUrl?: string;
-  description?: string;
+  description: string;
   pAuthor?: string;
   pTitle?: string;
   pDescription?: string;

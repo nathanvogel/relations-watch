@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 
-import SearchEntity from "./SearchEntity";
+import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
 import { Theme } from "../utils/media-styles";
 import Button from "./Button";
@@ -33,7 +33,7 @@ const HomeLink = styled(Link)`
   font-size: 22px;
 `;
 
-const StyledSearch = styled(SearchEntity)`
+const StyledSearch = styled(EntitySearch)`
   max-width: 100px;
 `;
 

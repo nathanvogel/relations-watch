@@ -3,16 +3,15 @@ import { Dispatch } from "redux";
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
 import { Action, ErrorPayload, Status } from "../utils/types";
-import { EntityForUpload } from "../utils/types";
+import { Entity } from "../utils/types";
 import { AxiosError } from "axios";
 
 /**
  * Upload new entities to the database.
  */
-export const postEntity = (
-  entity: EntityForUpload,
-  requestId: string
-) => async (dispatch: Dispatch): Promise<void> => {
+export const postEntity = (entity: Entity, requestId: string) => async (
+  dispatch: Dispatch
+): Promise<void> => {
   dispatch(actionRequest(requestId));
   api
     .post(`/entities`, entity)
@@ -36,10 +35,9 @@ export const postEntity = (
     });
 };
 
-export const patchEntity = (
-  entity: EntityForUpload,
-  requestId: string
-) => async (dispatch: Dispatch): Promise<void> => {
+export const patchEntity = (entity: Entity, requestId: string) => async (
+  dispatch: Dispatch
+): Promise<void> => {
   dispatch(actionRequest(requestId));
   api
     .patch(`/entities`, entity)

@@ -20,6 +20,7 @@ const RELATION_TYPES: RelationTypes = {
   COMMON_ACTIVITES: 110
 };
 
+// TODO: Use an Android-R like library to manage this stuff.
 export const RELATION_COLORS = {
   [RELATION_TYPES.OWNS]: "#e7b300",
   [RELATION_TYPES.OWNS_A_SHARE]: "#fbae17",
@@ -40,6 +41,7 @@ type EntityTypes = {
   [key: string]: EntityType;
 };
 
+// TODO: switch all of those to enums
 const ENTITY_TYPES: EntityTypes = {
   PHYSICAL_PERSON: 1,
   MORAL_PERSON: 2,

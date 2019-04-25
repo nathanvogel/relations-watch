@@ -149,6 +149,7 @@ router
     const newRef = {
       ref: ref,
       fullUrl: isLink ? fullRef : null,
+      description: "",
       domain: domain,
       rootDomain: rootDomain,
       type: type,

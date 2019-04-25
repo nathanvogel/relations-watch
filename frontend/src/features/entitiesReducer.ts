@@ -27,8 +27,16 @@ export default (state = defaultState, action: Action) => {
     case ACTIONS.EntitySaveSuccess:
       const key4 = action.payload._key as string;
       const fullEntity = action.payload as Entity;
+      // As the payload is a successful response from the server, this
+      // should never happen, but this is a warning just in case.
+      if (!fullEntity._key)
+        console.warn(
+          `The payload from ${
+            ACTIONS.EntitySaveSuccess
+          } is missing a _key property!`
+        );
       const entityPreview: EntityPreview = {
-        _key: fullEntity._key,
+        _key: fullEntity._key as string,
         name: fullEntity.name,
         imageId: fullEntity.imageId
       };
