@@ -97,3 +97,14 @@ export type LinkRenderData = {
   entityKey: string;
   types: number[];
 };
+
+export type Source = {
+  ref: string;
+  type: number;
+  authors: string[];
+  fullUrl?: string;
+  description?: string;
+  title?: string;
+  rootDomain?: string;
+  domain?: string;
+};

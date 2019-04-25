@@ -26,7 +26,8 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.2.0",
-    "typescript": "3.4.2"
+    "typescript": "3.4.2",
+    "validator": "^10.11.0"
   },
   "scripts": {
     "deploy": "cp build/index.html build/200.html && surge --domain diploma-nathan.surge.sh ./build/",

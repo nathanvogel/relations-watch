@@ -6,6 +6,8 @@ import EntityName from "./EntityName";
 import { RELATION_TYPES_STRRES } from "../strings/strings";
 import { Edge } from "../utils/types";
 import ButtonWithConfirmation from "./ButtonWithConfirmation";
+import SourceEditor from "./SourceEditor";
+import cuid from "cuid";
 
 const Content = styled.div`
   display: block;
@@ -61,6 +63,8 @@ class EdgeForm extends React.Component<Props> {
     sourceText: this.props.initialEdge.sourceText,
     invertDirection: false
   };
+
+  sourceEditorId = cuid.slug();
 
   onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({ text: event.target.value });
@@ -160,6 +164,7 @@ class EdgeForm extends React.Component<Props> {
               onChange={this.onSourceTextChange}
             />
           </Label>
+          <SourceEditor editorId={this.sourceEditorId} />
           <button type="submit">Save</button>
           {!isNew && (
             <ButtonWithConfirmation onAction={this.props.onDelete}>

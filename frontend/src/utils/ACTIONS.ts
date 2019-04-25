@@ -20,6 +20,10 @@ const ACTIONS = {
   EntitySaveClear: "EntitySaveClear",
   EntitySaveSuccess: "EntitySaveSuccess",
   EntitySaveError: "EntitySaveError",
+  SourceRefGetSent: "SourceRefGetSent",
+  SourceRefGetClear: "SourceRefGetClear",
+  SourceRefGetSuccess: "SourceRefGetSuccess",
+  SourceRefGetError: "SourceRefGetError",
   status: {
     ok: "ok",
     error: "error",
