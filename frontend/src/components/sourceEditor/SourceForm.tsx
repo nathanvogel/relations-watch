@@ -72,7 +72,7 @@ class SourceForm extends React.Component<Props> {
     const shouldWriteDescription = !isLink || !Boolean(initialSource.pTitle);
 
     return (
-      <React.Fragment>
+      <div>
         Reference: {this.state.ref}
         <Button onClick={this.props.onCancelClick}>Edit ref</Button>
         {!isLink && (
@@ -141,7 +141,7 @@ class SourceForm extends React.Component<Props> {
           </Label>
         </span>
         the affirmation.
-      </React.Fragment>
+      </div>
     );
   }
 }

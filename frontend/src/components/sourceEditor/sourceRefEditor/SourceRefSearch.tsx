@@ -50,7 +50,7 @@ export interface Props {
 class SourceRefSearch extends React.Component<Props, object> {
   onChange = (object: any) => {
     console.log("onChange selection", object);
-    if (this.props.onChange) this.props.onChange(object.value);
+    if (this.props.onChange) this.props.onChange(object);
   };
 
   onInputChange = (text: any, a: any) => {

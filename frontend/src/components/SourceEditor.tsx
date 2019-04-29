@@ -70,7 +70,9 @@ class SourceEditor extends React.Component<Props> {
   onCreateRef = (value: string) => {
     this.props.getSourceFromRef(value, this.props.refEditorId);
     // Now we want to edit the source.
-    this.setState({ editingRef: false });
+    // Put the ref value state again, because it's cleared with onChange by
+    // react-select when it's unmounted
+    this.setState({ editingRef: false, sourceRef: value });
   };
 
   onCancelSourceFormClick = () => {
