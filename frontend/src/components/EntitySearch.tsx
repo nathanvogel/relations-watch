@@ -6,17 +6,13 @@ import update from "immutability-helper";
 
 import api from "../utils/api";
 import EntityEditor from "./EntityEditor";
-import { Entity } from "../utils/types";
+import { Entity, ReactSelectOption } from "../utils/types";
 
-export interface Suggestion {
+interface Suggestion {
   _key: string;
   name: string;
 }
-export interface ReactSelectOption {
-  value: string;
-  label: string;
-}
-export interface ReactSelectInputValue {
+interface ReactSelectInputValue {
   inputValue: string;
 }
 

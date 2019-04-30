@@ -1,5 +1,5 @@
 import * as ACTIONS from "../utils/ACTIONS";
-import { Source, SelectedOption } from "../utils/types";
+import { Source, ReactSelectOption } from "../utils/types";
 import { ValueType } from "react-select/lib/types";
 
 export interface SouDescriptionChange {
@@ -11,7 +11,7 @@ export interface SouDescriptionChange {
 export interface SouAuthorsChange {
   type: ACTIONS.SOU_AUTHORS_CHANGE;
   namespace: string;
-  selection: ValueType<SelectedOption>;
+  selection: ValueType<ReactSelectOption>;
 }
 
 export interface SouInitialData {
@@ -38,7 +38,7 @@ export function souDescriptionChange(
 
 export function souAuthorsChange(
   namespace: string,
-  selection: ValueType<SelectedOption>
+  selection: ValueType<ReactSelectOption>
 ): SouAuthorsChange {
   return {
     type: ACTIONS.SOU_AUTHORS_CHANGE,

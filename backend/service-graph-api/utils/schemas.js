@@ -36,7 +36,6 @@ const relSchema = joi
       .required(),
     amount: joi.number(),
     exactAmount: joi.boolean(),
-    sourceText: joi.string(),
     sources: joi.array().items(joi.string())
   })
   .unknown(); // allow additional attributes

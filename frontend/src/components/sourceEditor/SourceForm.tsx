@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import { Dispatch, bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { ValueType } from "react-select/lib/types";
 
-import { Source, SelectedOption } from "../../utils/types";
+import { Source, ReactSelectOption } from "../../utils/types";
 import Button from "../Button";
 import CONSTS from "../../utils/consts";
 import EntitySearch from "../EntitySearch";
 import { RootAction } from "../../utils/ACTIONS";
 import { RootStore } from "../../Store";
 import * as sourceFormActions from "../../features/sourceFormActions";
-import { connect } from "react-redux";
-import { ValueType } from "react-select/lib/types";
 
 type OwnProps = {
   editorId: string;
@@ -34,7 +34,7 @@ const mapStateToProps = (
   // Besides the [entityKey1, entityKey2, ...] selection format stored
   // in the database, we need the same array with {value, label} pairs.
   // So we generate one here from the store.
-  const selectedAuthors: ValueType<SelectedOption> = [];
+  const selectedAuthors: ValueType<ReactSelectOption> = [];
   if (formData) {
     const entities = state.entities.datapreview;
     for (let entityKey of formData.authors) {
@@ -86,23 +86,10 @@ class SourceForm extends React.Component<Props> {
 
   onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onDescriptionChange(this.props.editorId, event.target.value);
-    // this.setState({ description: event.target.value });
-  };
-
-  onCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    // this.setState({ comment: event.target.value });
-  };
-
-  onConfirmationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // this.setState({ confirmation: parseInt(event.target.value) });
   };
 
   onAuthorsChange = (selection: any) => {
-    console.log(selection);
     this.props.onAuthorsChange(this.props.editorId, selection);
-    // this.setState({
-    //   authors: selection
-    // });
   };
 
   render() {
@@ -111,10 +98,10 @@ class SourceForm extends React.Component<Props> {
     // Editable props should come from formData
     const { formData, selectedAuthors } = this.props;
 
+    // Form data first has to make an initialisation round in Redux.
     if (!formData) return <div>Waiting for initial data...</div>;
 
     const isLink = initialSource.type === CONSTS.SOURCE_TYPES.LINK;
-    // const confirms = this.state.confirmation === CONSTS.CONFIRMATION.CONFIRMS;
     const shouldWriteDescription = !isLink || !Boolean(initialSource.pTitle);
 
     return (

@@ -1,16 +1,15 @@
 import React from "react";
-import api from "../../../utils/api";
-import StyledAsyncSelect from "../../StyledAsyncSelect";
+import api from "../../utils/api";
+import StyledAsyncSelect from "../StyledAsyncSelect";
+import { ReactSelectOption } from "../../utils/types";
 
-export interface Suggestion {
+interface SourceSuggestion {
+  _key: string;
   ref: string;
-  name: string;
+  title: string;
 }
-export interface ReactSelectOption {
-  value: string;
-  label: string;
-}
-export interface ReactSelectInputValue {
+
+interface ReactSelectInputValue {
   inputValue: string;
 }
 
@@ -24,11 +23,12 @@ const promiseAutocomplete = async (inputValue: string) => {
   if (response.status === 200) {
     // Convert the API data to react-select format.
     const suggestions: Array<ReactSelectOption> = [];
-    const data = response.data as Array<Suggestion>;
+    const data = response.data as Array<SourceSuggestion>;
     for (var i = 0; i < data.length; i += 1) {
       suggestions.push({
-        value: data[i].ref,
-        label: data[i].ref
+        value: data[i]._key,
+        label: data[i].ref,
+        title: data[i].title
       });
     }
     return suggestions;
@@ -40,7 +40,7 @@ const promiseAutocomplete = async (inputValue: string) => {
 };
 
 export interface Props {
-  onChange?: (value: string) => void;
+  onChange?: (value: ReactSelectOption) => void;
   onInputChange?: (value: string) => void;
   inputValue?: string;
   onCreateRef: (value: string) => void;
@@ -49,7 +49,6 @@ export interface Props {
 // object is the state type
 class SourceRefSearch extends React.Component<Props, object> {
   onChange = (object: any) => {
-    console.log("onChange selection", object);
     if (this.props.onChange) this.props.onChange(object);
   };
 

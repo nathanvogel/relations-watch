@@ -104,12 +104,28 @@ export type Source = {
   domain?: string;
 };
 
+/**
+ * The editable properties of a Source, for local state storage only.
+ */
 export type SourceFormData = {
   authors: string[];
   description: string;
 };
 
-export type SelectedOption = {
+export type SourceComment = {
+  type: SourceType;
+  comment: string;
+  sourceKey?: string;
+};
+
+export enum SourceType {
+  Neutral,
+  Confirms,
+  Refutes
+}
+
+export type ReactSelectOption = {
   value: string;
   label: string;
+  [key: string]: any;
 };

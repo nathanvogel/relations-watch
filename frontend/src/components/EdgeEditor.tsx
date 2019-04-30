@@ -14,7 +14,7 @@ import {
   deleteEdge
 } from "../features/edgesSaveAC";
 import { loadEdge } from "../features/edgesLoadAC";
-import { Edge, Status } from "../utils/types";
+import { Edge, Status, SourceComment } from "../utils/types";
 import MetaPostStatus from "./MetaPostStatus";
 import Meta from "./Meta";
 import EdgeForm from "./EdgeForm";
@@ -86,7 +86,7 @@ class EdgeEditor extends React.Component<Props> {
       this.props.loadEdge(this.props.edgeKey);
   }
 
-  onFormSubmit = (edge: Edge) => {
+  onFormSubmit = (edge: Edge, sourceMeta: SourceComment) => {
     if (this.props.edgeKey) {
       this.props.patchEdge(edge, this.props.editorId);
     } else {

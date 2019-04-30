@@ -4,10 +4,11 @@ import styled from "styled-components";
 import CONSTS from "../utils/consts";
 import EntityName from "./EntityName";
 import { RELATION_TYPES_STRRES } from "../strings/strings";
-import { Edge } from "../utils/types";
+import { Edge, SourceComment, SourceType } from "../utils/types";
 import ButtonWithConfirmation from "./ButtonWithConfirmation";
 import SourceEditor from "./SourceEditor";
 import cuid from "cuid";
+import SourceDetails from "./SourceDetails";
 
 const Content = styled.div`
   display: block;
@@ -29,7 +30,7 @@ const Label = styled.label`
 type Props = {
   entity1Key: string;
   entity2Key: string;
-  onFormSubmit: (edge: Edge) => void;
+  onFormSubmit: (edge: Edge, comment: SourceComment) => void;
   onDelete: () => void;
   disabled: boolean;
   initialEdge: Edge;
@@ -40,7 +41,8 @@ type State = {
   type: number | undefined;
   amount?: number;
   exactAmount?: boolean;
-  sourceText?: string;
+  comment: string;
+  sourceKey?: string;
   invertDirection: boolean;
 };
 
@@ -60,7 +62,8 @@ class EdgeForm extends React.Component<Props> {
     type: this.props.initialEdge.type,
     amount: this.props.initialEdge.amount,
     exactAmount: this.props.initialEdge.exactAmount,
-    sourceText: this.props.initialEdge.sourceText,
+    comment: "",
+    sourceKey: undefined,
     invertDirection: false
   };
 
@@ -86,12 +89,29 @@ class EdgeForm extends React.Component<Props> {
     this.setState({ amount: event.target.value });
   };
 
-  onSourceTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ sourceText: event.target.value });
+  onCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.setState({ comment: event.target.value });
+  };
+
+  onSourceSelected = (sourceKey: string) => {
+    this.setState({ sourceKey });
+  };
+
+  onSourceDeselected = () => {
+    this.setState({ sourceKey: undefined });
+  };
+
+  onRefutingSubmit = (event: React.MouseEvent) => {
+    this.submit(false);
   };
 
   onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    this.submit(true);
+  };
+
+  submit = (confirms: boolean) => {
+    // Validate data.
     if (!this.state.type) return;
 
     const { entity1Key, entity2Key } = this.props;
@@ -104,14 +124,18 @@ class EdgeForm extends React.Component<Props> {
       type: this.state.type,
       amount: this.state.amount,
       exactAmount: this.state.exactAmount,
-      sourceText: this.state.sourceText,
+      sourceText: this.props.initialEdge.sourceText,
       sources: []
     };
-    this.props.onFormSubmit(edge);
+    const comment: SourceComment = {
+      comment: this.state.comment,
+      type: confirms ? SourceType.Confirms : SourceType.Refutes
+    };
+    this.props.onFormSubmit(edge, comment);
   };
 
   render() {
-    const { entity1Key, entity2Key } = this.props;
+    const { entity1Key, entity2Key, initialEdge } = this.props;
     const invert = this.state.invertDirection;
     const isNew = !Boolean(this.props.initialEdge._key);
 
@@ -134,7 +158,7 @@ class EdgeForm extends React.Component<Props> {
             </button>
           </div>
           <Label>
-            Brief and neutral description of this information:
+            Succint element description:
             <TextArea
               value={this.state.text}
               onChange={this.onDescriptionChange}
@@ -149,23 +173,42 @@ class EdgeForm extends React.Component<Props> {
             />
           </Label>
           <Label>
-            Exact amount known
             <input
               type="checkbox"
               checked={this.state.exactAmount}
               onChange={this.onExactAmountChange}
             />
+            Exact amount known
           </Label>
-          <Label>
-            Source:
-            <input
-              type="string"
-              value={this.state.sourceText}
-              onChange={this.onSourceTextChange}
-            />
-          </Label>
-          <SourceEditor editorId={this.sourceEditorId} />
+          {initialEdge.sourceText && `(${initialEdge.sourceText})`}
+          {isNew &&
+            (this.state.sourceKey ? (
+              <SourceDetails
+                sourceKey={this.state.sourceKey}
+                onCancelClick={this.onSourceDeselected}
+              />
+            ) : (
+              <SourceEditor
+                sourceKey={this.state.sourceKey}
+                onSourceSelected={this.onSourceSelected}
+                editorId={this.sourceEditorId}
+              />
+            ))}
+          {isNew && (
+            <Label>
+              Comment
+              <textarea
+                onChange={this.onCommentChange}
+                value={this.state.comment}
+              />
+            </Label>
+          )}
           <button type="submit">Save</button>
+          {isNew && (
+            <button onClick={this.onRefutingSubmit}>
+              Save with refuting source
+            </button>
+          )}
           {!isNew && (
             <ButtonWithConfirmation onAction={this.props.onDelete}>
               Delete

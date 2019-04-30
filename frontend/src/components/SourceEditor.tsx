@@ -3,21 +3,26 @@ import styled from "styled-components";
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import SourceRefEditor from "./sourceEditor/SourceRefEditor";
 import SourceForm from "./sourceEditor/SourceForm";
 import MetaPostStatus from "./MetaPostStatus";
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
 import { getSourceFromRef } from "../features/sourcesAC";
-import { Status, Source, SourceFormData } from "../utils/types";
+import { Status, ReactSelectOption } from "../utils/types";
+import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 
 const Content = styled.div`
   disply: block;
 `;
 
+const Label = styled.label`
+  display: block;
+`;
+
 type OwnProps = {
-  sourceKey?: string;
   editorId: string;
+  sourceKey?: string;
+  onSourceSelected?: (sourceKey: string) => void;
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
@@ -33,7 +38,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const refGetError = state.requests.errors[refEditorId];
 
   return {
-    editorId,
+    ...props,
     refEditorId,
     postData,
     postStatus,
@@ -75,6 +80,10 @@ class SourceEditor extends React.Component<Props> {
     this.setState({ editingRef: false, sourceRef: value });
   };
 
+  onSelectSource = (option: ReactSelectOption) => {
+    if (this.props.onSourceSelected) this.props.onSourceSelected(option.value);
+  };
+
   onCancelSourceFormClick = () => {
     this.setState({ editingRef: true });
   };
@@ -86,11 +95,15 @@ class SourceEditor extends React.Component<Props> {
     if (this.state.editingRef)
       return (
         <Content>
-          <SourceRefEditor
-            sourceRef={sourceRef}
-            onSourceRefChange={this.onSourceRefChange}
-            onCreateRef={this.onCreateRef}
-          />
+          <Label>
+            Source document:
+            <SourceRefSearch
+              onChange={this.onSelectSource}
+              inputValue={sourceRef}
+              onInputChange={this.onSourceRefChange}
+              onCreateRef={this.onCreateRef}
+            />
+          </Label>
         </Content>
       );
 

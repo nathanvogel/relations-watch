@@ -1,6 +1,6 @@
 import ACTIONS from "../utils/ACTIONS";
 import * as TYPED_ACTIONS from "../utils/ACTIONS";
-import { Action, EntityPreview, Entity, SelectedOption } from "../utils/types";
+import { Action, EntityPreview, Entity } from "../utils/types";
 import update from "immutability-helper";
 import { SouAuthorsChange } from "./sourceFormActions";
 import { getArray } from "../utils/utils";
