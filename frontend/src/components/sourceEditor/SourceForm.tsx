@@ -1,12 +1,19 @@
 import React from "react";
 import styled from "styled-components";
+import { Dispatch, bindActionCreators } from "redux";
 
 import { Source } from "../../utils/types";
 import Button from "../Button";
 import CONSTS from "../../utils/consts";
 import EntitySearch from "../EntitySearch";
+import { souDescriptionChange } from "../../features/sourceFormActions";
+import { RootAction } from "../../utils/ACTIONS";
+import { RootStore } from "../../Store";
+import * as sourceFormActions from "../../features/sourceFormActions";
+import { connect } from "react-redux";
 
-type Props = {
+type OwnProps = {
+  editorId: string;
   initialSource: Source;
   onCancelClick: () => void;
 };
@@ -19,61 +26,84 @@ const Content = styled.div`
   display: block;
 `;
 
-class SourceForm extends React.Component<Props> {
-  static defaultProps = {
-    initialSource: {
-      ref: "",
-      type: 1,
-      // Corresponds to the react-select value
-      authors: [],
-      fullUrl: "",
-      description: "",
-      pTitle: "",
-      pAuthor: "",
-      pDescription: "",
-      rootDomain: "",
-      domain: ""
-    }
+const mapStateToProps = (
+  state: RootStore,
+  { editorId, onCancelClick, initialSource }: OwnProps
+) => {
+  // const editorId = props.editorId;
+  const formData = state.sourceForms[editorId];
+  return {
+    formData,
+    editorId,
+    onCancelClick,
+    initialSource
   };
+};
 
-  readonly state = {
-    ref: this.props.initialSource.ref,
-    type: this.props.initialSource.type,
-    authors: this.props.initialSource.authors,
-    fullUrl: this.props.initialSource.fullUrl,
-    description: this.props.initialSource.description,
-    comment: "",
-    confirmation: CONSTS.CONFIRMATION.CONFIRMS
-  };
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+  bindActionCreators(
+    {
+      onDescriptionChange: sourceFormActions.souDescriptionChange,
+      feedInitialFormData: sourceFormActions.souInitialData
+    },
+    dispatch
+  );
+
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>;
+
+/**
+ * Always set the React key attribute to the same as editorId, in order to
+ * remount component.
+ * @extends React
+ */
+class SourceForm extends React.Component<Props> {
+  componentDidMount() {
+    this.props.feedInitialFormData(
+      this.props.editorId,
+      this.props.initialSource
+    );
+  }
+
+  componentWillUnmount() {
+    // TODO : clear state
+  }
 
   onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ description: event.target.value });
+    this.props.onDescriptionChange(this.props.editorId, event.target.value);
+    // this.setState({ description: event.target.value });
   };
 
   onCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.setState({ comment: event.target.value });
+    // this.setState({ comment: event.target.value });
   };
 
   onConfirmationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ confirmation: parseInt(event.target.value) });
+    // this.setState({ confirmation: parseInt(event.target.value) });
   };
 
   onAuthorsChange = (selection: any) => {
-    console.log(selection);
-    this.setState({
-      authors: selection
-    });
+    // console.log(selection);
+    // this.setState({
+    //   authors: selection
+    // });
   };
 
   render() {
+    // Non-editable props should come from the initialSource state
     const { initialSource } = this.props;
-    const isLink = this.state.type === CONSTS.SOURCE_TYPES.LINK;
-    const confirms = this.state.confirmation === CONSTS.CONFIRMATION.CONFIRMS;
+    // Editable props should come from formData
+    const { formData } = this.props;
+
+    if (!formData) return <div>Waiting for initial data...</div>;
+
+    const isLink = initialSource.type === CONSTS.SOURCE_TYPES.LINK;
+    // const confirms = this.state.confirmation === CONSTS.CONFIRMATION.CONFIRMS;
     const shouldWriteDescription = !isLink || !Boolean(initialSource.pTitle);
 
     return (
       <div>
-        Reference: {this.state.ref}
+        Reference: {initialSource.ref}
         <Button onClick={this.props.onCancelClick}>Edit ref</Button>
         {!isLink && (
           <p>
@@ -91,7 +121,7 @@ class SourceForm extends React.Component<Props> {
             Description:{" "}
             <input
               onChange={this.onDescriptionChange}
-              value={this.state.description}
+              value={formData.description}
               disabled={!shouldWriteDescription}
             />
           </Label>
@@ -106,11 +136,11 @@ class SourceForm extends React.Component<Props> {
           <div>Detected author(s): {initialSource.pAuthor}</div>
         )}
         <EntitySearch
-          selection={this.state.authors}
+          selection={formData.authors}
           onChange={this.onAuthorsChange}
           isMulti={true}
         />
-        <Label>
+        {/* <Label>
           Optional comment to summarize or nuance the source
           <textarea
             onChange={this.onCommentChange}
@@ -140,10 +170,13 @@ class SourceForm extends React.Component<Props> {
             refutes
           </Label>
         </span>
-        the affirmation.
+        the affirmation. */}
       </div>
     );
   }
 }
 
-export default SourceForm;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SourceForm);

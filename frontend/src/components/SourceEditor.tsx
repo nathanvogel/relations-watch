@@ -9,7 +9,7 @@ import MetaPostStatus from "./MetaPostStatus";
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
 import { getSourceFromRef } from "../features/sourcesAC";
-import { Status, Source } from "../utils/types";
+import { Status, Source, SourceFormData } from "../utils/types";
 
 const Content = styled.div`
   disply: block;
@@ -100,7 +100,9 @@ class SourceEditor extends React.Component<Props> {
           <MetaPostStatus status={refGetStatus} error={refGetError} />
         ) : (
           <SourceForm
-            initialSource={refGetData as Source}
+            key={"form-" + this.props.editorId}
+            editorId={"form-" + this.props.editorId}
+            initialSource={refGetData}
             onCancelClick={this.onCancelSourceFormClick}
           />
         )}

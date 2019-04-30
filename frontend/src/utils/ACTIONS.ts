@@ -36,3 +36,16 @@ export default ACTIONS;
 export interface RootAction {
   type: string;
 }
+
+export type NamespacedAction = RootAction & {
+  namespace: string;
+};
+
+export const SOU_DESCRIPTION_CHANGE = "SOU_DESCRIPTION_CHANGE";
+export type SOU_DESCRIPTION_CHANGE = typeof SOU_DESCRIPTION_CHANGE;
+
+export const SOU_AUTHORS_CHANGE = "SOU_AUTHORS_CHANGE";
+export type SOU_AUTHORS_CHANGE = typeof SOU_AUTHORS_CHANGE;
+
+export const SOU_INITIAL_DATA = "SOU_INITIAL_DATA";
+export type SOU_INITIAL_DATA = typeof SOU_INITIAL_DATA;

@@ -1,24 +1,28 @@
+import { AnyAction } from "redux";
+
 export type ErrorPayload = {
   eData: any;
   eMessage: string;
   eStatus: number | string;
 };
 
-export type Action = {
-  type: string;
-  status: Status;
-  meta: {
-    entityKey?: string;
-    requestId?: string;
-    relationId?: string;
-    error?: ErrorPayload;
-    edgeKey?: string;
-    _key?: string;
-    _from?: string;
-    _to?: string;
-  };
-  payload?: any;
-};
+export type Action =
+  | AnyAction
+  | {
+      type: string;
+      status: Status;
+      meta: {
+        entityKey?: string;
+        requestId?: string;
+        relationId?: string;
+        error?: ErrorPayload;
+        edgeKey?: string;
+        _key?: string;
+        _from?: string;
+        _to?: string;
+      };
+      payload?: any;
+    };
 
 export enum Status {
   Requested,
@@ -97,4 +101,9 @@ export type Source = {
   pDescription?: string;
   rootDomain?: string;
   domain?: string;
+};
+
+export type SourceFormData = {
+  authors: string[];
+  description: string;
 };
