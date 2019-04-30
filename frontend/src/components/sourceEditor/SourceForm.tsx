@@ -93,20 +93,16 @@ class SourceForm extends React.Component<Props> {
   };
 
   render() {
-    // Non-editable props should come from the initialSource state
-    const { initialSource } = this.props;
-    // Editable props should come from formData
     const { formData, selectedAuthors } = this.props;
-
-    // Form data first has to make an initialisation round in Redux.
+    // the formData first has to make an initialisation round in Redux.
     if (!formData) return <div>Waiting for initial data...</div>;
 
-    const isLink = initialSource.type === CONSTS.SOURCE_TYPES.LINK;
-    const shouldWriteDescription = !isLink || !Boolean(initialSource.pTitle);
+    const isLink = formData.type === CONSTS.SOURCE_TYPES.LINK;
+    const shouldWriteDescription = !isLink || !Boolean(formData.pTitle);
 
     return (
       <div>
-        Reference: {initialSource.ref}
+        Reference: {formData.ref}
         <Button onClick={this.props.onCancelClick}>Edit ref</Button>
         {!isLink && (
           <p>
@@ -130,50 +126,19 @@ class SourceForm extends React.Component<Props> {
           </Label>
         ) : (
           <div>
-            Description: {initialSource.pTitle}
+            Description: {formData.pTitle}
             <br />
-            {initialSource.pDescription}
+            {formData.pDescription}
           </div>
         )}
-        {isLink && initialSource.pAuthor && (
-          <div>Detected author(s): {initialSource.pAuthor}</div>
+        {isLink && formData.pAuthor && (
+          <div>Detected author(s): {formData.pAuthor}</div>
         )}
         <EntitySearch
           selection={selectedAuthors}
           onChange={this.onAuthorsChange}
           isMulti={true}
         />
-        {/* <Label>
-          Optional comment to summarize or nuance the source
-          <textarea
-            onChange={this.onCommentChange}
-            value={this.state.comment}
-          />
-        </Label>
-        This source
-        <span>
-          <Label>
-            <input
-              type="radio"
-              name="confirmation"
-              value={CONSTS.CONFIRMATION.CONFIRMS}
-              checked={Boolean(confirms)}
-              onChange={this.onConfirmationChange}
-            />
-            supports
-          </Label>
-          <Label>
-            <input
-              type="radio"
-              name="confirmation"
-              value={CONSTS.CONFIRMATION.REFUTES}
-              checked={!confirms}
-              onChange={this.onConfirmationChange}
-            />
-            refutes
-          </Label>
-        </span>
-        the affirmation. */}
       </div>
     );
   }
