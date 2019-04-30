@@ -1,6 +1,3 @@
-import Redux, { AnyAction } from "redux";
-import { NamespacedAction, RootAction } from "../utils/ACTIONS";
-
 /**
  * Code from: https://gist.github.com/zivni/677638f712b9d16f78ee1903b5a11596
  *

@@ -2,15 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { Dispatch, bindActionCreators } from "redux";
 
-import { Source } from "../../utils/types";
+import { Source, SelectedOption } from "../../utils/types";
 import Button from "../Button";
 import CONSTS from "../../utils/consts";
 import EntitySearch from "../EntitySearch";
-import { souDescriptionChange } from "../../features/sourceFormActions";
 import { RootAction } from "../../utils/ACTIONS";
 import { RootStore } from "../../Store";
 import * as sourceFormActions from "../../features/sourceFormActions";
 import { connect } from "react-redux";
+import { ValueType } from "react-select/lib/types";
 
 type OwnProps = {
   editorId: string;
@@ -30,10 +30,24 @@ const mapStateToProps = (
   state: RootStore,
   { editorId, onCancelClick, initialSource }: OwnProps
 ) => {
-  // const editorId = props.editorId;
   const formData = state.sourceForms[editorId];
+  // Besides the [entityKey1, entityKey2, ...] selection format stored
+  // in the database, we need the same array with {value, label} pairs.
+  // So we generate one here from the store.
+  const selectedAuthors: ValueType<SelectedOption> = [];
+  if (formData) {
+    const entities = state.entities.datapreview;
+    for (let entityKey of formData.authors) {
+      const name = entities[entityKey] ? entities[entityKey].name : entityKey;
+      selectedAuthors.push({
+        label: name,
+        value: entityKey
+      });
+    }
+  }
   return {
     formData,
+    selectedAuthors,
     editorId,
     onCancelClick,
     initialSource
@@ -44,6 +58,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
   bindActionCreators(
     {
       onDescriptionChange: sourceFormActions.souDescriptionChange,
+      onAuthorsChange: sourceFormActions.souAuthorsChange,
       feedInitialFormData: sourceFormActions.souInitialData
     },
     dispatch
@@ -83,7 +98,8 @@ class SourceForm extends React.Component<Props> {
   };
 
   onAuthorsChange = (selection: any) => {
-    // console.log(selection);
+    console.log(selection);
+    this.props.onAuthorsChange(this.props.editorId, selection);
     // this.setState({
     //   authors: selection
     // });
@@ -93,7 +109,7 @@ class SourceForm extends React.Component<Props> {
     // Non-editable props should come from the initialSource state
     const { initialSource } = this.props;
     // Editable props should come from formData
-    const { formData } = this.props;
+    const { formData, selectedAuthors } = this.props;
 
     if (!formData) return <div>Waiting for initial data...</div>;
 
@@ -136,7 +152,7 @@ class SourceForm extends React.Component<Props> {
           <div>Detected author(s): {initialSource.pAuthor}</div>
         )}
         <EntitySearch
-          selection={formData.authors}
+          selection={selectedAuthors}
           onChange={this.onAuthorsChange}
           isMulti={true}
         />

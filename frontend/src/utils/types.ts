@@ -1,4 +1,5 @@
 import { AnyAction } from "redux";
+import { ValueType } from "react-select/lib/types";
 
 export type ErrorPayload = {
   eData: any;
@@ -106,4 +107,9 @@ export type Source = {
 export type SourceFormData = {
   authors: string[];
   description: string;
+};
+
+export type SelectedOption = {
+  value: string;
+  label: string;
 };

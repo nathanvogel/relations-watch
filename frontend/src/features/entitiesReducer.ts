@@ -1,6 +1,9 @@
 import ACTIONS from "../utils/ACTIONS";
-import { Action, EntityPreview, Entity } from "../utils/types";
+import * as TYPED_ACTIONS from "../utils/ACTIONS";
+import { Action, EntityPreview, Entity, SelectedOption } from "../utils/types";
 import update from "immutability-helper";
+import { SouAuthorsChange } from "./sourceFormActions";
+import { getArray } from "../utils/utils";
 
 const defaultState = { datapreview: {}, data: {}, status: {}, errors: {} };
 
@@ -44,6 +47,23 @@ export default (state = defaultState, action: Action) => {
         datapreview: { [key4]: { $set: entityPreview } },
         data: { [key4]: { $set: action.payload } },
         status: { [key4]: { $set: action.status } }
+      });
+    case TYPED_ACTIONS.SOU_AUTHORS_CHANGE:
+      const authorsAction = action as SouAuthorsChange;
+      // Selection could be empty, no need to react here.
+      if (!authorsAction.selection) return state;
+      // Make sure we're working with an array.
+      const selectionArray = getArray(authorsAction.selection);
+      // Push the entity previews to the state.
+      const newEntityPreviews: { [key: string]: EntityPreview } = {};
+      for (let option of selectionArray) {
+        newEntityPreviews[option.value] = {
+          _key: option.value,
+          name: option.label
+        };
+      }
+      return update(state, {
+        datapreview: { $merge: newEntityPreviews }
       });
     case ACTIONS.LinksLoadSuccess:
       if (!action.payload || !action.payload.vertices) {

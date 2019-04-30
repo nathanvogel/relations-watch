@@ -91,3 +91,11 @@ export function emptyOrRealKey(key?: string): string {
 export function keyForUrl(key?: string): string {
   return key || CONSTS.EMPTY_KEY;
 }
+
+/**
+ * Makes sure we're working with an array, in case we got a single object.
+ * (when working with ReactSelect ValueType for example).
+ */
+export function getArray<T>(arg: T | T[]): T[] {
+  return arg instanceof Array ? arg : [arg];
+}
