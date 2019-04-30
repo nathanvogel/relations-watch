@@ -3,13 +3,18 @@ const joi = require("joi");
 const createRouter = require("@arangodb/foxx/router");
 const db = require("@arangodb").db;
 const aql = require("@arangodb").aql;
+const request = require("@arangodb/request");
+const update = require("immutability-helper");
 
 const apiFactory = require("../utils/apiFactory");
 const utils = require("../utils/utils");
 const relSchema = require("../utils/schemas.js").relSchema;
+const relationWithSourceSchema = require("../utils/schemas.js")
+  .relationWithSourceSchema;
 const CONST = require("../utils/const.js");
 const entColl = db._collection(CONST.entCollectionName);
 const relColl = db._collection(CONST.relCollectionName);
+// const saveNewSources = require("../sources").saveNewSources;
 
 const router = createRouter();
 module.exports = router;
@@ -31,6 +36,67 @@ router
   })
   .body(
     joi.alternatives().try(relSchema, joi.array().items(relSchema)),
+    "The new relation to establish in the database."
+  )
+  .response(
+    joi
+      .alternatives()
+      .try(joi.object().required(), joi.array().items(joi.object().required())),
+    "The new added objects, with their meta-information."
+  )
+  .summary("Creates one or many new relations")
+  .description("Links two entities in the database with a new edge.");
+
+// POST new relations with a new source
+// TODO : validate input.
+router
+  .post("/withSource", function(req, res) {
+    const multiple = Array.isArray(req.body);
+    const body = multiple ? req.body : [req.body];
+
+    let data = [];
+    for (var doc of body) {
+      // doc = {relation:Edge, comment:SourceComment, source:SourceFormData}
+      // TODO: switch to a transaction ?
+      // https://www.arangodb.com/docs/3.4/transactions-transaction-invocation.html
+      // const savedSource = saveNewSources(doc.source)
+      const response = request.post(module.context.baseUrl + "/sources", {
+        body: doc.source,
+        json: true,
+        encoding: "utf-8"
+      });
+      if (response.statusCode !== 200) {
+        res.status(response.statusCode).send(response.body);
+        return;
+      }
+      // The Arango documentation indicates that it should be automatically
+      // parsed with json:true but it doesn't seem to be the case.
+      const savedSource =
+        typeof response.body === "string"
+          ? JSON.parse(response.body)
+          : response.body;
+      // Add the newly created sourceKey to the edge comment.
+      const linkedComment = update(doc.comment, {
+        $merge: { sourceKey: savedSource._key }
+      });
+      // Link the comment into the sources.
+      const edge = update(doc.relation, {
+        sources: { $set: [linkedComment] }
+      });
+      // Do the regular edge save operation.
+      utils.prefixToFromWithCollectionName(edge);
+      const meta = relColl.save(edge);
+      data.push(Object.assign(edge, meta));
+    }
+    res.send(multiple ? data : data[0]);
+  })
+  .body(
+    joi
+      .alternatives()
+      .try(
+        relationWithSourceSchema,
+        joi.array().items(relationWithSourceSchema)
+      ),
     "The new relation to establish in the database."
   )
   .response(

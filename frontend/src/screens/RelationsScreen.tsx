@@ -77,15 +77,15 @@ type Props = ReturnType<typeof mapStateToProps> &
   RouteComponentProps;
 
 type State = {
-  addEdgeEditorId: string;
   adding: boolean;
 };
 
 class RelationsScreen extends React.Component<Props> {
   readonly state: State = {
-    addEdgeEditorId: cuid.slug(),
     adding: false
   };
+
+  addEdgeEditorId = cuid.slug();
 
   componentDidMount() {
     const { realKey1, realKey2, relationsStatus } = this.props;
@@ -147,7 +147,7 @@ class RelationsScreen extends React.Component<Props> {
                   <EdgeEditor
                     entity1Key={realKey1}
                     entity2Key={realKey2}
-                    editorId={this.state.addEdgeEditorId}
+                    editorId={this.addEdgeEditorId}
                     dismiss={this.onCancelAddClick}
                   />
                   <Button onClick={this.onCancelAddClick}>Cancel</Button>

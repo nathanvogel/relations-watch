@@ -104,21 +104,13 @@ export type Source = {
   domain?: string;
 };
 
-/**
- * The editable properties of a Source, for local state storage only.
- */
-export type SourceFormData = {
-  authors: string[];
-  description: string;
-};
-
 export type SourceComment = {
-  type: SourceType;
+  type: SourceCommentType;
   comment: string;
   sourceKey?: string;
 };
 
-export enum SourceType {
+export enum SourceCommentType {
   Neutral,
   Confirms,
   Refutes

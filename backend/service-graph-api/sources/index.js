@@ -2,7 +2,7 @@
 const joi = require("joi");
 const createRouter = require("@arangodb/foxx/router");
 const db = require("@arangodb").db;
-const errors = require("@arangodb").errors;
+// const errors = require("@arangodb").errors;
 const query = require("@arangodb").query;
 const validator = require("validator");
 const Url = require("url-parse");
@@ -12,7 +12,7 @@ const souSchema = require("../utils/schemas").souSchema;
 const getRootDomain = require("../utils/utils").getRootDomain;
 const CONST = require("../utils/const.js");
 const souColl = db._collection(CONST.souCollectionName);
-const DOC_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
+// const DOC_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
 
 const router = createRouter();
 module.exports = router;
@@ -41,19 +41,24 @@ function getRefType(fullRef) {
   return isURL ? CONST.SOURCE_TYPES.LINK : CONST.SOURCE_TYPES.REF;
 }
 
+function saveNewSources(sources) {
+  const multiple = Array.isArray(sources);
+  const body = multiple ? sources : [sources];
+
+  let data = [];
+  for (var doc of body) {
+    // TODO: search by ref if it exists.
+    const meta = souColl.save(doc);
+    data.push(Object.assign(doc, meta));
+  }
+  return multiple ? data : data[0];
+}
+
 // POST a new source
 router
   .post("/", function(req, res) {
-    const multiple = Array.isArray(req.body);
-    const body = multiple ? req.body : [req.body];
-
-    let data = [];
-    for (var doc of body) {
-      // TODO: search by ref if it exists.
-      const meta = souColl.save(doc);
-      data.push(Object.assign(doc, meta));
-    }
-    res.send(multiple ? data : data[0]);
+    const savedSources = saveNewSources(req.body);
+    res.send(savedSources);
   })
   .body(
     joi.alternatives().try(souSchema, joi.array().items(souSchema)),

@@ -10,7 +10,7 @@ import {
   EdgePreview,
   Edge,
   EntityPreview,
-  SourceFormData
+  Source
 } from "./utils/types";
 
 // import { createLogger } from "redux-logger";
@@ -65,5 +65,5 @@ export interface RootStore {
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };
   };
-  sourceForms: { [key: string]: SourceFormData };
+  sourceForms: { [key: string]: Source };
 }

@@ -1,20 +1,45 @@
 import { Dispatch } from "redux";
+import update from "immutability-helper";
+import { AxiosError, AxiosPromise } from "axios";
 
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
-import { Action, ErrorPayload, Edge } from "../utils/types";
+import {
+  Action,
+  ErrorPayload,
+  Edge,
+  SourceComment,
+  Source
+} from "../utils/types";
 import { Status } from "../utils/types";
-import { AxiosError } from "axios";
 
 /**
  * Given an new relation element, upload it as an edge to the database.
  */
-export const postEdge = (edge: Edge, requestId: string) => async (
-  dispatch: Dispatch
-): Promise<void> => {
+export const postEdge = (
+  edge: Edge,
+  comment: SourceComment,
+  requestId: string,
+  source?: Source
+) => async (dispatch: Dispatch): Promise<void> => {
   dispatch(actionSaveRequest(requestId));
-  api
-    .post(`/relations`, edge)
+  var promise: AxiosPromise;
+  if (comment.sourceKey) {
+    const relation = update(edge, {
+      sources: { $set: [comment] }
+    });
+    promise = api.post(`/relations`, relation);
+  } else {
+    if (!source) {
+      throw new Error("Got a new edge without sourceKey nor Source");
+    }
+    promise = api.post(`/relations/withSource`, {
+      relation: edge,
+      comment: comment,
+      source: source
+    });
+  }
+  return promise
     .then(res => {
       const potentialError = checkResponse(res);
       if (potentialError) {

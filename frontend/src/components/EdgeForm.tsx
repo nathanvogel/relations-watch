@@ -4,7 +4,7 @@ import styled from "styled-components";
 import CONSTS from "../utils/consts";
 import EntityName from "./EntityName";
 import { RELATION_TYPES_STRRES } from "../strings/strings";
-import { Edge, SourceComment, SourceType } from "../utils/types";
+import { Edge, SourceComment, SourceCommentType } from "../utils/types";
 import ButtonWithConfirmation from "./ButtonWithConfirmation";
 import SourceEditor from "./SourceEditor";
 import cuid from "cuid";
@@ -34,6 +34,7 @@ type Props = {
   onDelete: () => void;
   disabled: boolean;
   initialEdge: Edge;
+  sourceEditorId: string;
 };
 
 type State = {
@@ -66,8 +67,6 @@ class EdgeForm extends React.Component<Props> {
     sourceKey: undefined,
     invertDirection: false
   };
-
-  sourceEditorId = cuid.slug();
 
   onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({ text: event.target.value });
@@ -127,9 +126,13 @@ class EdgeForm extends React.Component<Props> {
       sourceText: this.props.initialEdge.sourceText,
       sources: []
     };
+    // sourceKey is undefined if it's a new source. If so, the onFormSubmit
+    // function should look for the sourceForm with the given sourceFormId
+    // in the Redux store.
     const comment: SourceComment = {
       comment: this.state.comment,
-      type: confirms ? SourceType.Confirms : SourceType.Refutes
+      type: confirms ? SourceCommentType.Confirms : SourceCommentType.Refutes,
+      sourceKey: this.state.sourceKey // Optional
     };
     this.props.onFormSubmit(edge, comment);
   };
@@ -191,7 +194,7 @@ class EdgeForm extends React.Component<Props> {
               <SourceEditor
                 sourceKey={this.state.sourceKey}
                 onSourceSelected={this.onSourceSelected}
-                editorId={this.sourceEditorId}
+                editorId={this.props.sourceEditorId}
               />
             ))}
           {isNew && (

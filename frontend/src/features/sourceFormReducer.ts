@@ -2,10 +2,13 @@ import * as ACTIONS from "../utils/ACTIONS";
 import { SourceFormAction } from "./sourceFormActions";
 import update from "immutability-helper";
 
-import { SourceFormData } from "../utils/types";
+import { Source } from "../utils/types";
 import { getArray } from "../utils/utils";
+import CONSTS from "../utils/consts";
 
-const defaultState: SourceFormData = {
+const defaultState: Source = {
+  ref: "",
+  type: CONSTS.SOURCE_TYPES.LINK,
   authors: [],
   description: ""
 };
@@ -14,16 +17,12 @@ const defaultState: SourceFormData = {
  * This reducer takes care of updating the state in response to requests
  * that are scoped to a component instance or a request Id.
  */
-export default (
-  state: SourceFormData = defaultState,
-  action: SourceFormAction
-) => {
+export default (state: Source = defaultState, action: SourceFormAction) => {
   switch (action.type) {
     case ACTIONS.SOU_DESCRIPTION_CHANGE:
       return update(state, { description: { $set: action.newDescription } });
     case ACTIONS.SOU_INITIAL_DATA:
-      const { authors, description } = action.data;
-      return update(state, { $merge: { authors, description } });
+      return update(state, { $set: action.data });
     case ACTIONS.SOU_AUTHORS_CHANGE:
       const authors2: string[] = [];
       if (action.selection) {

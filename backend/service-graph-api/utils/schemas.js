@@ -36,7 +36,19 @@ const relSchema = joi
       .required(),
     amount: joi.number(),
     exactAmount: joi.boolean(),
-    sources: joi.array().items(joi.string())
+    sources: joi.array().items(
+      joi
+        .object()
+        .keys({
+          type: joi
+            .number()
+            .integer()
+            .required(), // Is it confirming or refuting ?,
+          comment: joi.string().optional(),
+          sourceKey: joi.string().required()
+        })
+        .optional()
+    )
   })
   .unknown(); // allow additional attributes
 
@@ -51,7 +63,7 @@ const souSchema = joi
       .required(), // Is it a LINK or REF ?
     authors: joi.array().items(joi.string()), // Entity keys
     // LINK-only
-    fullUrl: joi.string(),
+    fullUrl: joi.string().allow(null),
     description: joi.string(),
     pTitle: joi.string(),
     pDescription: joi.string(),
@@ -61,8 +73,27 @@ const souSchema = joi
   })
   .unknown(); // allow additional attributes
 
+const relationWithSourceSchema = joi
+  .object()
+  .required()
+  .keys({
+    relation: relSchema,
+    comment: joi
+      .object()
+      .required()
+      .keys({
+        type: joi
+          .number()
+          .integer()
+          .required(), // Is it confirming or refuting ?,
+        comment: joi.string().optional()
+      }),
+    source: souSchema
+  });
+
 module.exports = {
   entSchema,
   relSchema,
-  souSchema
+  souSchema,
+  relationWithSourceSchema
 };

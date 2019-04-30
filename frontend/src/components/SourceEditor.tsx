@@ -32,7 +32,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const postStatus = state.requests.status[editorId];
   const postError = state.requests.errors[editorId];
   // Get the GET request state for the Source generator (from ref)
-  const refEditorId = "ref-" + props.editorId;
+  const refEditorId = "ref_" + props.editorId;
   const refGetData = state.requests.data[refEditorId];
   const refGetStatus = state.requests.status[refEditorId];
   const refGetError = state.requests.errors[refEditorId];
@@ -113,8 +113,8 @@ class SourceEditor extends React.Component<Props> {
           <MetaPostStatus status={refGetStatus} error={refGetError} />
         ) : (
           <SourceForm
-            key={"form-" + this.props.editorId}
-            editorId={"form-" + this.props.editorId}
+            key={this.props.editorId}
+            editorId={this.props.editorId}
             initialSource={refGetData}
             onCancelClick={this.onCancelSourceFormClick}
           />

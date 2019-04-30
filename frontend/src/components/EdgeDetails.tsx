@@ -51,21 +51,26 @@ class EdgeDetails extends React.Component<Props> {
 
   render() {
     const { edge } = this.props;
-    return this.state.editing ? (
-      <div>
-        <Actions>
-          <Button onClick={this.onDoneEditing}>Cancel</Button>
-        </Actions>
-        <EdgeEditor
-          key={edge._key}
-          edgeKey={edge._key}
-          entity1Key={edge._from}
-          entity2Key={edge._to}
-          dismiss={this.onDoneEditing}
-          editorId={edge._key || "theid"}
-        />
-      </div>
-    ) : (
+    if (!edge._key) return <Content>Error: missing _key attribute.</Content>;
+
+    if (this.state.editing)
+      return (
+        <div>
+          <Actions>
+            <Button onClick={this.onDoneEditing}>Cancel</Button>
+          </Actions>
+          <EdgeEditor
+            key={edge._key}
+            edgeKey={edge._key}
+            entity1Key={edge._from}
+            entity2Key={edge._to}
+            dismiss={this.onDoneEditing}
+            editorId={edge._key}
+          />
+        </div>
+      );
+
+    return (
       <Content color={RELATION_COLORS[edge.type]}>
         <Actions>
           <Button onClick={this.onEditClick}>Edit</Button>

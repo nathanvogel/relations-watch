@@ -54,9 +54,13 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const postData = state.requests.data[editorId];
   const postStatus = state.requests.status[editorId];
   const postError = state.requests.errors[editorId];
+  // Get the SourceFormData (used only if it's a new edge)
+  // Otherwise, the source should be updated separately.
+  const sourceFormData = state.sourceForms["sou_" + editorId];
 
   return {
     ...props,
+    sourceFormData,
     relationId,
     postData,
     postStatus,
@@ -87,10 +91,20 @@ class EdgeEditor extends React.Component<Props> {
   }
 
   onFormSubmit = (edge: Edge, sourceMeta: SourceComment) => {
+    const { editorId } = this.props;
     if (this.props.edgeKey) {
-      this.props.patchEdge(edge, this.props.editorId);
+      this.props.patchEdge(edge, editorId);
     } else {
-      this.props.postEdge(edge, this.props.editorId);
+      if (sourceMeta.sourceKey) {
+        this.props.postEdge(edge, sourceMeta, editorId);
+      } else {
+        this.props.postEdge(
+          edge,
+          sourceMeta,
+          editorId,
+          this.props.sourceFormData
+        );
+      }
     }
   };
 
@@ -152,6 +166,7 @@ class EdgeEditor extends React.Component<Props> {
           onFormSubmit={this.onFormSubmit}
           onDelete={this.onDelete}
           disabled={postStatus === Status.Requested}
+          sourceEditorId={"sou_" + this.props.editorId}
         />
         <MetaPostStatus status={postStatus} error={postError} />
       </Content>
