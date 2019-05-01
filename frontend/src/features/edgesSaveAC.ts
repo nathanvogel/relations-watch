@@ -6,6 +6,7 @@ import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
 import { Action, ErrorPayload, Edge, SourceLink, Source } from "../utils/types";
 import { Status } from "../utils/types";
+import { actionSourcesReceived } from "./sourcesAC";
 
 /**
  * Given an new relation element, upload it as an edge to the database.
@@ -17,44 +18,65 @@ export const postEdge = (
   source?: Source
 ) => async (dispatch: Dispatch): Promise<void> => {
   dispatch(actionSaveRequest(requestId));
-  var promise: AxiosPromise;
+
   // If it's an existing source, we can just send the whole thing to the server.
   if (sourceLink.sourceKey) {
     const relation = update(edge, {
       sources: { $set: [sourceLink] }
     });
-    promise = api.post(`/relations`, relation);
+    return api
+      .post(`/relations`, relation)
+      .then(res => {
+        const potentialError = checkResponse(res);
+        if (potentialError) {
+          dispatch(actionSaveError(requestId, potentialError));
+          return;
+        }
+        // Everything is fine, we got the data, send it!
+        dispatch(actionEdgeSaveSuccess(requestId, res.data));
+      })
+      .catch((error: AxiosError) => {
+        const errorPayload = checkError(error);
+        console.error(
+          `Error posting edge from ${edge._from} to ${edge._to}`,
+          requestId,
+          errorPayload
+        );
+        dispatch(actionSaveError(requestId, errorPayload));
+      });
   } else {
     if (!source) {
       throw new Error("Got a new edge without sourceKey nor Source");
     }
     // If it's a new source, we need to send stuff separately so that the server
     // can save everything separately and atomically.
-    promise = api.post(`/relations/withSource`, {
-      relation: edge,
-      sourceLink: sourceLink,
-      source: source
-    });
+    return api
+      .post(`/relations/withSource`, {
+        relation: edge,
+        sourceLink: sourceLink,
+        source: source
+      })
+      .then(res => {
+        const potentialError = checkResponse(res);
+        if (potentialError) {
+          dispatch(actionSaveError(requestId, potentialError));
+          return;
+        }
+        // Everything is fine, we got the data, send it!
+        const { source, relation } = res.data;
+        dispatch(actionEdgeSaveSuccess(requestId, relation));
+        dispatch(actionSourcesReceived([source._key], [source]));
+      })
+      .catch((error: AxiosError) => {
+        const errorPayload = checkError(error);
+        console.error(
+          `Error posting edge+source from ${edge._from} to ${edge._to}`,
+          requestId,
+          errorPayload
+        );
+        dispatch(actionSaveError(requestId, errorPayload));
+      });
   }
-  return promise
-    .then(res => {
-      const potentialError = checkResponse(res);
-      if (potentialError) {
-        dispatch(actionSaveError(requestId, potentialError));
-        return;
-      }
-      // Everything is fine, we got the data, send it!
-      dispatch(actionSaveSuccess(requestId, res.data));
-    })
-    .catch((error: AxiosError) => {
-      const errorPayload = checkError(error);
-      console.error(
-        `Error posting edge from ${edge._from} to ${edge._to}`,
-        requestId,
-        errorPayload
-      );
-      dispatch(actionSaveError(requestId, errorPayload));
-    });
 };
 
 export const patchEdge = (edge: Edge, requestId: string) => async (
@@ -70,7 +92,7 @@ export const patchEdge = (edge: Edge, requestId: string) => async (
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionSaveSuccess(requestId, res.data));
+      dispatch(actionEdgeSaveSuccess(requestId, res.data));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
@@ -149,7 +171,7 @@ function actionSaveError(requestId: string, error: ErrorPayload): Action {
   };
 }
 
-function actionSaveSuccess(requestId: string, payload: object): Action {
+function actionEdgeSaveSuccess(requestId: string, payload: object): Action {
   return {
     type: ACTIONS.EdgeSaveSuccess,
     payload,

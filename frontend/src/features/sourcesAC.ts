@@ -101,7 +101,7 @@ export const loadSources = (sourceKeys: string[]) => async (
 ): Promise<void> => {
   const keys = arrayWithoutDuplicates(sourceKeys);
   // TODO: Optimization: Use getState to prevent reloading sources we already have.
-  dispatch(actionManyRequest(keys));
+  dispatch(actionSourcesRequest(keys));
   api
     .get(`/sources/many`, {
       params: { keys: keys },
@@ -114,20 +114,20 @@ export const loadSources = (sourceKeys: string[]) => async (
     .then(res => {
       const potentialError = checkResponse(res);
       if (potentialError) {
-        dispatch(actionManyError(keys, potentialError));
+        dispatch(actionSourcesError(keys, potentialError));
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionManyReceived(keys, res.data));
+      dispatch(actionSourcesReceived(keys, res.data));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
       console.error("Error getting sources ", keys, errorPayload);
-      dispatch(actionManyError(keys, errorPayload));
+      dispatch(actionSourcesError(keys, errorPayload));
     });
 };
 
-function actionManyRequest(sourceKeys: string[]): Action {
+function actionSourcesRequest(sourceKeys: string[]): Action {
   return {
     type: ACTIONS.SourceGetManyRequested,
     status: Status.Requested,
@@ -135,7 +135,7 @@ function actionManyRequest(sourceKeys: string[]): Action {
   };
 }
 
-function actionManyError(sourceKeys: string[], error: ErrorPayload): Action {
+function actionSourcesError(sourceKeys: string[], error: ErrorPayload): Action {
   return {
     type: ACTIONS.SourceGetManyError,
     status: Status.Error,
@@ -143,7 +143,10 @@ function actionManyError(sourceKeys: string[], error: ErrorPayload): Action {
   };
 }
 
-function actionManyReceived(sourceKeys: string[], payload: Source[]): Action {
+export function actionSourcesReceived(
+  sourceKeys: string[],
+  payload: Source[]
+): Action {
   return {
     type: ACTIONS.SourceGetManySuccess,
     payload,

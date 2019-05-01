@@ -86,7 +86,7 @@ router
       // Do the regular edge save operation.
       utils.prefixToFromWithCollectionName(edge);
       const meta = relColl.save(edge);
-      data.push(Object.assign(edge, meta));
+      data.push({ relation: Object.assign(edge, meta), source: savedSource });
     }
     res.send(multiple ? data : data[0]);
   })
