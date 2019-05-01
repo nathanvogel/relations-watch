@@ -228,7 +228,7 @@ class EdgeForm extends React.Component<Props> {
           )}
           <button type="submit">Save</button>
           {isNew && (
-            <button onClick={this.onRefutingSubmit}>
+            <button type="button" onClick={this.onRefutingSubmit}>
               Save with refuting source
             </button>
           )}
