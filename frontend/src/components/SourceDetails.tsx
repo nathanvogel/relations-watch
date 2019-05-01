@@ -68,15 +68,15 @@ class SourceDetails extends React.Component<Props> {
 
     return (
       <Content>
-        <div>{source.pTitle || source.description}</div>
         {isLink ? (
           <StyledSourceA href={source.fullUrl}>
             <strong>{domain}</strong>
             {refEnd}
           </StyledSourceA>
         ) : (
-          source.ref
+          <strong>{source.ref}</strong>
         )}
+        <div>{source.pTitle || source.description}</div>
         <SourceEntitiesContainer>
           {source.authors.map(entityKey => (
             <SourceEntityPreview key={entityKey} entityKey={entityKey} />
