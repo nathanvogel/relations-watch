@@ -14,6 +14,7 @@ export interface Action extends AnyAction {
     requestId?: string;
     relationId?: string;
     sourceKeys?: string[];
+    entityKeys?: string[];
     error?: ErrorPayload;
     edgeKey?: string;
     _key?: string;

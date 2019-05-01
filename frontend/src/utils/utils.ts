@@ -117,7 +117,6 @@ export function getKeyObject<T, P extends Extract<keyof T, string>>(
 ): { [key: string]: T } {
   const list: { [key: string]: T } = {};
   for (let element of array) {
-    console.log(element[keyPropName]);
     const key = (element[keyPropName] as unknown) as string;
     if (key) list[key] = element;
   }

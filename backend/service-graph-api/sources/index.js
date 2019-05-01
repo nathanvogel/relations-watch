@@ -73,7 +73,7 @@ router
   .summary("Stores a source or sources")
   .description("Stores a single Source or multiple sources in the collection.");
 
-// GET many entities
+// GET many sources
 router
   .get("/many", apiFactory.getMany.bind(this, souColl))
   .queryParam(
@@ -83,7 +83,10 @@ router
       .try(joi.string().required(), joi.array().items(joi.string())),
     "Keys of the sources"
   )
-  .response(joi.array(souSchema).required(), "Source stored in the collection.")
+  .response(
+    joi.array(souSchema).required(),
+    "Sources stored in the collection."
+  )
   .summary("Retrieve many sources")
   .description("Retrieves many sources by key in one request.");
 

@@ -36,7 +36,7 @@ type Props = {
   disabled: boolean;
   initialEdge: Edge;
   sourceEditorId: string;
-  loadSources: (sourceKeys: string[]) => void;
+  loadSources: (sourceKeys: string[], doLoadEntities: boolean) => void;
 };
 
 type State = {
@@ -96,7 +96,7 @@ class EdgeForm extends React.Component<Props> {
 
   onSourceSelected = (sourceKey: string) => {
     // One day, loadSources will handle not re-requesting sources.
-    this.props.loadSources([sourceKey]);
+    this.props.loadSources([sourceKey], true);
     this.setState({ sourceKey });
   };
 

@@ -15,6 +15,7 @@ import {
 import CONSTS from "../utils/consts";
 import { RootStore } from "../Store";
 import { arrayWithoutDuplicates } from "../utils/utils";
+import { loadEntities } from "./entitiesLoadAC";
 
 const microlink = axios.create({
   baseURL: "https://api.microlink.io",
@@ -95,14 +96,19 @@ export const clearPostRequest = (requestId: string) => (dispatch: Dispatch) => {
  * Load a bunch of sources in one requests.
  * It will de-duplicate the given sourceKeys array.
  */
-export const loadSources = (sourceKeys: string[]) => async (
-  dispatch: Dispatch,
-  getState: () => RootStore
-): Promise<void> => {
+export const loadSources = (
+  sourceKeys: string[],
+  doLoadEntities: boolean
+) => async (dispatch: Dispatch, getState: () => RootStore): Promise<void> => {
   const keys = arrayWithoutDuplicates(sourceKeys);
+  // Check that we have some keys.
+  if (keys.length === 0) {
+    console.log("No keys given, aborting loadSources");
+    return;
+  }
   // TODO: Optimization: Use getState to prevent reloading sources we already have.
   dispatch(actionSourcesRequest(keys));
-  api
+  return api
     .get(`/sources/many`, {
       params: { keys: keys },
       // `paramsSerializer` is an optional function in charge of serializing `params`
@@ -119,6 +125,16 @@ export const loadSources = (sourceKeys: string[]) => async (
       }
       // Everything is fine, we got the data, send it!
       dispatch(actionSourcesReceived(keys, res.data));
+
+      // Side-effect: also load contained entities if necessary.
+      if (doLoadEntities) {
+        var entityKeys: string[] = [];
+        const sources = res.data as Source[];
+        for (let source of sources) {
+          entityKeys = entityKeys.concat(source.authors);
+        }
+        return loadEntities(entityKeys)(dispatch, getState);
+      }
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);

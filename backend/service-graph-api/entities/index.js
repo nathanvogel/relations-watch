@@ -57,6 +57,23 @@ router
   .summary("Retrieve an entity")
   .description("Retrieves an entity by key.");
 
+// GET many entities
+router
+  .get("/many", apiFactory.getMany.bind(this, entColl))
+  .queryParam(
+    "keys",
+    joi
+      .alternatives()
+      .try(joi.string().required(), joi.array().items(joi.string())),
+    "Keys of the entities"
+  )
+  .response(
+    joi.array(entSchema).required(),
+    "Entities stored in the collection."
+  )
+  .summary("Retrieve many entities")
+  .description("Retrieves many entities by key in one request.");
+
 // GET the list of entity IDs
 router
   .get("/list", function(req, res) {

@@ -44,7 +44,7 @@ export const loadRelation = (entity1Key: string, entity2Key: string) => async (
           }
         }
       }
-      return loadSources(sourcesToLoad)(dispatch, getState);
+      return loadSources(sourcesToLoad, true)(dispatch, getState);
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);

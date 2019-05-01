@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { AnyAction, bindActionCreators, Dispatch } from "redux";
 
 import { RootStore } from "../Store";
-import { SourceLink, Status, SourceLinkType, SourceType } from "../utils/types";
+import { SourceLink, Status, SourceType } from "../utils/types";
 import Meta from "./meta/Meta";
 import SourceEntityPreview from "./sourceDetails/SourceEntityPreview";
 
@@ -65,7 +65,7 @@ class SourceDetails extends React.Component<Props> {
       domain = source.domain as string;
       refEnd = source.ref.replace(domain, ""); // = only the first occurence
     }
-    console.log("Source:", source);
+
     return (
       <Content>
         <div>{source.pTitle || source.description}</div>

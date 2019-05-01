@@ -1,15 +1,72 @@
 import ACTIONS from "../utils/ACTIONS";
 import * as TYPED_ACTIONS from "../utils/ACTIONS";
-import { Action, EntityPreview, Entity } from "../utils/types";
+import {
+  Action,
+  EntityPreview,
+  Entity,
+  Status,
+  ErrorPayload
+} from "../utils/types";
 import update from "immutability-helper";
 import { SouAuthorsChange } from "./sourceFormActions";
 import { getArray, getEntityPreview, getKeyObject } from "../utils/utils";
 import { AnyAction } from "redux";
 
-const defaultState = { datapreview: {}, data: {}, status: {}, errors: {} };
+const status: { [key: string]: Status } = {};
+const defaultState = { datapreview: {}, data: {}, status, errors: {} };
 
 export default (state = defaultState, action: AnyAction) => {
+  // Check and get the keys from any relevant Action
+  var keys: string[] = [];
+  const statusList: { [key: string]: Status } = {};
   switch (action.type) {
+    case ACTIONS.EntityLoadManyRequested:
+    case ACTIONS.EntityLoadManySuccess:
+    case ACTIONS.EntityLoadManyError:
+      if (!action.meta.entityKeys)
+        throw new Error("Missing keys in action" + action.type);
+      keys = action.meta.entityKeys;
+      for (let key of keys) {
+        // If we already have some data, we can display it, so no need to
+        // show that it's loading.
+        // An error status should override the current one anyway though.
+        if (state.status[key] !== Status.Ok || action.status === Status.Error)
+          statusList[key] = action.status;
+      }
+      break;
+  }
+
+  switch (action.type) {
+    case ACTIONS.EntityLoadManyRequested:
+      return update(state, {
+        status: { $merge: statusList }
+      });
+    case ACTIONS.EntityLoadManySuccess:
+      // Put all the freshest data:
+      const entities2: Entity[] = action.payload;
+      const entityList = getKeyObject(entities2, "_key");
+      // Also build a list for datapreview.
+      const entityPreviewList: { [key: string]: EntityPreview } = {};
+      for (let key in entityList) {
+        entityPreviewList[key] = getEntityPreview(entityList[key]);
+      }
+      return update(state, {
+        datapreview: { $merge: entityPreviewList },
+        data: { $merge: entityList },
+        status: { $merge: statusList }
+      });
+    case ACTIONS.EntityLoadManyError:
+      const errorList: { [key: string]: ErrorPayload } = {};
+      if (action.meta.error) {
+        for (let key of keys) {
+          errorList[key] = action.meta.error;
+        }
+      }
+      // Leave the .data[key] untouched because I'm bored.
+      return update(state, {
+        status: { $merge: statusList },
+        errors: { $merge: errorList }
+      });
     case ACTIONS.EntityLoadRequested:
       const key1 = action.meta.entityKey as string;
       return update(state, {

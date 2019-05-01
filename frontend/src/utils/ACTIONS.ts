@@ -29,6 +29,9 @@ const ACTIONS = {
   SourceGetManyRequested: "SourceGetManyRequested",
   SourceGetManySuccess: "SourceGetManySuccess",
   SourceGetManyError: "SourceGetManyError",
+  EntityLoadManyRequested: "EntityLoadManyRequested",
+  EntityLoadManySuccess: "EntityLoadManySuccess",
+  EntityLoadManyError: "EntityLoadManyError",
   status: {
     ok: "ok",
     error: "error",
