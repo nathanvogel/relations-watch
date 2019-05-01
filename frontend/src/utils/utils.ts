@@ -1,6 +1,13 @@
 import update from "immutability-helper";
 
-import { EdgePreview, Edge, CommonEdge, Status } from "./types";
+import {
+  EdgePreview,
+  Edge,
+  CommonEdge,
+  Status,
+  Entity,
+  EntityPreview
+} from "./types";
 import CONSTS from "./consts";
 
 // CONVENTION:
@@ -126,4 +133,12 @@ export function arrayWithoutDuplicates<T>(array: T[]): T[] {
 
 function onlyUnique(value: any, index: number, self: any[]) {
   return self.indexOf(value) === index;
+}
+
+export function getEntityPreview(entity: Entity): EntityPreview {
+  return {
+    _key: entity._key as string,
+    name: entity.name,
+    imageId: entity.imageId
+  };
 }

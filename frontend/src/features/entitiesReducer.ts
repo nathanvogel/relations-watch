@@ -3,7 +3,7 @@ import * as TYPED_ACTIONS from "../utils/ACTIONS";
 import { Action, EntityPreview, Entity } from "../utils/types";
 import update from "immutability-helper";
 import { SouAuthorsChange } from "./sourceFormActions";
-import { getArray } from "../utils/utils";
+import { getArray, getEntityPreview, getKeyObject } from "../utils/utils";
 import { AnyAction } from "redux";
 
 const defaultState = { datapreview: {}, data: {}, status: {}, errors: {} };
@@ -17,7 +17,9 @@ export default (state = defaultState, action: AnyAction) => {
       });
     case ACTIONS.EntityLoadSuccess:
       const key2 = action.meta.entityKey as string;
+      const entityPreview1 = getEntityPreview(action.payload);
       return update(state, {
+        datapreview: { [key2]: { $set: entityPreview1 } },
         data: { [key2]: { $set: action.payload } },
         status: { [key2]: { $set: action.status } }
       });
@@ -39,13 +41,9 @@ export default (state = defaultState, action: AnyAction) => {
             ACTIONS.EntitySaveSuccess
           } is missing a _key property!`
         );
-      const entityPreview: EntityPreview = {
-        _key: fullEntity._key as string,
-        name: fullEntity.name,
-        imageId: fullEntity.imageId
-      };
+      const entityPreview2 = getEntityPreview(fullEntity);
       return update(state, {
-        datapreview: { [key4]: { $set: entityPreview } },
+        datapreview: { [key4]: { $set: entityPreview2 } },
         data: { [key4]: { $set: action.payload } },
         status: { [key4]: { $set: action.status } }
       });
@@ -73,11 +71,8 @@ export default (state = defaultState, action: AnyAction) => {
         );
         return state;
       }
-      const entities = action.payload.vertices as Array<EntityPreview>;
-      const entitiesMap: { [key: string]: EntityPreview } = {};
-      for (let entityPreview of entities) {
-        entitiesMap[entityPreview._key] = entityPreview;
-      }
+      const entities = action.payload.vertices as EntityPreview[];
+      const entitiesMap = getKeyObject(entities, "_key");
       return update(state, { datapreview: { $merge: entitiesMap } });
     default:
       return state;
