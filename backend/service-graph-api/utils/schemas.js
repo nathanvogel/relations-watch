@@ -63,6 +63,11 @@ const relSchema = joi
   })
   .unknown(); // allow additional attributes
 
+const nullOrEmptyString = joi
+  .string()
+  .allow(null)
+  .allow("");
+
 const souSchema = joi
   .object()
   .required()
@@ -74,13 +79,13 @@ const souSchema = joi
       .required(), // Is it a LINK or REF ?
     authors: joi.array().items(joi.string()), // Entity keys
     // LINK-only
-    fullUrl: joi.string().allow(null),
-    description: joi.string(),
-    pTitle: joi.string(),
-    pDescription: joi.string(),
-    pAuthor: joi.string(),
-    rootDomain: joi.string(),
-    domain: joi.string()
+    fullUrl: nullOrEmptyString,
+    description: nullOrEmptyString,
+    pTitle: nullOrEmptyString,
+    pDescription: nullOrEmptyString,
+    pAuthor: nullOrEmptyString,
+    rootDomain: nullOrEmptyString,
+    domain: nullOrEmptyString
   })
   .unknown(); // allow additional attributes
 
