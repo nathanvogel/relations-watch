@@ -73,6 +73,14 @@ router
   .summary("Stores a source or sources")
   .description("Stores a single Source or multiple sources in the collection.");
 
+// GET many entities
+router
+  .get("/many", apiFactory.getMany.bind(this, souColl))
+  .queryParam("keys", joi.array().items(joi.string()), "Keys of the sources")
+  .response(joi.array(souSchema).required(), "Source stored in the collection.")
+  .summary("Retrieve many sources")
+  .description("Retrieves many sources by key in one request.");
+
 // GET an entity
 router
   .get("/:key", apiFactory.get.bind(this, souColl))

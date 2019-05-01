@@ -38,6 +38,25 @@ const get = function(coll, req, res) {
   }
 };
 
+const getMany = function(coll, req, res) {
+  if (!req.queryParams || !Array.isArray(req.queryParams.keys)) {
+    res.throw(400, "Missing or invalid queryParam 'keys'.");
+  }
+  const keys = req.queryParams.keys;
+  try {
+    const data = [];
+    for (var key of keys) {
+      data.push(coll.document(key));
+    }
+    res.send(data);
+  } catch (e) {
+    if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
+      throw e;
+    }
+    res.throw(404, "One of the entities does not exist.", e);
+  }
+};
+
 const remove = function(coll, req, res) {
   try {
     const oldDocument = coll.remove(req.pathParams.key);
@@ -54,5 +73,6 @@ module.exports = {
   post,
   patch,
   get,
+  getMany,
   remove
 };
