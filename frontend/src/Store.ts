@@ -65,5 +65,10 @@ export interface RootStore {
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };
   };
+  sources: {
+    data: { [key: string]: Source };
+    errors: { [key: string]: ErrorPayload };
+    status: { [key: string]: Status };
+  };
   sourceForms: { [key: string]: Source };
 }

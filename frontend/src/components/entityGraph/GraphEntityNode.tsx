@@ -20,6 +20,8 @@ class GraphEntityNode extends React.Component<OwnProps> {
   };
 
   render() {
+    // This should be able to handle an entity with only a _key attribute
+    // (in case it's still loading)
     const { entity, x, y, scale, textScale, primary } = this.props;
     const size = primary ? 52 : 40 * scale;
     const fontSize = 12 * textScale;

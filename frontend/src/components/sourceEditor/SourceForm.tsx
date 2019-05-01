@@ -4,7 +4,7 @@ import { Dispatch, bindActionCreators, AnyAction } from "redux";
 import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
 
-import { Source, ReactSelectOption } from "../../utils/types";
+import { Source, ReactSelectOption, SourceType } from "../../utils/types";
 import Button from "../buttons/Button";
 import CONSTS from "../../utils/consts";
 import EntitySearch from "../EntitySearch";
@@ -96,7 +96,7 @@ class SourceForm extends React.Component<Props> {
     // the formData first has to make an initialisation round in Redux.
     if (!formData) return <div>Waiting for initial data...</div>;
 
-    const isLink = formData.type === CONSTS.SOURCE_TYPES.LINK;
+    const isLink = formData.type === SourceType.Link;
     const shouldWriteDescription = !isLink || !Boolean(formData.pTitle);
 
     return (

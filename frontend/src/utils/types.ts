@@ -103,6 +103,11 @@ export type Source = {
   domain?: string;
 };
 
+export enum SourceType {
+  Link = 1,
+  TextRef = 2
+}
+
 export type SourceLink = {
   type: SourceLinkType;
   comments: Comment[];

@@ -49,26 +49,13 @@ const ENTITY_TYPES: EntityTypes = {
   SPECIAL_GROUP: 100
 };
 
-const SOURCE_TYPES = {
-  LINK: 1,
-  REF: 2
-};
-
-const CONFIRMATION = {
-  CONFIRMS: 1,
-  REFUTES: 2,
-  NEUTRAL: 3
-};
-
 const CONSTS = {
   relCollectionName: "relations",
   entCollectionName: "entities",
   EMPTY_KEY: "_",
   RELATION_COLORS,
   ENTITY_TYPES,
-  RELATION_TYPES,
-  SOURCE_TYPES,
-  CONFIRMATION
+  RELATION_TYPES
 };
 
 export default CONSTS;

@@ -1,11 +1,17 @@
 import { Dispatch } from "redux";
-import axios, { AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import validator from "validator";
 import qs from "qs";
 
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
-import { Action, ErrorPayload, Status, Source } from "../utils/types";
+import {
+  Action,
+  ErrorPayload,
+  Status,
+  Source,
+  SourceType
+} from "../utils/types";
 import CONSTS from "../utils/consts";
 import { RootStore } from "../Store";
 import { arrayWithoutDuplicates } from "../utils/utils";
@@ -27,7 +33,7 @@ function getRefType(fullRef: string) {
     allow_protocol_relative_urls: false,
     disallow_auth: false
   });
-  return isURL ? CONSTS.SOURCE_TYPES.LINK : CONSTS.SOURCE_TYPES.REF;
+  return isURL ? SourceType.Link : SourceType.TextRef;
 }
 
 function getUrlInfo(fullRef: string) {
@@ -48,7 +54,7 @@ export const getSourceFromRef = (fullRef: string, requestId: string) => async (
 ): Promise<void> => {
   dispatch(actionRefGetRequest(requestId));
 
-  const isLink = getRefType(fullRef) === CONSTS.SOURCE_TYPES.LINK;
+  const isLink = getRefType(fullRef) === SourceType.Link;
   return (isLink ? getUrlInfo(fullRef) : Promise.resolve(0)).then(urlData => {
     return api
       .get("/sources/ref", { params: { fullRef: fullRef } })

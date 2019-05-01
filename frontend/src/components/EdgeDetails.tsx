@@ -6,6 +6,7 @@ import Button from "./buttons/Button";
 import EdgeEditor from "./EdgeEditor";
 import Sources from "./edgeDetails/Sources";
 import { RELATION_COLORS } from "../utils/consts";
+import SourceDetails from "./SourceDetails";
 
 const Content = styled.section`
   border: 1px dotted black;
@@ -79,7 +80,7 @@ class EdgeDetails extends React.Component<Props> {
         {edge.sourceText && <div>Previous source: {edge.sourceText}</div>}
         {edge.sources && edge.sources.length > 0 ? (
           edge.sources.map((sourceLink, index) => (
-            <div key={index.toString()}>{sourceLink.sourceKey}</div>
+            <SourceDetails key={sourceLink.sourceKey} sourceLink={sourceLink} />
           ))
         ) : (
           <div>

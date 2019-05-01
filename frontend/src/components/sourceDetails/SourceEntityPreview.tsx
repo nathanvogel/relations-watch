@@ -1,29 +1,41 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+import { RootStore } from "../../Store";
+import ROUTES from "../../utils/ROUTES";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
-import { RootStore } from "../Store";
-import ROUTES from "../utils/ROUTES";
-import { Link } from "react-router-dom";
+const Content = styled.span`
+  font-size: 12px;
+  font-weight: bold;
+  margin: 3px;
+  padding: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #fff;
+  background-color: #245;
+  border-radius: 2px;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+`;
 
 type OwnProps = {
   entityKey: string;
-  baseEntityKey: string;
 };
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const baseEntityKey = props.baseEntityKey;
   const entityKey = props.entityKey;
-  // Get the entity from the Redux Store
   const entity = state.entities.datapreview[entityKey];
-  // Return everything.
   return {
     entity,
-    entityKey,
-    baseEntityKey
+    entityKey
   };
 };
 
@@ -34,14 +46,16 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
  * This is for a list display of the entities linked to another entity.
  * @extends Component
  */
-class LinkedEntityPreview extends Component<Props> {
+class SourceEntityPreview extends Component<Props> {
   render() {
-    const { entity, entityKey, baseEntityKey } = this.props;
+    const { entity, entityKey } = this.props;
 
     return (
-      <Link to={`/${ROUTES.relation}/${baseEntityKey}/${entityKey}`}>
-        <li>{entity ? entity.name : `Loading ${entityKey}...`}</li>
-      </Link>
+      <Content>
+        <Link to={`/${ROUTES.entity}/${entityKey}`}>
+          {entity ? entity.name : `Loading ${entityKey}...`}
+        </Link>
+      </Content>
     );
   }
 }
@@ -49,4 +63,4 @@ class LinkedEntityPreview extends Component<Props> {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LinkedEntityPreview);
+)(SourceEntityPreview);

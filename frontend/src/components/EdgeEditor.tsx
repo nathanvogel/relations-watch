@@ -13,6 +13,7 @@ import {
   deleteEdge
 } from "../features/edgesSaveAC";
 import { loadEdge } from "../features/edgesLoadAC";
+import { loadSources } from "../features/sourcesAC";
 import { Edge, Status, SourceLink } from "../utils/types";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import Meta from "./meta/Meta";
@@ -77,7 +78,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       postEdge,
       patchEdge,
       deleteEdge,
-      clearPostRequest
+      clearPostRequest,
+      loadSources
     },
     dispatch
   );
@@ -168,6 +170,7 @@ class EdgeEditor extends React.Component<Props> {
           onDelete={this.onDelete}
           disabled={postStatus === Status.Requested}
           sourceEditorId={"sou_" + this.props.editorId}
+          loadSources={this.props.loadSources}
         />
         <MetaPostStatus status={postStatus} error={postError} />
       </Content>

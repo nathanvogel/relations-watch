@@ -118,7 +118,7 @@ class EntityGraph extends Component<Props> {
         y,
         entity: this.props.entityPreviews[entityKey]
       };
-      nodeData.push(datapoint);
+      if (datapoint.entity) nodeData.push(datapoint);
       // nodeDataByEntity[entityKey] = datapoint;
       // Already to start to build edge data, we will complete it with
       // types afterwards.

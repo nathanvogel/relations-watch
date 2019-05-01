@@ -9,6 +9,7 @@ import { Edge, SourceLink, SourceLinkType } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceEditor from "../SourceEditor";
 import SourceDetails from "../SourceDetails";
+import Button from "../buttons/Button";
 
 const Content = styled.div`
   display: block;
@@ -35,6 +36,7 @@ type Props = {
   disabled: boolean;
   initialEdge: Edge;
   sourceEditorId: string;
+  loadSources: (sourceKeys: string[]) => void;
 };
 
 type State = {
@@ -93,6 +95,8 @@ class EdgeForm extends React.Component<Props> {
   };
 
   onSourceSelected = (sourceKey: string) => {
+    // One day, loadSources will handle not re-requesting sources.
+    this.props.loadSources([sourceKey]);
     this.setState({ sourceKey });
   };
 
@@ -194,10 +198,18 @@ class EdgeForm extends React.Component<Props> {
           {initialEdge.sourceText && `(${initialEdge.sourceText})`}
           {isNew &&
             (this.state.sourceKey ? (
-              <SourceDetails
-                sourceKey={this.state.sourceKey}
-                onCancelClick={this.onSourceDeselected}
-              />
+              <React.Fragment>
+                <SourceDetails
+                  sourceLink={{
+                    sourceKey: this.state.sourceKey,
+                    type: SourceLinkType.Neutral,
+                    comments: []
+                  }}
+                />
+                <Button onClick={this.onSourceDeselected}>
+                  Pick another source
+                </Button>
+              </React.Fragment>
             ) : (
               <SourceEditor
                 sourceKey={this.state.sourceKey}

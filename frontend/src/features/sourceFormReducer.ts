@@ -2,13 +2,12 @@ import * as ACTIONS from "../utils/ACTIONS";
 import { SourceFormAction } from "./sourceFormActions";
 import update from "immutability-helper";
 
-import { Source } from "../utils/types";
+import { Source, SourceType } from "../utils/types";
 import { getArray } from "../utils/utils";
-import CONSTS from "../utils/consts";
 
 const defaultState: Source = {
   ref: "",
-  type: CONSTS.SOURCE_TYPES.LINK,
+  type: SourceType.Link,
   authors: [],
   description: ""
 };
