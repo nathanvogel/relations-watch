@@ -1,12 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { bindActionCreators, Dispatch } from "redux";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";
 
 import SourceForm from "./sourceEditor/SourceForm";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { RootStore } from "../Store";
-import { RootAction } from "../utils/ACTIONS";
 import { getSourceFromRef } from "../features/sourcesAC";
 import { Status, ReactSelectOption } from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
@@ -49,7 +48,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       getSourceFromRef

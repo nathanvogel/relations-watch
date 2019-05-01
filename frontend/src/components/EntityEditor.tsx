@@ -2,12 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import cuid from "cuid";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
+import { connect } from "react-redux";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
-import { bindActionCreators, Dispatch } from "redux";
-import { RootAction } from "../utils/ACTIONS";
-import { connect } from "react-redux";
 import {
   postEntity,
   clearPostRequest,
@@ -72,7 +71,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       loadEntity,

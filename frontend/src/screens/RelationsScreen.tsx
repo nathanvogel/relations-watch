@@ -1,13 +1,12 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { bindActionCreators, Dispatch } from "redux";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import styled from "styled-components";
 import cuid from "cuid";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
 import { media } from "../utils/media-styles";
-import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";
@@ -69,7 +68,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators({ loadRelation }, dispatch);
 
 type Props = ReturnType<typeof mapStateToProps> &

@@ -2,10 +2,11 @@ import ACTIONS from "../utils/ACTIONS";
 import { Action, Edge } from "../utils/types";
 import update from "immutability-helper";
 import { getSimplifiedEdge } from "../utils/utils";
+import { AnyAction } from "redux";
 
 const defaultState = { data: {}, status: {}, errors: {} };
 
-export default (state = defaultState, action: Action) => {
+export default (state = defaultState, action: AnyAction) => {
   switch (action.type) {
     case ACTIONS.EdgeLoadRequested:
       const key1 = action.meta.edgeKey as string;

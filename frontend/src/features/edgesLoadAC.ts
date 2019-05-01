@@ -2,17 +2,20 @@ import { Dispatch } from "redux";
 
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
-import { Action, ErrorPayload } from "../utils/types";
+import { Action, ErrorPayload, Edge } from "../utils/types";
 import { Status } from "../utils/types";
 import { AxiosError } from "axios";
 import { getRelationId } from "../utils/utils";
+import { loadSources } from "./sourcesAC";
+import { RootStore } from "../Store";
 
 /**
  * Load all edges between 2 entities to
  * /relations/data/[relationId]/[edgeId]
  */
 export const loadRelation = (entity1Key: string, entity2Key: string) => async (
-  dispatch: Dispatch
+  dispatch: Dispatch,
+  getState: () => RootStore
 ): Promise<void> => {
   // Safe because 2 non-null args
   const relationId = getRelationId(entity1Key, entity2Key) as string;
@@ -27,6 +30,21 @@ export const loadRelation = (entity1Key: string, entity2Key: string) => async (
       }
       // Everything is fine, we got the data, send it!
       dispatch(actionLoadSuccess(relationId, res.data));
+
+      // As a side-effect, we can load all the sources, because
+      // they aren't nested in the documents.
+      // Doing this in two requests allows to display the edges faster,
+      // displaying the sources slightly later.
+      const edges = res.data as Edge[];
+      const sourcesToLoad: string[] = [];
+      for (let edge of edges) {
+        if (edge.sources) {
+          for (let source of edge.sources) {
+            if (source.sourceKey) sourcesToLoad.push(source.sourceKey);
+          }
+        }
+      }
+      return loadSources(sourcesToLoad)(dispatch, getState);
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);

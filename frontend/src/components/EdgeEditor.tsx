@@ -1,12 +1,11 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import styled from "styled-components";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
+import { connect } from "react-redux";
 
 import { RootStore } from "../Store";
 import { getRelationId, shouldLoad } from "../utils/utils";
-import { bindActionCreators, Dispatch } from "redux";
-import { RootAction } from "../utils/ACTIONS";
-import { connect } from "react-redux";
 import {
   postEdge,
   clearPostRequest,
@@ -71,7 +70,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       loadEdge,

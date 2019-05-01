@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { RouteComponentProps } from "react-router";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
 import { RootStore } from "../Store";
-import { RootAction } from "../utils/ACTIONS";
 import { loadEntity } from "../features/entitiesLoadAC";
 import Button from "../components/buttons/Button";
 import ROUTES from "../utils/ROUTES";
@@ -48,7 +47,7 @@ const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       loadEntity,

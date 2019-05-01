@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
 import { RootStore } from "../Store";
-import { RootAction } from "../utils/ACTIONS";
 import ROUTES from "../utils/ROUTES";
 import { Link } from "react-router-dom";
 
@@ -28,7 +27,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators({}, dispatch);
 
 class LinkedEntityPreview extends Component<Props> {

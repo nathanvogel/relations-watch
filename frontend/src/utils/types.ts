@@ -1,5 +1,4 @@
 import { AnyAction } from "redux";
-import { ValueType } from "react-select/lib/types";
 
 export type ErrorPayload = {
   eData: any;
@@ -7,23 +6,22 @@ export type ErrorPayload = {
   eStatus: number | string;
 };
 
-export type Action =
-  | AnyAction
-  | {
-      type: string;
-      status: Status;
-      meta: {
-        entityKey?: string;
-        requestId?: string;
-        relationId?: string;
-        error?: ErrorPayload;
-        edgeKey?: string;
-        _key?: string;
-        _from?: string;
-        _to?: string;
-      };
-      payload?: any;
-    };
+export interface Action extends AnyAction {
+  type: string;
+  status: Status;
+  meta: {
+    entityKey?: string;
+    requestId?: string;
+    relationId?: string;
+    sourceKeys?: string[];
+    error?: ErrorPayload;
+    edgeKey?: string;
+    _key?: string;
+    _from?: string;
+    _to?: string;
+  };
+  payload?: any;
+}
 
 export enum Status {
   Requested,
@@ -92,6 +90,7 @@ export type LinkRenderData = {
 };
 
 export type Source = {
+  _key?: string;
   ref: string;
   type: number;
   authors: string[];

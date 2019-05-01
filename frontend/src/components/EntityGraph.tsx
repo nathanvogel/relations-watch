@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
+import { Link } from "react-router-dom";
 
 import { RootStore } from "../Store";
-import { RootAction } from "../utils/ACTIONS";
 import { loadEntity } from "../features/entitiesLoadAC";
 import Button from "../components/buttons/Button";
 import ROUTES from "../utils/ROUTES";
@@ -14,7 +14,6 @@ import { loadEntityGraph } from "../features/linksLoadAC";
 import GraphEntityNode from "./entityGraph/GraphEntityNode";
 import CONSTS from "../utils/consts";
 import GraphLink from "./entityGraph/GraphLink";
-import { Link } from "react-router-dom";
 
 const Content = styled.div``;
 
@@ -58,7 +57,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       loadEntity,

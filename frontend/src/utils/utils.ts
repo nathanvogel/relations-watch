@@ -99,3 +99,31 @@ export function keyForUrl(key?: string): string {
 export function getArray<T>(arg: T | T[]): T[] {
   return arg instanceof Array ? arg : [arg];
 }
+
+/**
+ * Converts an array of objects to an object indexed with the given
+ * property name belonging the type of the objects in the given array.
+ */
+export function getKeyObject<T, P extends Extract<keyof T, string>>(
+  array: T[],
+  keyPropName: P
+): { [key: string]: T } {
+  const list: { [key: string]: T } = {};
+  for (let element of array) {
+    console.log(element[keyPropName]);
+    const key = (element[keyPropName] as unknown) as string;
+    if (key) list[key] = element;
+  }
+  return list;
+}
+
+/**
+ * Filter out duplicate elements in an Array.
+ */
+export function arrayWithoutDuplicates<T>(array: T[]): T[] {
+  return array.filter(onlyUnique);
+}
+
+function onlyUnique(value: any, index: number, self: any[]) {
+  return self.indexOf(value) === index;
+}

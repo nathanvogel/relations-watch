@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
+import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
 import { RootStore } from "../../Store";
 import { Status } from "../../utils/types";
-import { RootAction } from "../../utils/ACTIONS";
 
 type OwnProps = { entityKey: string };
 
@@ -23,7 +22,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators({}, dispatch);
 
 class EntityName extends Component<Props> {

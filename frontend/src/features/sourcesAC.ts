@@ -1,11 +1,14 @@
 import { Dispatch } from "redux";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import validator from "validator";
+import qs from "qs";
 
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
-import { Action, ErrorPayload, Status } from "../utils/types";
+import { Action, ErrorPayload, Status, Source } from "../utils/types";
 import CONSTS from "../utils/consts";
+import { RootStore } from "../Store";
+import { arrayWithoutDuplicates } from "../utils/utils";
 
 const microlink = axios.create({
   baseURL: "https://api.microlink.io",
@@ -43,7 +46,7 @@ function getUrlInfo(fullRef: string) {
 export const getSourceFromRef = (fullRef: string, requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
-  dispatch(actionRequest(requestId));
+  dispatch(actionRefGetRequest(requestId));
 
   const isLink = getRefType(fullRef) === CONSTS.SOURCE_TYPES.LINK;
   return (isLink ? getUrlInfo(fullRef) : Promise.resolve(0)).then(urlData => {
@@ -52,7 +55,7 @@ export const getSourceFromRef = (fullRef: string, requestId: string) => async (
       .then(res => {
         const potentialError = checkResponse(res);
         if (potentialError) {
-          dispatch(actionError(requestId, potentialError));
+          dispatch(actionRefGetError(requestId, potentialError));
           return;
         }
         // Everything is fine, we got the data, send it!
@@ -64,7 +67,7 @@ export const getSourceFromRef = (fullRef: string, requestId: string) => async (
                 pDescription: urlData.description
               })
             : res.data;
-        dispatch(actionReceived(requestId, source));
+        dispatch(actionRefGetReceived(requestId, source));
       })
       .catch((error: AxiosError) => {
         const errorPayload = checkError(error);
@@ -73,16 +76,77 @@ export const getSourceFromRef = (fullRef: string, requestId: string) => async (
           requestId,
           errorPayload
         );
-        dispatch(actionError(requestId, errorPayload));
+        dispatch(actionRefGetError(requestId, errorPayload));
       });
   });
 };
 
 export const clearPostRequest = (requestId: string) => (dispatch: Dispatch) => {
-  dispatch(actionClearRequest(requestId));
+  dispatch(actionRefGetClearRequest(requestId));
 };
 
-function actionRequest(requestId: string): Action {
+/**
+ * Load a bunch of sources in one requests.
+ * It will de-duplicate the given sourceKeys array.
+ */
+export const loadSources = (sourceKeys: string[]) => async (
+  dispatch: Dispatch,
+  getState: () => RootStore
+): Promise<void> => {
+  const keys = arrayWithoutDuplicates(sourceKeys);
+  // TODO: Optimization: Use getState to prevent reloading sources we already have.
+  dispatch(actionManyRequest(keys));
+  api
+    .get(`/sources/many`, {
+      params: { keys: keys },
+      // `paramsSerializer` is an optional function in charge of serializing `params`
+      // This is the format that the ArangoDB Foxx/joi backend supports
+      paramsSerializer: function(params) {
+        return qs.stringify(params, { arrayFormat: "repeat" });
+      }
+    })
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        dispatch(actionManyError(keys, potentialError));
+        return;
+      }
+      // Everything is fine, we got the data, send it!
+      dispatch(actionManyReceived(keys, res.data));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error("Error getting sources ", keys, errorPayload);
+      dispatch(actionManyError(keys, errorPayload));
+    });
+};
+
+function actionManyRequest(sourceKeys: string[]): Action {
+  return {
+    type: ACTIONS.SourceGetManyRequested,
+    status: Status.Requested,
+    meta: { sourceKeys }
+  };
+}
+
+function actionManyError(sourceKeys: string[], error: ErrorPayload): Action {
+  return {
+    type: ACTIONS.SourceGetManyError,
+    status: Status.Error,
+    meta: { sourceKeys, error }
+  };
+}
+
+function actionManyReceived(sourceKeys: string[], payload: Source[]): Action {
+  return {
+    type: ACTIONS.SourceGetManySuccess,
+    payload,
+    status: Status.Ok,
+    meta: { sourceKeys }
+  };
+}
+
+function actionRefGetRequest(requestId: string): Action {
   return {
     type: ACTIONS.SourceRefGetSent,
     status: Status.Requested,
@@ -90,7 +154,7 @@ function actionRequest(requestId: string): Action {
   };
 }
 
-function actionClearRequest(requestId: string): Action {
+function actionRefGetClearRequest(requestId: string): Action {
   return {
     type: ACTIONS.SourceRefGetClear,
     status: Status.Clear,
@@ -98,7 +162,7 @@ function actionClearRequest(requestId: string): Action {
   };
 }
 
-function actionError(requestId: string, error: ErrorPayload): Action {
+function actionRefGetError(requestId: string, error: ErrorPayload): Action {
   return {
     type: ACTIONS.SourceRefGetError,
     status: Status.Error,
@@ -106,7 +170,7 @@ function actionError(requestId: string, error: ErrorPayload): Action {
   };
 }
 
-function actionReceived(requestId: string, payload: object): Action {
+function actionRefGetReceived(requestId: string, payload: object): Action {
   return {
     type: ACTIONS.SourceRefGetSuccess,
     payload,

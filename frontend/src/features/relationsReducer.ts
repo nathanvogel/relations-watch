@@ -1,6 +1,7 @@
 import ACTIONS from "../utils/ACTIONS";
 import { Action, Edge } from "../utils/types";
 import update from "immutability-helper";
+import { AnyAction } from "redux";
 import { getRelationId, getSimplifiedEdge } from "../utils/utils";
 
 interface SubState {
@@ -10,7 +11,7 @@ interface SubState {
 }
 const defaultState: SubState = { data: {}, status: {}, errors: {} };
 
-export default (state = defaultState, action: Action) => {
+export default (state = defaultState, action: AnyAction) => {
   switch (action.type) {
     // When a new relation element is added, we get the new edge as a
     // confirmation back from the server, so we add it to the store at this

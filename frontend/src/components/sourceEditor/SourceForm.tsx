@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Dispatch, bindActionCreators } from "redux";
+import { Dispatch, bindActionCreators, AnyAction } from "redux";
 import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
 
@@ -8,7 +8,6 @@ import { Source, ReactSelectOption } from "../../utils/types";
 import Button from "../buttons/Button";
 import CONSTS from "../../utils/consts";
 import EntitySearch from "../EntitySearch";
-import { RootAction } from "../../utils/ACTIONS";
 import { RootStore } from "../../Store";
 import * as sourceFormActions from "../../features/sourceFormActions";
 
@@ -54,7 +53,7 @@ const mapStateToProps = (
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) =>
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       onDescriptionChange: sourceFormActions.souDescriptionChange,

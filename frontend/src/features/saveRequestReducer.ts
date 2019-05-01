@@ -1,6 +1,7 @@
 import ACTIONS from "../utils/ACTIONS";
 import { Action } from "../utils/types";
 import update from "immutability-helper";
+import { AnyAction } from "redux";
 
 const defaultState = { data: {}, status: {}, errors: {} };
 
@@ -8,7 +9,7 @@ const defaultState = { data: {}, status: {}, errors: {} };
  * This reducer takes care of updating the state in response to requests
  * that are scoped to a component instance or a request Id.
  */
-export default (state = defaultState, action: Action) => {
+export default (state = defaultState, action: AnyAction) => {
   switch (action.type) {
     case ACTIONS.EntitySaveSent:
     case ACTIONS.SourceRefGetSent:

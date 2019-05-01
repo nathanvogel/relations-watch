@@ -1,3 +1,5 @@
+import { AnyAction } from "redux";
+
 const ACTIONS = {
   EntityLoadRequested: "EntityLoadRequested",
   EntityLoadSuccess: "EntityLoadSuccess",
@@ -24,6 +26,9 @@ const ACTIONS = {
   SourceRefGetClear: "SourceRefGetClear",
   SourceRefGetSuccess: "SourceRefGetSuccess",
   SourceRefGetError: "SourceRefGetError",
+  SourceGetManyRequested: "SourceGetManyRequested",
+  SourceGetManySuccess: "SourceGetManySuccess",
+  SourceGetManyError: "SourceGetManyError",
   status: {
     ok: "ok",
     error: "error",
@@ -33,13 +38,9 @@ const ACTIONS = {
 
 export default ACTIONS;
 
-export interface RootAction {
-  type: string;
-}
-
-export type NamespacedAction = RootAction & {
+export interface NamespacedAction extends AnyAction {
   namespace: string;
-};
+}
 
 export const SOU_DESCRIPTION_CHANGE = "SOU_DESCRIPTION_CHANGE";
 export type SOU_DESCRIPTION_CHANGE = typeof SOU_DESCRIPTION_CHANGE;

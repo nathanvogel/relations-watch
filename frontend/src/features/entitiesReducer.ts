@@ -4,10 +4,11 @@ import { Action, EntityPreview, Entity } from "../utils/types";
 import update from "immutability-helper";
 import { SouAuthorsChange } from "./sourceFormActions";
 import { getArray } from "../utils/utils";
+import { AnyAction } from "redux";
 
 const defaultState = { datapreview: {}, data: {}, status: {}, errors: {} };
 
-export default (state = defaultState, action: Action) => {
+export default (state = defaultState, action: AnyAction) => {
   switch (action.type) {
     case ACTIONS.EntityLoadRequested:
       const key1 = action.meta.entityKey as string;
