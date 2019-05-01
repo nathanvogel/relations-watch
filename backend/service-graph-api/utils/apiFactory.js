@@ -39,10 +39,15 @@ const get = function(coll, req, res) {
 };
 
 const getMany = function(coll, req, res) {
-  if (!req.queryParams || !Array.isArray(req.queryParams.keys)) {
-    res.throw(400, "Missing or invalid queryParam 'keys'.");
+  if (!req.queryParams || !req.queryParams.keys) {
+    res.throw(400, "Missing queryParam 'keys'.");
+    return;
   }
-  const keys = req.queryParams.keys;
+  // We need to be able to handle a single value not wrapped in an array
+  // because of the poor formating support for arrays from joi and query
+  // string librairies. (security is hard with this apparently.)
+  const multiple = Array.isArray(req.queryParams.keys);
+  const keys = multiple ? req.queryParams.keys : [req.queryParams.keys];
   try {
     const data = [];
     for (var key of keys) {

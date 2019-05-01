@@ -76,7 +76,13 @@ router
 // GET many entities
 router
   .get("/many", apiFactory.getMany.bind(this, souColl))
-  .queryParam("keys", joi.array().items(joi.string()), "Keys of the sources")
+  .queryParam(
+    "keys",
+    joi
+      .alternatives()
+      .try(joi.string().required(), joi.array().items(joi.string())),
+    "Keys of the sources"
+  )
   .response(joi.array(souSchema).required(), "Source stored in the collection.")
   .summary("Retrieve many sources")
   .description("Retrieves many sources by key in one request.");
