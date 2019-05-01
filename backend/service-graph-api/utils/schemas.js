@@ -19,6 +19,26 @@ const entSchema = joi
   })
   .unknown(); // allow additional attributes
 
+const commentSchema = joi
+  .object()
+  .required()
+  .keys({
+    t: joi.string().required(),
+    posted: joi.number().optional()
+  });
+
+const sourceLinkSchema = joi
+  .object()
+  .required()
+  .keys({
+    type: joi
+      .number()
+      .integer()
+      .required(),
+    sourceKey: joi.string(),
+    comments: joi.array().items(commentSchema.optional())
+  });
+
 const relSchema = joi
   .object()
   .required()
@@ -36,19 +56,10 @@ const relSchema = joi
       .required(),
     amount: joi.number(),
     exactAmount: joi.boolean(),
-    sources: joi.array().items(
-      joi
-        .object()
-        .keys({
-          type: joi
-            .number()
-            .integer()
-            .required(), // Is it confirming or refuting ?,
-          comment: joi.string().optional(),
-          sourceKey: joi.string().required()
-        })
-        .optional()
-    )
+    sources: joi
+      .array()
+      .items(sourceLinkSchema)
+      .optional()
   })
   .unknown(); // allow additional attributes
 
@@ -78,16 +89,7 @@ const relationWithSourceSchema = joi
   .required()
   .keys({
     relation: relSchema,
-    comment: joi
-      .object()
-      .required()
-      .keys({
-        type: joi
-          .number()
-          .integer()
-          .required(), // Is it confirming or refuting ?,
-        comment: joi.string().optional()
-      }),
+    sourceLink: sourceLinkSchema,
     source: souSchema
   });
 
@@ -95,5 +97,7 @@ module.exports = {
   entSchema,
   relSchema,
   souSchema,
-  relationWithSourceSchema
+  relationWithSourceSchema,
+  commentSchema,
+  sourceLinkSchema
 };

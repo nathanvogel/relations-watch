@@ -5,7 +5,7 @@ import cuid from "cuid";
 import CONSTS from "../../utils/consts";
 import EntityName from "./EntityName";
 import { RELATION_TYPES_STRRES } from "../../strings/strings";
-import { Edge, SourceComment, SourceCommentType } from "../../utils/types";
+import { Edge, SourceLink, SourceLinkType } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceEditor from "../SourceEditor";
 import SourceDetails from "../SourceDetails";
@@ -30,7 +30,7 @@ const Label = styled.label`
 type Props = {
   entity1Key: string;
   entity2Key: string;
-  onFormSubmit: (edge: Edge, comment: SourceComment) => void;
+  onFormSubmit: (edge: Edge, comment?: SourceLink) => void;
   onDelete: () => void;
   disabled: boolean;
   initialEdge: Edge;
@@ -110,6 +110,8 @@ class EdgeForm extends React.Component<Props> {
   };
 
   submit = (confirms: boolean) => {
+    const isNew = !Boolean(this.props.initialEdge._key);
+
     // Validate data.
     if (!this.state.type) return;
 
@@ -123,18 +125,24 @@ class EdgeForm extends React.Component<Props> {
       type: this.state.type,
       amount: this.state.amount,
       exactAmount: this.state.exactAmount,
-      sourceText: this.props.initialEdge.sourceText,
-      sources: []
+      sourceText: this.props.initialEdge.sourceText
     };
+
+    // If we're creating a new edge, we only provide a comment/sourceLink
+    if (!isNew) {
+      this.props.onFormSubmit(edge);
+      return;
+    }
+
     // sourceKey is undefined if it's a new source. If so, the onFormSubmit
     // function should look for the sourceForm with the given sourceFormId
     // in the Redux store.
-    const comment: SourceComment = {
-      comment: this.state.comment,
-      type: confirms ? SourceCommentType.Confirms : SourceCommentType.Refutes,
+    const sourceLink: SourceLink = {
+      comments: this.state.comment ? [{ t: this.state.comment }] : [],
+      type: confirms ? SourceLinkType.Confirms : SourceLinkType.Refutes,
       sourceKey: this.state.sourceKey // Optional
     };
-    this.props.onFormSubmit(edge, comment);
+    this.props.onFormSubmit(edge, sourceLink);
   };
 
   render() {

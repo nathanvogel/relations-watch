@@ -14,7 +14,7 @@ import {
   deleteEdge
 } from "../features/edgesSaveAC";
 import { loadEdge } from "../features/edgesLoadAC";
-import { Edge, Status, SourceComment } from "../utils/types";
+import { Edge, Status, SourceLink } from "../utils/types";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import Meta from "./meta/Meta";
 import EdgeForm from "./edgeEditor/EdgeForm";
@@ -90,21 +90,23 @@ class EdgeEditor extends React.Component<Props> {
       this.props.loadEdge(this.props.edgeKey);
   }
 
-  onFormSubmit = (edge: Edge, sourceMeta: SourceComment) => {
+  onFormSubmit = (edge: Edge, sourceLink?: SourceLink) => {
     const { editorId } = this.props;
+    // EDIT mode
     if (this.props.edgeKey) {
       this.props.patchEdge(edge, editorId);
-    } else {
-      if (sourceMeta.sourceKey) {
-        this.props.postEdge(edge, sourceMeta, editorId);
-      } else {
-        this.props.postEdge(
-          edge,
-          sourceMeta,
-          editorId,
-          this.props.sourceFormData
-        );
+    }
+    // CREATE MODE
+    else {
+      if (!sourceLink) {
+        throw new Error("A source is required to post a new edge!");
       }
+      this.props.postEdge(
+        editorId,
+        edge,
+        sourceLink,
+        sourceLink.sourceKey ? undefined : this.props.sourceFormData
+      );
     }
   };
 

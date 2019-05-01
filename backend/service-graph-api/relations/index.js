@@ -75,13 +75,13 @@ router
         typeof response.body === "string"
           ? JSON.parse(response.body)
           : response.body;
-      // Add the newly created sourceKey to the edge comment.
-      const linkedComment = update(doc.comment, {
+      // Add the newly created sourceKey to the edge sourceLink.
+      const sourceLink = update(doc.sourceLink, {
         $merge: { sourceKey: savedSource._key }
       });
       // Link the comment into the sources.
       const edge = update(doc.relation, {
-        sources: { $set: [linkedComment] }
+        sources: { $set: [sourceLink] }
       });
       // Do the regular edge save operation.
       utils.prefixToFromWithCollectionName(edge);
@@ -117,7 +117,8 @@ router
     for (var doc of body) {
       utils.prefixToFromWithCollectionName(doc);
       const meta = relColl.update(doc, doc);
-      data.push(Object.assign(doc, meta));
+      const newDoc = relColl.document(meta);
+      data.push(Object.assign({}, newDoc, meta));
     }
     res.send(multiple ? data : data[0]);
   })

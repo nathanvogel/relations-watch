@@ -59,7 +59,7 @@ export interface Edge {
   type: number;
   amount?: number;
   exactAmount?: boolean;
-  sources: Array<object>;
+  sources?: SourceLink[];
   sourceText?: string;
 }
 
@@ -104,13 +104,18 @@ export type Source = {
   domain?: string;
 };
 
-export type SourceComment = {
-  type: SourceCommentType;
-  comment: string;
+export type SourceLink = {
+  type: SourceLinkType;
+  comments: Comment[];
   sourceKey?: string;
 };
 
-export enum SourceCommentType {
+export type Comment = {
+  posted?: number;
+  t: string;
+};
+
+export enum SourceLinkType {
   Neutral,
   Confirms,
   Refutes

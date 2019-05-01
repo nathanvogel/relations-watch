@@ -76,10 +76,16 @@ class EdgeDetails extends React.Component<Props> {
           <Button onClick={this.onEditClick}>Edit</Button>
         </Actions>
         <EdgeText>{edge.text}</EdgeText>
-        <Sources
-          confirmSources={edge.sourceText ? [edge.sourceText] : []}
-          refuteSources={[]}
-        />
+        {edge.sourceText && <div>Previous source: {edge.sourceText}</div>}
+        {edge.sources && edge.sources.length > 0 ? (
+          edge.sources.map((sourceLink, index) => (
+            <div key={index.toString()}>{sourceLink.sourceKey}</div>
+          ))
+        ) : (
+          <div>
+            <em>UNSOURCED INFORMATION</em>
+          </div>
+        )}
       </Content>
     );
   }

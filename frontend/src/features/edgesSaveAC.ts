@@ -4,38 +4,35 @@ import { AxiosError, AxiosPromise } from "axios";
 
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
-import {
-  Action,
-  ErrorPayload,
-  Edge,
-  SourceComment,
-  Source
-} from "../utils/types";
+import { Action, ErrorPayload, Edge, SourceLink, Source } from "../utils/types";
 import { Status } from "../utils/types";
 
 /**
  * Given an new relation element, upload it as an edge to the database.
  */
 export const postEdge = (
-  edge: Edge,
-  comment: SourceComment,
   requestId: string,
+  edge: Edge,
+  sourceLink: SourceLink,
   source?: Source
 ) => async (dispatch: Dispatch): Promise<void> => {
   dispatch(actionSaveRequest(requestId));
   var promise: AxiosPromise;
-  if (comment.sourceKey) {
+  // If it's an existing source, we can just send the whole thing to the server.
+  if (sourceLink.sourceKey) {
     const relation = update(edge, {
-      sources: { $set: [comment] }
+      sources: { $set: [sourceLink] }
     });
     promise = api.post(`/relations`, relation);
   } else {
     if (!source) {
       throw new Error("Got a new edge without sourceKey nor Source");
     }
+    // If it's a new source, we need to send stuff separately so that the server
+    // can save everything separately and atomically.
     promise = api.post(`/relations/withSource`, {
       relation: edge,
-      comment: comment,
+      sourceLink: sourceLink,
       source: source
     });
   }
