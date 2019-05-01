@@ -57,7 +57,7 @@ const StyledSelect = styled(AsyncCreatable)`
 
 export interface Props {
   selection?: any;
-  onChange?: (value: string) => void;
+  onChange?: (value: ReactSelectOption) => void;
   inputValue?: string;
   onInputChange?: (value: string) => void;
   className?: string;

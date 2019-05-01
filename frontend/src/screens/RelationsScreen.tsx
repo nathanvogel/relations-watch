@@ -14,7 +14,7 @@ import EdgesList from "../components/EdgesList";
 import EdgeEditor from "../components/EdgeEditor";
 import Button from "../components/buttons/Button";
 import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
-import { Edge, Status } from "../utils/types";
+import { Edge, Status, ReactSelectOption } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
 import Meta from "../components/meta/Meta";
 import BigLinksPreview from "../components/BigLinksPreview";
@@ -103,15 +103,27 @@ class RelationsScreen extends React.Component<Props> {
     this.setState({ adding: false });
   };
 
-  onEntity1Selected = (entity1Key: string) => {
-    const k1 = keyForUrl(entity1Key);
+  onEntity1Selected = (option: ReactSelectOption) => {
+    const k1 = keyForUrl(option.value);
     const k2 = keyForUrl(this.props.entity2Key);
     this.props.history.push(`/${ROUTES.relation}/${k1}/${k2}`);
   };
 
-  onEntity2Selected = (entity2Key: string) => {
+  onEntity2Selected = (option: ReactSelectOption) => {
     const k1 = keyForUrl(this.props.entity1Key);
-    const k2 = keyForUrl(entity2Key);
+    const k2 = keyForUrl(option.value);
+    this.props.history.push(`/${ROUTES.relation}/${k1}/${k2}`);
+  };
+
+  onEntity1Cleared = () => {
+    const k1 = keyForUrl();
+    const k2 = keyForUrl(this.props.entity2Key);
+    this.props.history.push(`/${ROUTES.relation}/${k1}/${k2}`);
+  };
+
+  onEntity2Cleared = () => {
+    const k1 = keyForUrl(this.props.entity1Key);
+    const k2 = keyForUrl();
     this.props.history.push(`/${ROUTES.relation}/${k1}/${k2}`);
   };
 
@@ -125,7 +137,7 @@ class RelationsScreen extends React.Component<Props> {
           {realKey1 ? (
             <div>
               <EntityDetails key={realKey1} entityKey={realKey1} />
-              <Button onClick={this.onEntity1Selected.bind(this, "")}>
+              <Button onClick={this.onEntity1Cleared}>
                 Search another entity
               </Button>
             </div>
@@ -169,7 +181,7 @@ class RelationsScreen extends React.Component<Props> {
           {realKey2 ? (
             <div>
               <EntityDetails key={realKey2} entityKey={realKey2} />
-              <Button onClick={this.onEntity2Selected.bind(this, "")}>
+              <Button onClick={this.onEntity2Cleared}>
                 Search another entity
               </Button>
             </div>

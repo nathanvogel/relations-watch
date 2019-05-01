@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import EntitySearch from "../components/EntitySearch";
 import ROUTES from "../utils/ROUTES";
+import { ReactSelectOption } from "../utils/types";
 
 const Header = styled.header`
   margin-top: 20vh;
@@ -23,7 +24,7 @@ const CentralTitle = styled.h2`
 `;
 
 class HomeScreen extends Component<RouterProps> {
-  onSearch = (searchSelection: any) => {
+  onSearch = (searchSelection: ReactSelectOption) => {
     const entityKey = searchSelection.value;
     const url = `/${ROUTES.entity}/${entityKey}`;
     this.props.history.push(url);

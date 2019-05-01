@@ -87,7 +87,7 @@ class SourceForm extends React.Component<Props> {
     this.props.onDescriptionChange(this.props.editorId, event.target.value);
   };
 
-  onAuthorsChange = (selection: any) => {
+  onAuthorsChange = (selection: ValueType<ReactSelectOption>) => {
     this.props.onAuthorsChange(this.props.editorId, selection);
   };
 
