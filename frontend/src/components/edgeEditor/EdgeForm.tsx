@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-
-import CONSTS from "../utils/consts";
-import EntityName from "./EntityName";
-import { RELATION_TYPES_STRRES } from "../strings/strings";
-import { Edge, SourceComment, SourceCommentType } from "../utils/types";
-import ButtonWithConfirmation from "./ButtonWithConfirmation";
-import SourceEditor from "./SourceEditor";
 import cuid from "cuid";
-import SourceDetails from "./SourceDetails";
+
+import CONSTS from "../../utils/consts";
+import EntityName from "./EntityName";
+import { RELATION_TYPES_STRRES } from "../../strings/strings";
+import { Edge, SourceComment, SourceCommentType } from "../../utils/types";
+import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
+import SourceEditor from "../SourceEditor";
+import SourceDetails from "../SourceDetails";
 
 const Content = styled.div`
   display: block;

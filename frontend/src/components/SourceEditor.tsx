@@ -4,7 +4,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 
 import SourceForm from "./sourceEditor/SourceForm";
-import MetaPostStatus from "./MetaPostStatus";
+import MetaPostStatus from "./meta/MetaPostStatus";
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
 import { getSourceFromRef } from "../features/sourcesAC";

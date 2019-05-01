@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { RootStore } from "../Store";
-import Button from "./Button";
+import Button from "./buttons/Button";
 
 type OwnProps = {
   sourceKey: string;

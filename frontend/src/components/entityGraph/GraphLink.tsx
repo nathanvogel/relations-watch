@@ -1,7 +1,7 @@
 import React from "react";
 
-import { LinkRenderData } from "../utils/types";
-import { RELATION_COLORS } from "../utils/consts";
+import { LinkRenderData } from "../../utils/types";
+import { RELATION_COLORS } from "../../utils/consts";
 
 type OwnProps = {
   data: LinkRenderData;

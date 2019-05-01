@@ -5,7 +5,7 @@ import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
 import { Theme } from "../utils/media-styles";
-import Button from "./Button";
+import Button from "./buttons/Button";
 
 const Bar = styled.nav`
   display: block;

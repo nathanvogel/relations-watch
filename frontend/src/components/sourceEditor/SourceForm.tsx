@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
 
 import { Source, ReactSelectOption } from "../../utils/types";
-import Button from "../Button";
+import Button from "../buttons/Button";
 import CONSTS from "../../utils/consts";
 import EntitySearch from "../EntitySearch";
 import { RootAction } from "../../utils/ACTIONS";

@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 
-import { RootStore } from "../Store";
-import { Status } from "../utils/types";
-import { RootAction } from "../utils/ACTIONS";
+import { RootStore } from "../../Store";
+import { Status } from "../../utils/types";
+import { RootAction } from "../../utils/ACTIONS";
 
 type OwnProps = { entityKey: string };
 

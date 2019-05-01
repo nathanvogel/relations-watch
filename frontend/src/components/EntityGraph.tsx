@@ -6,14 +6,14 @@ import { bindActionCreators, Dispatch } from "redux";
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
 import { loadEntity } from "../features/entitiesLoadAC";
-import Button from "../components/Button";
+import Button from "../components/buttons/Button";
 import ROUTES from "../utils/ROUTES";
-import Meta from "../components/Meta";
+import Meta from "../components/meta/Meta";
 import { Status, LinkRenderData } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
-import GraphEntityNode from "../components/GraphEntityNode";
+import GraphEntityNode from "./entityGraph/GraphEntityNode";
 import CONSTS from "../utils/consts";
-import GraphLink from "./GraphLink";
+import GraphLink from "./entityGraph/GraphLink";
 import { Link } from "react-router-dom";
 
 const Content = styled.div``;

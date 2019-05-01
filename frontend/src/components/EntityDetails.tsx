@@ -7,11 +7,11 @@ import { Link } from "react-router-dom";
 import { RootStore } from "../Store";
 import { RootAction } from "../utils/ACTIONS";
 import { loadEntity } from "../features/entitiesLoadAC";
-import Meta from "../components/Meta";
+import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
 import DefaultPerson from "../assets/physical_p_default_full_512.png";
 import CONSTS from "../utils/consts";
-import MainPersonImage from "./MainPersonImage";
+import MainPersonImage from "./entityDetails/MainPersonImage";
 
 const Content = styled.div`
   width: 100%;

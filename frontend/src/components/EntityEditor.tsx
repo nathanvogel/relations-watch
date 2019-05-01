@@ -15,12 +15,12 @@ import {
 } from "../features/entitiesSaveAC";
 import { loadEntity } from "../features/entitiesLoadAC";
 import { Status, Entity } from "../utils/types";
-import EntityForm from "./EntityForm";
-import Meta from "./Meta";
-import MetaPostStatus from "./MetaPostStatus";
+import EntityForm from "./entityEditor/EntityForm";
+import Meta from "./meta/Meta";
+import MetaPostStatus from "./meta/MetaPostStatus";
 import { shouldLoad } from "../utils/utils";
 import CONSTS from "../utils/consts";
-import Button from "./Button";
+import Button from "./buttons/Button";
 
 const Content = styled.div`
   display: block;

@@ -1,6 +1,6 @@
 import React from "react";
 import api from "../../utils/api";
-import StyledAsyncSelect from "../StyledAsyncSelect";
+import StyledAsyncSelect from "../select/StyledAsyncSelect";
 import { ReactSelectOption } from "../../utils/types";
 
 interface SourceSuggestion {

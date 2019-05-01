@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 import { Edge } from "../utils/types";
-import Button from "./Button";
+import Button from "./buttons/Button";
 import EdgeEditor from "./EdgeEditor";
-import Sources from "./Sources";
+import Sources from "./edgeDetails/Sources";
 import { RELATION_COLORS } from "../utils/consts";
 
 const Content = styled.section`

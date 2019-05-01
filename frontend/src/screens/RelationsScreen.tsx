@@ -11,13 +11,13 @@ import { RootAction } from "../utils/ACTIONS";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";
-import RelationEdgesList from "../components/RelationEdgesList";
+import EdgesList from "../components/EdgesList";
 import EdgeEditor from "../components/EdgeEditor";
-import Button from "../components/Button";
+import Button from "../components/buttons/Button";
 import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
 import { Edge, Status } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
-import Meta from "../components/Meta";
+import Meta from "../components/meta/Meta";
 import BigLinksPreview from "../components/BigLinksPreview";
 
 const Content = styled.div`
@@ -161,10 +161,7 @@ class RelationsScreen extends React.Component<Props> {
               {relationsStatus !== Status.Ok ? (
                 <Meta status={relationsStatus} error={relationsError} />
               ) : (
-                <RelationEdgesList
-                  key={this.props.relationId}
-                  relations={relations}
-                />
+                <EdgesList key={this.props.relationId} relations={relations} />
               )}
             </React.Fragment>
           )}

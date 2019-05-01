@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import CONSTS from "../utils/consts";
-import { ENTITY_TYPES } from "../strings/strings";
-import { Entity } from "../utils/types";
-import Button from "./Button";
+import CONSTS from "../../utils/consts";
+import { ENTITY_TYPES } from "../../strings/strings";
+import { Entity } from "../../utils/types";
+import Button from "../buttons/Button";
 import cuid from "cuid";
 
 const Content = styled.div`

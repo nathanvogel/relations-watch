@@ -15,10 +15,10 @@ import {
 } from "../features/edgesSaveAC";
 import { loadEdge } from "../features/edgesLoadAC";
 import { Edge, Status, SourceComment } from "../utils/types";
-import MetaPostStatus from "./MetaPostStatus";
-import Meta from "./Meta";
-import EdgeForm from "./EdgeForm";
-import Button from "./Button";
+import MetaPostStatus from "./meta/MetaPostStatus";
+import Meta from "./meta/Meta";
+import EdgeForm from "./edgeEditor/EdgeForm";
+import Button from "./buttons/Button";
 
 const Content = styled.div`
   display: block;

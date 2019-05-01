@@ -1,5 +1,5 @@
 import React from "react";
-import { Status, ErrorPayload } from "../utils/types";
+import { Status, ErrorPayload } from "../../utils/types";
 
 interface Props {
   status?: Status;
