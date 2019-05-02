@@ -47,6 +47,32 @@ router
   .summary("Creates one or many new relations")
   .description("Links two entities in the database with a new edge.");
 
+/**
+ * Save the given Source in the DB. Send a response through res if it failed.
+ * @param  {Source} source   The source to be saved
+ * @param  {Response} res    The response to use if the save fails.
+ * @return {Source | null}   The Source with metadata if it could be saved,
+ *                           null otherwise.
+ */
+function saveSource(source, res) {
+  const response = request.post(module.context.baseUrl + "/sources", {
+    body: source,
+    json: true,
+    encoding: "utf-8"
+  });
+  if (response.statusCode !== 200) {
+    res.status(response.statusCode).send(response.body);
+    return null;
+  }
+  // The Arango documentation indicates that it should be automatically
+  // parsed with json:true but it doesn't seem to be the case.
+  const savedSource =
+    typeof response.body === "string"
+      ? JSON.parse(response.body)
+      : response.body;
+  return savedSource;
+}
+
 // POST new relations with a new source
 // TODO : validate input.
 router
@@ -60,21 +86,12 @@ router
       // TODO: switch to a transaction ?
       // https://www.arangodb.com/docs/3.4/transactions-transaction-invocation.html
       // const savedSource = saveNewSources(doc.source)
-      const response = request.post(module.context.baseUrl + "/sources", {
-        body: doc.source,
-        json: true,
-        encoding: "utf-8"
-      });
-      if (response.statusCode !== 200) {
-        res.status(response.statusCode).send(response.body);
-        return;
-      }
-      // The Arango documentation indicates that it should be automatically
-      // parsed with json:true but it doesn't seem to be the case.
-      const savedSource =
-        typeof response.body === "string"
-          ? JSON.parse(response.body)
-          : response.body;
+
+      // Save the new source with our other endpoint
+      const savedSource = saveSource(doc.source, res);
+      // If the result is null, the source couldn't be saved and we should abort
+      // The  function has already sent a response.
+      if (!savedSource) return;
       // Add the newly created sourceKey to the edge sourceLink.
       const sourceLink = update(doc.sourceLink, {
         $merge: { sourceKey: savedSource._key }
@@ -134,6 +151,51 @@ router
   )
   .summary("Updates (merges) relation(s)")
   .description("Updates (merges) one or many edges.");
+
+router
+  .patch("/withSource", function(req, res) {
+    const multiple = Array.isArray(req.body);
+    const body = multiple ? req.body : [req.body];
+
+    let data = [];
+    for (var doc of body) {
+      // Save the new source with our other endpoint
+      const savedSource = saveSource(doc.source, res);
+      // If the result is null, the source couldn't be saved and we should abort
+      // The  function has already sent a response.
+      if (!savedSource) return;
+      // Add the newly created sourceKey to the edge sourceLink.
+      const sourceLink = update(doc.sourceLink, {
+        $merge: { sourceKey: savedSource._key }
+      });
+      // Link the comment into the sources.
+      const edge = update(doc.relation, {
+        sources: { $push: [sourceLink] }
+      });
+      // Do the regular edge save operation.
+      utils.prefixToFromWithCollectionName(edge);
+      const meta = relColl.update(edge, edge);
+      data.push({ relation: Object.assign(edge, meta), source: savedSource });
+    }
+    res.send(multiple ? data : data[0]);
+  })
+  .body(
+    joi
+      .alternatives()
+      .try(
+        relationWithSourceSchema,
+        joi.array().items(relationWithSourceSchema)
+      ),
+    "The Edge+Source to update in the database."
+  )
+  .response(
+    joi
+      .alternatives()
+      .try(joi.object().required(), joi.array().items(joi.object().required())),
+    "The updated objects, with their meta-information."
+  )
+  .summary("Updates (merges) relation(s) with a new Source")
+  .description("Updates (merges) one or many edges, adding new Source(s).");
 
 // GET a relation
 router

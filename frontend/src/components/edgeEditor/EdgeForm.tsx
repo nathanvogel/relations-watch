@@ -56,7 +56,8 @@ class EdgeForm extends React.Component<Props> {
       type: undefined,
       amount: 0,
       exactAmount: false,
-      sourceText: ""
+      sourceText: "",
+      sources: []
     }
   };
 
@@ -115,14 +116,12 @@ class EdgeForm extends React.Component<Props> {
 
   submit = (confirms: boolean) => {
     const isNew = !Boolean(this.props.initialEdge._key);
-
     // Validate data.
     if (!this.state.type) return;
 
     const { entity1Key, entity2Key } = this.props;
     const invert = this.state.invertDirection;
-    const edge: Edge = {
-      _key: this.props.initialEdge._key,
+    const edge: Edge = Object.assign({}, this.props.initialEdge, {
       _from: invert ? entity2Key : entity1Key,
       _to: invert ? entity1Key : entity2Key,
       text: this.state.text,
@@ -130,7 +129,7 @@ class EdgeForm extends React.Component<Props> {
       amount: this.state.amount,
       exactAmount: this.state.exactAmount,
       sourceText: this.props.initialEdge.sourceText
-    };
+    });
 
     // If we aren't creating a new edge, we don't need to provide a sourceLink
     if (!isNew) {
@@ -141,10 +140,11 @@ class EdgeForm extends React.Component<Props> {
     // sourceKey is undefined if it's a new source. If so, the onFormSubmit
     // function should look for the sourceForm with the given sourceFormId
     // in the Redux store.
+    const { sourceKey, comment } = this.state;
     const sourceLink: SourceLink = {
-      comments: this.state.comment ? [{ t: this.state.comment }] : [],
+      comments: comment ? [{ t: comment }] : [],
       type: confirms ? SourceLinkType.Confirms : SourceLinkType.Refutes,
-      sourceKey: this.state.sourceKey // Optional
+      sourceKey: sourceKey // Optional
     };
     this.props.onFormSubmit(edge, sourceLink);
   };
@@ -199,14 +199,7 @@ class EdgeForm extends React.Component<Props> {
           {isNew &&
             (this.state.sourceKey ? (
               <React.Fragment>
-                <SourceDetails
-                  sourceKey={this.state.sourceKey}
-                  sourceLink={{
-                    sourceKey: this.state.sourceKey,
-                    type: SourceLinkType.Neutral,
-                    comments: []
-                  }}
-                />
+                <SourceDetails sourceKey={this.state.sourceKey} />
                 <Button onClick={this.onSourceDeselected}>
                   Pick another source
                 </Button>

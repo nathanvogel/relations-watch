@@ -37,13 +37,12 @@ type OwnProps = {
   sourceKey: string;
   sourceLink?: SourceLink;
   editable?: boolean;
-  // onEditClick?: () => void;
 };
 
 const getEditorId = (sourceKey: string): string => "souEdit_" + sourceKey;
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const { sourceKey } = props; //props.sourceLink.sourceKey || "MISSING_SOURCE_KEY";
+  const { sourceKey } = props;
   const source = state.sources.data[sourceKey];
   const status = state.sources.status[sourceKey];
   const error = state.sources.errors[sourceKey];

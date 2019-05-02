@@ -58,7 +58,7 @@ export interface Edge {
   type: number;
   amount?: number;
   exactAmount?: boolean;
-  sources?: SourceLink[];
+  sources: SourceLink[];
   sourceText?: string;
 }
 

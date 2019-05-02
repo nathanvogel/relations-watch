@@ -58,7 +58,7 @@ const relSchema = joi
     exactAmount: joi.boolean(),
     sources: joi
       .array()
-      .items(sourceLinkSchema)
+      .items(sourceLinkSchema.optional())
       .optional()
   })
   .unknown(); // allow additional attributes
@@ -77,7 +77,7 @@ const souSchema = joi
       .number()
       .integer()
       .required(), // Is it a LINK or REF ?
-    authors: joi.array().items(joi.string()), // Entity keys
+    authors: joi.array().items(joi.string().optional()), // Entity keys
     // LINK-only
     fullUrl: nullOrEmptyString,
     description: nullOrEmptyString,
@@ -98,11 +98,21 @@ const relationWithSourceSchema = joi
     source: souSchema
   });
 
+// const relationKeyWithSourceSchema = joi
+//   .object()
+//   .required()
+//   .keys({
+//     relation: joi.string(),
+//     sourceLink: sourceLinkSchema,
+//     source: souSchema
+//   });
+
 module.exports = {
   entSchema,
   relSchema,
   souSchema,
   relationWithSourceSchema,
+  // relationKeyWithSourceSchema,
   commentSchema,
   sourceLinkSchema
 };

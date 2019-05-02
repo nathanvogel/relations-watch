@@ -7,9 +7,8 @@ import { connect } from "react-redux";
 import { RootStore } from "../Store";
 import { getRelationId, shouldLoad } from "../utils/utils";
 import {
-  postEdge,
+  saveEdge,
   clearPostRequest,
-  patchEdge,
   deleteEdge
 } from "../features/edgesSaveAC";
 import { loadEdge } from "../features/edgesLoadAC";
@@ -54,13 +53,11 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const postData = state.requests.data[editorId];
   const postStatus = state.requests.status[editorId];
   const postError = state.requests.errors[editorId];
-  // Get the SourceFormData (used only if it's a new edge)
-  // Otherwise, the source should be updated separately.
-  const sourceFormData = state.sourceForms["sou_" + editorId];
+  const sourceEditorId = "sou_" + editorId;
 
   return {
     ...props,
-    sourceFormData,
+    sourceEditorId,
     relationId,
     postData,
     postStatus,
@@ -75,8 +72,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       loadEdge,
-      postEdge,
-      patchEdge,
+      saveEdge,
       deleteEdge,
       clearPostRequest,
       loadSources
@@ -92,23 +88,12 @@ class EdgeEditor extends React.Component<Props> {
   }
 
   onFormSubmit = (edge: Edge, sourceLink?: SourceLink) => {
-    const { editorId } = this.props;
-    // EDIT mode
-    if (this.props.edgeKey) {
-      this.props.patchEdge(edge, editorId);
-    }
-    // CREATE MODE
-    else {
-      if (!sourceLink) {
-        throw new Error("A source is required to post a new edge!");
-      }
-      this.props.postEdge(
-        editorId,
-        edge,
-        sourceLink,
-        sourceLink.sourceKey ? undefined : this.props.sourceFormData
-      );
-    }
+    this.props.saveEdge(
+      this.props.editorId,
+      edge,
+      sourceLink,
+      this.props.sourceEditorId
+    );
   };
 
   onDelete = () => {
@@ -169,7 +154,7 @@ class EdgeEditor extends React.Component<Props> {
           onFormSubmit={this.onFormSubmit}
           onDelete={this.onDelete}
           disabled={postStatus === Status.Requested}
-          sourceEditorId={"sou_" + this.props.editorId}
+          sourceEditorId={this.props.sourceEditorId}
           loadSources={this.props.loadSources}
         />
         <MetaPostStatus status={postStatus} error={postError} />

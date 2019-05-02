@@ -7,97 +7,146 @@ import ACTIONS from "../utils/ACTIONS";
 import { Action, ErrorPayload, Edge, SourceLink, Source } from "../utils/types";
 import { Status } from "../utils/types";
 import { actionSourcesReceived } from "./sourcesAC";
+import { RootStore } from "../Store";
+import { ERROR_CODES } from "../utils/consts";
+
+function postNewEdgeWithExistingSource(edge: Edge, sourceLink: SourceLink) {
+  const relation = update(edge, {
+    sources: { $set: [sourceLink] }
+  });
+  return api.post(`/relations`, relation);
+}
+
+function patchEdgeWithExistingSource(edge: Edge, sourceLink: SourceLink) {
+  return patchEdge(
+    update(edge, {
+      sources: { $push: [sourceLink] }
+    })
+  );
+}
+
+function patchEdge(edge: Edge) {
+  return api.patch(`/relations`, edge);
+}
+
+function postNewEdgeWithNewSource(
+  edge: Edge,
+  sourceLink: SourceLink,
+  source: Source
+) {
+  return api.post(`/relations/withSource`, {
+    relation: edge,
+    sourceLink: sourceLink,
+    source: source
+  });
+}
+
+function patchEdgeWithNewSource(
+  edge: Edge,
+  sourceLink: SourceLink,
+  source: Source
+) {
+  return api.patch(`/relations/withSource`, {
+    relation: edge,
+    sourceLink: sourceLink,
+    source: source
+  });
+}
 
 /**
  * Given an new relation element, upload it as an edge to the database.
  */
-export const postEdge = (
+export const saveEdge = (
   requestId: string,
   edge: Edge,
-  sourceLink: SourceLink,
-  source?: Source
-) => async (dispatch: Dispatch): Promise<void> => {
+  sourceLink?: SourceLink,
+  sourceEditorId?: string
+) => async (dispatch: Dispatch, getState: () => RootStore): Promise<void> => {
   dispatch(actionSaveRequest(requestId));
 
-  // If it's an existing source, we can just send the whole thing to the server.
-  if (sourceLink.sourceKey) {
-    const relation = update(edge, {
-      sources: { $set: [sourceLink] }
-    });
-    return api
-      .post(`/relations`, relation)
-      .then(res => {
-        const potentialError = checkResponse(res);
-        if (potentialError) {
-          dispatch(actionSaveError(requestId, potentialError));
-          return;
-        }
-        // Everything is fine, we got the data, send it!
-        dispatch(actionEdgeSaveSuccess(requestId, res.data));
-      })
-      .catch((error: AxiosError) => {
-        const errorPayload = checkError(error);
-        console.error(
-          `Error posting edge from ${edge._from} to ${edge._to}`,
-          requestId,
-          errorPayload
-        );
-        dispatch(actionSaveError(requestId, errorPayload));
-      });
-  } else {
-    if (!source) {
-      throw new Error("Got a new edge without sourceKey nor Source");
+  var promise: AxiosPromise<any>;
+  var expectSource = false;
+  const source = sourceEditorId
+    ? getState().sourceForms[sourceEditorId]
+    : undefined;
+
+  // CREATE MODE
+  if (!edge._key) {
+    if (!sourceLink) {
+      dispatch(
+        actionSaveError(requestId, {
+          eMessage: "A source must be linked to post a new relation!",
+          eData: null,
+          eStatus: ERROR_CODES.MISSING_SOURCE_LINK
+        })
+      );
+      return;
     }
-    // If it's a new source, we need to send stuff separately so that the server
-    // can save everything separately and atomically.
-    return api
-      .post(`/relations/withSource`, {
-        relation: edge,
-        sourceLink: sourceLink,
-        source: source
-      })
-      .then(res => {
-        const potentialError = checkResponse(res);
-        if (potentialError) {
-          dispatch(actionSaveError(requestId, potentialError));
-          return;
-        }
-        // Everything is fine, we got the data, send it!
-        const { source, relation } = res.data;
-        dispatch(actionEdgeSaveSuccess(requestId, relation));
-        dispatch(actionSourcesReceived([source._key], [source]));
-      })
-      .catch((error: AxiosError) => {
-        const errorPayload = checkError(error);
-        console.error(
-          `Error posting edge+source from ${edge._from} to ${edge._to}`,
-          requestId,
-          errorPayload
-        );
-        dispatch(actionSaveError(requestId, errorPayload));
-      });
+    // If it's an existing source, we can just send the whole thing to the server.
+    if (sourceLink.sourceKey) {
+      promise = postNewEdgeWithExistingSource(edge, sourceLink);
+    } else if (source) {
+      promise = postNewEdgeWithNewSource(edge, sourceLink, source);
+      expectSource = true;
+    } else {
+      dispatch(
+        actionSaveError(requestId, {
+          eMessage: "No Source found in source forms with id:" + sourceEditorId,
+          eData: null,
+          eStatus: ERROR_CODES.MISSING_SOURCE_FORM
+        })
+      );
+      return;
+    }
   }
-};
+  // EDIT mode
+  else {
+    // If the patch comes without sources, we can simply patch it and let _rev
+    // take care of avoiding conflicts.
+    if (!sourceLink) {
+      promise = patchEdge(edge);
+    } else {
+      // If it's an existing source, we can just send the whole thing to the server.
+      if (sourceLink.sourceKey) {
+        promise = patchEdgeWithExistingSource(edge, sourceLink);
+      } else if (source) {
+        promise = patchEdgeWithNewSource(edge, sourceLink, source);
+        expectSource = true;
+      } else {
+        dispatch(
+          actionSaveError(requestId, {
+            eMessage:
+              "While editing, o Source found in source forms with id:" +
+              sourceEditorId,
+            eData: null,
+            eStatus: ERROR_CODES.MISSING_SOURCE_FORM
+          })
+        );
+        return;
+      }
+    }
+  }
 
-export const patchEdge = (edge: Edge, requestId: string) => async (
-  dispatch: Dispatch
-): Promise<void> => {
-  dispatch(actionSaveRequest(requestId));
-  api
-    .patch(`/relations`, edge)
+  return promise
     .then(res => {
       const potentialError = checkResponse(res);
       if (potentialError) {
         dispatch(actionSaveError(requestId, potentialError));
         return;
       }
-      // Everything is fine, we got the data, send it!
-      dispatch(actionEdgeSaveSuccess(requestId, res.data));
+      // Everything is fine, we got the data, send it to the Store!
+      if (expectSource) {
+        const { source, relation } = res.data;
+        dispatch(actionEdgeSaveSuccess(requestId, relation));
+        dispatch(actionSourcesReceived([source._key], [source]));
+      } else {
+        dispatch(actionEdgeSaveSuccess(requestId, res.data));
+      }
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);
       console.error(
-        `Error patching edge from ${edge._from} to ${edge._to}`,
+        `Error saving edge from ${edge._from} to ${edge._to}`,
         requestId,
         errorPayload
       );
