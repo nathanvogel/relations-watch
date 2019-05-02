@@ -1,10 +1,11 @@
-// A manual copy from /backend/service-graph-api/scripts/consts.js
+// Should have been maintained in sync with the backend here ?
+// /backend/service-graph-api/scripts/consts.js
 
+// TODO: convert this mess to enums
 type RelationType = number;
 type RelationTypes = {
   [key: string]: RelationType;
 };
-
 const RELATION_TYPES: RelationTypes = {
   OWNS: 1,
   OWNS_A_SHARE: 2,
@@ -36,17 +37,21 @@ export const RELATION_COLORS = {
   [RELATION_TYPES.COMMON_ACTIVITES]: "#08327d"
 };
 
+// TODO: convert this mess to enums
 type EntityType = number;
 type EntityTypes = {
   [key: string]: EntityType;
 };
-
-// TODO: switch all of those to enums
 const ENTITY_TYPES: EntityTypes = {
   PHYSICAL_PERSON: 1,
   MORAL_PERSON: 2,
   EVENT: 10,
   SPECIAL_GROUP: 100
+};
+
+export const ERROR_CODES = {
+  MISSING_SOURCE_FORM: "MISSING_SOURCE_FORM",
+  MISSING_SOURCE_LINK: "MISSING_SOURCE_LINK"
 };
 
 const CONSTS = {
@@ -55,7 +60,8 @@ const CONSTS = {
   EMPTY_KEY: "_",
   RELATION_COLORS,
   ENTITY_TYPES,
-  RELATION_TYPES
+  RELATION_TYPES,
+  ERROR_CODES
 };
 
 export default CONSTS;
