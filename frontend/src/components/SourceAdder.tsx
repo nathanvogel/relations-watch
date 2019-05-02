@@ -1,3 +1,4 @@
+/*
 import React from "react";
 import styled from "styled-components";
 
@@ -54,7 +55,7 @@ class SourceAdder extends React.Component<Props> {
     this.setState({ comment: event.target.value });
   };
 
-  onSourceSelected = (sourceKey: string) => {
+  onSourceSelected = (sourceKey?: string) => {
     // One day, loadSources will handle not re-requesting sources.
     this.props.loadSources([sourceKey], true);
     this.setState({ sourceKey });
@@ -121,3 +122,5 @@ class SourceAdder extends React.Component<Props> {
 }
 
 export default SourceAdder;
+*/
+export default "";

@@ -31,6 +31,8 @@ export default (state: Source = defaultState, action: SourceFormAction) => {
         }
       }
       return update(state, { authors: { $set: authors2 } });
+    case ACTIONS.SOU_CLEAR_DATA:
+      return undefined;
     default:
       return state;
   }

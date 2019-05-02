@@ -29,6 +29,12 @@ const Actions = styled.div`
   float: right;
 `;
 
+const EditButton = styled(Button)``;
+
+const BottomActions = styled.div`
+  text-align: center;
+`;
+
 type Props = {
   edge: Edge;
 };
@@ -73,16 +79,12 @@ class EdgeDetails extends React.Component<Props> {
 
     return (
       <Content color={RELATION_COLORS[edge.type]}>
-        <Actions>
-          <Button onClick={this.onEditClick}>Edit</Button>
-        </Actions>
         <EdgeText>{edge.text}</EdgeText>
         {edge.sourceText && <div>Previous source: {edge.sourceText}</div>}
         {edge.sources && edge.sources.length > 0 ? (
           edge.sources.map((sourceLink, index) => (
             <SourceDetails
               key={sourceLink.sourceKey}
-              editable
               sourceKey={sourceLink.sourceKey || "MISSING_SOURCE_KEY"}
               sourceLink={sourceLink}
             />
@@ -92,6 +94,11 @@ class EdgeDetails extends React.Component<Props> {
             <em>UNSOURCED INFORMATION</em>
           </div>
         )}
+        <BottomActions>
+          <EditButton onClick={this.onEditClick}>
+            Add a source and/or edit
+          </EditButton>
+        </BottomActions>
       </Content>
     );
   }

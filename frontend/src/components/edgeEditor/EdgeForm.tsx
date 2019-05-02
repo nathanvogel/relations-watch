@@ -5,7 +5,7 @@ import cuid from "cuid";
 import CONSTS from "../../utils/consts";
 import EntityName from "./EntityName";
 import { RELATION_TYPES_STRRES } from "../../strings/strings";
-import { Edge, SourceLink, SourceLinkType } from "../../utils/types";
+import { Edge, SourceLink, SourceLinkType, Source } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
 import SourceDetails from "../SourceDetails";
@@ -37,6 +37,7 @@ type Props = {
   initialEdge: Edge;
   sourceEditorId: string;
   loadSources: (sourceKeys: string[], doLoadEntities: boolean) => void;
+  sourceFormData: Source;
 };
 
 type State = {
@@ -71,6 +72,14 @@ class EdgeForm extends React.Component<Props> {
     invertDirection: false
   };
 
+  get hasSource() {
+    return this.state.sourceKey || this.props.sourceFormData;
+  }
+
+  get isNew() {
+    return !Boolean(this.props.initialEdge._key);
+  }
+
   onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({ text: event.target.value });
   };
@@ -95,14 +104,10 @@ class EdgeForm extends React.Component<Props> {
     this.setState({ comment: event.target.value });
   };
 
-  onSourceSelected = (sourceKey: string) => {
-    // One day, loadSources will handle not re-requesting sources.
-    this.props.loadSources([sourceKey], true);
+  onSourceSelected = (sourceKey?: string) => {
     this.setState({ sourceKey });
-  };
-
-  onSourceDeselected = () => {
-    this.setState({ sourceKey: undefined });
+    // One day, loadSources will handle not re-requesting sources.
+    if (sourceKey) this.props.loadSources([sourceKey], true);
   };
 
   onRefutingSubmit = (event: React.MouseEvent) => {
@@ -115,7 +120,6 @@ class EdgeForm extends React.Component<Props> {
   };
 
   submit = (confirms: boolean) => {
-    const isNew = !Boolean(this.props.initialEdge._key);
     // Validate data.
     if (!this.state.type) return;
 
@@ -131,8 +135,9 @@ class EdgeForm extends React.Component<Props> {
       sourceText: this.props.initialEdge.sourceText
     });
 
-    // If we aren't creating a new edge, we don't need to provide a sourceLink
-    if (!isNew) {
+    // If we are updating an existing edge without adding a source,
+    // no need to compute the sourceLink
+    if (!this.isNew && !this.hasSource) {
       this.props.onFormSubmit(edge);
       return;
     }
@@ -152,7 +157,6 @@ class EdgeForm extends React.Component<Props> {
   render() {
     const { entity1Key, entity2Key, initialEdge } = this.props;
     const invert = this.state.invertDirection;
-    const isNew = !Boolean(this.props.initialEdge._key);
 
     return (
       <Content>
@@ -195,22 +199,14 @@ class EdgeForm extends React.Component<Props> {
             />
             Exact amount known
           </Label>
+          <h4>Add a source:</h4>
           {initialEdge.sourceText && `(${initialEdge.sourceText})`}
-          {isNew &&
-            (this.state.sourceKey ? (
-              <React.Fragment>
-                <SourceDetails sourceKey={this.state.sourceKey} />
-                <Button onClick={this.onSourceDeselected}>
-                  Pick another source
-                </Button>
-              </React.Fragment>
-            ) : (
-              <SourceSelector
-                onSourceSelected={this.onSourceSelected}
-                editorId={this.props.sourceEditorId}
-              />
-            ))}
-          {isNew && (
+          <SourceSelector
+            sourceKey={this.state.sourceKey}
+            onSourceSelected={this.onSourceSelected}
+            editorId={this.props.sourceEditorId}
+          />
+          {this.hasSource && (
             <Label>
               Comment
               <textarea
@@ -220,17 +216,25 @@ class EdgeForm extends React.Component<Props> {
             </Label>
           )}
           <button type="submit">Save</button>
-          {isNew && (
+          {this.hasSource && (
             <button type="button" onClick={this.onRefutingSubmit}>
               Save with refuting source
             </button>
           )}
-          {!isNew && (
+          {!this.isNew && (
             <ButtonWithConfirmation onAction={this.props.onDelete}>
-              Delete
+              Delete this relation element
             </ButtonWithConfirmation>
           )}
         </form>
+        {initialEdge.sources.map((sourceLink, index) => (
+          <SourceDetails
+            key={sourceLink.sourceKey}
+            sourceKey={sourceLink.sourceKey as string}
+            sourceLink={sourceLink}
+            editable
+          />
+        ))}
       </Content>
     );
   }

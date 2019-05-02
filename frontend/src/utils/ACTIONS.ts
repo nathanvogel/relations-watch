@@ -57,3 +57,6 @@ export type SOU_AUTHORS_CHANGE = typeof SOU_AUTHORS_CHANGE;
 
 export const SOU_INITIAL_DATA = "SOU_INITIAL_DATA";
 export type SOU_INITIAL_DATA = typeof SOU_INITIAL_DATA;
+
+export const SOU_CLEAR_DATA = "SOU_CLEAR_DATA";
+export type SOU_CLEAR_DATA = typeof SOU_CLEAR_DATA;

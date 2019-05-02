@@ -54,10 +54,12 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const postStatus = state.requests.status[editorId];
   const postError = state.requests.errors[editorId];
   const sourceEditorId = "sou_" + editorId;
+  const sourceFormData = state.sourceForms[sourceEditorId];
 
   return {
     ...props,
     sourceEditorId,
+    sourceFormData,
     relationId,
     postData,
     postStatus,
@@ -156,6 +158,7 @@ class EdgeEditor extends React.Component<Props> {
           disabled={postStatus === Status.Requested}
           sourceEditorId={this.props.sourceEditorId}
           loadSources={this.props.loadSources}
+          sourceFormData={this.props.sourceFormData}
         />
         <MetaPostStatus status={postStatus} error={postError} />
       </Content>

@@ -9,6 +9,9 @@ import { RootStore } from "../Store";
 import { getSourceFromRef } from "../features/sourcesAC";
 import { Status, ReactSelectOption } from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
+import SourceDetails from "./SourceDetails";
+import Button from "./buttons/Button";
+import CONSTS from "../utils/consts";
 
 const Content = styled.div`
   disply: block;
@@ -20,7 +23,8 @@ const Label = styled.label`
 
 type OwnProps = {
   editorId: string;
-  onSourceSelected?: (sourceKey: string) => void;
+  sourceKey?: string;
+  onSourceSelected: (sourceKey?: string) => void;
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
@@ -58,9 +62,15 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
+enum SelectorMode {
+  SourceSelected,
+  EditingRef,
+  EditingNewSource
+}
+
 class SourceSelector extends React.Component<Props> {
   readonly state = {
-    editingRef: true,
+    mode: SelectorMode.EditingRef,
     sourceRef: ""
   };
 
@@ -70,55 +80,73 @@ class SourceSelector extends React.Component<Props> {
     });
   };
 
-  onCreateRef = (value: string) => {
+  onCreateSource = (value: string) => {
     this.props.getSourceFromRef(value, this.props.refEditorId);
     // Now we want to edit the source.
     // Put the ref value state again, because it's cleared with onChange by
     // react-select when it's unmounted
-    this.setState({ editingRef: false, sourceRef: value });
+    this.setState({ mode: SelectorMode.EditingNewSource, sourceRef: value });
   };
 
   onSelectSource = (option: ReactSelectOption) => {
-    if (this.props.onSourceSelected) this.props.onSourceSelected(option.value);
+    this.props.onSourceSelected(option.value);
+    this.setState({ mode: SelectorMode.SourceSelected });
   };
 
-  onCancelSourceFormClick = () => {
-    this.setState({ editingRef: true });
+  onDeselectSource = () => {
+    this.props.onSourceSelected();
+    this.setState({ mode: SelectorMode.EditingRef });
   };
 
   render() {
-    const { editingRef, sourceRef } = this.state;
+    const { mode, sourceRef } = this.state;
     const { refGetData, refGetStatus, refGetError } = this.props;
 
-    if (this.state.editingRef)
-      return (
-        <Content>
-          <Label>
-            Source document:
-            <SourceRefSearch
-              onChange={this.onSelectSource}
-              inputValue={sourceRef}
-              onInputChange={this.onSourceRefChange}
-              onCreateRef={this.onCreateRef}
-            />
-          </Label>
-        </Content>
-      );
-
-    return (
-      <Content>
-        {refGetStatus !== Status.Ok ? (
-          <MetaPostStatus isGet status={refGetStatus} error={refGetError} />
-        ) : (
-          <SourceForm
-            key={this.props.editorId}
-            editorId={this.props.editorId}
-            initialSource={refGetData}
-            onCancelClick={this.onCancelSourceFormClick}
-          />
-        )}
-      </Content>
-    );
+    switch (mode) {
+      case SelectorMode.EditingRef:
+        return (
+          <Content>
+            <Label>
+              Source document:
+              <SourceRefSearch
+                onChange={this.onSelectSource}
+                inputValue={sourceRef}
+                onInputChange={this.onSourceRefChange}
+                onCreateSource={this.onCreateSource}
+              />
+            </Label>
+          </Content>
+        );
+      case SelectorMode.EditingNewSource:
+        return (
+          <Content>
+            {refGetStatus !== Status.Ok ? (
+              <MetaPostStatus isGet status={refGetStatus} error={refGetError} />
+            ) : (
+              <SourceForm
+                key={this.props.editorId}
+                editorId={this.props.editorId}
+                initialSource={refGetData}
+                onCancelClick={this.onDeselectSource}
+              />
+            )}
+          </Content>
+        );
+      case SelectorMode.SourceSelected:
+        if (!this.props.sourceKey) {
+          console.error("sourceKey is undefined, but mode is SourceSelected");
+        }
+        return (
+          <Content>
+            {this.props.sourceKey ? (
+              <SourceDetails sourceKey={this.props.sourceKey} />
+            ) : (
+              "Missing source key!"
+            )}
+            <Button onClick={this.onDeselectSource}>Pick another source</Button>
+          </Content>
+        );
+    }
   }
 }
 

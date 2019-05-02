@@ -20,10 +20,16 @@ export interface SouInitialData {
   data: Source;
 }
 
+export interface SouClearData {
+  type: ACTIONS.SOU_CLEAR_DATA;
+  namespace: string;
+}
+
 export type SourceFormAction =
   | SouDescriptionChange
   | SouAuthorsChange
-  | SouInitialData;
+  | SouInitialData
+  | SouClearData;
 
 export function souDescriptionChange(
   namespace: string,
@@ -55,5 +61,12 @@ export function souInitialData(
     type: ACTIONS.SOU_INITIAL_DATA,
     namespace,
     data
+  };
+}
+
+export function souClearData(namespace: string): SouClearData {
+  return {
+    type: ACTIONS.SOU_CLEAR_DATA,
+    namespace
   };
 }

@@ -54,7 +54,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
     {
       onDescriptionChange: sourceFormActions.souDescriptionChange,
       onAuthorsChange: sourceFormActions.souAuthorsChange,
-      feedInitialFormData: sourceFormActions.souInitialData
+      feedInitialFormData: sourceFormActions.souInitialData,
+      clearFormData: sourceFormActions.souClearData
     },
     dispatch
   );
@@ -76,7 +77,7 @@ class SourceForm extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    // TODO : clear state
+    this.props.clearFormData(this.props.editorId);
   }
 
   onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {

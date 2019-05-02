@@ -43,7 +43,7 @@ export interface Props {
   onChange?: (value: ReactSelectOption) => void;
   onInputChange?: (value: string) => void;
   inputValue?: string;
-  onCreateRef: (value: string) => void;
+  onCreateSource: (value: string) => void;
 }
 
 // object is the state type
@@ -73,7 +73,7 @@ class SourceRefSearch extends React.Component<Props, object> {
         }
         autoFocus
         allowCreateWhileLoading
-        onCreateOption={this.props.onCreateRef}
+        onCreateOption={this.props.onCreateSource}
         noOptionsMessage={(d: ReactSelectInputValue) => {
           return d.inputValue && d.inputValue.length > 1
             ? "Nothing found"
