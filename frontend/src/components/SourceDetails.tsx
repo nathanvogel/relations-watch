@@ -7,6 +7,10 @@ import { RootStore } from "../Store";
 import { SourceLink, Status, SourceType } from "../utils/types";
 import Meta from "./meta/Meta";
 import SourceEntityPreview from "./sourceDetails/SourceEntityPreview";
+import Button from "./buttons/Button";
+import SourceForm from "./sourceEditor/SourceForm";
+import { patchSource } from "../features/sourcesAC";
+import MetaPostStatus from "./meta/MetaPostStatus";
 
 const Content = styled.div`
   display: block;
@@ -25,38 +29,86 @@ const StyledSourceA = styled.a`
   // text-decoration: none;
 `;
 
+const Actions = styled.div`
+  float: right;
+`;
+
 type OwnProps = {
-  sourceLink: SourceLink;
+  sourceKey: string;
+  sourceLink?: SourceLink;
+  editable?: boolean;
+  // onEditClick?: () => void;
 };
 
+const getEditorId = (sourceKey: string): string => "souEdit_" + sourceKey;
+
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const { sourceLink } = props;
-  const sourceKey = sourceLink.sourceKey || "MISSING_SOURCE_KEY";
+  const { sourceKey } = props; //props.sourceLink.sourceKey || "MISSING_SOURCE_KEY";
   const source = state.sources.data[sourceKey];
   const status = state.sources.status[sourceKey];
   const error = state.sources.errors[sourceKey];
+  // Get the POST request state from the Redux Store
+  const editorId = getEditorId(props.sourceKey);
+  const postStatus = state.requests.status[editorId];
+  const postError = state.requests.errors[editorId];
 
   return {
-    sourceLink,
+    ...props,
     source,
     status,
-    error
+    error,
+    postStatus,
+    postError
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({}, dispatch);
+  bindActionCreators(
+    {
+      patchSource
+    },
+    dispatch
+  );
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
 class SourceDetails extends React.Component<Props> {
+  readonly state = {
+    editingSource: false
+  };
+
+  toggleClick = () => {
+    this.setState({ editingSource: !this.state.editingSource });
+  };
+
+  onSaveSource = () => {
+    this.setState({ editingSource: false });
+    this.props.patchSource(getEditorId(this.props.sourceKey));
+  };
+
   render() {
     const { source, status, error } = this.props;
     // Wait for loading
     const meta = <Meta status={status} error={error} />;
     if (status !== Status.Ok) return <Content>{meta}</Content>;
+
     const isLink: boolean = source.type === SourceType.Link;
+    const { postStatus, postError } = this.props;
+    if (this.state.editingSource) {
+      return (
+        <SourceForm
+          initialSource={source}
+          onCancelClick={this.toggleClick}
+          editorId={getEditorId(this.props.sourceKey)}
+          onSaveClick={this.onSaveSource}
+        />
+      );
+    }
+
+    // After editing, but still with a Status:
+    if (postStatus !== undefined && postStatus !== Status.Ok)
+      return <MetaPostStatus status={postStatus} error={postError} />;
 
     // Separate the domain to bolden it.
     var domain: string = "";
@@ -68,6 +120,11 @@ class SourceDetails extends React.Component<Props> {
 
     return (
       <Content>
+        <Actions>
+          {this.props.editable && (
+            <Button onClick={this.toggleClick}>Edit</Button>
+          )}
+        </Actions>
         {isLink ? (
           <StyledSourceA href={source.fullUrl}>
             <strong>{domain}</strong>

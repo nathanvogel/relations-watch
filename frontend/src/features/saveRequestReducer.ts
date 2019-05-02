@@ -14,6 +14,7 @@ export default (state = defaultState, action: AnyAction) => {
     case ACTIONS.EntitySaveSent:
     case ACTIONS.SourceRefGetSent:
     case ACTIONS.EdgeSaveSent:
+    case ACTIONS.SourceSaveSent:
       const key1 = action.meta.requestId as string;
       return update(state, {
         status: { [key1]: { $set: action.status } }
@@ -21,6 +22,7 @@ export default (state = defaultState, action: AnyAction) => {
     case ACTIONS.EntitySaveClear:
     case ACTIONS.SourceRefGetClear:
     case ACTIONS.EdgeSaveClear:
+    case ACTIONS.SourceSaveClear:
       const key4 = action.meta.requestId as string;
       return update(state, {
         data: { $unset: [key4] },
@@ -30,6 +32,7 @@ export default (state = defaultState, action: AnyAction) => {
     case ACTIONS.EntitySaveSuccess:
     case ACTIONS.SourceRefGetSuccess:
     case ACTIONS.EdgeSaveSuccess:
+    case ACTIONS.SourceSaveSuccess:
       const key2 = action.meta.requestId as string;
       return update(state, {
         data: { [key2]: { $set: action.payload } },
@@ -38,6 +41,7 @@ export default (state = defaultState, action: AnyAction) => {
     case ACTIONS.EntitySaveError:
     case ACTIONS.SourceRefGetError:
     case ACTIONS.EdgeSaveError:
+    case ACTIONS.SourceSaveError:
       const key3 = action.meta.requestId as string;
       return update(state, {
         data: { [key3]: { $set: null } },

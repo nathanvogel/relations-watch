@@ -109,7 +109,7 @@ class SourceEditor extends React.Component<Props> {
     return (
       <Content>
         {refGetStatus !== Status.Ok ? (
-          <MetaPostStatus status={refGetStatus} error={refGetError} />
+          <MetaPostStatus isGet status={refGetStatus} error={refGetError} />
         ) : (
           <SourceForm
             key={this.props.editorId}

@@ -15,6 +15,7 @@ type OwnProps = {
   editorId: string;
   initialSource: Source;
   onCancelClick: () => void;
+  onSaveClick?: () => void;
 };
 
 const Label = styled.label`
@@ -25,10 +26,8 @@ const Content = styled.div`
   display: block;
 `;
 
-const mapStateToProps = (
-  state: RootStore,
-  { editorId, onCancelClick, initialSource }: OwnProps
-) => {
+const mapStateToProps = (state: RootStore, props: OwnProps) => {
+  const { editorId } = props;
   const formData = state.sourceForms[editorId];
   // Besides the [entityKey1, entityKey2, ...] selection format stored
   // in the database, we need the same array with {value, label} pairs.
@@ -47,9 +46,7 @@ const mapStateToProps = (
   return {
     formData,
     selectedAuthors,
-    editorId,
-    onCancelClick,
-    initialSource
+    ...props
   };
 };
 
@@ -101,14 +98,14 @@ class SourceForm extends React.Component<Props> {
 
     return (
       <div>
+        <Button onClick={this.props.onCancelClick}>← Back </Button>
         Reference: {formData.ref}
-        <Button onClick={this.props.onCancelClick}>Edit ref</Button>
         {!isLink && (
           <p>
             <em>
-              You're using a manual reference, if possible, use a link. If the
-              source is a book, link toward the Amazon page of the book. (Read
-              on why Amazon?)
+              You're using a manual reference, if possible, use a link. If it's
+              a book, link to{" "}
+              <a href="https://www.goodreads.com">goodreads.com</a>.
             </em>
           </p>
         )}
@@ -138,6 +135,9 @@ class SourceForm extends React.Component<Props> {
           onChange={this.onAuthorsChange}
           isMulti={true}
         />
+        {this.props.onSaveClick && (
+          <Button onClick={this.props.onSaveClick}>Save</Button>
+        )}
       </div>
     );
   }

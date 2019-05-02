@@ -132,7 +132,7 @@ class EdgeForm extends React.Component<Props> {
       sourceText: this.props.initialEdge.sourceText
     };
 
-    // If we're creating a new edge, we only provide a comment/sourceLink
+    // If we aren't creating a new edge, we don't need to provide a sourceLink
     if (!isNew) {
       this.props.onFormSubmit(edge);
       return;
@@ -200,6 +200,7 @@ class EdgeForm extends React.Component<Props> {
             (this.state.sourceKey ? (
               <React.Fragment>
                 <SourceDetails
+                  sourceKey={this.state.sourceKey}
                   sourceLink={{
                     sourceKey: this.state.sourceKey,
                     type: SourceLinkType.Neutral,

@@ -203,3 +203,75 @@ function actionRefGetReceived(requestId: string, payload: object): Action {
     meta: { requestId: requestId }
   };
 }
+
+export const patchSource = (formDataKey: string) => async (
+  dispatch: Dispatch,
+  getState: () => RootStore
+): Promise<void> => {
+  const formData = getState().sourceForms[formDataKey];
+  if (!formData) {
+    dispatch(
+      actionSourceSaveError(formDataKey, {
+        eData: null,
+        eMessage: "Error: no form data found to upload!",
+        eStatus: 4040
+      })
+    );
+    return;
+  }
+  dispatch(actionSourceSaveSent(formDataKey));
+  return api
+    .patch(`/sources`, formData)
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        dispatch(actionSourceSaveError(formDataKey, potentialError));
+        return;
+      }
+      // Everything is fine, we got the data, send it!
+      dispatch(actionSourceSaveSuccess(formDataKey, res.data));
+      dispatch(actionSourceSaveClear(formDataKey));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error(
+        `Error patching source ${formData.ref}`,
+        formDataKey,
+        errorPayload
+      );
+      dispatch(actionSourceSaveError(formDataKey, errorPayload));
+    });
+};
+
+function actionSourceSaveSent(requestId: string): Action {
+  return {
+    type: ACTIONS.SourceSaveSent,
+    status: Status.Requested,
+    meta: { requestId: requestId }
+  };
+}
+
+function actionSourceSaveClear(requestId: string): Action {
+  return {
+    type: ACTIONS.SourceSaveClear,
+    status: Status.Clear,
+    meta: { requestId }
+  };
+}
+
+function actionSourceSaveError(requestId: string, error: ErrorPayload): Action {
+  return {
+    type: ACTIONS.SourceSaveError,
+    status: Status.Error,
+    meta: { requestId: requestId, error: error }
+  };
+}
+
+function actionSourceSaveSuccess(requestId: string, payload: object): Action {
+  return {
+    type: ACTIONS.SourceSaveSuccess,
+    payload,
+    status: Status.Ok,
+    meta: { requestId: requestId }
+  };
+}

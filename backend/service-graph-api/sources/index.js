@@ -90,13 +90,29 @@ router
   .summary("Retrieve many sources")
   .description("Retrieves many sources by key in one request.");
 
-// GET an entity
+// GET a source
 router
   .get("/:key", apiFactory.get.bind(this, souColl))
   .pathParam("key", joi.string().required(), "Key of the source.")
   .response(joi.object().required(), "Source stored in the collection.")
   .summary("Retrieve a source")
   .description("Retrieves a source by key.");
+
+// GET a source
+router
+  .patch("/", apiFactory.patch.bind(this, souColl))
+  .body(
+    joi.alternatives().try(souSchema, joi.array().items(souSchema)),
+    "Source(s) to patch in the collection."
+  )
+  .response(
+    joi
+      .alternatives()
+      .try(joi.object().required(), joi.array().items(joi.object().required())),
+    "Source(s) stored in the collection."
+  )
+  .summary("Updates (merges) a source(s)")
+  .description("Updates (merges) a source(s) in the collection.");
 
 // GET source suggestions for autocomplete
 router

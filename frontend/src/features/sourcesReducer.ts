@@ -54,6 +54,14 @@ export default (state = defaultState, action: AnyAction) => {
         status: { $merge: statusList },
         errors: { $merge: errorList }
       });
+    case ACTIONS.SourceSaveSuccess:
+      // Put all the freshest data:
+      const source: Source = action.payload;
+      const key = source._key as string;
+      return update(state, {
+        data: { [key]: { $set: source } },
+        status: { [key]: { $set: Status.Ok } }
+      });
     default:
       return state;
   }

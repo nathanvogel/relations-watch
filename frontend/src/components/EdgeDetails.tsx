@@ -80,7 +80,12 @@ class EdgeDetails extends React.Component<Props> {
         {edge.sourceText && <div>Previous source: {edge.sourceText}</div>}
         {edge.sources && edge.sources.length > 0 ? (
           edge.sources.map((sourceLink, index) => (
-            <SourceDetails key={sourceLink.sourceKey} sourceLink={sourceLink} />
+            <SourceDetails
+              key={sourceLink.sourceKey}
+              editable
+              sourceKey={sourceLink.sourceKey || "MISSING_SOURCE_KEY"}
+              sourceLink={sourceLink}
+            />
           ))
         ) : (
           <div>
