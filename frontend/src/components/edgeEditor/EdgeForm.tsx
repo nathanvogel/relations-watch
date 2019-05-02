@@ -213,7 +213,6 @@ class EdgeForm extends React.Component<Props> {
               </React.Fragment>
             ) : (
               <SourceEditor
-                sourceKey={this.state.sourceKey}
                 onSourceSelected={this.onSourceSelected}
                 editorId={this.props.sourceEditorId}
               />

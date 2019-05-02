@@ -20,7 +20,6 @@ const Label = styled.label`
 
 type OwnProps = {
   editorId: string;
-  sourceKey?: string;
   onSourceSelected?: (sourceKey: string) => void;
 };
 
