@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";
 
-import SourceForm from "./sourceEditor/SourceForm";
+import SourceForm from "./SourceForm";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { RootStore } from "../Store";
 import { getSourceFromRef } from "../features/sourcesAC";
@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
-class SourceEditor extends React.Component<Props> {
+class SourceSelector extends React.Component<Props> {
   readonly state = {
     editingRef: true,
     sourceRef: ""
@@ -125,4 +125,4 @@ class SourceEditor extends React.Component<Props> {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SourceEditor);
+)(SourceSelector);

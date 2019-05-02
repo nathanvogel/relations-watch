@@ -8,7 +8,7 @@ import { SourceLink, Status, SourceType } from "../utils/types";
 import Meta from "./meta/Meta";
 import SourceEntityPreview from "./sourceDetails/SourceEntityPreview";
 import Button from "./buttons/Button";
-import SourceForm from "./sourceEditor/SourceForm";
+import SourceForm from "./SourceForm";
 import { patchSource } from "../features/sourcesAC";
 import MetaPostStatus from "./meta/MetaPostStatus";
 

@@ -7,7 +7,7 @@ import EntityName from "./EntityName";
 import { RELATION_TYPES_STRRES } from "../../strings/strings";
 import { Edge, SourceLink, SourceLinkType } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
-import SourceEditor from "../SourceEditor";
+import SourceSelector from "../SourceSelector";
 import SourceDetails from "../SourceDetails";
 import Button from "../buttons/Button";
 
@@ -212,7 +212,7 @@ class EdgeForm extends React.Component<Props> {
                 </Button>
               </React.Fragment>
             ) : (
-              <SourceEditor
+              <SourceSelector
                 onSourceSelected={this.onSourceSelected}
                 editorId={this.props.sourceEditorId}
               />

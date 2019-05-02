@@ -4,12 +4,11 @@ import { Dispatch, bindActionCreators, AnyAction } from "redux";
 import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
 
-import { Source, ReactSelectOption, SourceType } from "../../utils/types";
-import Button from "../buttons/Button";
-import CONSTS from "../../utils/consts";
-import EntitySearch from "../EntitySearch";
-import { RootStore } from "../../Store";
-import * as sourceFormActions from "../../features/sourceFormActions";
+import { Source, ReactSelectOption, SourceType } from "../utils/types";
+import Button from "./buttons/Button";
+import EntitySearch from "./EntitySearch";
+import { RootStore } from "../Store";
+import * as sourceFormActions from "../features/sourceFormActions";
 
 type OwnProps = {
   editorId: string;
