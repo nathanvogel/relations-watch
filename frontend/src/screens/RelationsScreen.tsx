@@ -18,6 +18,7 @@ import { Edge, Status, ReactSelectOption } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
 import Meta from "../components/meta/Meta";
 import BigLinksPreview from "../components/BigLinksPreview";
+import { selectEntities } from "../features/entitySelectionActions";
 
 const Content = styled.div`
   display: flex;
@@ -69,7 +70,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({ loadRelation }, dispatch);
+  bindActionCreators({ loadRelation, selectEntities }, dispatch);
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps> &
@@ -92,8 +93,10 @@ class RelationsScreen extends React.Component<Props> {
       realKey1 &&
       realKey2 &&
       (!relationsStatus || relationsStatus === Status.Error)
-    )
+    ) {
       this.props.loadRelation(realKey1, realKey2);
+      this.props.selectEntities([realKey1, realKey2]);
+    }
   }
 
   onAddClick = () => {

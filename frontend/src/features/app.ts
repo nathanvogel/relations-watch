@@ -8,6 +8,7 @@ import linksReducer from "./linksReducer";
 import saveRequestReducer from "./saveRequestReducer";
 import sourceFormReducer from "./sourceFormReducer";
 import sourcesReducer from "./sourcesReducer";
+import entitySelectionReducer from "./entitySelectionReducer";
 
 export default combineReducers({
   requests: saveRequestReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
   relations: relationsReducer,
   links: linksReducer,
   sources: sourcesReducer,
-  sourceForms: namespaceEnhancer(sourceFormReducer)
+  sourceForms: namespaceEnhancer(sourceFormReducer),
+  entitySelection: entitySelectionReducer
 });

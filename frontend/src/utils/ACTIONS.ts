@@ -49,6 +49,7 @@ export interface NamespacedAction extends AnyAction {
   namespace: string;
 }
 
+// ===== Source form
 export const SOU_DESCRIPTION_CHANGE = "SOU_DESCRIPTION_CHANGE";
 export type SOU_DESCRIPTION_CHANGE = typeof SOU_DESCRIPTION_CHANGE;
 
@@ -60,3 +61,9 @@ export type SOU_INITIAL_DATA = typeof SOU_INITIAL_DATA;
 
 export const SOU_CLEAR_DATA = "SOU_CLEAR_DATA";
 export type SOU_CLEAR_DATA = typeof SOU_CLEAR_DATA;
+
+// ===== Entity Selection
+export const SelectEntities = "SelectEntities";
+export type SelectEntities = typeof SelectEntities;
+export const DeselectEntities = "DeselectEntities";
+export type DeselectEntities = typeof DeselectEntities;

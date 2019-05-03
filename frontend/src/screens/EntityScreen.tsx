@@ -12,6 +12,7 @@ import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import EntityGraph from "../components/EntityGraph";
+import * as entitySelectionActions from "../features/entitySelectionActions";
 
 const Content = styled.div``;
 
@@ -51,17 +52,19 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       loadEntity,
-      loadEntityGraph
+      loadEntityGraph,
+      selectEntities: entitySelectionActions.selectEntities
     },
     dispatch
   );
 
 class EntityScreen extends Component<Props> {
   componentDidMount() {
-    if (!this.props.status || this.props.status === Status.Error)
-      this.props.loadEntity(this.props.entityKey);
-    if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
-      this.props.loadEntityGraph(this.props.entityKey);
+    const { entityKey, status, linksStatus } = this.props;
+    if (!status || status === Status.Error) this.props.loadEntity(entityKey);
+    if (!linksStatus || linksStatus === Status.Error)
+      this.props.loadEntityGraph(entityKey);
+    if (this.props.selectEntities) this.props.selectEntities([entityKey]);
   }
 
   render() {
@@ -77,7 +80,7 @@ class EntityScreen extends Component<Props> {
 
     return (
       <Content>
-        <Button to={`/${ROUTES.edit}/${ROUTES.entity}/${this.props.entityKey}`}>
+        <Button to={`/${ROUTES.edit}/${ROUTES.entity}/${entityKey}`}>
           Edit {entity.name}
         </Button>
         <EntityGraph entityKey={entityKey} />
