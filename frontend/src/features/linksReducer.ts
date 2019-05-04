@@ -1,10 +1,10 @@
 import ACTIONS from "../utils/ACTIONS";
 import {
-  Action,
   EdgePreview,
   Edge,
-  ConnectedEntities,
-  LinkedEntities
+  Connections,
+  LinkedEntities,
+  ConnectionsList
 } from "../utils/types";
 import update from "immutability-helper";
 import { AnyAction } from "redux";
@@ -12,18 +12,16 @@ import { getSimplifiedEdge } from "../utils/utils";
 
 interface SubState {
   data: {
-    bylinkedentities: { [key: string]: [string, number][] };
-    byentity: { [key: string]: ConnectedEntities };
-    bykey: { [key: string]: EdgePreview };
+    byentity: { [baseEntityKey: string]: Connections };
+    all: { [edgeKey: string]: EdgePreview };
   };
   status: {};
   errors: {};
 }
 const defaultState: SubState = {
   data: {
-    bylinkedentities: {},
     byentity: {},
-    bykey: {}
+    all: {}
   },
   status: {},
   errors: {}
@@ -53,7 +51,7 @@ export default (state = defaultState, action: AnyAction) => {
     //         [edge._from]: fUpdate,
     //         [edge._to]: tUpdate
     //       },
-    //       bykey: { [edgePreview._key]: edgePreview }
+    //       all: { [edgePreview._key]: edgePreview }
     //     }
     //   });
     case ACTIONS.EdgeDeleteSuccess:
@@ -71,39 +69,42 @@ export default (state = defaultState, action: AnyAction) => {
         console.error("Invalid action: " + ACTIONS.LinksLoadSuccess);
         return state;
       }
+
       const edges = action.payload.edges as Array<EdgePreview>;
-      const edgesMap: { [key: string]: EdgePreview } = {};
-      const entityKey = action.meta.entityKey as string;
-      const listByEntity: { [key: string]: ConnectedEntities } = {};
-      const linkedEntities: LinkedEntities = {};
+      const baseEntityKey = action.meta.baseEntityKey as string;
+
+      const edgeList: { [key: string]: EdgePreview } = {};
+      const cList: ConnectionsList = {};
+      // const linkedEntities: LinkedEntities = {};
+
       for (let e of edges) {
         // Pre-process the edge
         const edge = getSimplifiedEdge(e);
-        // To be saved in /data/bykey
-        edgesMap[edge._key] = edge;
+        // To be saved in /data/all
+        edgeList[edge._key] = edge;
         // To be saved in /data/byentity/:fromKey and
         //                /data/byentity/:toKey
-        addEdgeToBothEntities(listByEntity, edge);
+        addEdgeToBothEntities(cList, edge);
         // Count the number of element between each persons (both ways)
-        addLinkToEntityList(linkedEntities, edge._from, edge._to);
-        addLinkToEntityList(linkedEntities, edge._to, edge._from);
+        addLinkToEntityList(cList, edge._from, edge._to);
+        addLinkToEntityList(cList, edge._to, edge._from);
       }
       // For each entry that contains the list of entries it's connected
       // to and the number of connections
-      for (let fKey in linkedEntities) {
+      for (let entity1Key in cList) {
         // Get an array that contains all inforamtion and sort it.
-        let entries = Object.entries(linkedEntities[fKey]).sort((a, b) => {
-          return b[1] - a[1];
-        });
-        listByEntity[fKey].entities = entries;
+        let entries = Object.entries(cList[entity1Key].toEntity).sort(
+          (a, b) => b[1] - a[1]
+        );
+        cList[entity1Key].entities = entries;
       }
       return update(state, {
         data: {
-          byentity: { $merge: listByEntity },
-          bykey: { $merge: edgesMap }
+          byentity: { $merge: cList },
+          all: { $merge: edgeList }
         },
-        status: { [entityKey]: { $set: action.status } },
-        errors: { [entityKey]: { $set: action.meta.error } }
+        status: { [baseEntityKey]: { $set: action.status } },
+        errors: { [baseEntityKey]: { $set: action.meta.error } }
       });
     case ACTIONS.LinksLoadError:
       const key3 = action.meta.relationId as string;
@@ -118,18 +119,25 @@ export default (state = defaultState, action: AnyAction) => {
 };
 
 function addEdgeToBothEntities(
-  updates: { [key: string]: ConnectedEntities },
+  listByEntity: { [key: string]: Connections },
   edge: EdgePreview
 ) {
-  if (!updates[edge._from])
-    updates[edge._from] = { edges: [edge], entities: [] };
-  else updates[edge._from].edges.push(edge);
-  if (!updates[edge._to]) updates[edge._to] = { edges: [edge], entities: [] };
-  else updates[edge._to].edges.push(edge);
+  if (!listByEntity[edge._from])
+    listByEntity[edge._from] = genEmptyConnections(edge);
+  else listByEntity[edge._from].edges.push(edge);
+  if (!listByEntity[edge._to])
+    listByEntity[edge._to] = genEmptyConnections(edge);
+  else listByEntity[edge._to].edges.push(edge);
 }
 
-function addLinkToEntityList(list: LinkedEntities, k1: string, k2: string) {
-  if (!list[k1]) list[k1] = {};
-  if (!list[k1][k2]) list[k1][k2] = 1;
-  else list[k1][k2] += 1;
+const genEmptyConnections = (edge?: EdgePreview): Connections => ({
+  edges: edge ? [edge] : [],
+  entities: [],
+  toEntity: {}
+});
+
+function addLinkToEntityList(list: ConnectionsList, k1: string, k2: string) {
+  if (!list[k1]) list[k1] = genEmptyConnections();
+  if (!list[k1].toEntity[k2]) list[k1].toEntity[k2] = 1;
+  else list[k1].toEntity[k2] += 1;
 }

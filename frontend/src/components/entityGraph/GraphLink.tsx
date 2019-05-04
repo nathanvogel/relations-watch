@@ -9,7 +9,8 @@ type OwnProps = {
 
 class GraphLink extends React.Component<OwnProps> {
   render() {
-    const { x1, y1, x2, y2, angle, types, entityKey } = this.props.data;
+    const { x1, y1, x2, y2, types, entityKey } = this.props.data;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
     const dx: number[] = [];
     const dy: number[] = [];
     for (let i = 0; i < types.length; i += 1) {

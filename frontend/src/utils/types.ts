@@ -71,21 +71,30 @@ export interface EdgePreview {
 
 export type CommonEdge = Edge | EdgePreview;
 
-export type ConnectedEntities = {
-  edges: Array<EdgePreview>;
-  entities: [string, number][];
+export type ConnectedEntity = {
+  entityKey: string;
+  edgeCount: number;
 };
 
-export type LinkedEntities = {
-  [key: string]: { [key: string]: number };
+export type Connections = {
+  edges: Array<EdgePreview>;
+  entities: [string, number][];
+  toEntity: { [entityKey: string]: number };
 };
+
+export type ConnectionsList = {
+  [key: string]: Connections;
+};
+
+export interface LinkedEntities {
+  [key: string]: { [key: string]: number };
+}
 
 export type LinkRenderData = {
   x1: number;
   y1: number;
   x2: number;
   y2: number;
-  angle: number;
   entityKey: string;
   types: number[];
 };

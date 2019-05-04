@@ -6,7 +6,7 @@ import {
   Status,
   ErrorPayload,
   Entity,
-  ConnectedEntities,
+  Connections,
   EdgePreview,
   Edge,
   EntityPreview,
@@ -54,8 +54,8 @@ export interface RootStore {
   links: {
     data: {
       // bylinkedentities: { [key: string]: [string, number][] };
-      byentity: { [key: string]: ConnectedEntities };
-      bykey: { [key: string]: EdgePreview }; // EntityId -> EdgePreview
+      byentity: { [baseEntityKey: string]: Connections };
+      all: { [edgeKey: string]: EdgePreview }; // EntityId -> EdgePreview
     };
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };

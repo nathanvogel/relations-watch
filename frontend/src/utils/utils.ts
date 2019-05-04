@@ -43,7 +43,7 @@ update<IHasFoo & IHasBar>({ foo: "FOO" }, { $merge: { bar: 42 } });
 /**
  * Convert the Edge or EdgePreview to remove collection names.
  * @param  edge        The edge to be copied and processed
- * @return             A new edge object, for convienience
+ * @return             A new edge object, for convenience
  */
 export function getSimplifiedEdge<E extends CommonEdge>(edge: E): E {
   const newEdge = update<CommonEdge>(edge, {

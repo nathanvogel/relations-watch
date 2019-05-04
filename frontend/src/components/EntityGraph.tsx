@@ -32,10 +32,19 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const entity = state.entities.data[baseEntityKey];
   const status = state.entities.status[baseEntityKey];
   const error = state.entities.errors[baseEntityKey];
-  const linkedEntities = state.links.data.byentity[baseEntityKey]
+  const toEntity = state.links.data.byentity[baseEntityKey]
+    ? state.links.data.byentity[baseEntityKey].toEntity
+    : {};
+  /**
+   * A sorted descendent array of directly connected
+   * [entityKey, edgeCount] pairs
+   */
+  const connectedEntities: [string, number][] = state.links.data.byentity[
+    baseEntityKey
+  ]
     ? state.links.data.byentity[baseEntityKey].entities
     : [];
-  const linkedEdges = state.links.data.byentity[baseEntityKey]
+  const connectedEdges = state.links.data.byentity[baseEntityKey]
     ? state.links.data.byentity[baseEntityKey].edges
     : [];
   const linksStatus = state.links.status[baseEntityKey];
@@ -43,14 +52,22 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 
   const entityPreviews = state.entities.datapreview;
 
+  const selection = state.entitySelection;
+  const extraEntities = selection.filter(
+    selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
+  );
+
   // Return everything.
   return {
     baseEntityKey,
     entity,
     status,
     error,
-    linkedEntities,
-    linkedEdges,
+    selection,
+    extraEntities,
+    toEntity,
+    connectedEntities,
+    connectedEdges,
     linksStatus,
     linksError,
     entityPreviews
@@ -93,52 +110,49 @@ class EntityGraph extends Component<Props> {
       );
 
     // Calculate entity positions
-    const linkedEntities = this.props.linkedEntities;
-    const entityCount = linkedEntities.length;
-    const nodeData = [];
+    const { toEntity, connectedEntities } = this.props;
+    const entityCount = connectedEntities.length;
+    const renderedEntities = [];
     // const nodeDataByEntity:{[key:string]:{}} = {};
-    const renderedLinks: { [key: string]: LinkRenderData } = {};
+    const renderedLinks: { [entityKey: string]: LinkRenderData } = {};
     const minDist = 150;
     const maxDist = W / 2 - minDist - 40;
-    const maxEdgeCount = entityCount > 0 ? linkedEntities[0][1] : 1;
-    for (let i = 0; i < entityCount; i++) {
-      const entityKey = linkedEntities[i][0];
-      const edgeCount = linkedEntities[i][1];
+    const maxEdgeCount = entityCount > 0 ? connectedEntities[0][1] : 0;
+    let i = 0;
+    for (let destEntityKey in toEntity) {
+      const edgeCount = toEntity[destEntityKey];
       const angle = -i * ((Math.PI * 2) / entityCount) + Math.PI;
       const distance =
         minDist + ((maxEdgeCount - edgeCount) / maxEdgeCount) * maxDist;
       const x = CX + Math.sin(angle) * distance;
       const y = CY + Math.cos(angle) * distance;
       const datapoint = {
-        entityKey,
+        entityKey: destEntityKey,
         edgeCount,
-        angle,
         distance,
         x,
         y,
-        entity: this.props.entityPreviews[entityKey]
+        entity: this.props.entityPreviews[destEntityKey]
       };
-      if (datapoint.entity) nodeData.push(datapoint);
-      // nodeDataByEntity[entityKey] = datapoint;
+      if (datapoint.entity) renderedEntities.push(datapoint);
+      // nodeDataByEntity[destEntityKey] = datapoint;
       // Already to start to build edge data, we will complete it with
       // types afterwards.
-      renderedLinks[entityKey] = {
+      renderedLinks[destEntityKey] = {
         x1: CX,
         y1: CY,
         x2: x,
         y2: y,
-        angle,
-        entityKey,
+        entityKey: destEntityKey,
         types: []
       };
+      i += 1;
     }
 
-    const linkedEdges = this.props.linkedEdges;
-    const linkCount = linkedEdges.length;
-    for (let i = 0; i < linkCount; i++) {
-      const link = linkedEdges[i];
-      const other = link._from === baseEntityKey ? link._to : link._from;
-      const t = renderedLinks[other].types;
+    // Computes which types need to be rendered
+    for (const link of this.props.connectedEdges) {
+      const otherEntity = link._from === baseEntityKey ? link._to : link._from;
+      const t = renderedLinks[otherEntity].types;
       if (t.indexOf(link.type) < 0) t.push(link.type);
     }
     // Sort the types simply for consistency across relations.
@@ -160,7 +174,7 @@ class EntityGraph extends Component<Props> {
               <GraphLink data={renderedLinks[entityKey]} />
             </Link>
           ))}
-          {nodeData.map(datapoint => (
+          {renderedEntities.map(datapoint => (
             <Link
               key={datapoint.entity._key}
               to={`/${ROUTES.entity}/${datapoint.entity._key}`}
