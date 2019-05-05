@@ -17,6 +17,7 @@ export const RELATION_TYPES_STRRES: MyStringRes = {
   LOVES: "Love",
   HOSTILITY: "Adversary",
   COMMON_ACTIVITES: "did something with",
+  ATTENDED: "attended",
   EXCHANGES_VALUES: "traded with"
 };
 
@@ -33,6 +34,7 @@ export const RELATION_TYPES_STR = {
   [CONSTS.RELATION_TYPES.LOVES]: "Love",
   [CONSTS.RELATION_TYPES.HOSTILITY]: "Adversary",
   [CONSTS.RELATION_TYPES.COMMON_ACTIVITES]: "did something with",
+  [CONSTS.RELATION_TYPES.ATTENDED]: "attended",
   [CONSTS.RELATION_TYPES.EXCHANGES_VALUES]: "traded with"
 };
 

@@ -21,6 +21,7 @@ module.exports = {
     LOVES: 400,
     HOSTILITY: 410,
     EXCHANGES_VALUES: 100,
+    ATTENDED: 1000,
     COMMON_ACTIVITES: 110
   },
   SOURCE_TYPES: {
