@@ -61,14 +61,33 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const relationPreviews = state.links.data.byrelation;
 
   const entitySelection = state.entitySelection;
-  const extraEntities = entitySelection
-    .filter(
-      selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
-    )
-    .map(entityKey => state.entities.data[entityKey]);
-  for (let e of extraEntities) {
-    if (e._key && state.links.data.byentity[e._key])
-      connectedEdges.push(...state.links.data.byentity[e._key].edges);
+  const selectedEntities = entitySelection.map(
+    entityKey => state.entities.data[entityKey]
+  );
+  const extraEntitySelection = entitySelection.filter(
+    selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
+  );
+  // const extraEntities = entitySelection
+  //   .filter(
+  //     selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
+  //   )
+  //   .map(entityKey => state.entities.data[entityKey]);
+
+  // Add all additional useful edges
+  for (let entity of selectedEntities) {
+    // Check that the data is loaded
+    if (!entity._key || !state.links.data.byentity[entity._key]) continue;
+    const selectedEntityKey = entity._key;
+    // Add all edges between selected entities
+    // + edges between a selected entity and a non-selected 1st degree entity
+    connectedEdges.push(
+      ...state.links.data.byentity[entity._key].edges.filter(
+        edge =>
+          (entitySelection.indexOf(edge._from) >= 0 &&
+            entitySelection.indexOf(edge._to) >= 0) ||
+          extraEntitySelection.indexOf(selectedEntityKey) >= 0
+      )
+    );
   }
 
   // Return everything.
@@ -78,7 +97,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     status,
     error,
     entitySelection,
-    extraEntities,
+    selectedEntities,
     toEntity,
     connectedEntities,
     connectedEdges,
@@ -188,11 +207,14 @@ class EntityGraph extends Component<Props> {
       i += 1;
     }
 
+    // Add entities that aren't already linked with the base entity
     const GRID_X_SPACING = 100;
     const GRID_Y_SPACING = 100;
     const GRID_X_COUNT = W / GRID_X_SPACING;
     let j = 0;
-    for (let entity of this.props.extraEntities) {
+    for (let entity of this.props.selectedEntities) {
+      // Add only entities that aren't already in the graph
+      if (rEntitiesByKey.hasOwnProperty(entity._key as string)) continue;
       const rNode: NodeRenderData = {
         entity: getEntityPreview(entity),
         entityKey: entity._key as string,
