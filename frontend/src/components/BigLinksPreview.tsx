@@ -21,7 +21,7 @@ const VisualEdge = styled.div`
   height: 5px;
   // border-radius: 2.5px;
   background-color: ${props => props.color}
-  margin-bottom: 0px;
+  margin-bottom: 5px;
 `;
 
 const EdgeTypeExplainer = styled.span`

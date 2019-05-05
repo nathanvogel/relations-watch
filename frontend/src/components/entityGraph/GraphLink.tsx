@@ -1,16 +1,16 @@
 import React from "react";
 
-import { LinkRenderData } from "../../utils/types";
+import { RelationRenderData } from "../../utils/types";
 import { RELATION_COLORS } from "../../utils/consts";
 
 type OwnProps = {
-  data: LinkRenderData;
+  data: RelationRenderData;
 };
 
 class GraphLink extends React.Component<OwnProps> {
   render() {
-    const { x1, y1, x2, y2, types, entityKey } = this.props.data;
-    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const { x1, y1, x2, y2, types, relationId } = this.props.data;
+    const angle = Math.atan2(x2 - x1, y2 - y1);
     const dx: number[] = [];
     const dy: number[] = [];
     for (let i = 0; i < types.length; i += 1) {
@@ -20,7 +20,7 @@ class GraphLink extends React.Component<OwnProps> {
     }
 
     return (
-      <g id={"edges-" + entityKey}>
+      <g id={"edges-" + relationId}>
         <line
           x1={x1}
           y1={y1}

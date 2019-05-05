@@ -9,11 +9,18 @@ import { loadEntity } from "../features/entitiesLoadAC";
 import Button from "../components/buttons/Button";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
-import { Status, LinkRenderData } from "../utils/types";
+import {
+  Status,
+  RelationRenderData,
+  EdgePreview,
+  NodeRenderData,
+  NodeRenderType
+} from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import GraphEntityNode from "./entityGraph/GraphEntityNode";
 import CONSTS from "../utils/consts";
 import GraphLink from "./entityGraph/GraphLink";
+import { getEntityPreview, getRelationId } from "../utils/utils";
 
 const Content = styled.div``;
 
@@ -44,18 +51,25 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   ]
     ? state.links.data.byentity[baseEntityKey].entities
     : [];
-  const connectedEdges = state.links.data.byentity[baseEntityKey]
-    ? state.links.data.byentity[baseEntityKey].edges
-    : [];
+  const connectedEdges: EdgePreview[] = [];
+  if (state.links.data.byentity[baseEntityKey])
+    connectedEdges.push(...state.links.data.byentity[baseEntityKey].edges);
   const linksStatus = state.links.status[baseEntityKey];
   const linksError = state.links.errors[baseEntityKey];
 
   const entityPreviews = state.entities.datapreview;
+  const relationPreviews = state.links.data.byrelation;
 
-  const selection = state.entitySelection;
-  const extraEntities = selection.filter(
-    selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
-  );
+  const entitySelection = state.entitySelection;
+  const extraEntities = entitySelection
+    .filter(
+      selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
+    )
+    .map(entityKey => state.entities.data[entityKey]);
+  for (let e of extraEntities) {
+    if (e._key && state.links.data.byentity[e._key])
+      connectedEdges.push(...state.links.data.byentity[e._key].edges);
+  }
 
   // Return everything.
   return {
@@ -63,14 +77,15 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     entity,
     status,
     error,
-    selection,
+    entitySelection,
     extraEntities,
     toEntity,
     connectedEntities,
     connectedEdges,
     linksStatus,
     linksError,
-    entityPreviews
+    entityPreviews,
+    relationPreviews
   };
 };
 
@@ -96,10 +111,7 @@ class EntityGraph extends Component<Props> {
 
   render() {
     const { entity, status, error, baseEntityKey } = this.props;
-    const W = 800;
-    const H = 800;
-    const CX = W / 2;
-    const CY = H / 2;
+    const { toEntity, connectedEntities } = this.props;
 
     // Render loading status and error.
     if (status !== Status.Ok)
@@ -109,15 +121,38 @@ class EntityGraph extends Component<Props> {
         </Content>
       );
 
-    // Calculate entity positions
-    const { toEntity, connectedEntities } = this.props;
-    const entityCount = connectedEntities.length;
-    const renderedEntities = [];
-    // const nodeDataByEntity:{[key:string]:{}} = {};
-    const renderedLinks: { [entityKey: string]: LinkRenderData } = {};
+    // Render data
+    // We need arrays to preserve the order of the rendered
+    // (for accessibilities, among others)
+    const rEntities: NodeRenderData[] = [];
+    const rRelations: RelationRenderData[] = [];
+    // We need objects to quickly access data by key.
+    const rEntitiesByKey: { [key: string]: NodeRenderData } = {};
+    const rRelationsByKey: { [key: string]: RelationRenderData } = {};
+
+    // Compute initial constants
+    const W = 800;
+    const H = 800;
+    const CX = W / 2;
+    const CY = H / 2;
     const minDist = 150;
     const maxDist = W / 2 - minDist - 40;
+    const entityCount = connectedEntities.length;
     const maxEdgeCount = entityCount > 0 ? connectedEntities[0][1] : 0;
+
+    // The primary entity
+    const primaryEntity = {
+      x: CX,
+      y: CY,
+      entity: getEntityPreview(entity),
+      entityKey: baseEntityKey,
+      visited: true,
+      type: NodeRenderType.Primary
+    };
+    rEntities.push(primaryEntity);
+    rEntitiesByKey[primaryEntity.entityKey] = primaryEntity;
+
+    // Entities directly connected to the primary entity
     let i = 0;
     for (let destEntityKey in toEntity) {
       const edgeCount = toEntity[destEntityKey];
@@ -126,38 +161,98 @@ class EntityGraph extends Component<Props> {
         minDist + ((maxEdgeCount - edgeCount) / maxEdgeCount) * maxDist;
       const x = CX + Math.sin(angle) * distance;
       const y = CY + Math.cos(angle) * distance;
-      const datapoint = {
+      const rNode: NodeRenderData = {
         entityKey: destEntityKey,
-        edgeCount,
-        distance,
         x,
         y,
+        visited: this.props.entitySelection.indexOf(destEntityKey) >= 0,
+        type: NodeRenderType.Secondary,
         entity: this.props.entityPreviews[destEntityKey]
       };
-      if (datapoint.entity) renderedEntities.push(datapoint);
-      // nodeDataByEntity[destEntityKey] = datapoint;
-      // Already to start to build edge data, we will complete it with
-      // types afterwards.
-      renderedLinks[destEntityKey] = {
-        x1: CX,
-        y1: CY,
-        x2: x,
-        y2: y,
-        entityKey: destEntityKey,
-        types: []
-      };
+      rEntities.push(rNode);
+      rEntitiesByKey[rNode.entityKey] = rNode;
+
+      // const relationId = getRelationId(baseEntityKey, destEntityKey) as string;
+      // const rRelation: RelationRenderData = {
+      //   x1: CX,
+      //   y1: CY,
+      //   x2: x,
+      //   y2: y,
+      //   from: baseEntityKey,
+      //   to: destEntityKey,
+      //   relationId,
+      //   types: [] // Will be completed in a second pass.
+      // };
+      // rRelations.push(rRelation);
+      // rRelationsByKey[rRelation.relationId] = rRelation;
       i += 1;
+    }
+
+    const GRID_X_SPACING = 100;
+    const GRID_Y_SPACING = 100;
+    const GRID_X_COUNT = W / GRID_X_SPACING;
+    let j = 0;
+    for (let entity of this.props.extraEntities) {
+      const rNode: NodeRenderData = {
+        entity: getEntityPreview(entity),
+        entityKey: entity._key as string,
+        visited: this.props.entitySelection.indexOf(entity._key as string) >= 0,
+        type: NodeRenderType.Tertiary,
+        x: GRID_X_SPACING * ((j % GRID_X_COUNT) + 0.5),
+        y: GRID_Y_SPACING * (~~(j / GRID_X_COUNT) + 0.5)
+      };
+      rEntities.push(rNode);
+      rEntitiesByKey[rNode.entityKey] = rNode;
+
+      j += 1;
+    }
+
+    for (const link of this.props.connectedEdges) {
+      const relationId = getRelationId(link._from, link._to) as string;
+      if (
+        rEntitiesByKey.hasOwnProperty(link._from) &&
+        rEntitiesByKey.hasOwnProperty(link._to) &&
+        !rRelationsByKey[relationId]
+      ) {
+        const e1 = rEntitiesByKey[link._from];
+        const e2 = rEntitiesByKey[link._to];
+        const e1Primary = e1.type === NodeRenderType.Primary;
+        const e2Primary = e2.type === NodeRenderType.Primary;
+        // Filter out secondary relationships of secondary entities
+        if (
+          link.type === CONSTS.RELATION_TYPES.COMMON_ACTIVITES &&
+          !e1Primary &&
+          !e2Primary
+        )
+          continue;
+
+        const rRelation: RelationRenderData = {
+          x1: e1.x,
+          y1: e1.y,
+          x2: e2.x,
+          y2: e2.y,
+          // Make sure from is the primary entity (for links consistency)
+          from: e2Primary ? e2.entityKey : e1.entityKey,
+          to: e2Primary ? e1.entityKey : e2.entityKey,
+          relationId,
+          types: [] // Will be completed in a second pass.
+        };
+        rRelations.push(rRelation);
+        rRelationsByKey[rRelation.relationId] = rRelation;
+      }
     }
 
     // Computes which types need to be rendered
     for (const link of this.props.connectedEdges) {
-      const otherEntity = link._from === baseEntityKey ? link._to : link._from;
-      const t = renderedLinks[otherEntity].types;
-      if (t.indexOf(link.type) < 0) t.push(link.type);
+      const relationId = getRelationId(link._from, link._to) as string;
+      if (rRelationsByKey.hasOwnProperty(relationId)) {
+        const t = rRelationsByKey[relationId].types;
+        if (t.indexOf(link.type) < 0) t.push(link.type);
+      }
     }
     // Sort the types simply for consistency across relations.
-    for (let key in renderedLinks) {
-      renderedLinks[key].types.sort((a, b) => a - b);
+    for (let r of rRelations) {
+      r.types.sort((a, b) => a - b);
     }
 
     return (
@@ -166,27 +261,25 @@ class EntityGraph extends Component<Props> {
           New relation
         </Button>
         <GraphSVG width={W} height={H} xmlns="http://www.w3.org/2000/svg">
-          {Object.keys(renderedLinks).map(entityKey => (
+          {rRelations.map(rRelation => (
             <Link
-              key={entityKey}
-              to={`/${ROUTES.relation}/${baseEntityKey}/${entityKey}`}
+              key={rRelation.relationId}
+              to={`/${ROUTES.relation}/${rRelation.from}/${rRelation.to}`}
             >
-              <GraphLink data={renderedLinks[entityKey]} />
+              <GraphLink data={rRelation} />
             </Link>
           ))}
-          {renderedEntities.map(datapoint => (
-            <Link
-              key={datapoint.entity._key}
-              to={`/${ROUTES.entity}/${datapoint.entity._key}`}
-            >
+          {rEntities.map(d => (
+            <Link key={d.entityKey} to={`/${ROUTES.entity}/${d.entityKey}`}>
               <GraphEntityNode
-                entity={datapoint.entity}
-                x={datapoint.x}
-                y={datapoint.y}
+                entity={d.entity}
+                x={d.x}
+                y={d.y}
+                primary={d.type === NodeRenderType.Primary}
+                visited={d.visited}
               />
             </Link>
           ))}
-          <GraphEntityNode entity={entity} x={CX} y={CY} primary />
         </GraphSVG>
       </Content>
     );

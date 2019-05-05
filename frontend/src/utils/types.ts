@@ -90,13 +90,30 @@ export interface LinkedEntities {
   [key: string]: { [key: string]: number };
 }
 
-export type LinkRenderData = {
+export type RelationRenderData = {
   x1: number;
   y1: number;
   x2: number;
   y2: number;
-  entityKey: string;
+  from: string;
+  to: string;
+  relationId: string;
   types: number[];
+};
+
+export enum NodeRenderType {
+  Primary,
+  Secondary,
+  Tertiary
+}
+
+export type NodeRenderData = {
+  x: number;
+  y: number;
+  type: NodeRenderType;
+  visited: boolean;
+  entityKey: string;
+  entity: EntityPreview;
 };
 
 export type Source = {

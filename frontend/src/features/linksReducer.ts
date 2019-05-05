@@ -8,12 +8,13 @@ import {
 } from "../utils/types";
 import update from "immutability-helper";
 import { AnyAction } from "redux";
-import { getSimplifiedEdge } from "../utils/utils";
+import { getSimplifiedEdge, getRelationId } from "../utils/utils";
 
 interface SubState {
   data: {
     byentity: { [baseEntityKey: string]: Connections };
     all: { [edgeKey: string]: EdgePreview };
+    byrelation: { [relationKey: string]: { [edgeKey: string]: EdgePreview } };
   };
   status: {};
   errors: {};
@@ -21,7 +22,8 @@ interface SubState {
 const defaultState: SubState = {
   data: {
     byentity: {},
-    all: {}
+    all: {},
+    byrelation: {}
   },
   status: {},
   errors: {}
@@ -75,6 +77,9 @@ export default (state = defaultState, action: AnyAction) => {
 
       const edgeList: { [key: string]: EdgePreview } = {};
       const cList: ConnectionsList = {};
+      const byRelation: {
+        [relationId: string]: { [edgeKey: string]: EdgePreview };
+      } = {};
       // const linkedEntities: LinkedEntities = {};
 
       for (let e of edges) {
@@ -88,6 +93,10 @@ export default (state = defaultState, action: AnyAction) => {
         // Count the number of element between each persons (both ways)
         addLinkToEntityList(cList, edge._from, edge._to);
         addLinkToEntityList(cList, edge._to, edge._from);
+        // To be saved in /data/byrelation/:relationId
+        const relationId = getRelationId(edge._from, edge._to) as string;
+        if (!byRelation[relationId]) byRelation[relationId] = {}; // Vivify
+        byRelation[relationId][edge._key] = edge;
       }
       // For each entry that contains the list of entries it's connected
       // to and the number of connections
@@ -101,7 +110,10 @@ export default (state = defaultState, action: AnyAction) => {
       return update(state, {
         data: {
           byentity: { $merge: cList },
-          all: { $merge: edgeList }
+          all: { $merge: edgeList },
+          // A shallow merge is okay, because this action should return ALL
+          // the edges between the 2 entities
+          byrelation: { $merge: byRelation }
         },
         status: { [baseEntityKey]: { $set: action.status } },
         errors: { [baseEntityKey]: { $set: action.meta.error } }

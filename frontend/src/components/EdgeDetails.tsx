@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Edge } from "../utils/types";
 import Button from "./buttons/Button";
 import EdgeEditor from "./EdgeEditor";
-import Sources from "./edgeDetails/Sources";
 import { RELATION_COLORS } from "../utils/consts";
 import SourceDetails from "./SourceDetails";
 
@@ -28,8 +27,6 @@ const EdgeText = styled.p`
 const Actions = styled.div`
   float: right;
 `;
-
-const EditButton = styled(Button)``;
 
 const BottomActions = styled.div`
   text-align: center;
@@ -95,9 +92,7 @@ class EdgeDetails extends React.Component<Props> {
           </div>
         )}
         <BottomActions>
-          <EditButton onClick={this.onEditClick}>
-            Add a source and/or edit
-          </EditButton>
+          <Button onClick={this.onEditClick}>Add a source and/or edit</Button>
         </BottomActions>
       </Content>
     );
