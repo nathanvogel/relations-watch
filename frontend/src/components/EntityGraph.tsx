@@ -62,9 +62,9 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const relationPreviews = state.links.data.byrelation;
 
   const entitySelection = state.entitySelection;
-  const selectedEntities = entitySelection.map(
-    entityKey => state.entities.data[entityKey]
-  );
+  const selectedEntities = entitySelection
+    .map(entityKey => state.entities.data[entityKey])
+    .filter(entity => Boolean(entity));
   const extraEntitySelection = entitySelection.filter(
     selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
   );
@@ -77,7 +77,8 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   // Add all additional useful edges
   for (let entity of selectedEntities) {
     // Check that the data is loaded
-    if (!entity._key || !state.links.data.byentity[entity._key]) continue;
+    if (!entity || !entity._key || !state.links.data.byentity[entity._key])
+      continue;
     const selectedEntityKey = entity._key;
     // Add all edges between selected entities
     // + edges between a selected entity and a non-selected 1st degree entity
@@ -123,10 +124,10 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 class EntityGraph extends Component<Props> {
   componentDidMount() {
-    if (!this.props.status || this.props.status === Status.Error)
-      this.props.loadEntity(this.props.baseEntityKey);
-    if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
-      this.props.loadEntityGraph(this.props.baseEntityKey);
+    // if (!this.props.status || this.props.status === Status.Error)
+    //   this.props.loadEntity(this.props.baseEntityKey);
+    // if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
+    //   this.props.loadEntityGraph(this.props.baseEntityKey);
   }
 
   render() {

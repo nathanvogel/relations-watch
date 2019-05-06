@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, withRouter } from "react-router";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
@@ -15,6 +15,12 @@ import EntityGraph from "../components/EntityGraph";
 import * as entitySelectionActions from "../features/entitySelectionActions";
 
 const Content = styled.div``;
+
+const StyledMeta = styled(Meta)`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(20vh);
+`;
 
 interface EntityMatch {
   entityKey: string;
@@ -58,38 +64,67 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
     dispatch
   );
 
+type State = {
+  prevEntityKey: null | string;
+};
+
 class EntityScreen extends Component<Props> {
+  readonly state: State = { prevEntityKey: null };
+
   componentDidMount() {
+    this.fetchData();
+  }
+
+  // Maybe to do: Extract this logic to a generic component that can be
+  // composed by giving it children.
+  static getDerivedStateFromProps(props: Props, state: State) {
+    if (props.status === Status.Ok && props.entityKey !== state.prevEntityKey)
+      return {
+        prevEntityKey: props.entityKey
+      };
+    return null;
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.entityKey !== prevProps.entityKey) {
+      // At this point, we're in the React "commit" phase,
+      // so it's safe to load the new data.
+      this.fetchData();
+    }
+  }
+
+  fetchData = () => {
     const { entityKey, status, linksStatus } = this.props;
     if (!status || status === Status.Error) this.props.loadEntity(entityKey);
     if (!linksStatus || linksStatus === Status.Error)
       this.props.loadEntityGraph(entityKey);
     if (this.props.selectEntities) this.props.selectEntities([entityKey]);
-  }
+  };
 
   render() {
     const { entity, status, error, entityKey } = this.props;
 
     // Render loading status and error.
-    if (status !== Status.Ok)
-      return (
-        <Content>
-          <Meta status={status} error={error} />
-        </Content>
-      );
 
     return (
       <Content>
+        {status !== Status.Ok && <StyledMeta status={status} error={error} />}
         <Button to={`/${ROUTES.edit}/${ROUTES.entity}/${entityKey}`}>
-          Edit {entity.name}
+          Edit {status === Status.Ok && entity.name}
         </Button>
-        <EntityGraph entityKey={entityKey} />
+        {status === Status.Ok ? (
+          <EntityGraph entityKey={entityKey} />
+        ) : this.state.prevEntityKey ? (
+          <EntityGraph entityKey={this.state.prevEntityKey} />
+        ) : null}
       </Content>
     );
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EntityScreen);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EntityScreen)
+);
