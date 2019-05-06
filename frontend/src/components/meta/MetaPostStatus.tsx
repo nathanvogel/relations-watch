@@ -5,6 +5,7 @@ interface Props {
   status?: Status;
   error?: ErrorPayload;
   isGet?: boolean;
+  className?: string;
 }
 
 export default function MetaPostStatus(props: Props) {
@@ -12,10 +13,12 @@ export default function MetaPostStatus(props: Props) {
   return (
     <React.Fragment>
       {status === Status.Requested && (
-        <p>{isGet ? "Loading..." : "Saving..."}</p>
+        <p className={props.className}>{isGet ? "Loading..." : "Saving..."}</p>
       )}
       {status === Status.Error && (
-        <p>Error: {error ? error.eMessage : "Unkown error"}</p>
+        <p className={props.className}>
+          Error: {error ? error.eMessage : "Unkown error"}
+        </p>
       )}
     </React.Fragment>
   );
