@@ -28,11 +28,7 @@ class GraphEntityNode extends React.Component<OwnProps> {
     const fontSize = 12 * textScale;
 
     return (
-      <g
-        className="node"
-        id={entity._key}
-        transform={`translate(${x - size / 2},${y - size / 2 - 5})`}
-      >
+      <g className="node" id={entity._key}>
         <image
           opacity="1"
           href={primary ? PrimaryDefaultPerson : DefaultPerson}

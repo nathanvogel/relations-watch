@@ -30,9 +30,7 @@ class App extends Component {
           <Switch>
             <Route
               path={`/${RT.entity}/:entityKey?`}
-              render={props => (
-                <EntityScreen {...props} key={props.match.params.entityKey} />
-              )}
+              render={props => <EntityScreen {...props} />}
             />
             <Route
               path={`/${RT.add}/${RT.entity}`}

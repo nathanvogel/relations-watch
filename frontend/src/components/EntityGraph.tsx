@@ -21,6 +21,7 @@ import GraphEntityNode from "./entityGraph/GraphEntityNode";
 import CONSTS from "../utils/consts";
 import GraphLink from "./entityGraph/GraphLink";
 import { getEntityPreview, getRelationId } from "../utils/utils";
+import GraphD3 from "./GraphD3";
 
 const Content = styled.div``;
 
@@ -282,7 +283,7 @@ class EntityGraph extends Component<Props> {
         <Button to={`/${ROUTES.relation}/${baseEntityKey}/${CONSTS.EMPTY_KEY}`}>
           New relation
         </Button>
-        <GraphSVG width={W} height={H} xmlns="http://www.w3.org/2000/svg">
+        {/* <GraphSVG width={W} height={H} xmlns="http://www.w3.org/2000/svg">
           {rRelations.map(rRelation => (
             <Link
               key={rRelation.relationId}
@@ -302,7 +303,13 @@ class EntityGraph extends Component<Props> {
               />
             </Link>
           ))}
-        </GraphSVG>
+        </GraphSVG> */}
+        <GraphD3
+          width={W}
+          height={H}
+          rRelations={rRelations}
+          rEntities={rEntities}
+        />
       </Content>
     );
   }
