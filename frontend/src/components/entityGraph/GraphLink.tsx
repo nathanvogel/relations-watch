@@ -20,7 +20,7 @@ class GraphLink extends React.Component<OwnProps> {
     }
 
     return (
-      <g id={"edges-" + relationId}>
+      <g className="relation" id={"edges-" + relationId}>
         <line
           x1={x1}
           y1={y1}

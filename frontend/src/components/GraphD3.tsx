@@ -58,7 +58,15 @@ class GraphD3 extends React.Component<Props> {
       .data(this.props.rEntities)
       .transition()
       .duration(1000)
-      .attr("transform", d => `translate(${d.x - 20},${d.y - 40})`);
+      .attr("transform", d => `translate(${d.x - 20},${d.y - 20})`);
+
+    // d3.select(this.svgEl.current)
+    //   .selectAll("g.relation")
+    //   .data(this.props.rRelations)
+    //   .transition()
+    //   .duration(1000)
+    //   .attr("transform", (d, i, groups) => `translate(${ - 20},${d.y - 40})`);
+
     // .attr("cx", d => xScale(d.x))
     // .attr("cy", d => yScale(d.y))
     // .attr("r", d => rScale(d.r))
