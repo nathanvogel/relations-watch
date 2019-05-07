@@ -102,6 +102,7 @@ export type RelationRenderData = {
   target: string | SimulationNodeDatum;
   relationId: string;
   types: number[];
+  withType: NodeRenderType;
 };
 
 export enum NodeRenderType {

@@ -265,6 +265,10 @@ class EntityGraph extends Component<Props> {
           source: from,
           target: to,
           relationId,
+          withType:
+            e1Primary || e2Primary
+              ? NodeRenderType.Primary
+              : NodeRenderType.Secondary,
           types: [] // Will be completed in a second pass.
         };
         rRelations.push(rRelation);

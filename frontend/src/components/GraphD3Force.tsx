@@ -38,22 +38,22 @@ const COLL_RADIUS = 2;
 function size(d: NodeRenderData): number {
   switch (d.type) {
     case NodeRenderType.Primary:
-      return 38;
+      return 45;
     case NodeRenderType.Secondary:
-      return 30;
+      return 35;
     case NodeRenderType.Tertiary:
-      return 22;
+      return 25;
   }
 }
 
 function collisionSize(d: NodeRenderData): number {
   switch (d.type) {
     case NodeRenderType.Primary:
-      return 70;
+      return 80;
     case NodeRenderType.Secondary:
-      return 60;
+      return 66;
     case NodeRenderType.Tertiary:
-      return 40;
+      return 42;
   }
 }
 
@@ -71,6 +71,17 @@ function fontWeight(d: NodeRenderData): string {
       return "normal";
     case NodeRenderType.Tertiary:
       return "normal";
+  }
+}
+
+function fontSize(d: NodeRenderData): number {
+  switch (d.type) {
+    case NodeRenderType.Primary:
+      return 14;
+    case NodeRenderType.Secondary:
+      return 14;
+    case NodeRenderType.Tertiary:
+      return 12;
   }
 }
 
@@ -105,14 +116,12 @@ class GraphD3Simple extends React.Component<Props> {
     this.gLinks = React.createRef();
     this.gNodes = React.createRef();
 
-    const { width, height } = props;
-    this.simulation = d3
-      .forceSimulation()
-      .force("link", d3.forceLink().id(d => (d as NodeRenderData).entityKey))
-      .force("charge", d3.forceManyBody())
-      .force("collide", d3.forceCollide().radius(collisionSize as any))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("boundary", forceBoundary(0, 0, width, height)) as any;
+    this.simulation = d3.forceSimulation();
+    // .force("link", d3.forceLink().id(d => (d as NodeRenderData).entityKey))
+    // .force("charge", d3.forceManyBody())
+    // .force("collide", d3.forceCollide().radius(collisionSize as any))
+    // .force("center", d3.forceCenter(width / 2, height / 2))
+    // .force("boundary", forceBoundary(0, 0, width, height)) as any;
   }
 
   componentDidMount() {
@@ -124,17 +133,11 @@ class GraphD3Simple extends React.Component<Props> {
   }
 
   updateGraph() {
-    // We need to recreate the simulation for some reason... ?
-    const { width, height } = this.props;
-    this.simulation = d3
-      .forceSimulation()
-      .force("link", d3.forceLink().id(d => (d as NodeRenderData).entityKey))
-      .force("charge", d3.forceManyBody())
-      .force("collide", d3.forceCollide().radius(collisionSize as any))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("boundary", forceBoundary(0, 0, width, height)) as any;
+    // PREPARE DATA
 
     // Create a deep copy of the props and merges it to our existing data
+    // We do this to preserve the positions and velocities from one
+    // screen to the next.
     const { rEntitiesByKey, rRelationsByKey } = this.props;
     var rRelations: RelationRenderData[] = [];
     for (let key in rRelationsByKey) {
@@ -148,10 +151,88 @@ class GraphD3Simple extends React.Component<Props> {
       this.nodesData[key] = this.nodesData[key]
         ? Object.assign({}, this.nodesData[key], rEntitiesByKey[key])
         : Object.assign({}, rEntitiesByKey[key]);
+      // this.nodesData[key].x = this.nodesData[key].x || width / 2 - 200;
+      // this.nodesData[key].y = this.nodesData[key].y || height;
       // this.nodesData[key].fx = this.nodesData[key].type === NodeRenderType.Primary ? width / 2 : undefined;
       // this.nodesData[key].fy = this.nodesData[key].type === NodeRenderType.Primary ? height / 2 : undefined;
       rEntities.push(this.nodesData[key]);
     }
+
+    // D3 FORCES SETUP
+
+    const maxTypes = d3.max(rRelations, d => d.types.length) || 1;
+    const distScale = d3
+      .scaleLinear()
+      .domain([1, maxTypes])
+      .range([250, 100]);
+    // We need to recreate the simulation for some reason... ?
+    const { width, height } = this.props;
+    this.simulation = d3
+      .forceSimulation()
+      .velocityDecay(0.82) // Akin to atmosphere friction (velocity multiplier)
+      .alphaTarget(-0.1) // Stop mini-pixel-step-motion early
+      // The most important force, attraction derived from our relations.
+      .force(
+        "link",
+        d3
+          .forceLink()
+          .id(d => (d as NodeRenderData).entityKey)
+          .strength(1) // Warning: crashes if higher than 2, better stay within [0,1]
+          // Make some links closer than others.
+          .distance((d: any) => distScale(d.types.length))
+          // Emphasize this force and arrive faster at a stable result
+          .iterations(8)
+      )
+      // Makes nodes repulse each other
+      .force("charge", d3.forceManyBody().strength(-800))
+      // Keep the whole graph centered
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      // Put the primary entity at the center of the graph
+      // TODO: Make it distribute the secondary nodes depending on the type of
+      // relationship.
+      .force(
+        "x",
+        d3
+          .forceX(width / 2)
+          .strength((d: any) =>
+            (d as NodeRenderData).type === NodeRenderType.Primary ? 1 : 0
+          )
+      )
+      .force(
+        "y",
+        d3
+          .forceY(height / 2)
+          .strength((d: any) =>
+            (d as NodeRenderData).type === NodeRenderType.Primary ? 1 : 0
+          )
+      )
+      // Pushes Tertiary entities towards an outer circle
+      .force(
+        "radial",
+        d3
+          .forceRadial(Math.min(width, height) * 0.4, width / 2, height / 2)
+          .strength((d: any) =>
+            (d as NodeRenderData).type === NodeRenderType.Tertiary ? 1 : 0
+          )
+      )
+      // Keep all nodes within our canvas
+      .force("boundary", forceBoundary(0, 0, width, height)) as any;
+
+    // Alternative or helper to forceManyBody()
+    // .force(
+    //   "collide",
+    //   d3
+    //     .forceCollide()
+    //     .radius(collisionSize as any)
+    //     .strength(0.2)
+    // )
+
+    // Alternative to forceBoundary() taken from
+    // https://observablehq.com/@d3/disjoint-force-directed-graph
+    // .force("x", d3.forceX())
+    // .force("y", d3.forceY())
+
+    // D3 RENDERING starts here
 
     var linkGroup = d3.select(this.gLinks.current);
     var links = linkGroup.selectAll("line").data(
@@ -162,8 +243,10 @@ class GraphD3Simple extends React.Component<Props> {
     var links2 = links
       .enter()
       .append("line")
-      .attr("stroke", "#999999")
       .merge(links as any);
+    links2.attr("stroke", d =>
+      d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd"
+    );
     links.exit().remove();
 
     var nodeGroup = d3.select(this.gNodes.current);
@@ -178,6 +261,7 @@ class GraphD3Simple extends React.Component<Props> {
       .enter()
       .append("g")
       .attr("class", "node")
+      // .attr("transform", "scale(0.2, 0.2)")
       .on("click", this.onNodeClick)
       // Add the image child
       .append("image")
@@ -187,7 +271,6 @@ class GraphD3Simple extends React.Component<Props> {
       .text(d => d.entity.name)
       .attr("text-anchor", "middle")
       .attr("dy", "1.0em")
-      .attr("font-size", 13)
       .attr("fill", "#000000")
       .select(goToParent)
       // General Update Pattern: Tell all to update with animation.
@@ -196,21 +279,21 @@ class GraphD3Simple extends React.Component<Props> {
     // Update dynamic attributes for all nodes:
     nodes2
       .select("text")
+      .attr("font-size", fontSize)
       .attr("font-weight", fontWeight)
       .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")
       .attr("href", href)
       .attr("width", size)
-      .attr("height", size)
-      .attr("transform", "scale(0.2, 0.2)");
+      .attr("height", size);
 
     // Transition IN
-    nodes2
-      .select("image")
-      .transition()
-      .duration(300)
-      .attr("transform", "scale(1, 1)");
+    // nodes2
+    //   .select("image")
+    //   .transition()
+    //   .duration(300)
+    //   .attr("transform", "scale(1, 1)");
     // Transition OUT
     nodes
       .exit()
@@ -227,6 +310,7 @@ class GraphD3Simple extends React.Component<Props> {
         .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
         .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
 
+      // With circle:
       // nodes2.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
       nodes2.attr("transform", nodeTranslate);
     });
