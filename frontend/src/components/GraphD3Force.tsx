@@ -1,20 +1,13 @@
 import * as React from "react";
-import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
-import update from "immutability-helper";
 import * as d3 from "d3";
 import "d3-force";
-
-import {
-  RelationRenderData,
-  NodeRenderData,
-  NodeRenderType
-} from "../utils/types";
-import ROUTES from "../utils/ROUTES";
-import GraphEntityNode from "./entityGraph/GraphEntityNode";
-import GraphLink from "./entityGraph/GraphLink";
 import { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
-import { getKeyObject } from "../utils/utils";
+import forceBoundary from "../utils/d3/d3-force-boundary";
+
+import { RelationRenderData, NodeRenderData } from "../utils/types";
+import ROUTES from "../utils/ROUTES";
 
 const GraphSVG = styled.svg`
   display: block;
@@ -60,7 +53,8 @@ class GraphD3Simple extends React.Component<Props> {
         "collide",
         d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type] * 2)
       )
-      .force("center", d3.forceCenter(width / 2, height / 2)) as any;
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("boundary", forceBoundary(0, 0, width, height)) as any;
   }
 
   componentDidMount() {
@@ -82,25 +76,23 @@ class GraphD3Simple extends React.Component<Props> {
         "collide",
         d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type] * 2)
       )
-      .force("center", d3.forceCenter(width / 2, height / 2)) as any;
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("boundary", forceBoundary(0, 0, width, height)) as any;
 
     // Create a deep copy of the props and merges it to our existing data
+    const { rEntitiesByKey, rRelationsByKey } = this.props;
     var rRelations: RelationRenderData[] = [];
-    for (let key in this.props.rRelationsByKey) {
+    for (let key in rRelationsByKey) {
       this.linksData[key] = this.linksData[key]
-        ? Object.assign(
-            {},
-            this.linksData[key],
-            this.props.rRelationsByKey[key]
-          )
-        : Object.assign({}, this.props.rRelationsByKey[key]);
+        ? Object.assign({}, this.linksData[key], rRelationsByKey[key])
+        : Object.assign({}, rRelationsByKey[key]);
       rRelations.push(this.linksData[key]);
     }
     var rEntities: NodeRenderData[] = [];
-    for (let key in this.props.rEntitiesByKey) {
+    for (let key in rEntitiesByKey) {
       this.nodesData[key] = this.nodesData[key]
-        ? Object.assign({}, this.nodesData[key], this.props.rEntitiesByKey[key])
-        : Object.assign({}, this.props.rEntitiesByKey[key]);
+        ? Object.assign({}, this.nodesData[key], rEntitiesByKey[key])
+        : Object.assign({}, rEntitiesByKey[key]);
       // this.nodesData[key].fx = this.nodesData[key].type === NodeRenderType.Primary ? width / 2 : undefined;
       // this.nodesData[key].fy = this.nodesData[key].type === NodeRenderType.Primary ? height / 2 : undefined;
       rEntities.push(this.nodesData[key]);
