@@ -165,8 +165,8 @@ class EntityGraph extends Component<Props> {
 
     // The primary entity
     const primaryEntity = {
-      x: CX,
-      y: CY,
+      bx: CX,
+      by: CY,
       entity: getEntityPreview(entity),
       entityKey: baseEntityKey,
       visited: true,
@@ -186,8 +186,8 @@ class EntityGraph extends Component<Props> {
       const y = CY + Math.cos(angle) * distance;
       const rNode: NodeRenderData = {
         entityKey: destEntityKey,
-        x,
-        y,
+        bx: x,
+        by: y,
         visited: this.props.entitySelection.indexOf(destEntityKey) >= 0,
         type: NodeRenderType.Secondary,
         entity: this.props.entityPreviews[destEntityKey]
@@ -224,8 +224,8 @@ class EntityGraph extends Component<Props> {
         entityKey: entity._key as string,
         visited: this.props.entitySelection.indexOf(entity._key as string) >= 0,
         type: NodeRenderType.Tertiary,
-        x: GRID_X_SPACING * ((j % GRID_X_COUNT) + 0.5),
-        y: GRID_Y_SPACING * (~~(j / GRID_X_COUNT) + 0.5)
+        bx: GRID_X_SPACING * ((j % GRID_X_COUNT) + 0.5),
+        by: GRID_Y_SPACING * (~~(j / GRID_X_COUNT) + 0.5)
       };
       rEntities.push(rNode);
       rEntitiesByKey[rNode.entityKey] = rNode;
@@ -255,10 +255,10 @@ class EntityGraph extends Component<Props> {
         const from = e2Primary ? e2.entityKey : e1.entityKey;
         const to = e2Primary ? e1.entityKey : e2.entityKey;
         const rRelation: RelationRenderData = {
-          x1: e1.x,
-          y1: e1.y,
-          x2: e2.x,
-          y2: e2.y,
+          bx1: e1.bx,
+          by1: e1.by,
+          bx2: e2.bx,
+          by2: e2.by,
           // Make sure from is the primary entity (for links consistency)
           from,
           to,
@@ -328,6 +328,8 @@ class EntityGraph extends Component<Props> {
           height={H}
           rRelations={rRelations}
           rEntities={rEntities}
+          rRelationsByKey={rRelationsByKey}
+          rEntitiesByKey={rEntitiesByKey}
         />
       </Content>
     );

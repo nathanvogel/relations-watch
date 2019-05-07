@@ -54,8 +54,8 @@ class GraphD3Simple extends React.Component<Props> {
       .on("click", this.onNodeClick)
       .transition()
       .duration(1000)
-      .attr("cx", d => d.x)
-      .attr("cy", d => d.y)
+      .attr("cx", d => d.bx)
+      .attr("cy", d => d.by)
       .attr("r", d => sizes[d.type])
       .style("fill", d => colours[d.type]);
 

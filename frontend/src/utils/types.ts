@@ -92,10 +92,10 @@ export interface LinkedEntities {
 }
 
 export type RelationRenderData = {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
+  bx1: number;
+  by1: number;
+  bx2: number;
+  by2: number;
   from: string;
   to: string;
   source: string | SimulationNodeDatum;
@@ -111,12 +111,19 @@ export enum NodeRenderType {
 }
 
 export type NodeRenderData = {
-  x: number;
-  y: number;
+  bx: number;
+  by: number;
   type: NodeRenderType;
   visited: boolean;
   entityKey: string;
   entity: EntityPreview;
+  // From d3-force:
+  // Each node must be an object. The following properties are assigned by the simulation:
+  index?: number; // the node’s zero-based index into nodes
+  x?: number; // the node’s current x-position
+  y?: number; // the node’s current y-position
+  vx?: number; // the node’s current x-velocity
+  vy?: number; // the node’s current y-velocity
 };
 
 export type Source = {

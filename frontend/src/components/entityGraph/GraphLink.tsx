@@ -9,10 +9,10 @@ type OwnProps = {
 
 class GraphLink extends React.Component<OwnProps> {
   render() {
-    const { x1, y1, x2, y2, types, relationId } = this.props.data;
-    const angle = Math.atan2(x2 - x1, y2 - y1);
+    const { bx1, by1, bx2, by2, types, relationId } = this.props.data;
+    const angle = Math.atan2(bx2 - bx1, by2 - by1);
     const angleDeg = -(angle * 180) / Math.PI + 90;
-    const length = Math.hypot(x2 - x1, y2 - y1);
+    const length = Math.hypot(bx2 - bx1, by2 - by1);
     const dx: number[] = [];
     const dy: number[] = [];
     for (let i = 0; i < types.length; i += 1) {
@@ -26,7 +26,7 @@ class GraphLink extends React.Component<OwnProps> {
         className="relation"
         id={relationId}
         transform={`
-          translate(${x1},${y1})
+          translate(${bx1},${by1})
           rotate(${angleDeg})
           scale(${length},1)
           `}

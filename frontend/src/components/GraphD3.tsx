@@ -58,7 +58,7 @@ class GraphD3 extends React.Component<Props> {
       .data(this.props.rEntities)
       .transition()
       .duration(1000)
-      .attr("transform", d => `translate(${d.x - 20},${d.y - 20})`);
+      .attr("transform", d => `translate(${d.bx - 20},${d.by - 20})`);
 
     d3.select(this.svgEl.current)
       .selectAll("g.relation")
@@ -67,12 +67,12 @@ class GraphD3 extends React.Component<Props> {
       .duration(1000)
       .attr("transform", d => {
         console.log(d.relationId);
-        const { x1, y1, x2, y2 } = d;
-        const angle = Math.atan2(x2 - x1, y2 - y1);
+        const { bx1, by1, bx2, by2 } = d;
+        const angle = Math.atan2(bx2 - bx1, by2 - by1);
         const angleDeg = -(angle * 180) / Math.PI + 90;
-        const length = Math.hypot(x2 - x1, y2 - y1);
+        const length = Math.hypot(bx2 - bx1, by2 - by1);
         return `
-          translate(${x1},${y1})
+          translate(${bx1},${by1})
           rotate(${angleDeg})
           scale(${length},1)
           `;
@@ -106,8 +106,8 @@ class GraphD3 extends React.Component<Props> {
           <Link key={d.entityKey} to={`/${ROUTES.entity}/${d.entityKey}`}>
             <GraphEntityNode
               entity={d.entity}
-              x={d.x}
-              y={d.y}
+              x={d.bx}
+              y={d.by}
               primary={d.type === NodeRenderType.Primary}
               visited={d.visited}
             />
