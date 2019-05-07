@@ -1,4 +1,5 @@
 import { AnyAction } from "redux";
+import { SimulationNodeDatum } from "d3-force";
 
 export type ErrorPayload = {
   eData: any;
@@ -97,6 +98,8 @@ export type RelationRenderData = {
   y2: number;
   from: string;
   to: string;
+  source: string | SimulationNodeDatum;
+  target: string | SimulationNodeDatum;
   relationId: string;
   types: number[];
 };

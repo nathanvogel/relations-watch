@@ -23,6 +23,7 @@ import GraphLink from "./entityGraph/GraphLink";
 import { getEntityPreview, getRelationId } from "../utils/utils";
 import GraphD3 from "./GraphD3";
 import GraphD3Simple from "./GraphD3Simple";
+import GraphD3Force from "./GraphD3Force";
 
 const Content = styled.div``;
 
@@ -251,14 +252,18 @@ class EntityGraph extends Component<Props> {
         )
           continue;
 
+        const from = e2Primary ? e2.entityKey : e1.entityKey;
+        const to = e2Primary ? e1.entityKey : e2.entityKey;
         const rRelation: RelationRenderData = {
           x1: e1.x,
           y1: e1.y,
           x2: e2.x,
           y2: e2.y,
           // Make sure from is the primary entity (for links consistency)
-          from: e2Primary ? e2.entityKey : e1.entityKey,
-          to: e2Primary ? e1.entityKey : e2.entityKey,
+          from,
+          to,
+          source: from,
+          target: to,
           relationId,
           types: [] // Will be completed in a second pass.
         };
@@ -312,7 +317,13 @@ class EntityGraph extends Component<Props> {
           rRelations={rRelations}
           rEntities={rEntities}
         /> */}
-        <GraphD3Simple
+        {/* <GraphD3Simple
+          width={W}
+          height={H}
+          rRelations={rRelations}
+          rEntities={rEntities}
+        /> */}
+        <GraphD3Force
           width={W}
           height={H}
           rRelations={rRelations}

@@ -1,18 +1,10 @@
 import * as React from "react";
-import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import * as d3 from "d3";
-import "d3-force";
-import "d3-selection";
 
-import {
-  RelationRenderData,
-  NodeRenderData,
-  NodeRenderType
-} from "../utils/types";
+import { RelationRenderData, NodeRenderData } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
-import GraphEntityNode from "./entityGraph/GraphEntityNode";
-import GraphLink from "./entityGraph/GraphLink";
 
 const GraphSVG = styled.svg`
   display: block;
