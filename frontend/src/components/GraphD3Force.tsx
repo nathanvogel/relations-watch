@@ -172,8 +172,9 @@ class GraphD3Simple extends React.Component<Props> {
       // Key function to preserve the relation between DOM and rEntities
       (d: NodeRenderData | {}) => (d as NodeRenderData).entityKey
     );
+
+    // Add nodes for the first time and define one-time attribute.
     var nodes2 = nodes
-      // Add nodes for the first time and define one-time attribute.
       .enter()
       .append("g")
       .attr("class", "node")
@@ -190,25 +191,27 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("fill", "#000000")
       .select(goToParent)
       // General Update Pattern: Tell all to update with animation.
-      .merge(nodes as any)
+      .merge(nodes as any);
+
+    // Update dynamic attributes for all nodes:
+    nodes2
       .select("text")
       .attr("font-weight", fontWeight)
-      .attr("transform", d => `translate(${size(d) / 2},${size(d)})`)
-      .select(goToParent as any)
+      .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
+    nodes2
       .select("image")
       .attr("href", href)
       .attr("width", size)
       .attr("height", size)
-      .select(goToParent as any);
+      .attr("transform", "scale(0.2, 0.2)");
 
-    // nodes2
-    //   .transition()
-    //   .duration(300)
-    //   .attr("r", size)
-    //   .style("fill", d =>
-    //     d.visited ? coloursVisited[d.type] : colours[d.type]
-    //   );
-
+    // Transition IN
+    nodes2
+      .select("image")
+      .transition()
+      .duration(300)
+      .attr("transform", "scale(1, 1)");
+    // Transition OUT
     nodes
       .exit()
       .transition()
