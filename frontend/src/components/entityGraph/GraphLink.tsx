@@ -22,7 +22,15 @@ class GraphLink extends React.Component<OwnProps> {
     }
 
     return (
-      <g className="relation" id={relationId}>
+      <g
+        className="relation"
+        id={relationId}
+        transform={`
+          translate(${x1},${y1})
+          rotate(${angleDeg})
+          scale(${length},1)
+          `}
+      >
         <line
           x1={0}
           y1={0}

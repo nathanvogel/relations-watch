@@ -22,6 +22,7 @@ import CONSTS from "../utils/consts";
 import GraphLink from "./entityGraph/GraphLink";
 import { getEntityPreview, getRelationId } from "../utils/utils";
 import GraphD3 from "./GraphD3";
+import GraphD3Simple from "./GraphD3Simple";
 
 const Content = styled.div``;
 
@@ -305,7 +306,13 @@ class EntityGraph extends Component<Props> {
             </Link>
           ))}
         </GraphSVG> */}
-        <GraphD3
+        {/* <GraphD3
+          width={W}
+          height={H}
+          rRelations={rRelations}
+          rEntities={rEntities}
+        /> */}
+        <GraphD3Simple
           width={W}
           height={H}
           rRelations={rRelations}
