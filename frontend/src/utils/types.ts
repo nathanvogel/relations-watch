@@ -124,6 +124,8 @@ export type NodeRenderData = {
   y?: number; // the node’s current y-position
   vx?: number; // the node’s current x-velocity
   vy?: number; // the node’s current y-velocity
+  fx?: number; // the node’s fixed position
+  fy?: number; // the node’s fixe position
 };
 
 export type Source = {

@@ -101,6 +101,8 @@ class GraphD3Simple extends React.Component<Props> {
       this.nodesData[key] = this.nodesData[key]
         ? Object.assign({}, this.nodesData[key], this.props.rEntitiesByKey[key])
         : Object.assign({}, this.props.rEntitiesByKey[key]);
+      // this.nodesData[key].fx = this.nodesData[key].type === NodeRenderType.Primary ? width / 2 : undefined;
+      // this.nodesData[key].fy = this.nodesData[key].type === NodeRenderType.Primary ? height / 2 : undefined;
       rEntities.push(this.nodesData[key]);
     }
 
