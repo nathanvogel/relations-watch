@@ -6,8 +6,14 @@ import "d3-force";
 import { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
 import forceBoundary from "../utils/d3/d3-force-boundary";
 
-import { RelationRenderData, NodeRenderData } from "../utils/types";
+import {
+  RelationRenderData,
+  NodeRenderData,
+  NodeRenderType
+} from "../utils/types";
 import ROUTES from "../utils/ROUTES";
+import DefaultPerson from "../assets/physical_p_default_preview_48.png";
+import PrimaryDefaultPerson from "../assets/physical_p_default_preview_56.png";
 
 const GraphSVG = styled.svg`
   display: block;
@@ -25,7 +31,62 @@ type Props = {
 
 const colours = ["#f92035", "#0423e8", "#0480e8"];
 const coloursVisited = ["#a92035", "#0423a8", "#0480a8"];
-const sizes = [38, 28, 18];
+// const sizes = [38, 28, 18];
+
+const COLL_RADIUS = 2;
+
+function size(d: NodeRenderData): number {
+  switch (d.type) {
+    case NodeRenderType.Primary:
+      return 38;
+    case NodeRenderType.Secondary:
+      return 30;
+    case NodeRenderType.Tertiary:
+      return 22;
+  }
+}
+
+function collisionSize(d: NodeRenderData): number {
+  switch (d.type) {
+    case NodeRenderType.Primary:
+      return 70;
+    case NodeRenderType.Secondary:
+      return 60;
+    case NodeRenderType.Tertiary:
+      return 40;
+  }
+}
+
+function nodeTranslate(d: NodeRenderData): string {
+  return `translate(
+    ${(d.x as number) - size(d) / 2},
+    ${(d.y as number) - size(d) / 2 - 5})`;
+}
+
+function fontWeight(d: NodeRenderData): string {
+  switch (d.type) {
+    case NodeRenderType.Primary:
+      return "bold";
+    case NodeRenderType.Secondary:
+      return "normal";
+    case NodeRenderType.Tertiary:
+      return "normal";
+  }
+}
+
+function href(d: NodeRenderData): string {
+  switch (d.type) {
+    case NodeRenderType.Primary:
+      return PrimaryDefaultPerson;
+    default:
+      return DefaultPerson;
+  }
+}
+
+function goToParent(this: Element | null) {
+  if (!this) return null;
+  return this.parentNode as any;
+}
 
 class GraphD3Simple extends React.Component<Props> {
   private svgEl: React.RefObject<SVGSVGElement>;
@@ -49,10 +110,7 @@ class GraphD3Simple extends React.Component<Props> {
       .forceSimulation()
       .force("link", d3.forceLink().id(d => (d as NodeRenderData).entityKey))
       .force("charge", d3.forceManyBody())
-      .force(
-        "collide",
-        d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type] * 2)
-      )
+      .force("collide", d3.forceCollide().radius(collisionSize as any))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("boundary", forceBoundary(0, 0, width, height)) as any;
   }
@@ -72,10 +130,7 @@ class GraphD3Simple extends React.Component<Props> {
       .forceSimulation()
       .force("link", d3.forceLink().id(d => (d as NodeRenderData).entityKey))
       .force("charge", d3.forceManyBody())
-      .force(
-        "collide",
-        d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type] * 2)
-      )
+      .force("collide", d3.forceCollide().radius(collisionSize as any))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("boundary", forceBoundary(0, 0, width, height)) as any;
 
@@ -107,12 +162,12 @@ class GraphD3Simple extends React.Component<Props> {
     var links2 = links
       .enter()
       .append("line")
-      .attr("stroke", "#555555")
+      .attr("stroke", "#999999")
       .merge(links as any);
     links.exit().remove();
 
     var nodeGroup = d3.select(this.gNodes.current);
-    var nodes = nodeGroup.selectAll("circle").data(
+    var nodes = nodeGroup.selectAll("g.node").data(
       () => rEntities,
       // Key function to preserve the relation between DOM and rEntities
       (d: NodeRenderData | {}) => (d as NodeRenderData).entityKey
@@ -120,34 +175,45 @@ class GraphD3Simple extends React.Component<Props> {
     var nodes2 = nodes
       // Add nodes for the first time and define one-time attribute.
       .enter()
-      .append("circle")
+      .append("g")
+      .attr("class", "node")
       .on("click", this.onNodeClick)
-      // Add a child
-      .append("title")
+      // Add the image child
+      .append("image")
+      .select(goToParent)
+      // Add the text child
+      .append("text")
       .text(d => d.entity.name)
-      // <- back to parent
-      .select(function() {
-        return this.parentNode as any;
-      })
+      .attr("text-anchor", "middle")
+      .attr("dy", "1.0em")
+      .attr("font-size", 13)
+      .attr("fill", "#000000")
+      .select(goToParent)
       // General Update Pattern: Tell all to update with animation.
-      .merge(nodes as any);
-    nodes2
-      .transition()
-      .duration(300)
-      .attr("r", d => sizes[d.type])
-      .style("fill", d =>
-        d.visited ? coloursVisited[d.type] : colours[d.type]
-      );
-    // .call(d3.drag()
-    //     .on("start", dragstarted)
-    //     .on("drag", dragged)
-    //     .on("end", dragended) as any);
+      .merge(nodes as any)
+      .select("text")
+      .attr("font-weight", fontWeight)
+      .attr("transform", d => `translate(${size(d) / 2},${size(d)})`)
+      .select(goToParent as any)
+      .select("image")
+      .attr("href", href)
+      .attr("width", size)
+      .attr("height", size)
+      .select(goToParent as any);
+
+    // nodes2
+    //   .transition()
+    //   .duration(300)
+    //   .attr("r", size)
+    //   .style("fill", d =>
+    //     d.visited ? coloursVisited[d.type] : colours[d.type]
+    //   );
+
     nodes
       .exit()
       .transition()
       .duration(300)
-      .attr("x", -50)
-      .attr("r", 0)
+      .attr("transform", d => nodeTranslate(d as any) + " scale(0,0)")
       .remove();
 
     // Update the positions from the simulation
@@ -158,7 +224,8 @@ class GraphD3Simple extends React.Component<Props> {
         .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
         .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
 
-      nodes2.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
+      // nodes2.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
+      nodes2.attr("transform", nodeTranslate);
     });
 
     // Update the data in the simulation.
