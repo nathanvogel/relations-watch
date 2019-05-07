@@ -43,6 +43,7 @@ class GraphD3Simple extends React.Component<Props> {
     SimulationLinkDatum<NodeRenderData>
   >;
   private nodesData: { [key: string]: NodeRenderData } = {};
+  private linksData: { [key: string]: RelationRenderData } = {};
 
   constructor(props: Readonly<Props>) {
     super(props);
@@ -57,7 +58,7 @@ class GraphD3Simple extends React.Component<Props> {
       .force("charge", d3.forceManyBody())
       .force(
         "collide",
-        d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type])
+        d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type] * 2)
       )
       .force("center", d3.forceCenter(width / 2, height / 2)) as any;
   }
@@ -79,28 +80,37 @@ class GraphD3Simple extends React.Component<Props> {
       .force("charge", d3.forceManyBody())
       .force(
         "collide",
-        d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type])
+        d3.forceCollide().radius(d => sizes[(d as NodeRenderData).type] * 2)
       )
       .force("center", d3.forceCenter(width / 2, height / 2)) as any;
 
     // Create a deep copy of the props and merges it to our existing data
+    var rRelations: RelationRenderData[] = [];
+    for (let key in this.props.rRelationsByKey) {
+      this.linksData[key] = this.linksData[key]
+        ? Object.assign(
+            {},
+            this.linksData[key],
+            this.props.rRelationsByKey[key]
+          )
+        : Object.assign({}, this.props.rRelationsByKey[key]);
+      rRelations.push(this.linksData[key]);
+    }
     var rEntities: NodeRenderData[] = [];
     for (let key in this.props.rEntitiesByKey) {
-      this.nodesData[key] = Object.assign(
-        {},
-        this.nodesData[key],
-        this.props.rEntitiesByKey[key]
-      );
+      this.nodesData[key] = this.nodesData[key]
+        ? Object.assign({}, this.nodesData[key], this.props.rEntitiesByKey[key])
+        : Object.assign({}, this.props.rEntitiesByKey[key]);
       rEntities.push(this.nodesData[key]);
     }
 
     var linkGroup = d3.select(this.gLinks.current);
     var links = linkGroup.selectAll("line").data(
-      () => this.props.rRelations,
+      () => rRelations,
       // Key function to preserve the relation between DOM and rRelations
       (d: RelationRenderData | {}) => (d as RelationRenderData).relationId
     );
-    links
+    var links2 = links
       .enter()
       .append("line")
       .attr("stroke", "#555555")
@@ -113,16 +123,24 @@ class GraphD3Simple extends React.Component<Props> {
       // Key function to preserve the relation between DOM and rEntities
       (d: NodeRenderData | {}) => (d as NodeRenderData).entityKey
     );
-    nodes
+    var nodes2 = nodes
+      // Add nodes for the first time and define one-time attribute.
       .enter()
       .append("circle")
       .on("click", this.onNodeClick)
+      // Add a child
       .append("title")
       .text(d => d.entity.name)
-      .merge(nodes as any)
+      // <- back to parent
+      .select(function() {
+        return this.parentNode as any;
+      })
+      // General Update Pattern: Tell all to update with animation.
+      .merge(nodes as any);
+    nodes2
       .transition()
       .duration(300)
-      .attr("r", d => sizes[d.type] / 2)
+      .attr("r", d => sizes[d.type])
       .style("fill", d =>
         d.visited ? coloursVisited[d.type] : colours[d.type]
       );
@@ -138,26 +156,26 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("r", 0)
       .remove();
 
+    // Update the positions from the simulation
+    this.simulation.on("tick", () => {
+      links2
+        .attr("x1", d => (d.source as SimulationNodeDatum).x as number)
+        .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
+        .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
+        .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
+
+      nodes2.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
+    });
+
     // Update the data in the simulation.
     this.simulation.nodes(rEntities);
     const linkForce = this.simulation.force("link") as d3.ForceLink<
       {},
       d3.SimulationLinkDatum<{}>
     >;
-    linkForce.links(this.props.rRelations);
+    linkForce.links(rRelations);
 
-    this.simulation.restart();
-
-    // Update the positions from the simulation
-    this.simulation.on("tick", () => {
-      links
-        .attr("x1", d => (d.source as SimulationNodeDatum).x as number)
-        .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
-        .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
-        .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
-
-      nodes.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
-    });
+    // this.simulation.restart();
   }
 
   onNodeClick = (d: NodeRenderData, _index: number) => {
