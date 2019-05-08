@@ -253,17 +253,16 @@ class GraphD3Simple extends React.Component<Props> {
             (d as NodeRenderData).type === NodeRenderType.Tertiary ? 1 : 0
           )
       )
+      // Alternative or helper to forceManyBody()
+      .force(
+        "collide",
+        d3
+          .forceCollide()
+          .radius(collisionSize as any)
+          .strength(0.2)
+      )
       // Keep all nodes within our canvas
       .force("boundary", forceBoundary(0, 0, width, height)) as any;
-
-    // Alternative or helper to forceManyBody()
-    // .force(
-    //   "collide",
-    //   d3
-    //     .forceCollide()
-    //     .radius(collisionSize as any)
-    //     .strength(0.2)
-    // )
 
     // Alternative to forceBoundary() taken from
     // https://observablehq.com/@d3/disjoint-force-directed-graph
@@ -285,15 +284,15 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("class", "relation")
       .append("line")
       .classed("visual", true)
-      .attr("stroke-width", d => d.types.length)
-      .attr("stroke", relationColor)
+      .attr("stroke-width", 2)
+      .attr("stroke", "#aaaaaa")
       .select(goToParent)
-      // .append("circle")
-      // .attr("r", 6)
-      // .attr("fill", relationColor)
-      // .attr("stroke-width", 2)
-      // .attr("stroke", "#ffffff")
-      // .select(goToParent)
+      .append("circle")
+      .attr("r", 4)
+      .attr("fill", relationColor)
+      .attr("stroke-width", 1)
+      .attr("stroke", "#aaaaaa")
+      .select(goToParent)
       .append("line")
       .classed("interaction", true)
       .attr("stroke-width", 11)
@@ -317,7 +316,7 @@ class GraphD3Simple extends React.Component<Props> {
     var linksInteraction = links2
       .select("line.interaction")
       .attr("stroke", d => (d.visited ? "#E6E2FF" : "transparent"));
-    // var linksC = links2.select("circle").attr("opacity", linkOpacity);
+    var linksC = links2.select("circle").attr("opacity", linkOpacity);
     links.exit().remove();
 
     // NODES rendering
@@ -404,9 +403,9 @@ class GraphD3Simple extends React.Component<Props> {
         .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
         .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
 
-      // linksC
-      //   .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.5))
-      //   .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.5));
+      linksC
+        .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.84))
+        .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.84));
       // linksC
       //   .attr("cx", d => betweenOffD(d, 20).x)
       //   .attr("cy", d => betweenOffD(d, 15).y);
