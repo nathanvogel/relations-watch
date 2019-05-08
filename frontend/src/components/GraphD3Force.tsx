@@ -14,6 +14,7 @@ import {
 import ROUTES from "../utils/ROUTES";
 import DefaultPerson from "../assets/physical_p_default_preview_48.png";
 import PrimaryDefaultPerson from "../assets/physical_p_default_preview_56.png";
+import CONSTS from "../utils/consts";
 
 const GraphSVG = styled.svg`
   display: block;
@@ -36,7 +37,10 @@ const coloursVisited = ["#a92035", "#0423a8", "#0480a8"];
 const COLL_RADIUS = 2;
 
 function size(d: NodeRenderData): number {
-  switch (d.type) {
+  return sizeT(d.type);
+}
+function sizeT(type: NodeRenderType): number {
+  switch (type) {
     case NodeRenderType.Primary:
       return 45;
     case NodeRenderType.Secondary:
@@ -45,7 +49,6 @@ function size(d: NodeRenderData): number {
       return 25;
   }
 }
-
 function collisionSize(d: NodeRenderData): number {
   switch (d.type) {
     case NodeRenderType.Primary:
@@ -94,6 +97,18 @@ function href(d: NodeRenderData): string {
   }
 }
 
+function relationColor(d: RelationRenderData) {
+  return CONSTS.RELATION_COLORS[d.types[0]];
+}
+
+function strokeColor(d: RelationRenderData) {
+  return d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd";
+}
+
+function linkOpacity(d: RelationRenderData) {
+  return d.withType === NodeRenderType.Primary ? 1 : 0.5;
+}
+
 function goToParent(this: Element | null) {
   if (!this) return null;
   return this.parentNode as any;
@@ -101,6 +116,31 @@ function goToParent(this: Element | null) {
 
 function between(a1: number, a2: number, percent: number) {
   return a1 + (a2 - a1) * percent;
+}
+function betweenOffD(d: RelationRenderData, offset: number) {
+  const source = d.source as SimulationNodeDatum;
+  const target = d.target as SimulationNodeDatum;
+
+  return betweenOff(
+    source.x as number,
+    source.y as number,
+    target.x as number,
+    target.y as number,
+    offset
+  );
+}
+function betweenOff(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  offset: number
+) {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  return {
+    x: x2 - offset * Math.cos(angle),
+    y: y2 - offset * Math.sin(angle)
+  };
 }
 
 class GraphD3Simple extends React.Component<Props> {
@@ -238,6 +278,7 @@ class GraphD3Simple extends React.Component<Props> {
 
     // D3 RENDERING starts here
 
+    // LINKS rendering
     var linkGroup = d3.select(this.gLinks.current);
     var links = linkGroup.selectAll("g").data(
       () => rRelations,
@@ -250,28 +291,27 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("class", "relation")
       .append("line")
       .attr("stroke-width", 1)
+      .attr("stroke", relationColor)
+      .select(goToParent)
+      .append("circle")
+      .attr("r", 6)
+      .attr("fill", relationColor)
+      .attr("stroke-width", 2)
+      .attr("stroke", "#ffffff")
       .select(goToParent)
       .merge(links as any);
-
-    var links3 = links2
-      .select("line")
-      .attr("stroke", d =>
-        d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd"
-      );
-
+    var links3 = links2.select("line").attr("opacity", linkOpacity);
+    links2.select("circle").attr("opacity", linkOpacity);
+    var linksC = links2.select("circle");
     links.exit().remove();
-    // links2
-    //   .append("circle")
-    //   .attr("r", 25)
-    //   .attr("fill", "#dd2211");
 
+    // NODES rendering
     var nodeGroup = d3.select(this.gNodes.current);
     var nodes = nodeGroup.selectAll("g.node").data(
       () => rEntities,
       // Key function to preserve the relation between DOM and rEntities
       (d: NodeRenderData | {}) => (d as NodeRenderData).entityKey
     );
-
     // Add nodes for the first time and define one-time attribute.
     var nodes2 = nodes
       .enter()
@@ -291,7 +331,6 @@ class GraphD3Simple extends React.Component<Props> {
       .select(goToParent)
       // General Update Pattern: Tell all to update with animation.
       .merge(nodes as any);
-
     // Update dynamic attributes for all nodes:
     nodes2
       .select("text")
@@ -303,7 +342,6 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("href", href)
       .attr("width", size)
       .attr("height", size);
-
     // Transition IN
     // nodes2
     //   .select("image")
@@ -325,6 +363,13 @@ class GraphD3Simple extends React.Component<Props> {
         .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
         .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
         .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
+
+      linksC
+        .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.5))
+        .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.5));
+      // linksC
+      //   .attr("cx", d => betweenOffD(d, 20).x)
+      //   .attr("cy", d => betweenOffD(d, 15).y);
 
       // With circle:
       // nodes2.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
