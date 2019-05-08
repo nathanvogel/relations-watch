@@ -99,6 +99,10 @@ function goToParent(this: Element | null) {
   return this.parentNode as any;
 }
 
+function between(a1: number, a2: number, percent: number) {
+  return a1 + (a2 - a1) * percent;
+}
+
 class GraphD3Simple extends React.Component<Props> {
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
@@ -163,7 +167,7 @@ class GraphD3Simple extends React.Component<Props> {
     const maxTypes = d3.max(rRelations, d => d.types.length) || 1;
     const distScale = d3
       .scaleLinear()
-      .domain([1, maxTypes])
+      .domain([1, Math.max(maxTypes, 3)])
       .range([250, 100]);
     // We need to recreate the simulation for some reason... ?
     const { width, height } = this.props;
@@ -235,19 +239,31 @@ class GraphD3Simple extends React.Component<Props> {
     // D3 RENDERING starts here
 
     var linkGroup = d3.select(this.gLinks.current);
-    var links = linkGroup.selectAll("line").data(
+    var links = linkGroup.selectAll("g").data(
       () => rRelations,
       // Key function to preserve the relation between DOM and rRelations
       (d: RelationRenderData | {}) => (d as RelationRenderData).relationId
     );
     var links2 = links
       .enter()
+      .append("g")
+      .attr("class", "relation")
       .append("line")
+      .attr("stroke-width", 1)
+      .select(goToParent)
       .merge(links as any);
-    links2.attr("stroke", d =>
-      d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd"
-    );
+
+    var links3 = links2
+      .select("line")
+      .attr("stroke", d =>
+        d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd"
+      );
+
     links.exit().remove();
+    // links2
+    //   .append("circle")
+    //   .attr("r", 25)
+    //   .attr("fill", "#dd2211");
 
     var nodeGroup = d3.select(this.gNodes.current);
     var nodes = nodeGroup.selectAll("g.node").data(
@@ -304,7 +320,7 @@ class GraphD3Simple extends React.Component<Props> {
 
     // Update the positions from the simulation
     this.simulation.on("tick", () => {
-      links2
+      links3
         .attr("x1", d => (d.source as SimulationNodeDatum).x as number)
         .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
         .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
