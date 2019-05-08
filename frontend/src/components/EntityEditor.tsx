@@ -13,12 +13,11 @@ import {
   patchEntity
 } from "../features/entitiesSaveAC";
 import { loadEntity } from "../features/entitiesLoadAC";
-import { Status, Entity } from "../utils/types";
+import { Status, Entity, EntityType } from "../utils/types";
 import EntityForm from "./entityEditor/EntityForm";
 import Meta from "./meta/Meta";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { shouldLoad } from "../utils/utils";
-import CONSTS from "../utils/consts";
 import Button from "./buttons/Button";
 
 const Content = styled.div`
@@ -47,7 +46,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     : initialName
     ? {
         name: initialName,
-        type: CONSTS.ENTITY_TYPES.PHYSICAL_PERSON
+        type: EntityType.PhysicalPerson
       }
     : undefined;
   const entityStatus = entityKey ? state.entities.status[entityKey] : undefined;

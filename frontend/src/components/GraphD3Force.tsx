@@ -12,8 +12,7 @@ import {
   NodeRenderType
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
-import DefaultPerson from "../assets/physical_p_default_preview_48.png";
-import PrimaryDefaultPerson from "../assets/physical_p_default_preview_56.png";
+import { getEntitySAsset } from "../assets/EntityIcons";
 import CONSTS from "../utils/consts";
 
 const GraphSVG = styled.svg`
@@ -89,12 +88,7 @@ function fontSize(d: NodeRenderData): number {
 }
 
 function href(d: NodeRenderData): string {
-  switch (d.type) {
-    case NodeRenderType.Primary:
-      return PrimaryDefaultPerson;
-    default:
-      return DefaultPerson;
-  }
+  return getEntitySAsset(d.entity.type);
 }
 
 function relationColor(d: RelationRenderData) {
@@ -354,6 +348,7 @@ class GraphD3Simple extends React.Component<Props> {
       .select(goToParent)
       // Add the image child
       .append("image")
+      .attr("href", href)
       .select(goToParent)
       // General Update Pattern: Tell all to update with animation.
       .merge(nodes as any);
@@ -365,7 +360,6 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")
-      .attr("href", href)
       .attr("width", size)
       .attr("height", size);
     // Get the text size and resize the background

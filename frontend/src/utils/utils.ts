@@ -138,6 +138,7 @@ export function getEntityPreview(entity: Entity): EntityPreview {
   return {
     _key: entity._key as string,
     name: entity.name,
+    type: entity.type,
     imageId: entity.imageId
   };
 }

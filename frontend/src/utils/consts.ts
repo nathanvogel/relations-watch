@@ -41,18 +41,6 @@ export const RELATION_COLORS = {
   [RELATION_TYPES.COMMON_ACTIVITES]: "#08327d"
 };
 
-// TODO: convert this mess to enums
-type EntityType = number;
-type EntityTypes = {
-  [key: string]: EntityType;
-};
-const ENTITY_TYPES: EntityTypes = {
-  PHYSICAL_PERSON: 1,
-  MORAL_PERSON: 2,
-  EVENT: 10,
-  SPECIAL_GROUP: 100
-};
-
 export const ERROR_CODES = {
   MISSING_SOURCE_FORM: "MISSING_SOURCE_FORM",
   MISSING_SOURCE_LINK: "MISSING_SOURCE_LINK"
@@ -63,7 +51,6 @@ const CONSTS = {
   entCollectionName: "entities",
   EMPTY_KEY: "_",
   RELATION_COLORS,
-  ENTITY_TYPES,
   RELATION_TYPES,
   ERROR_CODES
 };

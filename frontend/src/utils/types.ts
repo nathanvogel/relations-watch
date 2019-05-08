@@ -1,6 +1,16 @@
 import { AnyAction } from "redux";
 import { SimulationNodeDatum } from "d3-force";
 
+export enum EntityType {
+  PhysicalPerson = 1,
+  MoralPerson = 2,
+  Event = 10,
+  Group = 100
+}
+export const EntityTypeValues: EntityType[] = Object.values(EntityType).filter(
+  x => typeof x === "number"
+);
+
 export type ErrorPayload = {
   eData: any;
   eMessage: string;
@@ -35,7 +45,7 @@ export enum Status {
 export type Entity = {
   _key?: string;
   name: string;
-  type: number;
+  type: EntityType;
   imageId?: string;
   linkWikipedia?: string;
   linkCrunchbase?: string;
@@ -49,6 +59,7 @@ export interface EntityPreview {
   _key: string;
   name: string;
   imageId?: string;
+  type: EntityType;
 }
 
 export interface Edge {

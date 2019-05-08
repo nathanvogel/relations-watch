@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import CONSTS from "../../utils/consts";
 import { ENTITY_TYPES } from "../../strings/strings";
-import { Entity } from "../../utils/types";
+import { Entity, EntityType, EntityTypeValues } from "../../utils/types";
 import Button from "../buttons/Button";
 import cuid from "cuid";
 
@@ -40,7 +40,7 @@ class EntityForm extends React.Component<Props> {
   static defaultProps = {
     initialEntity: {
       name: "",
-      type: CONSTS.ENTITY_TYPES.PHYSICAL_PERSON,
+      type: EntityType.PhysicalPerson,
       linkWikipedia: "",
       linkCrunchbase: "",
       linkTwitter: "",
@@ -105,8 +105,8 @@ class EntityForm extends React.Component<Props> {
               onChange={this.onTypeChange}
               form={this.state.formId}
             >
-              {Object.keys(CONSTS.ENTITY_TYPES).map(key => (
-                <option key={key} value={CONSTS.ENTITY_TYPES[key]}>
+              {EntityTypeValues.map((key: EntityType) => (
+                <option key={key} value={key}>
                   {ENTITY_TYPES[key]}
                 </option>
               ))}

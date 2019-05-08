@@ -6,11 +6,12 @@ import update from "immutability-helper";
 
 import api from "../utils/api";
 import EntityEditor from "./EntityEditor";
-import { Entity, ReactSelectOption } from "../utils/types";
+import { Entity, ReactSelectOption, EntityType } from "../utils/types";
 
 interface Suggestion {
   _key: string;
   name: string;
+  type: EntityType;
 }
 interface ReactSelectInputValue {
   inputValue: string;
@@ -28,7 +29,8 @@ const promiseAutocomplete = async (inputValue: string) => {
     for (var i = 0; i < data.length; i += 1) {
       suggestions.push({
         value: data[i]._key,
-        label: data[i].name
+        label: data[i].name,
+        type: data[i].type
       });
     }
     return suggestions;

@@ -1,7 +1,6 @@
 import React from "react";
 import { EntityPreview, Entity } from "../../utils/types";
-import DefaultPerson from "../../assets/physical_p_default_preview_48.png";
-import PrimaryDefaultPerson from "../../assets/physical_p_default_preview_56.png";
+import { getEntitySAsset } from "../../assets/EntityIcons";
 
 type OwnProps = {
   entity: EntityPreview | Entity;
@@ -35,7 +34,7 @@ class GraphEntityNode extends React.Component<OwnProps> {
       >
         <image
           opacity="1"
-          href={primary ? PrimaryDefaultPerson : DefaultPerson}
+          href={getEntitySAsset(entity.type)}
           width={size}
           height={size}
         />

@@ -120,7 +120,7 @@ router
     const entities = db._query(
       `
           FOR entity IN FULLTEXT(@@collection, "name", CONCAT("prefix:", @searchTerm),  6)
-            RETURN {"name": entity.name, "_key": entity._key }
+            RETURN {"name": entity.name, "_key": entity._key, "type": entity.type }
         `,
       {
         "@collection": entColl.name(),
@@ -157,7 +157,7 @@ router
               ANY CONCAT(${entColl.name()}, '/', ${req.pathParams.key})
               ${relColl}
               OPTIONS { uniqueEdges: "path", bfs: true }
-              RETURN DISTINCT KEEP(v, "_key", "name")
+              RETURN DISTINCT KEEP(v, "_key", "name", "type")
            )
            RETURN { edges: eResults, vertices: vResults}
         `);

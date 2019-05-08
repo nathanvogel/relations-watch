@@ -1,10 +1,15 @@
 import CONSTS from "../utils/consts";
+import { EntityType } from "../utils/types";
 
-type MyStringRes = {
+type StringRes = {
   [key: string]: string;
 };
 
-export const RELATION_TYPES_STRRES: MyStringRes = {
+type StringTypeRes = {
+  [key: number]: string;
+};
+
+export const RELATION_TYPES_STRRES: StringRes = {
   OWNS: "owns",
   OWNS_A_SHARE: "owns a share of",
   GROUP_MEMBER: "is a group member of",
@@ -38,9 +43,9 @@ export const RELATION_TYPES_STR = {
   [CONSTS.RELATION_TYPES.EXCHANGES_VALUES]: "traded with"
 };
 
-export const ENTITY_TYPES: MyStringRes = {
-  PHYSICAL_PERSON: "Natural person",
-  MORAL_PERSON: "Moral person",
-  EVENT: "Event",
-  SPECIAL_GROUP: "Group"
+export const ENTITY_TYPES: StringTypeRes = {
+  [EntityType.PhysicalPerson]: "Natural person",
+  [EntityType.MoralPerson]: "Moral person",
+  [EntityType.Event]: "Event",
+  [EntityType.Group]: "Group"
 };

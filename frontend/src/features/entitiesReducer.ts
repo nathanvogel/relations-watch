@@ -115,7 +115,8 @@ export default (state = defaultState, action: AnyAction) => {
       for (let option of selectionArray) {
         newEntityPreviews[option.value] = {
           _key: option.value,
-          name: option.label
+          name: option.label,
+          type: option.type
         };
       }
       return update(state, {

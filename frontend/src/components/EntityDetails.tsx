@@ -8,8 +8,8 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
-import DefaultPerson from "../assets/physical_p_default_full_512.png";
-import CONSTS from "../utils/consts";
+import { getEntityLAsset } from "../assets/EntityIcons";
+import { ENTITY_TYPES } from "../strings/strings";
 import MainPersonImage from "./entityDetails/MainPersonImage";
 
 const Content = styled.div`
@@ -67,14 +67,10 @@ class EntityDetails extends Component<Props> {
     return (
       <Content>
         <Link to={`/e/${this.props.entityKey}`}>
-          <MainPersonImage src={DefaultPerson} />
+          <MainPersonImage src={getEntityLAsset(entity.type)} />
           <PersonName>{entity.name}</PersonName>
         </Link>
-        <p>
-          {entity.type === CONSTS.ENTITY_TYPES.PHYSICAL_PERSON
-            ? "Physical person"
-            : "Legal person"}
-        </p>
+        <p>{ENTITY_TYPES[entity.type]}</p>
       </Content>
     );
   }
