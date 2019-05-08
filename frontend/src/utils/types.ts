@@ -127,6 +127,8 @@ export type NodeRenderData = {
   vy?: number; // the node’s current y-velocity
   fx?: number; // the node’s fixed position
   fy?: number; // the node’s fixe position
+  // Text sizing
+  bb?: DOMRect;
 };
 
 export type Source = {

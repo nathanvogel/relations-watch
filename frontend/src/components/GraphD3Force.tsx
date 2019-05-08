@@ -339,15 +339,20 @@ class GraphD3Simple extends React.Component<Props> {
       .classed("interaction", true)
       // .attr("transform", "scale(0.2, 0.2)")
       .on("click", this.onNodeClick)
-      // Add the image child
-      .append("image")
+      // Add the text background
+      .append("rect")
+      .attr("fill", "#ffffff")
+      .attr("opacity", 0.76)
       .select(goToParent)
       // Add the text child
       .append("text")
       .text(d => d.entity.name)
       .attr("text-anchor", "middle")
-      .attr("dy", "1.0em")
+      .attr("dy", "18px")
       .attr("fill", "#000000")
+      .select(goToParent)
+      // Add the image child
+      .append("image")
       .select(goToParent)
       // General Update Pattern: Tell all to update with animation.
       .merge(nodes as any);
@@ -362,6 +367,20 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("href", href)
       .attr("width", size)
       .attr("height", size);
+    // Get the text size and resize the background
+    // Code from: http://bl.ocks.org/andreaskoller/7674031
+    nodes2.select("text").each(function(d, _index) {
+      // get bounding box of text field and store it in texts array
+      d.bb = (this as SVGTextElement).getBBox();
+    });
+    var paddingLR = 6; // adjust the padding values depending on font and font size
+    var paddingTB = 4;
+    nodes2
+      .select("rect")
+      .attr("x", (d: any) => -d.bb.width / 2 - paddingLR / 2 + size(d) / 2)
+      .attr("y", (d: any) => size(d) + 2 + paddingTB / 2)
+      .attr("width", (d: any) => d.bb.width + paddingLR)
+      .attr("height", (d: any) => d.bb.height + paddingTB);
     // Transition IN
     // nodes2
     //   .select("image")

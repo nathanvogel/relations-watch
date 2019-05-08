@@ -16,3 +16,7 @@ code {
 svg .interaction {
   cursor: pointer;
 }
+
+svg .nodes g:hover text {
+  text-decoration: underline;
+}
