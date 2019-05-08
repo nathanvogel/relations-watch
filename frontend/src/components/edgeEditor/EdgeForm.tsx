@@ -22,6 +22,17 @@ const TextArea = styled.textarea`
   width: 100%;
   min-height: 3em;
   box-sizing: border-box;
+  padding: 6px;
+  border: 2px solid #bbbbbb;
+  border-radius: 2px;
+  &:hover {
+    border-color: #888888;
+    border-width: 2px;
+  }
+  &:focus {
+    border-color: #2684ff;
+    border-width: 2px;
+  }
 `;
 
 const Label = styled.label`
