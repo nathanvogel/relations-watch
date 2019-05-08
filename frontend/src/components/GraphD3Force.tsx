@@ -290,6 +290,7 @@ class GraphD3Simple extends React.Component<Props> {
       .append("g")
       .attr("class", "relation")
       .append("line")
+      .classed("visual", true)
       .attr("stroke-width", 1)
       .attr("stroke", relationColor)
       .select(goToParent)
@@ -299,10 +300,16 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("stroke-width", 2)
       .attr("stroke", "#ffffff")
       .select(goToParent)
+      .append("line")
+      .classed("interaction", true)
+      .attr("stroke-width", 15)
+      .attr("stroke", "transparent")
+      .on("click", this.onRelationClick)
+      .select(goToParent)
       .merge(links as any);
-    var links3 = links2.select("line").attr("opacity", linkOpacity);
-    links2.select("circle").attr("opacity", linkOpacity);
-    var linksC = links2.select("circle");
+    var linksVisual = links2.select("line.visual").attr("opacity", linkOpacity);
+    var linksInteraction = links2.select("line.interaction");
+    var linksC = links2.select("circle").attr("opacity", linkOpacity);
     links.exit().remove();
 
     // NODES rendering
@@ -316,7 +323,8 @@ class GraphD3Simple extends React.Component<Props> {
     var nodes2 = nodes
       .enter()
       .append("g")
-      .attr("class", "node")
+      .classed("node", true)
+      .classed("interaction", true)
       // .attr("transform", "scale(0.2, 0.2)")
       .on("click", this.onNodeClick)
       // Add the image child
@@ -358,7 +366,12 @@ class GraphD3Simple extends React.Component<Props> {
 
     // Update the positions from the simulation
     this.simulation.on("tick", () => {
-      links3
+      linksVisual
+        .attr("x1", d => (d.source as SimulationNodeDatum).x as number)
+        .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
+        .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
+        .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
+      linksInteraction
         .attr("x1", d => (d.source as SimulationNodeDatum).x as number)
         .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
         .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
@@ -389,6 +402,10 @@ class GraphD3Simple extends React.Component<Props> {
 
   onNodeClick = (d: NodeRenderData, _index: number) => {
     this.props.history.push(`/${ROUTES.entity}/${d.entityKey}`);
+  };
+
+  onRelationClick = (d: RelationRenderData, _index: number) => {
+    this.props.history.push(`/${ROUTES.relation}/${d.from}/${d.to}`);
   };
 
   render() {
