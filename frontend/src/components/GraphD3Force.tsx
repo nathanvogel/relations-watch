@@ -291,15 +291,15 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("class", "relation")
       .append("line")
       .classed("visual", true)
-      .attr("stroke-width", 1)
+      .attr("stroke-width", d => d.types.length)
       .attr("stroke", relationColor)
       .select(goToParent)
-      .append("circle")
-      .attr("r", 6)
-      .attr("fill", relationColor)
-      .attr("stroke-width", 2)
-      .attr("stroke", "#ffffff")
-      .select(goToParent)
+      // .append("circle")
+      // .attr("r", 6)
+      // .attr("fill", relationColor)
+      // .attr("stroke-width", 2)
+      // .attr("stroke", "#ffffff")
+      // .select(goToParent)
       .append("line")
       .classed("interaction", true)
       .attr("stroke-width", 15)
@@ -309,7 +309,7 @@ class GraphD3Simple extends React.Component<Props> {
       .merge(links as any);
     var linksVisual = links2.select("line.visual").attr("opacity", linkOpacity);
     var linksInteraction = links2.select("line.interaction");
-    var linksC = links2.select("circle").attr("opacity", linkOpacity);
+    // var linksC = links2.select("circle").attr("opacity", linkOpacity);
     links.exit().remove();
 
     // NODES rendering
@@ -377,9 +377,9 @@ class GraphD3Simple extends React.Component<Props> {
         .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
         .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
 
-      linksC
-        .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.5))
-        .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.5));
+      // linksC
+      //   .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.5))
+      //   .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.5));
       // linksC
       //   .attr("cx", d => betweenOffD(d, 20).x)
       //   .attr("cy", d => betweenOffD(d, 15).y);
