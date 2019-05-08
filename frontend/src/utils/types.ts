@@ -103,6 +103,7 @@ export type RelationRenderData = {
   relationId: string;
   types: number[];
   withType: NodeRenderType;
+  visited: boolean;
 };
 
 export enum NodeRenderType {

@@ -302,8 +302,8 @@ class GraphD3Simple extends React.Component<Props> {
       // .select(goToParent)
       .append("line")
       .classed("interaction", true)
-      .attr("stroke-width", 15)
-      .attr("stroke", "transparent")
+      .attr("stroke-width", 11)
+      .attr("opacity", 0.3)
       .on("click", this.onRelationClick)
       .on("mouseover", function(d) {
         d3.select(this.parentNode as any)
@@ -320,7 +320,9 @@ class GraphD3Simple extends React.Component<Props> {
       .select(goToParent)
       .merge(links as any);
     var linksVisual = links2.select("line.visual").attr("opacity", linkOpacity);
-    var linksInteraction = links2.select("line.interaction");
+    var linksInteraction = links2
+      .select("line.interaction")
+      .attr("stroke", d => (d.visited ? "#E6E2FF" : "transparent"));
     // var linksC = links2.select("circle").attr("opacity", linkOpacity);
     links.exit().remove();
 
@@ -341,7 +343,6 @@ class GraphD3Simple extends React.Component<Props> {
       .on("click", this.onNodeClick)
       // Add the text background
       .append("rect")
-      .attr("fill", "#ffffff")
       .attr("opacity", 0.76)
       .select(goToParent)
       // Add the text child
@@ -373,14 +374,15 @@ class GraphD3Simple extends React.Component<Props> {
       // get bounding box of text field and store it in texts array
       d.bb = (this as SVGTextElement).getBBox();
     });
-    var paddingLR = 6; // adjust the padding values depending on font and font size
-    var paddingTB = 4;
+    var paddingLR = 4; // adjust the padding values depending on font and font size
+    var paddingTB = 2;
     nodes2
       .select("rect")
       .attr("x", (d: any) => -d.bb.width / 2 - paddingLR / 2 + size(d) / 2)
       .attr("y", (d: any) => size(d) + 2 + paddingTB / 2)
       .attr("width", (d: any) => d.bb.width + paddingLR)
-      .attr("height", (d: any) => d.bb.height + paddingTB);
+      .attr("height", (d: any) => d.bb.height + paddingTB)
+      .attr("fill", d => (d.visited ? "#E6E2FF" : "#ffffff"));
     // Transition IN
     // nodes2
     //   .select("image")

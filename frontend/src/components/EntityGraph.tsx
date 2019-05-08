@@ -269,6 +269,7 @@ class EntityGraph extends Component<Props> {
             e1Primary || e2Primary
               ? NodeRenderType.Primary
               : NodeRenderType.Secondary,
+          visited: e1.visited && e2.visited,
           types: [] // Will be completed in a second pass.
         };
         rRelations.push(rRelation);
