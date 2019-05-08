@@ -305,6 +305,18 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("stroke-width", 15)
       .attr("stroke", "transparent")
       .on("click", this.onRelationClick)
+      .on("mouseover", function(d) {
+        d3.select(this.parentNode as any)
+          .select(".visual")
+          .attr("stroke", "#000000")
+          .attr("stroke-width", d => (d as any).types.length * 2);
+      })
+      .on("mouseout", function(d) {
+        d3.select(this.parentNode as any)
+          .select(".visual")
+          .attr("stroke", relationColor as any)
+          .attr("stroke-width", d => (d as any).types.length);
+      })
       .select(goToParent)
       .merge(links as any);
     var linksVisual = links2.select("line.visual").attr("opacity", linkOpacity);
