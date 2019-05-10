@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
+import styled from "styled-components";
 
 import { RootStore } from "../../Store";
 import { Status } from "../../utils/types";
+
+const Name = styled.span`
+  font-weight: bold;
+`;
 
 type OwnProps = { entityKey: string };
 
@@ -28,9 +33,9 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 class EntityName extends Component<Props> {
   render() {
     const { entity, status } = this.props;
-    if (status !== Status.Ok) return <span>...</span>;
+    if (status !== Status.Ok) return <Name>...</Name>;
 
-    return <span>{entity ? entity.name : ""}</span>;
+    return <Name>{entity ? entity.name : ""}</Name>;
   }
 }
 

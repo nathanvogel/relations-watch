@@ -7,6 +7,7 @@ const theme = {
   borderWidth: "2px",
   inputPaddingLR: "6px",
   inputPaddingTB: "4px",
+  buttonLRSpacing: "4px",
   marginLR: "12px",
   marginTB: "12px",
   inputMarginTB: "12px",

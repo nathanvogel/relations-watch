@@ -15,7 +15,7 @@ import { TP } from "../../utils/theme";
 // </div>
 
 export const styledSelectCSS = css`
-  min-width: 150px;
+  ${"" /* min-width: 150px; */}
   display: inline-block;
 
   .rs__dropdown-indicator {

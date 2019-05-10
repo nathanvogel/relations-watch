@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import cuid from "cuid";
 import Select from "react-select";
+import { ValueType } from "react-select/lib/types";
 
 import CONSTS from "../../utils/consts";
 import EntityName from "./EntityName";
@@ -21,12 +22,39 @@ import TextArea from "../inputs/TextArea";
 import Label from "../inputs/Label";
 import Input from "../inputs/Input";
 import StyledSelect from "../select/StyledSelect";
-import { ValueType } from "react-select/lib/types";
+import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
+import IconButton from "../buttons/IconButton";
+import { TP } from "../../utils/theme";
 
 const Content = styled.div`
   display: block;
   border: grey 1px dotted;
   padding: 12px;
+`;
+
+const TypeContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr minmax(150px, 2fr) 1fr;
+  align-items: center;
+  grid-column-gap: ${(props: TP) => props.theme.marginLR};
+
+  & > *:nth-child(1) {
+    justify-self: end;
+  }
+  & > *:nth-child(2) {
+    justify-self: center;
+    width: 100%;
+    display: flex;
+
+    div:nth-child(1) {
+      padding-right: ${(props: TP) => props.theme.buttonLRSpacing};
+      flex-grow: 100;
+    }
+  }
+  & > *:nth-child(3) {
+    justify-self: start;
+    text-align: right;
+  }
 `;
 
 type Props = {
@@ -167,19 +195,21 @@ class EdgeForm extends React.Component<Props> {
     return (
       <Content>
         <form onSubmit={this.onSubmit}>
-          <div>
+          <TypeContainer>
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
-            <StyledSelect
-              options={TypeOptions}
-              value={selectedType}
-              onChange={this.onTypeChange}
-              placeholder="..."
-            />
+            <div>
+              <StyledSelect
+                options={TypeOptions}
+                value={selectedType}
+                onChange={this.onTypeChange}
+                placeholder="..."
+              />
+              <IconButton type="button" onClick={this.toggleInvert}>
+                <SwapIcon />
+              </IconButton>
+            </div>
             <EntityName entityKey={invert ? entity1Key : entity2Key} />
-            <button type="button" onClick={this.toggleInvert}>
-              Invert direction
-            </button>
-          </div>
+          </TypeContainer>
           <Label>
             Succint element description:
             <TextArea
