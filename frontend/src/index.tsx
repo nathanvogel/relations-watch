@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { ThemeProvider } from "styled-components";
 // Routing
 import { BrowserRouter as Router } from "react-router-dom";
 // Data
@@ -11,13 +12,16 @@ import "normalize.css";
 import "./index.css";
 import App from "./screens/App";
 import * as serviceWorker from "./serviceWorker";
+import theme from "./utils/theme";
 
 ReactDOM.render(
-  <Provider store={Store}>
-    <Router>
-      <App />
-    </Router>
-  </Provider>,
+  <ThemeProvider theme={theme}>
+    <Provider store={Store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
+  </ThemeProvider>,
   document.getElementById("root")
 );
 

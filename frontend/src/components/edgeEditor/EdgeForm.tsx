@@ -1,31 +1,32 @@
 import React from "react";
 import styled from "styled-components";
 import cuid from "cuid";
+import Select from "react-select";
 
 import CONSTS from "../../utils/consts";
 import EntityName from "./EntityName";
-import { RELATION_TYPES_STRRES } from "../../strings/strings";
-import { Edge, SourceLink, SourceLinkType, Source } from "../../utils/types";
+import { TypeOptions } from "../../strings/strings";
+import {
+  Edge,
+  SourceLink,
+  SourceLinkType,
+  Source,
+  ReactTypeOption
+} from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
 import SourceDetails from "../SourceDetails";
 import Button from "../buttons/Button";
+import TextArea from "../inputs/TextArea";
+import Label from "../inputs/Label";
+import Input from "../inputs/Input";
+import StyledSelect from "../select/StyledSelect";
+import { ValueType } from "react-select/lib/types";
 
 const Content = styled.div`
   display: block;
   border: grey 1px dotted;
   padding: 12px;
-`;
-
-const TextArea = styled.textarea`
-  display: block;
-  width: 100%;
-  min-height: 3em;
-  box-sizing: border-box;
-`;
-
-const Label = styled.label`
-  display: block;
 `;
 
 type Props = {
@@ -84,8 +85,8 @@ class EdgeForm extends React.Component<Props> {
     this.setState({ text: event.target.value });
   };
 
-  onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ type: +event.target.value });
+  onTypeChange = (option: any) => {
+    this.setState({ type: option ? option.value : null });
   };
 
   toggleInvert = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -158,19 +159,22 @@ class EdgeForm extends React.Component<Props> {
     const { entity1Key, entity2Key, initialEdge } = this.props;
     const invert = this.state.invertDirection;
 
+    var selectedType = null;
+    for (let type of TypeOptions) {
+      if (type.value === this.state.type) selectedType = type;
+    }
+
     return (
       <Content>
         <form onSubmit={this.onSubmit}>
           <div>
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
-            <select value={this.state.type} onChange={this.onTypeChange}>
-              <option key="empty" />
-              {Object.keys(CONSTS.RELATION_TYPES).map(key => (
-                <option key={key} value={CONSTS.RELATION_TYPES[key]}>
-                  {RELATION_TYPES_STRRES[key]}
-                </option>
-              ))}
-            </select>
+            <StyledSelect
+              options={TypeOptions}
+              value={selectedType}
+              onChange={this.onTypeChange}
+              placeholder="..."
+            />
             <EntityName entityKey={invert ? entity1Key : entity2Key} />
             <button type="button" onClick={this.toggleInvert}>
               Invert direction
@@ -185,7 +189,7 @@ class EdgeForm extends React.Component<Props> {
           </Label>
           <Label>
             Amount involved (in US$):
-            <input
+            <Input
               type="number"
               value={this.state.amount}
               onChange={this.onAmountChange}
@@ -209,7 +213,7 @@ class EdgeForm extends React.Component<Props> {
           {this.hasSource && (
             <Label>
               Comment
-              <textarea
+              <TextArea
                 onChange={this.onCommentChange}
                 value={this.state.comment}
               />

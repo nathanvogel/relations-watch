@@ -43,6 +43,11 @@ export const RELATION_TYPES_STR = {
   [CONSTS.RELATION_TYPES.EXCHANGES_VALUES]: "traded with"
 };
 
+export const TypeOptions = Object.keys(CONSTS.RELATION_TYPES).map(key => ({
+  value: CONSTS.RELATION_TYPES[key],
+  label: RELATION_TYPES_STRRES[key]
+}));
+
 export const ENTITY_TYPES: StringTypeRes = {
   [EntityType.PhysicalPerson]: "Natural person",
   [EntityType.MoralPerson]: "Moral person",

@@ -184,3 +184,9 @@ export type ReactSelectOption = {
   label: string;
   [key: string]: any;
 };
+
+export type ReactTypeOption = {
+  value: string;
+  label: string;
+  [key: string]: any;
+};

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import * as React from "react";
 // import AsyncSelect from "react-select/lib/Async";
-import AsyncCreatable from "react-select/lib/AsyncCreatable";
 import update from "immutability-helper";
 
 import api from "../utils/api";
 import EntityEditor from "./EntityEditor";
 import { Entity, ReactSelectOption, EntityType } from "../utils/types";
+import StyledAsyncCreatableSelect from "./select/StyledAsyncCreatableSelect";
 
 interface Suggestion {
   _key: string;
@@ -41,20 +41,9 @@ const promiseAutocomplete = async (inputValue: string) => {
   }
 };
 
-const StyledSelect = styled(AsyncCreatable)`
+const MySelect = styled(StyledAsyncCreatableSelect)`
   min-width: 150px;
   display: inline-block;
-
-  .rs__indicators {
-    display: none;
-  }
-  .rs__control {
-    min-height: 22px;
-    border-radius: 0px;
-  }
-  .rs__control--is-focused {
-    border-radius: 0px;
-  }
 `;
 
 export interface Props {
@@ -130,7 +119,7 @@ class EntitySearch extends React.Component<Props, object> {
     }
 
     return (
-      <StyledSelect
+      <MySelect
         className={this.props.className}
         cacheOptions
         defaultOptions

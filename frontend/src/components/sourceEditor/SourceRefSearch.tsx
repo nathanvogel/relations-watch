@@ -1,6 +1,7 @@
 import React from "react";
+
 import api from "../../utils/api";
-import StyledAsyncSelect from "../select/StyledAsyncSelect";
+import StyledAsyncCreatableSelect from "../select/StyledAsyncCreatableSelect";
 import { ReactSelectOption } from "../../utils/types";
 
 interface SourceSuggestion {
@@ -62,10 +63,9 @@ class SourceRefSearch extends React.Component<Props, object> {
 
   render() {
     return (
-      <StyledAsyncSelect
+      <StyledAsyncCreatableSelect
         cacheOptions
         defaultOptions
-        classNamePrefix="rs"
         onChange={this.onChange}
         onInputChange={this.onInputChange}
         inputValue={
