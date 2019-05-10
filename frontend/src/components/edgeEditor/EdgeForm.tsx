@@ -1,23 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import cuid from "cuid";
-import Select from "react-select";
-import { ValueType } from "react-select/lib/types";
 
-import CONSTS from "../../utils/consts";
 import EntityName from "./EntityName";
 import { TypeOptions } from "../../strings/strings";
-import {
-  Edge,
-  SourceLink,
-  SourceLinkType,
-  Source,
-  ReactTypeOption
-} from "../../utils/types";
+import { Edge, SourceLink, SourceLinkType, Source } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
 import SourceDetails from "../SourceDetails";
-import Button from "../buttons/Button";
 import TextArea from "../inputs/TextArea";
 import Label from "../inputs/Label";
 import Input from "../inputs/Input";
@@ -25,11 +14,10 @@ import StyledSelect from "../select/StyledSelect";
 import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
 import IconButton from "../buttons/IconButton";
 import { TP } from "../../utils/theme";
+import ButtonBar from "../buttons/ButtonBar";
 
 const Content = styled.div`
   display: block;
-  border: grey 1px dotted;
-  padding: 12px;
 `;
 
 const TypeContainer = styled.div`
@@ -47,7 +35,7 @@ const TypeContainer = styled.div`
     display: flex;
 
     div:nth-child(1) {
-      padding-right: ${(props: TP) => props.theme.buttonLRSpacing};
+      padding-right: ${(props: TP) => props.theme.inputLRSpacing};
       flex-grow: 100;
     }
   }
@@ -55,6 +43,15 @@ const TypeContainer = styled.div`
     justify-self: start;
     text-align: right;
   }
+`;
+
+const AmountInput = styled(Input)`
+  margin-right: ${(props: TP) => props.theme.inputLRSpacing};
+  margin-top: ${(props: TP) => props.theme.inputTBSpacing};
+`;
+
+const SaveButtonBar = styled(ButtonBar)`
+  margin: ${(props: TP) => props.theme.marginTB} 0px;
 `;
 
 type Props = {
@@ -199,6 +196,7 @@ class EdgeForm extends React.Component<Props> {
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
             <div>
               <StyledSelect
+                autoFocus
                 options={TypeOptions}
                 value={selectedType}
                 onChange={this.onTypeChange}
@@ -210,20 +208,20 @@ class EdgeForm extends React.Component<Props> {
             </div>
             <EntityName entityKey={invert ? entity1Key : entity2Key} />
           </TypeContainer>
-          <Label>
-            Succint element description:
-            <TextArea
-              value={this.state.text}
-              onChange={this.onDescriptionChange}
-            />
-          </Label>
-          <Label>
-            Amount involved (in US$):
-            <Input
-              type="number"
-              value={this.state.amount}
-              onChange={this.onAmountChange}
-            />
+          <Label htmlFor="description">Short neutral description</Label>
+          <TextArea
+            name="description"
+            value={this.state.text}
+            onChange={this.onDescriptionChange}
+          />
+          <AmountInput
+            name="amountInvolved"
+            type="number"
+            value={this.state.amount}
+            onChange={this.onAmountChange}
+          />
+          <Label as="span" htmlFor="amountInvolved">
+            US $ involved
           </Label>
           <Label>
             <input
@@ -233,7 +231,6 @@ class EdgeForm extends React.Component<Props> {
             />
             Exact amount known
           </Label>
-          <h4>Add a source:</h4>
           {initialEdge.sourceText && `(${initialEdge.sourceText})`}
           <SourceSelector
             sourceKey={this.state.sourceKey}
@@ -241,25 +238,30 @@ class EdgeForm extends React.Component<Props> {
             editorId={this.props.sourceEditorId}
           />
           {this.hasSource && (
-            <Label>
-              Comment
+            <React.Fragment>
+              <Label htmlFor="sourceComment">Comment</Label>
               <TextArea
+                name="sourceComment"
                 onChange={this.onCommentChange}
                 value={this.state.comment}
               />
-            </Label>
+            </React.Fragment>
           )}
-          <button type="submit">Save</button>
-          {this.hasSource && (
-            <button type="button" onClick={this.onRefutingSubmit}>
-              Save with refuting source
-            </button>
-          )}
-          {!this.isNew && (
-            <ButtonWithConfirmation onAction={this.props.onDelete}>
-              Delete this relation element
-            </ButtonWithConfirmation>
-          )}
+          <SaveButtonBar>
+            <IconButton disabled={this.isNew && !this.hasSource} type="submit">
+              Save
+            </IconButton>
+            {this.hasSource && (
+              <IconButton type="button" onClick={this.onRefutingSubmit}>
+                Save with refuting reference
+              </IconButton>
+            )}
+            {!this.isNew && (
+              <ButtonWithConfirmation onAction={this.props.onDelete}>
+                Delete this relation element
+              </ButtonWithConfirmation>
+            )}
+          </SaveButtonBar>
         </form>
         {initialEdge.sources.map((sourceLink, index) => (
           <SourceDetails

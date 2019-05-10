@@ -9,6 +9,8 @@ import Button from "./buttons/Button";
 import EntitySearch from "./EntitySearch";
 import { RootStore } from "../Store";
 import * as sourceFormActions from "../features/sourceFormActions";
+import Label from "./inputs/Label";
+import TextArea from "./inputs/TextArea";
 
 type OwnProps = {
   editorId: string;
@@ -16,10 +18,6 @@ type OwnProps = {
   onCancelClick: () => void;
   onSaveClick?: () => void;
 };
-
-const Label = styled.label`
-  display: block;
-`;
 
 const Content = styled.div`
   display: block;
@@ -80,7 +78,7 @@ class SourceForm extends React.Component<Props> {
     this.props.clearFormData(this.props.editorId);
   }
 
-  onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.props.onDescriptionChange(this.props.editorId, event.target.value);
   };
 
@@ -99,37 +97,43 @@ class SourceForm extends React.Component<Props> {
     return (
       <div>
         <Button onClick={this.props.onCancelClick}>← Back </Button>
-        Reference: {formData.ref}
+        <Label>Reference</Label>
+        <strong>{formData.ref}</strong>
         {!isLink && (
           <p>
             <em>
               You're using a manual reference, if possible, use a link. If it's
-              a book, link to{" "}
-              <a href="https://www.goodreads.com">goodreads.com</a>.
+              a book, link to its{" "}
+              <a href="https://www.goodreads.com">goodreads.com</a> page.
             </em>
           </p>
         )}
         {/* Editable only if it's not a link
          * or if there isn't any auto-generated description  */}
         {shouldWriteDescription ? (
-          <Label>
-            Description:{" "}
-            <input
+          <React.Fragment>
+            <Label htmlFor="sourceDescription">Description</Label>
+            <TextArea
+              name="sourceDescription"
               onChange={this.onDescriptionChange}
               value={formData.description}
               disabled={!shouldWriteDescription}
             />
-          </Label>
+          </React.Fragment>
         ) : (
           <div>
-            Description: {formData.pTitle}
-            <br />
-            {formData.pDescription}
+            <Label>Description</Label>
+            <p>
+              {formData.pTitle}
+              <br />
+              {formData.pDescription}
+            </p>
           </div>
         )}
         {isLink && formData.pAuthor && (
           <div>Detected author(s): {formData.pAuthor}</div>
         )}
+        <Label>Authors' entities</Label>
         <EntitySearch
           selection={selectedAuthors}
           onChange={this.onAuthorsChange}

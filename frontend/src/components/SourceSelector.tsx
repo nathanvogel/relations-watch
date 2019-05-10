@@ -12,13 +12,14 @@ import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
 import Button from "./buttons/Button";
 import CONSTS from "../utils/consts";
+import Label from "./inputs/Label";
 
 const Content = styled.div`
-  disply: block;
+  display: block;
 `;
 
-const Label = styled.label`
-  display: block;
+const StyledSourceRefSearch = styled(SourceRefSearch)`
+  width: 100%;
 `;
 
 type OwnProps = {
@@ -106,15 +107,13 @@ class SourceSelector extends React.Component<Props> {
       case SelectorMode.EditingRef:
         return (
           <Content>
-            <Label>
-              Source document:
-              <SourceRefSearch
-                onChange={this.onSelectSource}
-                inputValue={sourceRef}
-                onInputChange={this.onSourceRefChange}
-                onCreateSource={this.onCreateSource}
-              />
-            </Label>
+            <Label>Reference</Label>
+            <StyledSourceRefSearch
+              onChange={this.onSelectSource}
+              inputValue={sourceRef}
+              onInputChange={this.onSourceRefChange}
+              onCreateSource={this.onCreateSource}
+            />
           </Content>
         );
       case SelectorMode.EditingNewSource:

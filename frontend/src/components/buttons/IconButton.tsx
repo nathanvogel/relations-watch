@@ -4,7 +4,8 @@ import { TP } from "../../utils/theme";
 const IconButton = styled.button`
   min-height: 28px;
   min-width: 28px;
-  padding: ${(props: TP) => props.theme.inputPaddingTB};
+  padding: ${(props: TP) => props.theme.inputPaddingTB}
+    ${(props: TP) => props.theme.inputPaddingLR};
   background-color: ${(props: TP) => props.theme.inputBG};
   border-color: ${(props: TP) => props.theme.inputBG};
   border-width: ${(props: TP) => props.theme.borderWidth};
@@ -14,7 +15,7 @@ const IconButton = styled.button`
   cursor: pointer;
   color: inherit;
 
-  &:hover {
+  &:not([disabled]):hover {
     background-color: ${(props: TP) => props.theme.borderHover};
     border-color: ${(props: TP) => props.theme.borderHover};
   }
@@ -22,6 +23,11 @@ const IconButton = styled.button`
   &:focus {
     border-color: ${(props: TP) => props.theme.focusColor};
     outline: none;
+  }
+
+  &:disabled {
+    color: ${(props: TP) => props.theme.secondaryTextColor};
+    cursor: not-allowed;
   }
 `;
 
