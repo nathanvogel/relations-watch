@@ -104,8 +104,8 @@ const AMOUNT_UNKNOWN = -1;
 const AMOUNT_DO_ENTER = -2;
 
 export const AmountOptions: AmountSelectOption[] = [
-  { label: "Unknown", value: AMOUNT_UNKNOWN },
-  { label: "0", value: 0 },
+  { label: "Unknown amount", value: AMOUNT_UNKNOWN },
+  { label: "0 US$", value: 0 },
   { label: "1+ US$", value: 1 },
   { label: "1'000+ US$", value: 1000 },
   { label: "10'000+ US$", value: 10000 },

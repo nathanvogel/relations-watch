@@ -71,7 +71,7 @@ const TypeContainer = styled.div`
   }
 `;
 
-const AmountInput = styled(Input)`
+const SecondaryInput = styled(Input)`
   margin-right: ${(props: TP) => props.theme.inputLRSpacing};
   margin-top: ${(props: TP) => props.theme.inputTBSpacing};
   width: 100%;
@@ -196,6 +196,10 @@ class EdgeForm extends React.Component<Props> {
 
   onAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ amount: event.target.value });
+  };
+
+  onOwnedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ ownedPercent: event.target.value });
   };
 
   onCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -353,33 +357,46 @@ class EdgeForm extends React.Component<Props> {
                     placeholder="..."
                   />
                 )}
-                {requirements.amount && (
-                  <React.Fragment>
-                    {this.state.exactAmount ? (
-                      <VerticalInputBar>
-                        <AmountInput
-                          name="amountInvolved"
-                          type="number"
-                          value={this.state.amount}
-                          onChange={this.onAmountChange}
-                        />
-                        <Label as="div">
-                          <input
-                            type="checkbox"
-                            checked={this.state.exactAmount}
-                            onChange={this.onExactAmountChange}
-                          />{" "}
-                          The exact amount is known.
-                        </Label>
-                      </VerticalInputBar>
-                    ) : (
-                      <StyledSelect
-                        options={AmountOptions}
-                        value={selectedAmount}
-                        onChange={this.onSelectedAmountChange}
-                        placeholder="..."
+                {requirements.amount &&
+                  (this.state.exactAmount ? (
+                    <VerticalInputBar>
+                      <SecondaryInput
+                        name="amountInvolved"
+                        type="number"
+                        value={this.state.amount}
+                        onChange={this.onAmountChange}
                       />
-                    )}
+                      <Label as="div" htmlFor="exactAmountCheckbox">
+                        <input
+                          name="exactAmountCheckbox"
+                          type="checkbox"
+                          checked={this.state.exactAmount}
+                          onChange={this.onExactAmountChange}
+                        />{" "}
+                        The exact amount is known.
+                      </Label>
+                    </VerticalInputBar>
+                  ) : (
+                    <StyledSelect
+                      options={AmountOptions}
+                      value={selectedAmount}
+                      onChange={this.onSelectedAmountChange}
+                      placeholder="..."
+                    />
+                  ))}
+                {requirements.ownedPercent && (
+                  <React.Fragment>
+                    <SecondaryInput
+                      name="ownedPercent"
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={this.state.ownedPercent}
+                      onChange={this.onOwnedChange}
+                    />
+                    <Label as="div" htmlFor="ownedPercent">
+                      %
+                    </Label>
                   </React.Fragment>
                 )}
               </VerticalInputBar>

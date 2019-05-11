@@ -6,7 +6,7 @@ type StringTypeRes = {
 
 export const RELATION_TYPES_STR: StringTypeRes = {
   [RelationType.IsOwned]: "is owned by",
-  [RelationType.JobDependsOn]: "'s job depends on",
+  [RelationType.JobDependsOn]: "works for",
   [RelationType.IsControled]: "is controled by",
   [RelationType.ValueExchange]: "traded with",
   [RelationType.Family]: "Family",
