@@ -29,6 +29,11 @@ export const RelationTypeValues: RelationType[] = Object.values(
   RelationType
 ).filter(x => typeof x === "number");
 
+export type RelationTypeOption = {
+  label: string;
+  value: RelationType;
+};
+
 export type ErrorPayload = {
   eData: any;
   eMessage: string;
@@ -203,8 +208,8 @@ export type ReactSelectOption = {
   [key: string]: any;
 };
 
-export type ReactTypeOption = {
-  value: string;
-  label: string;
-  [key: string]: any;
-};
+// export type ReactTypeOption = {
+//   value: number;
+//   label: string;
+//   [key: string]: any;
+// };

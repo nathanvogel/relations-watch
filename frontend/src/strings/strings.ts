@@ -1,9 +1,4 @@
-import CONSTS from "../utils/consts";
 import { EntityType, RelationType } from "../utils/types";
-
-type StringRes = {
-  [key: string]: string;
-};
 
 type StringTypeRes = {
   [key: number]: string;
@@ -17,7 +12,7 @@ export const RELATION_TYPES_STR: StringTypeRes = {
   [RelationType.Family]: "Family",
   [RelationType.Friendship]: "Friends",
   [RelationType.Love]: "Love",
-  [RelationType.Opposition]: "Adversary",
+  [RelationType.Opposition]: "Opposition",
   [RelationType.Influences]: "influences the ideas of",
   [RelationType.Attendance]: "attended",
   [RelationType.GroupMember]: "is a group member of",

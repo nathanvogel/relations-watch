@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ValueType, OptionsType } from "react-select/lib/types";
 
 import EntityName from "./EntityName";
 import {
@@ -8,7 +9,10 @@ import {
   SourceLinkType,
   Source,
   RelationTypeValues,
-  RelationType
+  RelationType,
+  RelationTypeOption,
+  EntityPreview,
+  Entity
 } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
@@ -22,6 +26,7 @@ import IconButton from "../buttons/IconButton";
 import { TP } from "../../utils/theme";
 import ButtonBar from "../buttons/ButtonBar";
 import { RELATION_TYPES_STR } from "../../strings/strings";
+import { POSSIBLE_LINKS } from "../../utils/consts";
 
 const Content = styled.div`
   display: block;
@@ -61,7 +66,7 @@ const SaveButtonBar = styled(ButtonBar)`
   margin: ${(props: TP) => props.theme.marginTB} 0px;
 `;
 
-const TypeOptions = RelationTypeValues.map(value => ({
+const TypeOptions: RelationTypeOption[] = RelationTypeValues.map(value => ({
   value: value,
   label: RELATION_TYPES_STR[value]
 }));
@@ -69,6 +74,8 @@ const TypeOptions = RelationTypeValues.map(value => ({
 type Props = {
   entity1Key: string;
   entity2Key: string;
+  entity1: Entity | EntityPreview;
+  entity2: Entity | EntityPreview;
   onFormSubmit: (edge: Edge, comment?: SourceLink) => void;
   onDelete: () => void;
   disabled: boolean;
@@ -80,7 +87,7 @@ type Props = {
 
 type State = {
   text: string;
-  type: number | undefined;
+  type: RelationType | undefined;
   amount?: number;
   exactAmount?: boolean;
   comment: string;
@@ -192,14 +199,49 @@ class EdgeForm extends React.Component<Props> {
     this.props.onFormSubmit(edge, sourceLink);
   };
 
+  componentDidUpdate() {
+    // If we're in a possible configuration of entity1.type <-> entity2.type
+    // but that is only possible in the opposite direction, swap entities.
+    if (this.state.type) {
+      const allowed = POSSIBLE_LINKS[this.state.type];
+      const invert = this.state.invertDirection;
+      const { entity1, entity2 } = this.props;
+      const typeFrom = invert ? entity2.type : entity1.type;
+      const typeTo = invert ? entity1.type : entity2.type;
+      const isCurrentAllowed =
+        allowed[0].indexOf(typeFrom) >= 0 && allowed[1].indexOf(typeTo) >= 0;
+      const isInvertAllowed =
+        allowed[0].indexOf(typeTo) >= 0 && allowed[1].indexOf(typeFrom) >= 0;
+
+      if (!isCurrentAllowed && isInvertAllowed) {
+        this.setState({ invertDirection: !invert });
+      }
+    }
+  }
+
   render() {
     const { entity1Key, entity2Key, initialEdge } = this.props;
     const invert = this.state.invertDirection;
 
-    var selectedType = null;
+    // Find the selected value
+    var selectedType: RelationTypeOption | null = null;
     for (let option of TypeOptions) {
       if (option.value === this.state.type) selectedType = option;
     }
+
+    // List all possible types compatible with the entity types
+    // (ignoring the direction, which is automatically corrected
+    // in componentDidUpdate)
+    const { entity1, entity2 } = this.props;
+    const possibleTypes: RelationTypeOption[] = TypeOptions.filter(option => {
+      const allowed = POSSIBLE_LINKS[option.value];
+      return (
+        (allowed[0].indexOf(entity1.type) >= 0 &&
+          allowed[1].indexOf(entity2.type) >= 0) ||
+        (allowed[1].indexOf(entity1.type) >= 0 &&
+          allowed[0].indexOf(entity2.type) >= 0)
+      );
+    });
 
     return (
       <Content>
@@ -209,7 +251,7 @@ class EdgeForm extends React.Component<Props> {
             <div>
               <StyledSelect
                 autoFocus
-                options={TypeOptions}
+                options={possibleTypes}
                 value={selectedType}
                 onChange={this.onTypeChange}
                 placeholder="..."

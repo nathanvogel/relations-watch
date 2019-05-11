@@ -26,7 +26,7 @@ export const POSSIBLE_LINKS = {
     [E.MoralPerson, E.Group, E.PhysicalPerson]
   ],
   [RelationType.JobDependsOn]: [
-    [E.PhysicalPerson],
+    [E.PhysicalPerson, E.MoralPerson],
     [E.MoralPerson, E.Group, E.PhysicalPerson]
   ],
   [RelationType.IsControled]: [
