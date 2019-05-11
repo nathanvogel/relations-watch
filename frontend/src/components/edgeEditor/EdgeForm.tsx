@@ -115,7 +115,7 @@ class EdgeForm extends React.Component<Props> {
       amount: 0,
       exactAmount: false,
       familialLink: undefined,
-      ownedPercent: 100,
+      owned: 100,
       sourceText: "",
       sources: []
     }
