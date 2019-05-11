@@ -13,7 +13,8 @@ import {
   Entity,
   RelationTypeRequirements,
   FamilialLink,
-  FamilialLinkOption
+  FamilialLinkOption,
+  AmountSelectOption
 } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
@@ -26,11 +27,13 @@ import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
 import IconButton from "../buttons/IconButton";
 import { TP } from "../../utils/theme";
 import ButtonBar from "../buttons/ButtonBar";
-import {
+import CONSTS, {
   POSSIBLE_LINKS,
   RelationTypeOptions,
   RELATION_REQUIREMENTS,
-  FamilialLinkOptions
+  FamilialLinkOptions,
+  AmountOptions,
+  unkownAmountOption
 } from "../../utils/consts";
 import VerticalInputBar from "../buttons/VerticalInputBar";
 
@@ -71,6 +74,7 @@ const TypeContainer = styled.div`
 const AmountInput = styled(Input)`
   margin-right: ${(props: TP) => props.theme.inputLRSpacing};
   margin-top: ${(props: TP) => props.theme.inputTBSpacing};
+  width: 100%;
 `;
 
 const SaveButtonBar = styled(ButtonBar)`
@@ -149,12 +153,45 @@ class EdgeForm extends React.Component<Props> {
     this.setState({ familialLink: option ? option.value : null });
   };
 
+  onSelectedAmountChange = (option: any) => {
+    if (option && option.value === CONSTS.AMOUNT_DO_ENTER) {
+      this.setState({
+        exactAmount: true,
+        amount:
+          this.state.amount && this.state.amount > 0 ? this.state.amount : 0
+      });
+    } else {
+      this.setState({
+        amount: option ? option.value : CONSTS.AMOUNT_UNKNOWN
+      });
+    }
+  };
+
   toggleInvert = (event: React.MouseEvent<HTMLButtonElement>) => {
     this.setState({ invertDirection: !this.state.invertDirection });
   };
 
   onExactAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ exactAmount: event.target.checked });
+    // This might be unnecessary: Convert the previously exact amount
+    // to it's corresponding range. We can keep the value as is and even
+    // save it in the database as an unexact amount. It'll just be more precise
+    // probably... We shouldn't count on this value being specifically
+    // correlated to our ranges.
+    // Bonus: the user input is saved if he changes his mind.
+    //
+    // if (this.state.amount !== undefined) {
+    //   for (let i = AmountOptions.length - 1; i >= 0; i--) {
+    //     const option = AmountOptions[i];
+    //     if (
+    //       option.value !== CONSTS.AMOUNT_DO_ENTER &&
+    //       this.state.amount >= option.value
+    //     ) {
+    //       this.setState({ amount: option.value });
+    //       break;
+    //     }
+    //   }
+    // }
   };
 
   onAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -247,15 +284,33 @@ class EdgeForm extends React.Component<Props> {
     const { entity1Key, entity2Key, initialEdge } = this.props;
     const invert = this.state.invertDirection;
 
-    // Find the selected value
+    // Find the selected values
     var selectedType: RelationTypeOption | null = null;
     for (let option of RelationTypeOptions) {
-      if (option.value === this.state.type) selectedType = option;
+      if (option.value === this.state.type) {
+        selectedType = option;
+        break;
+      }
     }
     var selectedFamilialLink: FamilialLinkOption | null = null;
     for (let option of FamilialLinkOptions) {
-      if (option.value === this.state.familialLink)
+      if (option.value === this.state.familialLink) {
         selectedFamilialLink = option;
+        break;
+      }
+    }
+    var selectedAmount: AmountSelectOption = unkownAmountOption;
+    if (this.state.amount !== undefined) {
+      for (let i = AmountOptions.length - 1; i >= 0; i--) {
+        const option = AmountOptions[i];
+        if (
+          option.value !== CONSTS.AMOUNT_DO_ENTER &&
+          this.state.amount >= option.value
+        ) {
+          selectedAmount = option;
+          break;
+        }
+      }
     }
 
     // List all possible types compatible with the entity types
@@ -298,6 +353,35 @@ class EdgeForm extends React.Component<Props> {
                     placeholder="..."
                   />
                 )}
+                {requirements.amount && (
+                  <React.Fragment>
+                    {this.state.exactAmount ? (
+                      <VerticalInputBar>
+                        <AmountInput
+                          name="amountInvolved"
+                          type="number"
+                          value={this.state.amount}
+                          onChange={this.onAmountChange}
+                        />
+                        <Label as="div">
+                          <input
+                            type="checkbox"
+                            checked={this.state.exactAmount}
+                            onChange={this.onExactAmountChange}
+                          />{" "}
+                          The exact amount is known.
+                        </Label>
+                      </VerticalInputBar>
+                    ) : (
+                      <StyledSelect
+                        options={AmountOptions}
+                        value={selectedAmount}
+                        onChange={this.onSelectedAmountChange}
+                        placeholder="..."
+                      />
+                    )}
+                  </React.Fragment>
+                )}
               </VerticalInputBar>
               <IconButton type="button" onClick={this.toggleInvert}>
                 <SwapIcon />
@@ -305,29 +389,16 @@ class EdgeForm extends React.Component<Props> {
             </div>
             <EntityName entityKey={invert ? entity1Key : entity2Key} />
           </TypeContainer>
-          <Label htmlFor="description">Short neutral description</Label>
+          <Label htmlFor="description">
+            {requirements.descriptionRequired
+              ? "Short neutral description"
+              : "Short neutral description (optional)"}
+          </Label>
           <TextArea
             name="description"
             value={this.state.text}
             onChange={this.onDescriptionChange}
           />
-          <AmountInput
-            name="amountInvolved"
-            type="number"
-            value={this.state.amount}
-            onChange={this.onAmountChange}
-          />
-          <Label as="span" htmlFor="amountInvolved">
-            US $ involved
-          </Label>
-          <Label>
-            <input
-              type="checkbox"
-              checked={this.state.exactAmount}
-              onChange={this.onExactAmountChange}
-            />
-            Exact amount known
-          </Label>
           {initialEdge.sourceText && `(${initialEdge.sourceText})`}
           <SourceSelector
             sourceKey={this.state.sourceKey}

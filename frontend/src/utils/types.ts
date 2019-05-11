@@ -234,3 +234,8 @@ export type ReactSelectOption = {
   label: string;
   [key: string]: any;
 };
+
+export type AmountSelectOption = {
+  value: number;
+  label: string;
+};

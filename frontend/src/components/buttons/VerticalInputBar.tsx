@@ -6,11 +6,11 @@ const VerticalInputBar = styled.div`
     margin: ${(props: TP) => props.theme.inputTBSpacing} 0px;
   }
 
-  *:first-child {
+  & > *:first-child {
     margin-top: 0px;
   }
 
-  *:last-child {
+  & > *:last-child {
     margin-bottom: 0px;
   }
 `;

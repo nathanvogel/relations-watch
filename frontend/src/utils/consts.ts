@@ -4,7 +4,8 @@ import {
   RelationTypeValues,
   FamilialLinkOption,
   FamilialLinkValues,
-  RelationTypeRequirements
+  RelationTypeRequirements,
+  AmountSelectOption
 } from "./types";
 import { EntityType as E } from "./types";
 import { RELATION_TYPES_STR, FAMILIAL_LINK_STR } from "../strings/strings";
@@ -99,6 +100,34 @@ export const FamilialLinkOptions: FamilialLinkOption[] = FamilialLinkValues.map(
   })
 );
 
+const AMOUNT_UNKNOWN = -1;
+const AMOUNT_DO_ENTER = -2;
+
+export const AmountOptions: AmountSelectOption[] = [
+  { label: "Unknown", value: AMOUNT_UNKNOWN },
+  { label: "0", value: 0 },
+  { label: "1+ US$", value: 1 },
+  { label: "1'000+ US$", value: 1000 },
+  { label: "10'000+ US$", value: 10000 },
+  { label: "100'000+ US$", value: 100000 },
+  { label: "1'000'000+ US$", value: 1000000 },
+  { label: "10'000'000+ US$", value: 10000000 },
+  { label: "100'000'000+ US$", value: 100000000 },
+  { label: "1'000'000'000+ US$", value: 1000000000 },
+  { label: "10'000'000'000+ US$", value: 10000000000 },
+  // { label: "1 - 1'000 US$", value: 1 },
+  // { label: "1'000 - 10'000 US$", value: 1000 },
+  // { label: "10'000 - 100'000 US$", value: 10000 },
+  // { label: "100'000 - 1'000'000 US$", value: 100000 },
+  // { label: "1'000'000 - 10'000'000 US$", value: 1000000 },
+  // { label: "10'000'000 - 100'000'000 US$", value: 10000000 },
+  // { label: "100'000'000 - 1'000'000'000 US$", value: 100000000 },
+  // { label: "1'000'000'000 - 10'000'000'000 US$", value: 1000000000 },
+  // { label: "10'000'000'000+ US$", value: 10000000000 },
+  { label: "Enter the exact amount", value: AMOUNT_DO_ENTER }
+];
+export const unkownAmountOption = AmountOptions[0];
+
 export const ERROR_CODES = {
   MISSING_SOURCE_FORM: "MISSING_SOURCE_FORM",
   MISSING_SOURCE_LINK: "MISSING_SOURCE_LINK"
@@ -109,6 +138,8 @@ const CONSTS = {
   entCollectionName: "entities",
   EMPTY_KEY: "_",
   RELATION_COLORS,
+  AMOUNT_UNKNOWN,
+  AMOUNT_DO_ENTER,
   ERROR_CODES
 };
 

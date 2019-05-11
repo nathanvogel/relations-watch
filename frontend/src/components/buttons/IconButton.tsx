@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { TP } from "../../utils/theme";
 
 const IconButton = styled.button`
+  height: 32px;
   min-height: 28px;
   min-width: 28px;
   padding: ${(props: TP) => props.theme.inputPaddingTB}
