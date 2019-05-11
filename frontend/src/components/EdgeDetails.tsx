@@ -25,7 +25,7 @@ const EdgeText = styled.p`
 `;
 
 const Actions = styled.div`
-  float: right;
+  text-align: right;
 `;
 
 const BottomActions = styled.div`

@@ -14,7 +14,8 @@ import {
   RelationRenderData,
   EdgePreview,
   NodeRenderData,
-  NodeRenderType
+  NodeRenderType,
+  RelationType
 } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import GraphEntityNode from "./entityGraph/GraphEntityNode";
@@ -246,7 +247,9 @@ class EntityGraph extends Component<Props> {
         const e2Primary = e2.type === NodeRenderType.Primary;
         // Filter out secondary relationships of secondary entities
         if (
-          link.type === CONSTS.RELATION_TYPES.COMMON_ACTIVITES &&
+          (link.type === RelationType.Other ||
+            link.type === RelationType.ValueExchange ||
+            link.type === RelationType.Attendance) &&
           !e1Primary &&
           !e2Primary
         )

@@ -1,44 +1,62 @@
+import { RelationType } from "./types";
+import { EntityType as E } from "./types";
+
 // Should have been maintained in sync with the backend here ?
 // /backend/service-graph-api/scripts/consts.js
 
-// TODO: convert this mess to enums
-type RelationType = number;
-type RelationTypes = {
-  [key: string]: RelationType;
-};
-const RELATION_TYPES: RelationTypes = {
-  OWNS: 1,
-  OWNS_A_SHARE: 2,
-  ENABLES_A_JOB: 3,
-  ENABLES_A_CONTRACT: 4,
-  WORKS_FOR: 5,
-  GROUP_MEMBER: 20,
-  INFLUENCES_IDEAS: 10,
-  FAMILY: 300,
-  FRIENDSHIP: 310,
-  LOVES: 400,
-  HOSTILITY: 410,
-  EXCHANGES_VALUES: 100,
-  ATTENDED: 1000,
-  COMMON_ACTIVITES: 110
-};
-
 // TODO: Use an Android-R like library to manage this stuff.
 export const RELATION_COLORS = {
-  [RELATION_TYPES.OWNS]: "#e7b300",
-  [RELATION_TYPES.OWNS_A_SHARE]: "#fbae17",
-  [RELATION_TYPES.ENABLES_A_JOB]: "#ee8012",
-  [RELATION_TYPES.ENABLES_A_CONTRACT]: "#a63e14",
-  [RELATION_TYPES.WORKS_FOR]: "#a63e14",
-  [RELATION_TYPES.GROUP_MEMBER]: "#0095a3",
-  [RELATION_TYPES.INFLUENCES_IDEAS]: "#f45844",
-  [RELATION_TYPES.FAMILY]: "#007500",
-  [RELATION_TYPES.FRIENDSHIP]: "#00b8b8",
-  [RELATION_TYPES.LOVES]: "#de3d83",
-  [RELATION_TYPES.HOSTILITY]: "#db2f27",
-  [RELATION_TYPES.EXCHANGES_VALUES]: "#ffeb00",
-  [RELATION_TYPES.ATTENDED]: "#00b8b8",
-  [RELATION_TYPES.COMMON_ACTIVITES]: "#08327d"
+  [RelationType.IsOwned]: "#e7b300",
+  [RelationType.JobDependsOn]: "#ee8012",
+  [RelationType.IsControled]: "#a63e14",
+  [RelationType.ValueExchange]: "#ffeb00",
+  [RelationType.Family]: "#007500",
+  [RelationType.Friendship]: "#00b8b8",
+  [RelationType.Love]: "#de3d83",
+  [RelationType.Opposition]: "#db2f27",
+  [RelationType.Influences]: "#f45844",
+  [RelationType.Attendance]: "#00b8b8",
+  [RelationType.GroupMember]: "#0095a3",
+  [RelationType.Other]: "#444444"
+};
+
+export const POSSIBLE_LINKS = {
+  [RelationType.IsOwned]: [
+    [E.MoralPerson, E.Event],
+    [E.MoralPerson, E.Group, E.PhysicalPerson]
+  ],
+  [RelationType.JobDependsOn]: [
+    [E.PhysicalPerson],
+    [E.MoralPerson, E.Group, E.PhysicalPerson]
+  ],
+  [RelationType.IsControled]: [
+    [E.Group, E.MoralPerson],
+    [E.PhysicalPerson, E.MoralPerson, E.Group]
+  ],
+  [RelationType.ValueExchange]: [
+    [E.MoralPerson, E.Group, E.PhysicalPerson],
+    [E.MoralPerson, E.Group, E.PhysicalPerson]
+  ],
+  [RelationType.Family]: [[E.PhysicalPerson], [E.PhysicalPerson]],
+  [RelationType.Friendship]: [[E.PhysicalPerson], [E.PhysicalPerson]],
+  [RelationType.Love]: [[E.PhysicalPerson], [E.PhysicalPerson]],
+  [RelationType.Opposition]: [
+    [E.MoralPerson, E.Group, E.PhysicalPerson],
+    [E.MoralPerson, E.Group, E.PhysicalPerson]
+  ],
+  [RelationType.Influences]: [
+    [E.MoralPerson, E.Group, E.PhysicalPerson],
+    [E.MoralPerson, E.Group, E.PhysicalPerson]
+  ],
+  [RelationType.Attendance]: [
+    [E.MoralPerson, E.Group, E.PhysicalPerson],
+    [E.Event]
+  ],
+  [RelationType.GroupMember]: [[E.MoralPerson, E.PhysicalPerson], [E.Group]],
+  [RelationType.Other]: [
+    [E.MoralPerson, E.Group, E.PhysicalPerson, E.Event],
+    [E.MoralPerson, E.Group, E.PhysicalPerson, E.Event]
+  ]
 };
 
 export const ERROR_CODES = {
@@ -51,7 +69,6 @@ const CONSTS = {
   entCollectionName: "entities",
   EMPTY_KEY: "_",
   RELATION_COLORS,
-  RELATION_TYPES,
   ERROR_CODES
 };
 

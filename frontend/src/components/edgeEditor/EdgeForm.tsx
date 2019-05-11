@@ -2,8 +2,14 @@ import React from "react";
 import styled from "styled-components";
 
 import EntityName from "./EntityName";
-import { TypeOptions } from "../../strings/strings";
-import { Edge, SourceLink, SourceLinkType, Source } from "../../utils/types";
+import {
+  Edge,
+  SourceLink,
+  SourceLinkType,
+  Source,
+  RelationTypeValues,
+  RelationType
+} from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
 import SourceDetails from "../SourceDetails";
@@ -15,6 +21,7 @@ import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
 import IconButton from "../buttons/IconButton";
 import { TP } from "../../utils/theme";
 import ButtonBar from "../buttons/ButtonBar";
+import { RELATION_TYPES_STR } from "../../strings/strings";
 
 const Content = styled.div`
   display: block;
@@ -53,6 +60,11 @@ const AmountInput = styled(Input)`
 const SaveButtonBar = styled(ButtonBar)`
   margin: ${(props: TP) => props.theme.marginTB} 0px;
 `;
+
+const TypeOptions = RelationTypeValues.map(value => ({
+  value: value,
+  label: RELATION_TYPES_STR[value]
+}));
 
 type Props = {
   entity1Key: string;
@@ -95,7 +107,7 @@ class EdgeForm extends React.Component<Props> {
     exactAmount: this.props.initialEdge.exactAmount,
     comment: "",
     sourceKey: undefined,
-    invertDirection: false
+    invertDirection: this.props.entity1Key === this.props.initialEdge._to
   };
 
   get hasSource() {
@@ -185,8 +197,8 @@ class EdgeForm extends React.Component<Props> {
     const invert = this.state.invertDirection;
 
     var selectedType = null;
-    for (let type of TypeOptions) {
-      if (type.value === this.state.type) selectedType = type;
+    for (let option of TypeOptions) {
+      if (option.value === this.state.type) selectedType = option;
     }
 
     return (

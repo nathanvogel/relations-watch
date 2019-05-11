@@ -11,6 +11,24 @@ export const EntityTypeValues: EntityType[] = Object.values(EntityType).filter(
   x => typeof x === "number"
 );
 
+export enum RelationType {
+  IsOwned = 1,
+  JobDependsOn = 30,
+  IsControled = 50,
+  ValueExchange = 100,
+  Family = 300,
+  Friendship = 310,
+  Love = 320,
+  Opposition = 330,
+  Influences = 500,
+  Attendance = 1000,
+  GroupMember = 2000,
+  Other = 3000
+}
+export const RelationTypeValues: RelationType[] = Object.values(
+  RelationType
+).filter(x => typeof x === "number");
+
 export type ErrorPayload = {
   eData: any;
   eMessage: string;
@@ -67,7 +85,7 @@ export interface Edge {
   _from: string;
   _to: string;
   text: string;
-  type: number;
+  type: RelationType;
   amount?: number;
   exactAmount?: boolean;
   sources: SourceLink[];
@@ -78,7 +96,7 @@ export interface EdgePreview {
   _key: string;
   _from: string;
   _to: string;
-  type: number;
+  type: RelationType;
 }
 
 export type CommonEdge = Edge | EdgePreview;
@@ -112,7 +130,7 @@ export type RelationRenderData = {
   source: string | SimulationNodeDatum;
   target: string | SimulationNodeDatum;
   relationId: string;
-  types: number[];
+  types: RelationType[];
   withType: NodeRenderType;
   visited: boolean;
 };
@@ -148,7 +166,7 @@ export type Source = {
   ref: string;
   type: number;
   authors: string[];
-  fullUrl?: string;
+  fullUrl?: string; // Should be in SourceLink
   description: string;
   pAuthor?: string;
   pTitle?: string;

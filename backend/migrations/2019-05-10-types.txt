@@ -1,0 +1,39 @@
+FOR r IN relations
+    FILTER r.type == 1 OR r.type == 2
+    UPDATE { _key: r._key, type: 1, _from: r._to, _to: r._from } IN relations
+    RETURN r.text
+
+FOR r IN relations
+    FILTER r.type == 4 OR r.type == 3
+    UPDATE { _key: r._key, type: 30, _from: r._to, _to: r._from } IN relations
+    RETURN r.text
+
+FOR r IN relations
+    FILTER r.type == 5
+    UPDATE { _key: r._key, type: 30 } IN relations
+    RETURN r.text
+
+FOR r IN relations
+    FILTER r.type == 400
+    UPDATE { _key: r._key, type: 320 } IN relations
+    RETURN r.text
+
+FOR r IN relations
+    FILTER r.type == 410
+    UPDATE { _key: r._key, type: 330 } IN relations
+    RETURN r.text
+
+FOR r IN relations
+    FILTER r.type == 10
+    UPDATE { _key: r._key, type: 500 } IN relations
+    RETURN r.text
+
+FOR r IN relations
+    FILTER r.type == 20
+    UPDATE { _key: r._key, type: 2000 } IN relations
+    RETURN r.text
+
+FOR r IN relations
+    FILTER r.type == 110
+    UPDATE { _key: r._key, type: 3000 } IN relations
+    RETURN r.text
