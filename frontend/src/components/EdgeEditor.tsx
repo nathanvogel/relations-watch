@@ -19,17 +19,12 @@ import Meta from "./meta/Meta";
 import EdgeForm from "./edgeEditor/EdgeForm";
 import Button from "./buttons/Button";
 
-const Content = styled.div`
-  display: block;
-  padding: 12px;
-`;
-
 type OwnProps = {
   entity1Key: string;
   entity2Key: string;
   editorId: string;
   edgeKey?: string;
-  dismiss?: () => void;
+  dismiss: () => void;
 };
 
 type Props = ReturnType<typeof mapStateToProps> &
@@ -148,22 +143,15 @@ class EdgeEditor extends React.Component<Props> {
       }
       // If we're adding an edge: show a confirmation + offer back/new choice
       return (
-        <Content>
-          <p>
-            Saved!{" "}
-            <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
-          </p>
-          {/*edgeKey || (
-            <Button onClick={this.clearPostRequest.bind(this, false)}>
-              New
-            </Button>
-          )*/}
-        </Content>
+        <p>
+          Saved!{" "}
+          <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
+        </p>
       );
     }
 
     return (
-      <Content>
+      <React.Fragment>
         <EdgeForm
           entity1Key={entity1Key}
           entity2Key={entity2Key}
@@ -172,6 +160,7 @@ class EdgeEditor extends React.Component<Props> {
           key={edgeKey}
           initialEdge={edge}
           onFormSubmit={this.onFormSubmit}
+          onFormCancel={this.props.dismiss}
           onDelete={this.onDelete}
           disabled={postStatus === Status.Requested}
           sourceEditorId={this.props.sourceEditorId}
@@ -179,7 +168,7 @@ class EdgeEditor extends React.Component<Props> {
           sourceFormData={this.props.sourceFormData}
         />
         <MetaPostStatus status={postStatus} error={postError} />
-      </Content>
+      </React.Fragment>
     );
   }
 }

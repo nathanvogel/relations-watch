@@ -92,7 +92,6 @@ class SourceForm extends React.Component<Props> {
     return (
       <div>
         <Button onClick={this.props.onCancelClick}>← Back </Button>
-        <Label>Reference</Label>
         <strong>{formData.ref}</strong>
         {!isLink && (
           <p>

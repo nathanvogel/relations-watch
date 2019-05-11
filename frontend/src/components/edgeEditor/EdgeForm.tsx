@@ -24,6 +24,7 @@ import Label from "../inputs/Label";
 import Input from "../inputs/Input";
 import StyledSelect from "../select/StyledSelect";
 import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
+import { ReactComponent as CloseIcon } from "../../assets/ic_close.svg";
 import IconButton from "../buttons/IconButton";
 import { TP } from "../../utils/theme";
 import ButtonBar from "../buttons/ButtonBar";
@@ -36,9 +37,17 @@ import CONSTS, {
   unkownAmountOption
 } from "../../utils/consts";
 import VerticalInputBar from "../buttons/VerticalInputBar";
+import TopRightButton from "../buttons/TopRightButton";
 
 const Content = styled.div`
   display: block;
+  position: relative; // Needed to position:absolute the close button
+  border-style: solid;
+  border-width: ${(props: TP) => props.theme.borderWidth};
+  border-color: ${(props: TP) => props.theme.border};
+  border-radius: ${(props: TP) => props.theme.radius};
+  padding: 12px;
+  padding-top: 32px;
 `;
 
 const TypeContainer = styled.div`
@@ -49,6 +58,7 @@ const TypeContainer = styled.div`
 
   & > *:nth-child(1) {
     justify-self: end;
+    text-align: right;
   }
   & > *:nth-child(2) {
     justify-self: center;
@@ -67,7 +77,7 @@ const TypeContainer = styled.div`
   }
   & > *:nth-child(3) {
     justify-self: start;
-    text-align: right;
+    text-align: left;
   }
 `;
 
@@ -81,12 +91,17 @@ const SaveButtonBar = styled(ButtonBar)`
   margin: ${(props: TP) => props.theme.marginTB} 0px;
 `;
 
+const Form = styled.form`
+  margin-bottom: ${(props: TP) => props.theme.marginTB};
+`;
+
 type Props = {
   entity1Key: string;
   entity2Key: string;
   entity1: Entity | EntityPreview;
   entity2: Entity | EntityPreview;
   onFormSubmit: (edge: Edge, comment?: SourceLink) => void;
+  onFormCancel: () => void;
   onDelete: () => void;
   disabled: boolean;
   initialEdge: Edge;
@@ -337,7 +352,10 @@ class EdgeForm extends React.Component<Props> {
 
     return (
       <Content>
-        <form onSubmit={this.onSubmit}>
+        <TopRightButton type="button" onClick={this.props.onFormCancel}>
+          <CloseIcon />
+        </TopRightButton>
+        <Form onSubmit={this.onSubmit}>
           <TypeContainer>
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
             <div>
@@ -417,6 +435,7 @@ class EdgeForm extends React.Component<Props> {
             onChange={this.onDescriptionChange}
           />
           {initialEdge.sourceText && `(${initialEdge.sourceText})`}
+          <Label>Add a reference</Label>
           <SourceSelector
             sourceKey={this.state.sourceKey}
             onSourceSelected={this.onSourceSelected}
@@ -447,7 +466,8 @@ class EdgeForm extends React.Component<Props> {
               </ButtonWithConfirmation>
             )}
           </SaveButtonBar>
-        </form>
+        </Form>
+        {initialEdge.sources.length > 0 && <Label>Existing references</Label>}
         {initialEdge.sources.map((sourceLink, index) => (
           <SourceDetails
             key={sourceLink.sourceKey}

@@ -157,15 +157,12 @@ class RelationsScreen extends React.Component<Props> {
               <BigLinksPreview relations={relations} />
               {/* PART adding */}
               {this.state.adding ? (
-                <React.Fragment>
-                  <EdgeEditor
-                    entity1Key={realKey1}
-                    entity2Key={realKey2}
-                    editorId={this.addEdgeEditorId}
-                    dismiss={this.onCancelAddClick}
-                  />
-                  <Button onClick={this.onCancelAddClick}>Cancel</Button>
-                </React.Fragment>
+                <EdgeEditor
+                  entity1Key={realKey1}
+                  entity2Key={realKey2}
+                  editorId={this.addEdgeEditorId}
+                  dismiss={this.onCancelAddClick}
+                />
               ) : (
                 <Button onClick={this.onAddClick}>
                   Add a relation element

@@ -24,10 +24,6 @@ const EdgeText = styled.p`
   margin-top: 0px;
 `;
 
-const Actions = styled.div`
-  text-align: right;
-`;
-
 const BottomActions = styled.div`
   text-align: center;
 `;
@@ -60,9 +56,6 @@ class EdgeDetails extends React.Component<Props> {
     if (this.state.editing)
       return (
         <div>
-          <Actions>
-            <Button onClick={this.onDoneEditing}>Cancel</Button>
-          </Actions>
           <EdgeEditor
             key={edge._key}
             edgeKey={edge._key}

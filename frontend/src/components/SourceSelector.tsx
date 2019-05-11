@@ -106,7 +106,6 @@ class SourceSelector extends React.Component<Props> {
       case SelectorMode.EditingRef:
         return (
           <Content>
-            <Label>Reference</Label>
             <StyledSourceRefSearch
               onChange={this.onSelectSource}
               inputValue={sourceRef}
