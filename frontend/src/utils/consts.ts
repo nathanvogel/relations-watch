@@ -32,39 +32,36 @@ export const RELATION_COLORS = {
 export const POSSIBLE_LINKS = {
   [RelationType.IsOwned]: [
     [E.MoralPerson, E.Event],
-    [E.MoralPerson, E.Group, E.PhysicalPerson]
+    [E.MoralPerson, E.Group, E.Human]
   ],
   [RelationType.JobDependsOn]: [
-    [E.PhysicalPerson, E.MoralPerson],
-    [E.MoralPerson, E.Group, E.PhysicalPerson]
+    [E.Human, E.MoralPerson],
+    [E.MoralPerson, E.Group, E.Human]
   ],
   [RelationType.IsControled]: [
     [E.Group, E.MoralPerson],
-    [E.PhysicalPerson, E.MoralPerson, E.Group]
+    [E.Human, E.MoralPerson, E.Group]
   ],
   [RelationType.ValueExchange]: [
-    [E.MoralPerson, E.Group, E.PhysicalPerson],
-    [E.MoralPerson, E.Group, E.PhysicalPerson]
+    [E.MoralPerson, E.Group, E.Human],
+    [E.MoralPerson, E.Group, E.Human]
   ],
-  [RelationType.Family]: [[E.PhysicalPerson], [E.PhysicalPerson]],
-  [RelationType.Friendship]: [[E.PhysicalPerson], [E.PhysicalPerson]],
-  [RelationType.Love]: [[E.PhysicalPerson], [E.PhysicalPerson]],
+  [RelationType.Family]: [[E.Human], [E.Human]],
+  [RelationType.Friendship]: [[E.Human], [E.Human]],
+  [RelationType.Love]: [[E.Human], [E.Human]],
   [RelationType.Opposition]: [
-    [E.MoralPerson, E.Group, E.PhysicalPerson],
-    [E.MoralPerson, E.Group, E.PhysicalPerson]
+    [E.MoralPerson, E.Group, E.Human],
+    [E.MoralPerson, E.Group, E.Human]
   ],
   [RelationType.Influences]: [
-    [E.MoralPerson, E.Group, E.PhysicalPerson],
-    [E.MoralPerson, E.Group, E.PhysicalPerson]
+    [E.MoralPerson, E.Group, E.Human],
+    [E.MoralPerson, E.Group, E.Human]
   ],
-  [RelationType.Attendance]: [
-    [E.MoralPerson, E.Group, E.PhysicalPerson],
-    [E.Event]
-  ],
-  [RelationType.GroupMember]: [[E.MoralPerson, E.PhysicalPerson], [E.Group]],
+  [RelationType.Attendance]: [[E.MoralPerson, E.Group, E.Human], [E.Event]],
+  [RelationType.GroupMember]: [[E.MoralPerson, E.Human], [E.Group]],
   [RelationType.Other]: [
-    [E.MoralPerson, E.Group, E.PhysicalPerson, E.Event],
-    [E.MoralPerson, E.Group, E.PhysicalPerson, E.Event]
+    [E.MoralPerson, E.Group, E.Human, E.Event],
+    [E.MoralPerson, E.Group, E.Human, E.Event]
   ]
 };
 

@@ -2,7 +2,7 @@ import { AnyAction } from "redux";
 import { SimulationNodeDatum } from "d3-force";
 
 export enum EntityType {
-  PhysicalPerson = 1,
+  Human = 1,
   MoralPerson = 2,
   Event = 10,
   Group = 100

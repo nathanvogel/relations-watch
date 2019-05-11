@@ -20,7 +20,7 @@ export const RELATION_TYPES_STR: StringTypeRes = {
 };
 
 export const ENTITY_TYPES: StringTypeRes = {
-  [EntityType.PhysicalPerson]: "Natural person",
+  [EntityType.Human]: "Human",
   [EntityType.MoralPerson]: "Moral person",
   [EntityType.Event]: "Event",
   [EntityType.Group]: "Group"

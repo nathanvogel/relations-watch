@@ -46,7 +46,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     : initialName
     ? {
         name: initialName,
-        type: EntityType.PhysicalPerson
+        type: EntityType.Human
       }
     : undefined;
   const entityStatus = entityKey ? state.entities.status[entityKey] : undefined;

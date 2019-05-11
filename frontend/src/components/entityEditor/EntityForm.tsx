@@ -40,7 +40,7 @@ class EntityForm extends React.Component<Props> {
   static defaultProps = {
     initialEntity: {
       name: "",
-      type: EntityType.PhysicalPerson,
+      type: EntityType.Human,
       linkWikipedia: "",
       linkCrunchbase: "",
       linkTwitter: "",
