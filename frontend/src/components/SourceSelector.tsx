@@ -11,7 +11,6 @@ import { Status, ReactSelectOption } from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
 import Button from "./buttons/Button";
-import CONSTS from "../utils/consts";
 import Label from "./inputs/Label";
 
 const Content = styled.div`

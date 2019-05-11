@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { ValueType, OptionsType } from "react-select/lib/types";
 
 import EntityName from "./EntityName";
 import {
@@ -8,11 +7,13 @@ import {
   SourceLink,
   SourceLinkType,
   Source,
-  RelationTypeValues,
   RelationType,
   RelationTypeOption,
   EntityPreview,
-  Entity
+  Entity,
+  RelationTypeRequirements,
+  FamilialLink,
+  FamilialLinkOption
 } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
@@ -25,8 +26,13 @@ import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
 import IconButton from "../buttons/IconButton";
 import { TP } from "../../utils/theme";
 import ButtonBar from "../buttons/ButtonBar";
-import { RELATION_TYPES_STR } from "../../strings/strings";
-import { POSSIBLE_LINKS } from "../../utils/consts";
+import {
+  POSSIBLE_LINKS,
+  RelationTypeOptions,
+  RELATION_REQUIREMENTS,
+  FamilialLinkOptions
+} from "../../utils/consts";
+import VerticalInputBar from "../buttons/VerticalInputBar";
 
 const Content = styled.div`
   display: block;
@@ -46,9 +52,14 @@ const TypeContainer = styled.div`
     width: 100%;
     display: flex;
 
-    div:nth-child(1) {
+    > div:nth-child(1) {
       padding-right: ${(props: TP) => props.theme.inputLRSpacing};
       flex-grow: 100;
+
+      > * {
+        display: block;
+        width: 100%;
+      }
     }
   }
   & > *:nth-child(3) {
@@ -65,11 +76,6 @@ const AmountInput = styled(Input)`
 const SaveButtonBar = styled(ButtonBar)`
   margin: ${(props: TP) => props.theme.marginTB} 0px;
 `;
-
-const TypeOptions: RelationTypeOption[] = RelationTypeValues.map(value => ({
-  value: value,
-  label: RELATION_TYPES_STR[value]
-}));
 
 type Props = {
   entity1Key: string;
@@ -90,6 +96,8 @@ type State = {
   type: RelationType | undefined;
   amount?: number;
   exactAmount?: boolean;
+  familialLink: FamilialLink | undefined;
+  ownedPercent: number | undefined;
   comment: string;
   sourceKey?: string;
   invertDirection: boolean;
@@ -102,6 +110,8 @@ class EdgeForm extends React.Component<Props> {
       type: undefined,
       amount: 0,
       exactAmount: false,
+      familialLink: undefined,
+      ownedPercent: 100,
       sourceText: "",
       sources: []
     }
@@ -112,6 +122,8 @@ class EdgeForm extends React.Component<Props> {
     type: this.props.initialEdge.type,
     amount: this.props.initialEdge.amount,
     exactAmount: this.props.initialEdge.exactAmount,
+    familialLink: this.props.initialEdge.fType,
+    ownedPercent: this.props.initialEdge.owned,
     comment: "",
     sourceKey: undefined,
     invertDirection: this.props.entity1Key === this.props.initialEdge._to
@@ -131,6 +143,10 @@ class EdgeForm extends React.Component<Props> {
 
   onTypeChange = (option: any) => {
     this.setState({ type: option ? option.value : null });
+  };
+
+  onFamilialLinkChange = (option: any) => {
+    this.setState({ familialLink: option ? option.value : null });
   };
 
   toggleInvert = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -167,6 +183,9 @@ class EdgeForm extends React.Component<Props> {
   submit = (confirms: boolean) => {
     // Validate data.
     if (!this.state.type) return;
+    const requirements = this.getRequirements();
+    if (requirements.descriptionRequired && !this.state.text) return;
+    if (requirements.familialLinkType && !this.state.familialLink) return;
 
     const { entity1Key, entity2Key } = this.props;
     const invert = this.state.invertDirection;
@@ -177,6 +196,8 @@ class EdgeForm extends React.Component<Props> {
       type: this.state.type,
       amount: this.state.amount,
       exactAmount: this.state.exactAmount,
+      fType: this.state.familialLink,
+      owned: this.state.ownedPercent,
       sourceText: this.props.initialEdge.sourceText
     });
 
@@ -219,29 +240,41 @@ class EdgeForm extends React.Component<Props> {
     }
   }
 
+  getRequirements = () =>
+    this.state.type ? RELATION_REQUIREMENTS[this.state.type] : {};
+
   render() {
     const { entity1Key, entity2Key, initialEdge } = this.props;
     const invert = this.state.invertDirection;
 
     // Find the selected value
     var selectedType: RelationTypeOption | null = null;
-    for (let option of TypeOptions) {
+    for (let option of RelationTypeOptions) {
       if (option.value === this.state.type) selectedType = option;
+    }
+    var selectedFamilialLink: FamilialLinkOption | null = null;
+    for (let option of FamilialLinkOptions) {
+      if (option.value === this.state.familialLink)
+        selectedFamilialLink = option;
     }
 
     // List all possible types compatible with the entity types
     // (ignoring the direction, which is automatically corrected
     // in componentDidUpdate)
     const { entity1, entity2 } = this.props;
-    const possibleTypes: RelationTypeOption[] = TypeOptions.filter(option => {
-      const allowed = POSSIBLE_LINKS[option.value];
-      return (
-        (allowed[0].indexOf(entity1.type) >= 0 &&
-          allowed[1].indexOf(entity2.type) >= 0) ||
-        (allowed[1].indexOf(entity1.type) >= 0 &&
-          allowed[0].indexOf(entity2.type) >= 0)
-      );
-    });
+    const possibleTypes: RelationTypeOption[] = RelationTypeOptions.filter(
+      option => {
+        const allowed = POSSIBLE_LINKS[option.value];
+        return (
+          (allowed[0].indexOf(entity1.type) >= 0 &&
+            allowed[1].indexOf(entity2.type) >= 0) ||
+          (allowed[1].indexOf(entity1.type) >= 0 &&
+            allowed[0].indexOf(entity2.type) >= 0)
+        );
+      }
+    );
+
+    const requirements = this.getRequirements();
 
     return (
       <Content>
@@ -249,13 +282,23 @@ class EdgeForm extends React.Component<Props> {
           <TypeContainer>
             <EntityName entityKey={invert ? entity2Key : entity1Key} />
             <div>
-              <StyledSelect
-                autoFocus
-                options={possibleTypes}
-                value={selectedType}
-                onChange={this.onTypeChange}
-                placeholder="..."
-              />
+              <VerticalInputBar>
+                <StyledSelect
+                  autoFocus
+                  options={possibleTypes}
+                  value={selectedType}
+                  onChange={this.onTypeChange}
+                  placeholder="..."
+                />
+                {requirements.familialLinkType && (
+                  <StyledSelect
+                    options={FamilialLinkOptions}
+                    value={selectedFamilialLink}
+                    onChange={this.onFamilialLinkChange}
+                    placeholder="..."
+                  />
+                )}
+              </VerticalInputBar>
               <IconButton type="button" onClick={this.toggleInvert}>
                 <SwapIcon />
               </IconButton>

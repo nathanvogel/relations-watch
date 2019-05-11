@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { Dispatch, bindActionCreators, AnyAction } from "redux";
 import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
@@ -18,10 +17,6 @@ type OwnProps = {
   onCancelClick: () => void;
   onSaveClick?: () => void;
 };
-
-const Content = styled.div`
-  display: block;
-`;
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { editorId } = props;

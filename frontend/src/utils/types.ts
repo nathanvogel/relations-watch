@@ -40,6 +40,31 @@ export type ErrorPayload = {
   eStatus: number | string;
 };
 
+export type RelationTypeRequirements = {
+  descriptionRequired?: boolean;
+  amount?: boolean;
+  familialLinkType?: boolean;
+  ownedPercent?: boolean;
+};
+
+export enum FamilialLink {
+  childOf = 1,
+  siblingOf = 2,
+  spouseOf = 3,
+  grandchildOf = 14,
+  cousinOf = 15,
+  niblingOf = 16,
+  other = 100 // son-in-law, etc.
+}
+export const FamilialLinkValues: FamilialLink[] = Object.values(
+  FamilialLink
+).filter(x => typeof x === "number");
+
+export type FamilialLinkOption = {
+  label: string;
+  value: FamilialLink;
+};
+
 export interface Action extends AnyAction {
   type: string;
   status: Status;
@@ -78,14 +103,14 @@ export type Entity = {
   linkWebsite?: string;
 };
 
-export interface EntityPreview {
+export type EntityPreview = {
   _key: string;
   name: string;
   imageId?: string;
   type: EntityType;
-}
+};
 
-export interface Edge {
+export type Edge = {
   _key?: string;
   _from: string;
   _to: string;
@@ -93,16 +118,18 @@ export interface Edge {
   type: RelationType;
   amount?: number;
   exactAmount?: boolean;
+  fType?: FamilialLink;
+  owned?: number;
   sources: SourceLink[];
   sourceText?: string;
-}
+};
 
-export interface EdgePreview {
+export type EdgePreview = {
   _key: string;
   _from: string;
   _to: string;
   type: RelationType;
-}
+};
 
 export type CommonEdge = Edge | EdgePreview;
 
@@ -207,9 +234,3 @@ export type ReactSelectOption = {
   label: string;
   [key: string]: any;
 };
-
-// export type ReactTypeOption = {
-//   value: number;
-//   label: string;
-//   [key: string]: any;
-// };

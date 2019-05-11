@@ -3,7 +3,6 @@ import React from "react";
 import api from "../../utils/api";
 import StyledAsyncCreatableSelect from "../select/StyledAsyncCreatableSelect";
 import { ReactSelectOption } from "../../utils/types";
-import { StyledProps, StyledComponentProps } from "styled-components";
 
 interface SourceSuggestion {
   _key: string;
