@@ -14,7 +14,7 @@ export const EntityTypeValues: EntityType[] = Object.values(EntityType).filter(
 export enum RelationType {
   IsOwned = 1,
   JobDependsOn = 30,
-  IsControled = 50,
+  IsControlled = 50,
   ValueExchange = 100,
   Family = 300,
   Friendship = 310,

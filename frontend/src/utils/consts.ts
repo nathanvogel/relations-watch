@@ -17,7 +17,7 @@ import { RELATION_TYPES_STR, FAMILIAL_LINK_STR } from "../strings/strings";
 export const RELATION_COLORS = {
   [RelationType.IsOwned]: "#e7b300",
   [RelationType.JobDependsOn]: "#ee8012",
-  [RelationType.IsControled]: "#a63e14",
+  [RelationType.IsControlled]: "#a63e14",
   [RelationType.ValueExchange]: "#ffeb00",
   [RelationType.Family]: "#007500",
   [RelationType.Friendship]: "#00b8b8",
@@ -38,7 +38,7 @@ export const POSSIBLE_LINKS = {
     [E.Human, E.MoralPerson],
     [E.MoralPerson, E.Group, E.Human]
   ],
-  [RelationType.IsControled]: [
+  [RelationType.IsControlled]: [
     [E.Group, E.MoralPerson],
     [E.Human, E.MoralPerson, E.Group]
   ],
@@ -71,7 +71,7 @@ type Requirements = {
 export const RELATION_REQUIREMENTS: Requirements = {
   [RelationType.IsOwned]: { ownedPercent: true },
   [RelationType.JobDependsOn]: { amount: true, descriptionRequired: true },
-  [RelationType.IsControled]: { descriptionRequired: true },
+  [RelationType.IsControlled]: { descriptionRequired: true },
   [RelationType.ValueExchange]: { amount: true, descriptionRequired: true },
   [RelationType.Family]: { familialLinkType: true },
   [RelationType.Friendship]: { descriptionRequired: true },
