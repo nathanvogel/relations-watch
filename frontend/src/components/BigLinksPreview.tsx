@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import { Edge } from "../utils/types";
-import CONSTS from "../utils/consts";
 import { RELATION_TYPES_STR } from "../strings/strings";
+import { RELATION_COLORS } from "../utils/theme";
 
 const Header = styled.header`
   min-height: 200px;
@@ -65,12 +65,12 @@ class BigLinksPreview extends React.Component<OwnProps> {
       <Header>
         <EdgesWrapper>
           {types.map((type, index) => (
-            <VisualEdge key={type} color={CONSTS.RELATION_COLORS[type]} />
+            <VisualEdge key={type} color={RELATION_COLORS[type]} />
           ))}
         </EdgesWrapper>
         <VerticalMarginWrapper>
           {types.map((type, index) => (
-            <EdgeTypeExplainer key={type} color={CONSTS.RELATION_COLORS[type]}>
+            <EdgeTypeExplainer key={type} color={RELATION_COLORS[type]}>
               {RELATION_TYPES_STR[type]}
             </EdgeTypeExplainer>
           ))}

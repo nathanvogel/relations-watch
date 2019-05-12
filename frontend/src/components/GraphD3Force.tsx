@@ -13,7 +13,7 @@ import {
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
-import CONSTS from "../utils/consts";
+import { RELATION_COLORS } from "../utils/theme";
 
 const GraphSVG = styled.svg`
   display: block;
@@ -92,7 +92,7 @@ function href(d: NodeRenderData): string {
 }
 
 function relationColor(d: RelationRenderData) {
-  return CONSTS.RELATION_COLORS[d.types[0]];
+  return RELATION_COLORS[d.types[0]];
 }
 
 function strokeColor(d: RelationRenderData) {

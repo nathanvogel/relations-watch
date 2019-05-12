@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Edge, Entity, Status } from "../utils/types";
 import Button from "./buttons/Button";
 import EdgeEditor from "./EdgeEditor";
-import { RELATION_COLORS } from "../utils/consts";
+import { RELATION_COLORS } from "../utils/theme";
 import SourceDetails from "./SourceDetails";
 import EdgeSummary from "./edgeDetails/EdgeSummary";
 import { RootStore } from "../Store";

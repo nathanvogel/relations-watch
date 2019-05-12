@@ -13,22 +13,6 @@ import { RELATION_TYPES_STR, FAMILIAL_LINK_STR } from "../strings/strings";
 // Should have been maintained in sync with the backend here ?
 // /backend/service-graph-api/scripts/consts.js
 
-// TODO: Use an Android-R like library to manage this stuff.
-export const RELATION_COLORS = {
-  [RelationType.IsOwned]: "#e7b300",
-  [RelationType.JobDependsOn]: "#ee8012",
-  [RelationType.IsControlled]: "#a63e14",
-  [RelationType.ValueExchange]: "#ffeb00",
-  [RelationType.Family]: "#007500",
-  [RelationType.Friendship]: "#00b8b8",
-  [RelationType.Love]: "#de3d83",
-  [RelationType.Opposition]: "#db2f27",
-  [RelationType.Influences]: "#f45844",
-  [RelationType.Attendance]: "#00b8b8",
-  [RelationType.GroupMember]: "#0095a3",
-  [RelationType.Other]: "#444444"
-};
-
 export const POSSIBLE_LINKS = {
   [RelationType.IsOwned]: [
     [E.MoralPerson, E.Event],
@@ -134,7 +118,6 @@ const CONSTS = {
   relCollectionName: "relations",
   entCollectionName: "entities",
   EMPTY_KEY: "_",
-  RELATION_COLORS,
   AMOUNT_UNKNOWN,
   AMOUNT_DO_ENTER,
   ERROR_CODES
