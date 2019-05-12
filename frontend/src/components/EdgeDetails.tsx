@@ -98,7 +98,7 @@ class EdgeDetails extends React.Component<Props> {
       <Content color={RELATION_COLORS[edge.type]}>
         {this.props.hasLoadedEntities && (
           <EdgeSummary
-            relationType={edge.type}
+            edge={edge}
             entityFrom={entityFrom}
             entityTo={entityTo}
           />

@@ -239,3 +239,9 @@ export type AmountSelectOption = {
   value: number;
   label: string;
 };
+
+/**
+ * Useful to generate key lists from JSON files
+ * in order to get static (dynamic) Typescript autocomplete.
+ */
+export type KeyList<T> = { readonly [P in keyof T]: P };
