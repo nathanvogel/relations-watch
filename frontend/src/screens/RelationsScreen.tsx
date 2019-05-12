@@ -46,7 +46,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
   const relationId = getRelationId(realKey1, realKey2) as string;
 
-  // Get the entity from the Redux Store
+  // Get the relation from the Redux Store
   const relations: Edge[] =
     relationId && state.relations.data[relationId]
       ? state.relations.data[relationId]

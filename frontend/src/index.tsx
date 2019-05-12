@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import Store from "./Store"; // Use a Maj to let CRA's typescript find it.
 // Styles
 import "normalize.css";
+// i18n
+import "./i18n/i18n";
 // My files
 import "./index.css";
 import App from "./screens/App";

@@ -1,11 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Edge } from "../utils/types";
+import { Edge, Entity, Status } from "../utils/types";
 import Button from "./buttons/Button";
 import EdgeEditor from "./EdgeEditor";
 import { RELATION_COLORS } from "../utils/consts";
 import SourceDetails from "./SourceDetails";
+import EdgeSummary from "./edgeDetails/EdgeSummary";
+import { RootStore } from "../Store";
+import { Dispatch, AnyAction, bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
 const Content = styled.section`
   border: 1px dotted black;
@@ -28,13 +32,36 @@ const BottomActions = styled.div`
   text-align: center;
 `;
 
-type Props = {
+type OwnProps = {
   edge: Edge;
 };
+
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>;
 
 type State = {
   editing: boolean;
 };
+
+const mapStateToProps = (state: RootStore, props: OwnProps) => {
+  const { edge } = props;
+  const entityFrom = state.entities.data[props.edge._from];
+  const statusFrom = state.entities.status[props.edge._from];
+  const entityTo = state.entities.data[props.edge._to];
+  const statusTo = state.entities.status[props.edge._to];
+
+  const hasLoadedEntities = statusFrom === Status.Ok && statusTo === Status.Ok;
+
+  return {
+    edge,
+    entityFrom,
+    entityTo,
+    hasLoadedEntities
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+  bindActionCreators({}, dispatch);
 
 class EdgeDetails extends React.Component<Props> {
   readonly state: State = {
@@ -50,7 +77,7 @@ class EdgeDetails extends React.Component<Props> {
   };
 
   render() {
-    const { edge } = this.props;
+    const { edge, entityFrom, entityTo } = this.props;
     if (!edge._key) return <Content>Error: missing _key attribute.</Content>;
 
     if (this.state.editing)
@@ -69,6 +96,13 @@ class EdgeDetails extends React.Component<Props> {
 
     return (
       <Content color={RELATION_COLORS[edge.type]}>
+        {this.props.hasLoadedEntities && (
+          <EdgeSummary
+            relationType={edge.type}
+            entityFrom={entityFrom}
+            entityTo={entityTo}
+          />
+        )}
         <EdgeText>{edge.text}</EdgeText>
         {edge.sourceText && <div>Previous source: {edge.sourceText}</div>}
         {edge.sources && edge.sources.length > 0 ? (
@@ -92,4 +126,7 @@ class EdgeDetails extends React.Component<Props> {
   }
 }
 
-export default EdgeDetails;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EdgeDetails);
