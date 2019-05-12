@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Edge, Entity, Status } from "../utils/types";
 import Button from "./buttons/Button";
 import EdgeEditor from "./EdgeEditor";
-import { RELATION_COLORS } from "../utils/theme";
+import { RELATION_COLORS, TP } from "../utils/theme";
 import SourceDetails from "./SourceDetails";
 import EdgeSummary from "./edgeDetails/EdgeSummary";
 import { RootStore } from "../Store";
@@ -12,20 +12,28 @@ import { Dispatch, AnyAction, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 const Content = styled.section`
-  border: 1px dotted black;
-  border-bottom: 4px solid ${props => props.color}33;
+  box-sizing: border-box;
+  border-color: ${(props: TP) => props.theme.inputBG};
+  border-width: ${(props: TP) => props.theme.borderWidth};
+  border-style: solid;
+  border-radius: ${(props: TP) => props.theme.radius};
+
+  transition: border-color 0.1s ease-in-out;
+
   &:hover {
-    border-bottom: 4px solid ${props => props.color}dd;
+    border-color: ${props => props.color}dd;
   }
+
   // background-color: #f4f4f4;
-  padding: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  padding: ${(props: TP) => props.theme.blockPadding};
+  margin-top: ${(props: TP) => props.theme.blockSpacingTB};
+  margin-bottom: ${(props: TP) => props.theme.blockSpacingTB};
 `;
 
-const EdgeText = styled.p`
-  font-size: 16px;
-  margin-top: 0px;
+const EdgeMainText = styled.p`
+  font-size: 24px;
+  margin-top: 24px;
+  margin-bottom: 20px;
 `;
 
 const BottomActions = styled.div`
@@ -103,7 +111,7 @@ class EdgeDetails extends React.Component<Props> {
             entityTo={entityTo}
           />
         )}
-        <EdgeText>{edge.text}</EdgeText>
+        <EdgeMainText>{edge.text}</EdgeMainText>
         {edge.sourceText && <div>Previous source: {edge.sourceText}</div>}
         {edge.sources && edge.sources.length > 0 ? (
           edge.sources.map((sourceLink, index) => (

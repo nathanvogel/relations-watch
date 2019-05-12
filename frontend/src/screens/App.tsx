@@ -6,7 +6,6 @@ import AppBar from "../components/AppBar";
 import HomeScreen from "./HomeScreen";
 import EntityScreen from "./EntityScreen";
 import RelationsScreen from "./RelationsScreen";
-import "./App.css";
 import RT from "../utils/ROUTES";
 import { Theme } from "../utils/media-styles";
 import { CreateEntityScreen } from "./CreateEntityScreen";

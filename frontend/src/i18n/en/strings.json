@@ -16,7 +16,7 @@
   "relationType_f_sibling": "{{nameFrom}} is a sibling {{nameTo}}.",
   "relationType_f_cousin": "{{nameFrom}} is a cousin {{nameTo}}.",
   "relationType_f_nibling": "{{nameFrom}} is a nibling {{nameTo}}.",
-  "relationType_f_other": "They're related.",
+  "relationType_f_other": "They're in the same family.",
   "relationType_friends": "They're friends.",
   "relationType_love": "They're in love.",
   "relationType_opposition": "They're in opposition."

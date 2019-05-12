@@ -3,7 +3,7 @@ import { RelationType } from "./types";
 const theme = {
   mainFont:
     '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
-  mainTextColor: "#000000",
+  mainTextColor: "rgb(0, 0, 0, 0.84)" /* Stolen from Medium */,
   secondaryTextColor: "#72727c",
   focusColor: "#5B44E8",
   lightBgGrey1: "#DEDAEF",
@@ -18,6 +18,8 @@ const theme = {
   marginLR: "12px",
   marginTB: "12px",
   inputMarginTB: "12px",
+  blockPadding: "12px",
+  blockSpacingTB: "20px",
   longFieldHeight: "3em",
   radius: "4px"
 };
