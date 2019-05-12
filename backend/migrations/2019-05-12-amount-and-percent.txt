@@ -1,0 +1,10 @@
+FOR r IN relations
+    FILTER r.type == 30 AND r.amount == 0
+    UPDATE { _key: r._key, amount: -1 } IN relations
+    RETURN {t: r.text, a:r.amount}
+
+
+FOR r IN relations
+    FILTER r.type == 1
+    UPDATE {_key: r._key, owned: 100} IN relations
+    RETURN {t: r.text, a:r.owned}
