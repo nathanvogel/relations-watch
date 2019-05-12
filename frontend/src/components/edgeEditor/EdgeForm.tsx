@@ -38,6 +38,8 @@ import CONSTS, {
 } from "../../utils/consts";
 import VerticalInputBar from "../buttons/VerticalInputBar";
 import TopRightButton from "../buttons/TopRightButton";
+import NumericInput from "../inputs/NumericInput";
+import { predefinedOptions } from "react-numeric";
 
 const Content = styled.div`
   display: block;
@@ -209,12 +211,12 @@ class EdgeForm extends React.Component<Props> {
     // }
   };
 
-  onAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ amount: event.target.value });
+  onAmountChange = (_event: any, value: number) => {
+    this.setState({ amount: value });
   };
 
-  onOwnedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ ownedPercent: event.target.value });
+  onOwnedChange = (_event: any, value: number) => {
+    this.setState({ ownedPercent: value });
   };
 
   onCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -349,6 +351,8 @@ class EdgeForm extends React.Component<Props> {
     );
 
     const requirements = this.getRequirements();
+    const ownedPercent =
+      this.state.ownedPercent === undefined ? 100 : this.state.ownedPercent;
 
     return (
       <Content>
@@ -378,11 +382,15 @@ class EdgeForm extends React.Component<Props> {
                 {requirements.amount &&
                   (this.state.exactAmount ? (
                     <VerticalInputBar>
-                      <SecondaryInput
+                      <NumericInput
                         name="amountInvolved"
-                        type="number"
                         value={this.state.amount}
                         onChange={this.onAmountChange}
+                        preDefined={predefinedOptions.dollarPos}
+                        minimumValue="0"
+                        currencySymbol=" $"
+                        currencySymbolPlacement="s"
+                        decimalPlaces={0}
                       />
                       <Label as="div" htmlFor="exactAmountCheckbox">
                         <input
@@ -404,17 +412,16 @@ class EdgeForm extends React.Component<Props> {
                   ))}
                 {requirements.ownedPercent && (
                   <React.Fragment>
-                    <SecondaryInput
+                    <NumericInput
                       name="ownedPercent"
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={this.state.ownedPercent}
+                      allowDecimalPadding={false}
+                      minimumValue="0"
+                      maximumValue="100"
+                      currencySymbol=" %"
+                      currencySymbolPlacement="s"
+                      value={ownedPercent}
                       onChange={this.onOwnedChange}
                     />
-                    <Label as="div" htmlFor="ownedPercent">
-                      %
-                    </Label>
                   </React.Fragment>
                 )}
               </VerticalInputBar>

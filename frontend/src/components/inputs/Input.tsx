@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { TP } from "../../utils/theme";
 
-const Input = styled.input`
+export const cssInput = css`
   padding-left: ${(props: TP) => props.theme.inputPaddingLR};
   padding-right: ${(props: TP) => props.theme.inputPaddingLR};
   padding-top: ${(props: TP) => props.theme.inputPaddingTB};
@@ -22,6 +22,10 @@ const Input = styled.input`
     border-color: ${(props: TP) => props.theme.focusColor};
     outline: none;
   }
+`;
+
+const Input = styled.input`
+  ${cssInput}
 `;
 
 export default Input;

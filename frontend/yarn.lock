@@ -1911,6 +1911,11 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
+autonumeric@^4.4.0:
+  version "4.5.4"
+  resolved "https://registry.yarnpkg.com/autonumeric/-/autonumeric-4.5.4.tgz#9af584e4a3a41b1ddb7f7857756fe865099110c4"
+  integrity sha512-tdPvLHB3QoJ3SZnjb6MD34tXOtn1aKb53if3eWQmAe3rEWfONKgSzvn2ZdigQRYHYf2Sr76JSmWjia/mY1KehQ==
+
 autoprefixer@^9.4.2:
   version "9.4.10"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-9.4.10.tgz#e1be61fc728bacac8f4252ed242711ec0dcc6a7b"
@@ -8652,7 +8657,7 @@ prompts@^0.1.9:
     kleur "^2.0.1"
     sisteransi "^0.1.1"
 
-prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.4, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -8917,6 +8922,14 @@ react-measure@^2.2.6:
     get-node-dimensions "^1.2.1"
     prop-types "^15.6.2"
     resize-observer-polyfill "^1.5.0"
+
+react-numeric@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-numeric/-/react-numeric-0.4.1.tgz#487c5a27c090ba06a324d15aff97b2b9ce53f218"
+  integrity sha512-0KWLE7Kl0JhX2ayRPHR+Ft2VkjuQzX9rYCg6Qgqub+BfW570HICHN9zgoSlGs+pG/f2erb/NVGwbneb7tNo8Fg==
+  dependencies:
+    autonumeric "^4.4.0"
+    prop-types "^15.6.1"
 
 react-redux@^6.0.1:
   version "6.0.1"
