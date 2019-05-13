@@ -40,19 +40,7 @@ import VerticalInputBar from "../buttons/VerticalInputBar";
 import TopRightButton from "../buttons/TopRightButton";
 import NumericInput from "../inputs/NumericInput";
 import { predefinedOptions } from "react-numeric";
-
-const Content = styled.div`
-  display: block;
-  position: relative; // Needed to position:absolute the close button
-  border-style: solid;
-  border-width: ${(props: TP) => props.theme.borderWidth};
-  border-color: ${(props: TP) => props.theme.border};
-  border-radius: ${(props: TP) => props.theme.radius};
-  padding: ${(props: TP) => props.theme.blockPadding};
-  padding-top: 32px; // For the close button
-  margin-top: ${(props: TP) => props.theme.blockSpacingTB};
-  margin-bottom: ${(props: TP) => props.theme.blockSpacingTB};
-`;
+import EditorContainer from "../EditorContainer";
 
 const TypeContainer = styled.div`
   display: grid;
@@ -83,10 +71,6 @@ const TypeContainer = styled.div`
     justify-self: start;
     text-align: left;
   }
-`;
-
-const SaveButtonBar = styled(ButtonBar)`
-  margin: ${(props: TP) => props.theme.marginTB} 0px;
 `;
 
 const Form = styled.form`
@@ -351,7 +335,7 @@ class EdgeForm extends React.Component<Props> {
       this.state.ownedPercent === undefined ? 100 : this.state.ownedPercent;
 
     return (
-      <Content>
+      <EditorContainer>
         <TopRightButton type="button" onClick={this.props.onFormCancel}>
           <CloseIcon />
         </TopRightButton>
@@ -446,7 +430,9 @@ class EdgeForm extends React.Component<Props> {
           />
           {this.hasSource && (
             <React.Fragment>
-              <Label htmlFor="sourceComment">Comment</Label>
+              <Label htmlFor="sourceComment">
+                Comment what this source says (optional)
+              </Label>
               <TextArea
                 name="sourceComment"
                 onChange={this.onCommentChange}
@@ -454,7 +440,12 @@ class EdgeForm extends React.Component<Props> {
               />
             </React.Fragment>
           )}
-          <SaveButtonBar>
+          <ButtonBar>
+            {!this.isNew && (
+              <ButtonWithConfirmation onAction={this.props.onDelete}>
+                Delete this relation element
+              </ButtonWithConfirmation>
+            )}
             <IconButton disabled={this.isNew && !this.hasSource} type="submit">
               Save
             </IconButton>
@@ -463,13 +454,9 @@ class EdgeForm extends React.Component<Props> {
                 Save with refuting reference
               </IconButton>
             )}
-            {!this.isNew && (
-              <ButtonWithConfirmation onAction={this.props.onDelete}>
-                Delete this relation element
-              </ButtonWithConfirmation>
-            )}
-          </SaveButtonBar>
+          </ButtonBar>
         </Form>
+        {initialEdge.sources.length > 0 && <br />}
         {initialEdge.sources.length > 0 && <Label>Existing references</Label>}
         {initialEdge.sources.map((sourceLink, index) => (
           <SourceDetails
@@ -479,7 +466,7 @@ class EdgeForm extends React.Component<Props> {
             editable
           />
         ))}
-      </Content>
+      </EditorContainer>
     );
   }
 }

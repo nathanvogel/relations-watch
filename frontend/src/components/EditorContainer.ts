@@ -1,0 +1,17 @@
+import styled from "styled-components";
+import { TP } from "../utils/theme";
+
+const EditorContainer = styled.div`
+  display: block;
+  position: relative; // Needed to position:absolute the close button
+  border-style: solid;
+  border-width: ${(props: TP) => props.theme.borderWidth};
+  border-color: ${(props: TP) => props.theme.border};
+  border-radius: ${(props: TP) => props.theme.radius};
+  padding: ${(props: TP) => props.theme.blockPadding};
+  padding-top: 32px; // For the close button
+  margin-top: ${(props: TP) => props.theme.blockSpacingTB};
+  margin-bottom: ${(props: TP) => props.theme.blockSpacingTB};
+`;
+
+export default EditorContainer;

@@ -4,12 +4,16 @@ import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
 
 import { Source, ReactSelectOption, SourceType } from "../utils/types";
-import Button from "./buttons/Button";
+import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
 import EntitySearch from "./EntitySearch";
 import { RootStore } from "../Store";
 import * as sourceFormActions from "../features/sourceFormActions";
 import Label from "./inputs/Label";
 import TextArea from "./inputs/TextArea";
+import IconButton from "./buttons/IconButton";
+import ButtonBar from "./buttons/ButtonBar";
+import EditorContainer from "./EditorContainer";
+import TopRightButton from "./buttons/TopRightButton";
 
 type OwnProps = {
   editorId: string;
@@ -90,8 +94,10 @@ class SourceForm extends React.Component<Props> {
     const shouldWriteDescription = !isLink || !Boolean(formData.pTitle);
 
     return (
-      <div>
-        <Button onClick={this.props.onCancelClick}>← Back </Button>
+      <EditorContainer>
+        <TopRightButton type="button" onClick={this.props.onCancelClick}>
+          <CloseIcon />
+        </TopRightButton>
         <strong>{formData.ref}</strong>
         {!isLink && (
           <p>
@@ -133,10 +139,12 @@ class SourceForm extends React.Component<Props> {
           onChange={this.onAuthorsChange}
           isMulti={true}
         />
-        {this.props.onSaveClick && (
-          <Button onClick={this.props.onSaveClick}>Save</Button>
-        )}
-      </div>
+        <ButtonBar>
+          {this.props.onSaveClick && (
+            <IconButton onClick={this.props.onSaveClick}>Save</IconButton>
+          )}
+        </ButtonBar>
+      </EditorContainer>
     );
   }
 }

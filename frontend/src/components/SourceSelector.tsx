@@ -12,6 +12,7 @@ import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
 import Button from "./buttons/Button";
 import Label from "./inputs/Label";
+import IconButton from "./buttons/IconButton";
 
 const Content = styled.div`
   display: block;
@@ -135,12 +136,14 @@ class SourceSelector extends React.Component<Props> {
         }
         return (
           <Content>
+            <IconButton onClick={this.onDeselectSource}>
+              Pick another
+            </IconButton>
             {this.props.sourceKey ? (
               <SourceDetails sourceKey={this.props.sourceKey} />
             ) : (
               "Missing source key!"
             )}
-            <Button onClick={this.onDeselectSource}>Pick another source</Button>
           </Content>
         );
     }
