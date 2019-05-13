@@ -94,7 +94,7 @@ class SourceForm extends React.Component<Props> {
     const shouldWriteDescription = !isLink || !Boolean(formData.pTitle);
 
     return (
-      <EditorContainer>
+      <EditorContainer withButton>
         <TopRightButton type="button" onClick={this.props.onCancelClick}>
           <CloseIcon />
         </TopRightButton>

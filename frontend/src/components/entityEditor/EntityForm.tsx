@@ -1,20 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 
-import { ENTITY_TYPES } from "../../strings/strings";
-import { Entity, EntityType, EntityTypeValues } from "../../utils/types";
+import { Entity, EntityType, EntityTypeOption } from "../../utils/types";
 import IconButton from "../buttons/IconButton";
 import cuid from "cuid";
 import ButtonBar from "../buttons/ButtonBar";
+import { EntityTypeOptions } from "../../utils/consts";
+import StyledSelect from "../select/StyledSelect";
+import Label from "../inputs/Label";
+import EditorContainer from "../EditorContainer";
+import Input from "../inputs/Input";
 
-const Content = styled.div`
-  display: block;
-  border: grey 1px dotted;
-  padding: 12px;
+const RestyledSelect = styled(StyledSelect)`
+  width: 300px;
+  max-width: 100%;
 `;
-
-const Label = styled.label`
-  display: block;
+const RestyledInput = styled(Input)`
+  width: 300px;
+  max-width: 100%;
 `;
 
 type Props = {
@@ -26,7 +29,7 @@ type Props = {
 
 type State = {
   name: string;
-  type: number;
+  type: EntityType | undefined;
   linkWikipedia?: string;
   linkCrunchbase?: string;
   linkTwitter?: string;
@@ -70,12 +73,13 @@ class EntityForm extends React.Component<Props> {
     this.setState({ name: event.target.value });
   };
 
-  onTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ type: +event.target.value });
+  onTypeChange = (option: EntityTypeOption) => {
+    this.setState({ type: option ? option.value : undefined });
   };
 
   onSubmit = () => {
     if (!this.state.name || this.state.name.length < 3) return;
+    if (!this.state.type) return;
 
     const entity: Entity = {
       _key: this.props.initialEntity._key,
@@ -86,40 +90,43 @@ class EntityForm extends React.Component<Props> {
   };
 
   render() {
+    var selectedEntityType: EntityTypeOption | null = null;
+    for (let option of EntityTypeOptions) {
+      if (option.value === this.state.type) {
+        selectedEntityType = option;
+        break;
+      }
+    }
+
     return (
-      <Content>
-        <fieldset disabled={this.props.disabled}>
-          <div>
-            <Label>
-              Name
-              <input
-                type="text"
-                maxLength={200}
-                value={this.state.name}
-                onChange={this.onNameChange}
-                form={this.state.formId}
-              />
-            </Label>
-            <select
-              value={this.state.type}
-              onChange={this.onTypeChange}
-              form={this.state.formId}
-            >
-              {EntityTypeValues.map((key: EntityType) => (
-                <option key={key} value={key}>
-                  {ENTITY_TYPES[key]}
-                </option>
-              ))}
-            </select>
-          </div>
-          <ButtonBar>
-            <IconButton onClick={this.onSubmit}>Save</IconButton>
-            {this.props.onFormCancel && (
-              <IconButton onClick={this.props.onFormCancel}>Cancel</IconButton>
-            )}
-          </ButtonBar>
-        </fieldset>
-      </Content>
+      <EditorContainer>
+        <Label htmlFor="entityName">Name</Label>
+        <RestyledInput
+          autoFocus
+          type="text"
+          name="entityName"
+          maxLength={200}
+          value={this.state.name}
+          onChange={this.onNameChange}
+          form={this.state.formId}
+        />
+        <Label htmlFor="entityType">Type</Label>
+        <RestyledSelect
+          name="entityType"
+          options={EntityTypeOptions}
+          value={selectedEntityType}
+          onChange={this.onTypeChange}
+          placeholder="..."
+        />
+        <ButtonBar>
+          <IconButton disabled={this.props.disabled} onClick={this.onSubmit}>
+            Save
+          </IconButton>
+          {this.props.onFormCancel && (
+            <IconButton onClick={this.props.onFormCancel}>Cancel</IconButton>
+          )}
+        </ButtonBar>
+      </EditorContainer>
     );
   }
 }

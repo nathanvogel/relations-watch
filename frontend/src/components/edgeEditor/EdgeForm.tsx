@@ -335,7 +335,7 @@ class EdgeForm extends React.Component<Props> {
       this.state.ownedPercent === undefined ? 100 : this.state.ownedPercent;
 
     return (
-      <EditorContainer>
+      <EditorContainer withButton>
         <TopRightButton type="button" onClick={this.props.onFormCancel}>
           <CloseIcon />
         </TopRightButton>

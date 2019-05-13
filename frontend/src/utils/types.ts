@@ -10,6 +10,10 @@ export enum EntityType {
 export const EntityTypeValues: EntityType[] = Object.values(EntityType).filter(
   x => typeof x === "number"
 );
+export type EntityTypeOption = {
+  label: string;
+  value: EntityType;
+};
 
 export enum RelationType {
   IsOwned = 1,

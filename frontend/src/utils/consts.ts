@@ -5,10 +5,16 @@ import {
   FamilialLinkOption,
   FamilialLinkValues,
   RelationTypeRequirements,
-  AmountSelectOption
+  AmountSelectOption,
+  EntityTypeOption,
+  EntityTypeValues
 } from "./types";
 import { EntityType as E } from "./types";
-import { RELATION_TYPES_STR, FAMILIAL_LINK_STR } from "../strings/strings";
+import {
+  RELATION_TYPES_STR,
+  FAMILIAL_LINK_STR,
+  ENTITY_TYPES
+} from "../strings/strings";
 
 // Should have been maintained in sync with the backend here ?
 // /backend/service-graph-api/scripts/consts.js
@@ -78,6 +84,13 @@ export const FamilialLinkOptions: FamilialLinkOption[] = FamilialLinkValues.map(
   value => ({
     value: value,
     label: FAMILIAL_LINK_STR[value]
+  })
+);
+
+export const EntityTypeOptions: EntityTypeOption[] = EntityTypeValues.map(
+  value => ({
+    value: value,
+    label: ENTITY_TYPES[value]
   })
 );
 
