@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-import CONSTS from "../../utils/consts";
 import { ENTITY_TYPES } from "../../strings/strings";
 import { Entity, EntityType, EntityTypeValues } from "../../utils/types";
-import Button from "../buttons/Button";
+import IconButton from "../buttons/IconButton";
 import cuid from "cuid";
+import ButtonBar from "../buttons/ButtonBar";
 
 const Content = styled.div`
   display: block;
@@ -112,10 +112,12 @@ class EntityForm extends React.Component<Props> {
               ))}
             </select>
           </div>
-          <Button onClick={this.onSubmit}>Save</Button>
-          {this.props.onFormCancel && (
-            <Button onClick={this.props.onFormCancel}>Cancel</Button>
-          )}
+          <ButtonBar>
+            <IconButton onClick={this.onSubmit}>Save</IconButton>
+            {this.props.onFormCancel && (
+              <IconButton onClick={this.props.onFormCancel}>Cancel</IconButton>
+            )}
+          </ButtonBar>
         </fieldset>
       </Content>
     );

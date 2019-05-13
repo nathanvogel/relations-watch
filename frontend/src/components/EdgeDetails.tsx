@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Edge, Entity, Status } from "../utils/types";
-import Button from "./buttons/Button";
+import { Edge, Status } from "../utils/types";
 import EdgeEditor from "./EdgeEditor";
 import { RELATION_COLORS, TP } from "../utils/theme";
 import SourceDetails from "./SourceDetails";

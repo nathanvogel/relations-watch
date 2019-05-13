@@ -34,12 +34,18 @@ const Content = styled.span`
 `;
 
 const StyledLink = styled(Link)`
-  color: inherit;
+  font-weight: bold;
   text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
+  &:link {
+    color: ${(props: TP) => props.theme.mainTextColor};
   }
+`;
+
+const NameSpan = styled.span`
+  // This is only to fix a bug in Firefox 66.0.5 Windows,
+  // with which even if the correct style override is choosen in the inspector,
+  // Firefox renders the other color.
+  color: ${(props: TP) => props.theme.mainTextColor};
 `;
 
 const EntityImage = styled.img`
@@ -81,7 +87,7 @@ class SourceEntityPreview extends Component<Props> {
         ) : (
           <Content>
             <EntityImage src={getEntitySAsset(entity.type)} />
-            {entity.name}
+            <NameSpan>{entity.name}</NameSpan>
           </Content>
         )}
       </StyledLink>

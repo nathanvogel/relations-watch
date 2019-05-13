@@ -1,7 +1,8 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 import { TP } from "./utils/theme";
 
-const GlobalStyle = createGlobalStyle`
+// Put the CSS in a separate css template to get babel coloring
+const GlobalStyleCSS = css`
   body {
     margin: 0;
     padding: 0;
@@ -14,7 +15,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
   }
 
   svg .interaction {
@@ -29,6 +31,25 @@ const GlobalStyle = createGlobalStyle`
     margin-top: 0.25em;
     margin-bottom: 0.5em;
   }
+
+  a:link {
+    color: ${(props: TP) => props.theme.linkTextColor};
+    text-decoration: none;
+  }
+  a:visited {
+    color: ${(props: TP) => props.theme.visitedLinkTextColor};
+  }
+  a:hover {
+    color: ${(props: TP) => props.theme.hoverLinkTextColor};
+    text-decoration: underline;
+  }
+  a:active {
+    color: ${(props: TP) => props.theme.linkTextColor};
+  }
+`;
+
+const GlobalStyle = createGlobalStyle`
+  ${GlobalStyleCSS}
 `;
 
 export default GlobalStyle;

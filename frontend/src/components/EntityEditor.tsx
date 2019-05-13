@@ -18,7 +18,7 @@ import EntityForm from "./entityEditor/EntityForm";
 import Meta from "./meta/Meta";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { shouldLoad } from "../utils/utils";
-import Button from "./buttons/Button";
+import IconButton from "./buttons/IconButton";
 
 const Content = styled.div`
   display: block;
@@ -123,7 +123,7 @@ class EntityEditor extends React.Component<Props> {
         <Content>
           <p>Saved!</p>
           {this.props.onDone ? (
-            <Button onClick={this.onClearClick}>Ok</Button>
+            <IconButton onClick={this.onClearClick}>Ok</IconButton>
           ) : (
             <Link
               onClick={this.onClearClick}

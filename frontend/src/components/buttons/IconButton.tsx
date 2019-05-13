@@ -1,10 +1,15 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { TP } from "../../utils/theme";
+
+const withTextCSS = css`
+  margin-right: ${(props: TP) => props.theme.inputLRSpacing};
+`;
 
 const IconButton = styled.button`
   height: auto;
-  min-height: 28px;
-  min-width: 28px;
+  min-height: ${props => (props.small ? "16px" : "28px")};
+  min-width: ${props => (props.small ? "16px" : "28px")};
+  font-size: ${(props: TP) => (props.small ? props.theme.fontSizeS : "inherit")}
   padding: ${(props: TP) => props.theme.inputPaddingTB}
     ${(props: TP) => props.theme.inputPaddingLR};
   background-color: ${(props: TP) => props.theme.inputBG};
@@ -29,6 +34,10 @@ const IconButton = styled.button`
   &:disabled {
     color: ${(props: TP) => props.theme.secondaryTextColor};
     cursor: not-allowed;
+  }
+
+  & > svg {
+    ${props => props.withText && withTextCSS}
   }
 `;
 

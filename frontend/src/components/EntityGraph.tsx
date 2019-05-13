@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
-import Button from "../components/buttons/Button";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
 import {
@@ -295,9 +294,6 @@ class EntityGraph extends Component<Props> {
 
     return (
       <Content>
-        <Button to={`/${ROUTES.relation}/${baseEntityKey}/${CONSTS.EMPTY_KEY}`}>
-          New relation
-        </Button>
         {/* <GraphSVG width={W} height={H} xmlns="http://www.w3.org/2000/svg">
           {rRelations.map(rRelation => (
             <Link

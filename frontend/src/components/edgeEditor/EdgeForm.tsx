@@ -440,7 +440,7 @@ class EdgeForm extends React.Component<Props> {
               />
             </React.Fragment>
           )}
-          <ButtonBar>
+          <ButtonBar buttonsAlign="right">
             {!this.isNew && (
               <ButtonWithConfirmation onAction={this.props.onDelete}>
                 Delete this relation element

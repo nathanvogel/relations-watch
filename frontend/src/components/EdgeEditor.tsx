@@ -1,6 +1,5 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import styled from "styled-components";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";
 
@@ -17,7 +16,7 @@ import { Edge, Status, SourceLink } from "../utils/types";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import Meta from "./meta/Meta";
 import EdgeForm from "./edgeEditor/EdgeForm";
-import Button from "./buttons/Button";
+import IconButton from "./buttons/IconButton";
 
 type OwnProps = {
   entity1Key: string;
@@ -145,7 +144,9 @@ class EdgeEditor extends React.Component<Props> {
       return (
         <p>
           Saved!{" "}
-          <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
+          <IconButton onClick={this.clearPostRequest.bind(this, true)}>
+            Ok
+          </IconButton>
         </p>
       );
     }

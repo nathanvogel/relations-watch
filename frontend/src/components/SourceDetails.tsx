@@ -7,11 +7,11 @@ import { RootStore } from "../Store";
 import { SourceLink, Status, SourceType } from "../utils/types";
 import Meta from "./meta/Meta";
 import SourceEntityPreview from "./sourceDetails/SourceEntityPreview";
-import Button from "./buttons/Button";
 import SourceForm from "./SourceForm";
 import { patchSource } from "../features/sourcesAC";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import SourceListItemContainerCSS from "./sourceDetails/SourceListItemContainer";
+import IconButton from "./buttons/IconButton";
 
 const SourceListItemContainer = styled.div`
   ${SourceListItemContainerCSS}
@@ -123,7 +123,7 @@ class SourceDetails extends React.Component<Props> {
       <SourceListItemContainer>
         <Actions>
           {this.props.editable && (
-            <Button onClick={this.toggleClick}>Edit</Button>
+            <IconButton onClick={this.toggleClick}>Edit</IconButton>
           )}
         </Actions>
         <div>{source.pTitle || source.description}</div>

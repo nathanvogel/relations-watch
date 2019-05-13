@@ -8,6 +8,9 @@ const theme = {
   fontSizeL: "24px",
   mainTextColor: "rgb(0, 0, 0, 0.84)" /* Stolen from Medium */,
   lightTextColor: "#ffffff",
+  linkTextColor: "#0077CC", // Stackoverflow
+  visitedLinkTextColor: "#0077CC",
+  hoverLinkTextColor: "#33AAFF",
   secondaryTextColor: "#72727c",
   focusColor: "#5B44E8",
   lightBg: "#EFEFF2",
@@ -25,6 +28,9 @@ const theme = {
   inputMarginTB: "12px",
   blockPadding: "12px",
   blockSpacingTB: "20px",
+  navBarHeight: "42px",
+  appMaxWidth: "1280px",
+  appPadding: "24px",
   longFieldHeight: "3em",
   radius: "4px"
 };

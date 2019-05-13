@@ -6,13 +6,17 @@ import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
 import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
-import Button from "../components/buttons/Button";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import EntityGraph from "../components/EntityGraph";
 import * as entitySelectionActions from "../features/entitySelectionActions";
+import ButtonBar from "../components/buttons/ButtonBar";
+import IconButton from "../components/buttons/IconButton";
+import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
+import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
+import CONSTS from "../utils/consts";
 
 const Content = styled.div``;
 
@@ -44,6 +48,7 @@ const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
   const linksError = state.links.errors[entityKey];
   // Return everything.
   return {
+    ...props,
     entityKey,
     entity,
     status,
@@ -101,6 +106,18 @@ class EntityScreen extends Component<Props> {
     if (this.props.selectEntities) this.props.selectEntities([entityKey]);
   };
 
+  onEditEntity = () => {
+    const url = `/${ROUTES.edit}/${ROUTES.entity}/${this.props.entityKey}`;
+    this.props.history.push(url);
+  };
+
+  onAddRelation = () => {
+    const url = `/${ROUTES.relation}/${this.props.entityKey}/${
+      CONSTS.EMPTY_KEY
+    }`;
+    this.props.history.push(url);
+  };
+
   render() {
     const { entity, status, error, entityKey } = this.props;
 
@@ -109,9 +126,16 @@ class EntityScreen extends Component<Props> {
     return (
       <Content>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
-        <Button to={`/${ROUTES.edit}/${ROUTES.entity}/${entityKey}`}>
-          Edit {status === Status.Ok && entity.name}
-        </Button>
+        <ButtonBar>
+          <IconButton withText onClick={this.onEditEntity}>
+            <EditIcon />
+            Edit {status === Status.Ok && entity.name}
+          </IconButton>
+          <IconButton withText onClick={this.onAddRelation}>
+            <AddIcon />
+            New relation
+          </IconButton>
+        </ButtonBar>
         {status === Status.Ok ? (
           <EntityGraph entityKey={entityKey} />
         ) : this.state.prevEntityKey ? (

@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { TP } from "../../utils/theme";
 
+type Props = {
+  buttonsAlign?: string;
+};
+
 const ButtonBar = styled.div`
-  text-align: right;
+  text-align: ${(props: Props) => props.buttonsAlign || "left"};
   margin: ${(props: TP) => props.theme.inputTBSpacing} -${(props: TP) => props.theme.inputLRSpacing};
 
   & > * {

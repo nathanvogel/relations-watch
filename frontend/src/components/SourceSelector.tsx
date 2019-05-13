@@ -10,8 +10,6 @@ import { getSourceFromRef } from "../features/sourcesAC";
 import { Status, ReactSelectOption } from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
-import Button from "./buttons/Button";
-import Label from "./inputs/Label";
 import IconButton from "./buttons/IconButton";
 
 const Content = styled.div`

@@ -37,9 +37,3 @@ export const media: MediaQueryHelper = Object.keys(sizes).reduce(
   },
   {}
 );
-
-export const Theme = {
-  NAV_HEIGHT: "42px",
-  MAX_WIDTH: "1280px",
-  MAIN_PADDING: "24px"
-};

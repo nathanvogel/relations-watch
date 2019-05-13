@@ -7,16 +7,19 @@ import HomeScreen from "./HomeScreen";
 import EntityScreen from "./EntityScreen";
 import RelationsScreen from "./RelationsScreen";
 import RT from "../utils/ROUTES";
-import { Theme } from "../utils/media-styles";
 import { CreateEntityScreen } from "./CreateEntityScreen";
 import { getRelationId } from "../utils/utils";
+import { TP } from "../utils/theme";
 
 const MainContent = styled.main`
-  width: calc(100% - ${Theme.MAIN_PADDING} - ${Theme.MAIN_PADDING});
-  max-width: ${Theme.MAX_WIDTH};
+  width: calc(
+    100% - ${(props: TP) => props.theme.appPadding}; -
+      ${(props: TP) => props.theme.appPadding};
+  );
+  max-width: ${(props: TP) => props.theme.appMaxWidth};
   margin: 0 auto;
-  padding-left: ${Theme.MAIN_PADDING};
-  padding-right: ${Theme.MAIN_PADDING};
+  padding-left: ${(props: TP) => props.theme.appPadding};
+  padding-right: ${(props: TP) => props.theme.appPadding};
   padding-top: 12px;
 `;
 
