@@ -10,6 +10,9 @@ import EdgeSummary from "./edgeDetails/EdgeSummary";
 import { RootStore } from "../Store";
 import { Dispatch, AnyAction, bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
+import SourceListItemContainerCSS from "./sourceDetails/SourceListItemContainer";
+import IconButton from "./buttons/IconButton";
 
 const Content = styled.section`
   box-sizing: border-box;
@@ -36,8 +39,21 @@ const EdgeMainText = styled.p`
   margin-bottom: 20px;
 `;
 
-const BottomActions = styled.div`
-  text-align: center;
+const AddSourceButton = styled(IconButton)`
+  ${SourceListItemContainerCSS}
+  width: 100%;
+  display: block;
+  padding-top: ${(props: TP) => props.theme.inputPaddingTB};
+  padding-bottom: ${(props: TP) => props.theme.inputPaddingTB};
+  margin-bottom: 0px; // It's the last element
+  font-size: 6px; // smaller than the icon so that it is centered
+  // background-color: white;
+
+  & > svg {
+    height: 18px;
+    width: 18px;
+    // margin-right: 10px;
+  }
 `;
 
 type OwnProps = {
@@ -112,7 +128,9 @@ class EdgeDetails extends React.Component<Props> {
           />
         )}
         <EdgeMainText>{edge.text}</EdgeMainText>
-        {edge.sourceText && <div>Previous source: {edge.sourceText}</div>}
+        {edge.sourceText && (!edge.sources || edge.sources.length === 0) && (
+          <div>Previous source: {edge.sourceText}</div>
+        )}
         {edge.sources && edge.sources.length > 0 ? (
           edge.sources.map((sourceLink, index) => (
             <SourceDetails
@@ -126,9 +144,9 @@ class EdgeDetails extends React.Component<Props> {
             <em>UNSOURCED INFORMATION</em>
           </div>
         )}
-        <BottomActions>
-          <Button onClick={this.onEditClick}>Add a source and/or edit</Button>
-        </BottomActions>
+        <AddSourceButton onClick={this.onEditClick}>
+          <EditIcon />
+        </AddSourceButton>
       </Content>
     );
   }

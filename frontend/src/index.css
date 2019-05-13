@@ -9,7 +9,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.4;
   color: rgb(0, 0, 0, 0.84); /* Stolen from Medium */
-  font-size: 20px;
+  font-size: 18px;
 }
 
 code {

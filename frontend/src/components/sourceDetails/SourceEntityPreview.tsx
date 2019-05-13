@@ -6,21 +6,45 @@ import styled from "styled-components";
 import { RootStore } from "../../Store";
 import ROUTES from "../../utils/ROUTES";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
+import { getEntitySAsset } from "../../assets/EntityIcons";
+import { TP } from "../../utils/theme";
 
 const Content = styled.span`
-  font-size: 12px;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  font-size: ${(props: TP) => props.theme.fontSizeS};
+  // font-weight: bold;
   margin: 3px;
   padding: 3px;
   padding-left: 5px;
   padding-right: 5px;
-  color: #fff;
-  background-color: #245;
   border-radius: 2px;
-  a {
-    color: inherit;
-    text-decoration: none;
+
+  background-color: #fff;
+  // color: ${(props: TP) => props.theme.lightTextColor};
+  // background-color: #245;
+  // border-style: solid;
+  // border-color: #fff;
+  // border-width: ${(props: TP) => props.theme.borderWidth};
+  &:hover {
+    background-color: ${(props: TP) => props.theme.surfaceHover};
   }
+`;
+
+const StyledLink = styled(Link)`
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const EntityImage = styled.img`
+  height: 16px;
+  padding-right: 4px;
 `;
 
 type OwnProps = {
@@ -51,11 +75,16 @@ class SourceEntityPreview extends Component<Props> {
     const { entity, entityKey } = this.props;
 
     return (
-      <Content>
-        <Link to={`/${ROUTES.entity}/${entityKey}`}>
-          {entity ? entity.name : `Loading ${entityKey}...`}
-        </Link>
-      </Content>
+      <StyledLink to={`/${ROUTES.entity}/${entityKey}`}>
+        {!entity ? (
+          <Content>{`Loading ${entityKey}...`}</Content>
+        ) : (
+          <Content>
+            <EntityImage src={getEntitySAsset(entity.type)} />
+            {entity.name}
+          </Content>
+        )}
+      </StyledLink>
     );
   }
 }

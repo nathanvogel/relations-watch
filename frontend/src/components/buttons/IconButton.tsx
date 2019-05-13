@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { TP } from "../../utils/theme";
 
 const IconButton = styled.button`
-  height: 32px;
+  height: auto;
   min-height: 28px;
   min-width: 28px;
   padding: ${(props: TP) => props.theme.inputPaddingTB}
@@ -17,8 +17,8 @@ const IconButton = styled.button`
   color: inherit;
 
   &:not([disabled]):hover {
-    background-color: ${(props: TP) => props.theme.borderHover};
-    border-color: ${(props: TP) => props.theme.borderHover};
+    background-color: ${(props: TP) => props.theme.surfaceHover};
+    border-color: ${(props: TP) => props.theme.surfaceHover};
   }
 
   &:focus {
