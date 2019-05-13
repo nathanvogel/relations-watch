@@ -2,7 +2,7 @@ import { AnyAction } from "redux";
 import { SimulationNodeDatum } from "d3-force";
 
 export enum EntityType {
-  PhysicalPerson = 1,
+  Human = 1,
   MoralPerson = 2,
   Event = 10,
   Group = 100
@@ -10,11 +10,63 @@ export enum EntityType {
 export const EntityTypeValues: EntityType[] = Object.values(EntityType).filter(
   x => typeof x === "number"
 );
+export type EntityTypeOption = {
+  label: string;
+  value: EntityType;
+};
+
+export enum RelationType {
+  IsOwned = 1,
+  JobDependsOn = 30,
+  IsControlled = 50,
+  ValueExchange = 100,
+  Family = 300,
+  Friendship = 310,
+  Love = 320,
+  Opposition = 330,
+  Influences = 500,
+  Attendance = 1000,
+  GroupMember = 2000,
+  Other = 3000
+}
+export const RelationTypeValues: RelationType[] = Object.values(
+  RelationType
+).filter(x => typeof x === "number");
+
+export type RelationTypeOption = {
+  label: string;
+  value: RelationType;
+};
 
 export type ErrorPayload = {
   eData: any;
   eMessage: string;
   eStatus: number | string;
+};
+
+export type RelationTypeRequirements = {
+  descriptionRequired?: boolean;
+  amount?: boolean;
+  familialLinkType?: boolean;
+  ownedPercent?: boolean;
+};
+
+export enum FamilialLink {
+  childOf = 1,
+  siblingOf = 2,
+  spouseOf = 3,
+  grandchildOf = 14,
+  cousinOf = 15,
+  niblingOf = 16,
+  other = 100 // son-in-law, etc.
+}
+export const FamilialLinkValues: FamilialLink[] = Object.values(
+  FamilialLink
+).filter(x => typeof x === "number");
+
+export type FamilialLinkOption = {
+  label: string;
+  value: FamilialLink;
 };
 
 export interface Action extends AnyAction {
@@ -55,31 +107,33 @@ export type Entity = {
   linkWebsite?: string;
 };
 
-export interface EntityPreview {
+export type EntityPreview = {
   _key: string;
   name: string;
   imageId?: string;
   type: EntityType;
-}
+};
 
-export interface Edge {
+export type Edge = {
   _key?: string;
   _from: string;
   _to: string;
   text: string;
-  type: number;
+  type: RelationType;
   amount?: number;
   exactAmount?: boolean;
+  fType?: FamilialLink;
+  owned?: number;
   sources: SourceLink[];
   sourceText?: string;
-}
+};
 
-export interface EdgePreview {
+export type EdgePreview = {
   _key: string;
   _from: string;
   _to: string;
-  type: number;
-}
+  type: RelationType;
+};
 
 export type CommonEdge = Edge | EdgePreview;
 
@@ -112,7 +166,7 @@ export type RelationRenderData = {
   source: string | SimulationNodeDatum;
   target: string | SimulationNodeDatum;
   relationId: string;
-  types: number[];
+  types: RelationType[];
   withType: NodeRenderType;
   visited: boolean;
 };
@@ -148,7 +202,7 @@ export type Source = {
   ref: string;
   type: number;
   authors: string[];
-  fullUrl?: string;
+  fullUrl?: string; // Should be in SourceLink
   description: string;
   pAuthor?: string;
   pTitle?: string;
@@ -184,3 +238,14 @@ export type ReactSelectOption = {
   label: string;
   [key: string]: any;
 };
+
+export type AmountSelectOption = {
+  value: number;
+  label: string;
+};
+
+/**
+ * Useful to generate key lists from JSON files
+ * in order to get static (dynamic) Typescript autocomplete.
+ */
+export type KeyList<T> = { readonly [P in keyof T]: P };

@@ -10,15 +10,14 @@ import { getSourceFromRef } from "../features/sourcesAC";
 import { Status, ReactSelectOption } from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
-import Button from "./buttons/Button";
-import CONSTS from "../utils/consts";
+import IconButton from "./buttons/IconButton";
 
 const Content = styled.div`
-  disply: block;
+  display: block;
 `;
 
-const Label = styled.label`
-  display: block;
+const StyledSourceRefSearch = styled(SourceRefSearch)`
+  width: 100%;
 `;
 
 type OwnProps = {
@@ -106,15 +105,12 @@ class SourceSelector extends React.Component<Props> {
       case SelectorMode.EditingRef:
         return (
           <Content>
-            <Label>
-              Source document:
-              <SourceRefSearch
-                onChange={this.onSelectSource}
-                inputValue={sourceRef}
-                onInputChange={this.onSourceRefChange}
-                onCreateSource={this.onCreateSource}
-              />
-            </Label>
+            <StyledSourceRefSearch
+              onChange={this.onSelectSource}
+              inputValue={sourceRef}
+              onInputChange={this.onSourceRefChange}
+              onCreateSource={this.onCreateSource}
+            />
           </Content>
         );
       case SelectorMode.EditingNewSource:
@@ -138,12 +134,14 @@ class SourceSelector extends React.Component<Props> {
         }
         return (
           <Content>
+            <IconButton onClick={this.onDeselectSource}>
+              Pick another
+            </IconButton>
             {this.props.sourceKey ? (
               <SourceDetails sourceKey={this.props.sourceKey} />
             ) : (
               "Missing source key!"
             )}
-            <Button onClick={this.onDeselectSource}>Pick another source</Button>
           </Content>
         );
     }

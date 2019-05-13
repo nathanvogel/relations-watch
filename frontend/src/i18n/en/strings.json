@@ -1,0 +1,23 @@
+{
+  "relationType_jobDep": "{{nameFrom}} works for {{nameTo}}.",
+  "relationType_jobDep_A": "{{nameFrom}} works for {{nameTo}} for ~{{amount}}+ US$.",
+  "relationType_jobDep_eA": "{{nameFrom}} works for {{nameTo}} for {{amount}} US$.",
+  "relationType_traded": "They traded together.",
+  "relationType_traded_A": "They traded together for ~{{amount}}+ US$.",
+  "relationType_traded_eA": "They traded together for {{amount}} US$.",
+  "relationType_owned_p": "{{nameFrom}} is owned at {{percent}} % by {{nameTo}}.",
+  "relationType_controlled": "{{nameFrom}} is controlled by {{nameTo}}.",
+  "relationType_member": "{{nameFrom}} is a member of {{nameTo}}.",
+  "relationType_attended": "{{nameFrom}} attended {{nameTo}}.",
+  "relationType_ideas": "{{nameFrom}} inflenced the ideas of {{nameTo}}.",
+  "relationType_f_child": "{{nameFrom}} is a child of {{nameTo}}.",
+  "relationType_f_grandchild": "{{nameFrom}} is a grandchild of {{nameTo}}.",
+  "relationType_f_married": "They're married.",
+  "relationType_f_sibling": "{{nameFrom}} is a sibling {{nameTo}}.",
+  "relationType_f_cousin": "{{nameFrom}} is a cousin {{nameTo}}.",
+  "relationType_f_nibling": "{{nameFrom}} is a nibling {{nameTo}}.",
+  "relationType_f_other": "They're in the same family.",
+  "relationType_friends": "They're friends.",
+  "relationType_love": "They're in love.",
+  "relationType_opposition": "They're in opposition."
+}

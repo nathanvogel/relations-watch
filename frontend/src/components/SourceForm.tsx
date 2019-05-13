@@ -1,14 +1,19 @@
 import React from "react";
-import styled from "styled-components";
 import { Dispatch, bindActionCreators, AnyAction } from "redux";
 import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
 
 import { Source, ReactSelectOption, SourceType } from "../utils/types";
-import Button from "./buttons/Button";
+import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
 import EntitySearch from "./EntitySearch";
 import { RootStore } from "../Store";
 import * as sourceFormActions from "../features/sourceFormActions";
+import Label from "./inputs/Label";
+import TextArea from "./inputs/TextArea";
+import IconButton from "./buttons/IconButton";
+import ButtonBar from "./buttons/ButtonBar";
+import EditorContainer from "./EditorContainer";
+import TopRightButton from "./buttons/TopRightButton";
 
 type OwnProps = {
   editorId: string;
@@ -16,14 +21,6 @@ type OwnProps = {
   onCancelClick: () => void;
   onSaveClick?: () => void;
 };
-
-const Label = styled.label`
-  display: block;
-`;
-
-const Content = styled.div`
-  display: block;
-`;
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { editorId } = props;
@@ -80,7 +77,7 @@ class SourceForm extends React.Component<Props> {
     this.props.clearFormData(this.props.editorId);
   }
 
-  onDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.props.onDescriptionChange(this.props.editorId, event.target.value);
   };
 
@@ -97,48 +94,57 @@ class SourceForm extends React.Component<Props> {
     const shouldWriteDescription = !isLink || !Boolean(formData.pTitle);
 
     return (
-      <div>
-        <Button onClick={this.props.onCancelClick}>← Back </Button>
-        Reference: {formData.ref}
+      <EditorContainer withButton>
+        <TopRightButton type="button" onClick={this.props.onCancelClick}>
+          <CloseIcon />
+        </TopRightButton>
+        <strong>{formData.ref}</strong>
         {!isLink && (
           <p>
             <em>
               You're using a manual reference, if possible, use a link. If it's
-              a book, link to{" "}
-              <a href="https://www.goodreads.com">goodreads.com</a>.
+              a book, link to its{" "}
+              <a href="https://www.goodreads.com">goodreads.com</a> page.
             </em>
           </p>
         )}
         {/* Editable only if it's not a link
          * or if there isn't any auto-generated description  */}
         {shouldWriteDescription ? (
-          <Label>
-            Description:{" "}
-            <input
+          <React.Fragment>
+            <Label htmlFor="sourceDescription">Description</Label>
+            <TextArea
+              name="sourceDescription"
               onChange={this.onDescriptionChange}
               value={formData.description}
               disabled={!shouldWriteDescription}
             />
-          </Label>
+          </React.Fragment>
         ) : (
           <div>
-            Description: {formData.pTitle}
-            <br />
-            {formData.pDescription}
+            <Label>Description</Label>
+            <p>
+              {formData.pTitle}
+              <br />
+              {formData.pDescription}
+            </p>
           </div>
         )}
         {isLink && formData.pAuthor && (
           <div>Detected author(s): {formData.pAuthor}</div>
         )}
+        <Label>Authors' entities</Label>
         <EntitySearch
           selection={selectedAuthors}
           onChange={this.onAuthorsChange}
           isMulti={true}
         />
-        {this.props.onSaveClick && (
-          <Button onClick={this.props.onSaveClick}>Save</Button>
-        )}
-      </div>
+        <ButtonBar buttonsAlign="right">
+          {this.props.onSaveClick && (
+            <IconButton onClick={this.props.onSaveClick}>Save</IconButton>
+          )}
+        </ButtonBar>
+      </EditorContainer>
     );
   }
 }

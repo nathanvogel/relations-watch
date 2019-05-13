@@ -9,18 +9,19 @@ import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
 import { getEntityLAsset } from "../assets/EntityIcons";
-import { ENTITY_TYPES } from "../strings/strings";
 import MainPersonImage from "./entityDetails/MainPersonImage";
+import { TP } from "../utils/theme";
 
 const Content = styled.div`
   width: 100%;
 `;
 
-const PersonName = styled.h5`
+const PersonName = styled.div`
   text-align: center;
-  font-size: 18px;
-  text-decoration: none;
-  color: #001144;
+  font-size: ${(props: TP) => props.theme.fontSizeL};
+  margin: ${(props: TP) => props.theme.marginTB};
+  // text-decoration: none;
+  // color: #001144;
 `;
 
 type OwnProps = { entityKey: string };
@@ -70,7 +71,6 @@ class EntityDetails extends Component<Props> {
           <MainPersonImage src={getEntityLAsset(entity.type)} />
           <PersonName>{entity.name}</PersonName>
         </Link>
-        <p>{ENTITY_TYPES[entity.type]}</p>
       </Content>
     );
   }

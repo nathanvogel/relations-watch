@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { TP } from "../../utils/theme";
 
 type Props = {
   to?: string;
@@ -11,7 +12,10 @@ const style = css`
   font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  color: inherit;
+
+  &:link {
+    color: ${(props: TP) => props.theme.mainTextColor};
+  }
 
   &:hover {
     opacity: 0.7;
@@ -37,4 +41,4 @@ const Button: React.FunctionComponent<Props> = props => {
   );
 };
 
-export default Button;
+// export default Button;

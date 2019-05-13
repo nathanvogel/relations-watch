@@ -47,8 +47,8 @@ const relSchema = joi
     _to: joi.string().required(),
     text: joi
       .string()
-      .min(3)
       .max(288)
+      .allow("")
       .required(),
     type: joi
       .number()
@@ -56,6 +56,8 @@ const relSchema = joi
       .required(),
     amount: joi.number(),
     exactAmount: joi.boolean(),
+    fType: joi.number(),
+    owned: joi.number(),
     sources: joi
       .array()
       .items(sourceLinkSchema.optional())

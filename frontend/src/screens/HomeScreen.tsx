@@ -5,9 +5,10 @@ import styled from "styled-components";
 import EntitySearch from "../components/EntitySearch";
 import ROUTES from "../utils/ROUTES";
 import { ReactSelectOption } from "../utils/types";
+import { TP } from "../utils/theme";
 
 const Header = styled.header`
-  margin-top: 20vh;
+  margin-top: 16vh;
 `;
 
 const CentralSearch = styled(EntitySearch)`
@@ -16,6 +17,10 @@ const CentralSearch = styled(EntitySearch)`
   width: 330px;
   max-width: 100%;
   margin: 0 auto;
+
+  .rs__control {
+    padding: 4px ${(props: TP) => props.theme.inputPaddingLR};
+  }
 `;
 
 const CentralTitle = styled.h2`

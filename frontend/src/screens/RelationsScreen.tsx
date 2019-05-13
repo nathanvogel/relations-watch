@@ -12,13 +12,15 @@ import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";
 import EdgesList from "../components/EdgesList";
 import EdgeEditor from "../components/EdgeEditor";
-import Button from "../components/buttons/Button";
 import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
 import { Edge, Status, ReactSelectOption } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
 import Meta from "../components/meta/Meta";
 import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
+import IconButton from "../components/buttons/IconButton";
+import { EditorContainerCSS } from "../components/EditorContainer";
+import { TP } from "../utils/theme";
 
 const Content = styled.div`
   display: flex;
@@ -34,6 +36,28 @@ const RelationsColumn = styled.div`
   padding-right: 32px;
 `;
 
+const AddButton = styled(IconButton)`
+  ${EditorContainerCSS}
+  width:100%;
+  display: block;
+  padding-top: ${(props: TP) => props.theme.inputPaddingTB};
+  padding-bottom: ${(props: TP) => props.theme.inputPaddingTB};
+  margin-bottom: 0px; // It's the last element
+  // font-size: 6px; // smaller than the icon so that it is centered
+  background-color: white;
+
+  & > svg {
+    height: 18px;
+    width: 18px;
+    // margin-right: 10px;
+  }
+`;
+
+const ClearButton = styled(IconButton)`
+  display: block;
+  margin: 0 auto;
+`;
+
 type OwnProps = {
   entity1Key?: string;
   entity2Key?: string;
@@ -46,7 +70,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
   const relationId = getRelationId(realKey1, realKey2) as string;
 
-  // Get the entity from the Redux Store
+  // Get the relation from the Redux Store
   const relations: Edge[] =
     relationId && state.relations.data[relationId]
       ? state.relations.data[relationId]
@@ -140,9 +164,9 @@ class RelationsScreen extends React.Component<Props> {
           {realKey1 ? (
             <div>
               <EntityDetails key={realKey1} entityKey={realKey1} />
-              <Button onClick={this.onEntity1Cleared}>
+              <ClearButton small onClick={this.onEntity1Cleared}>
                 Search another entity
-              </Button>
+              </ClearButton>
             </div>
           ) : (
             <EntitySearch onChange={this.onEntity1Selected} />
@@ -157,19 +181,14 @@ class RelationsScreen extends React.Component<Props> {
               <BigLinksPreview relations={relations} />
               {/* PART adding */}
               {this.state.adding ? (
-                <React.Fragment>
-                  <EdgeEditor
-                    entity1Key={realKey1}
-                    entity2Key={realKey2}
-                    editorId={this.addEdgeEditorId}
-                    dismiss={this.onCancelAddClick}
-                  />
-                  <Button onClick={this.onCancelAddClick}>Cancel</Button>
-                </React.Fragment>
+                <EdgeEditor
+                  entity1Key={realKey1}
+                  entity2Key={realKey2}
+                  editorId={this.addEdgeEditorId}
+                  dismiss={this.onCancelAddClick}
+                />
               ) : (
-                <Button onClick={this.onAddClick}>
-                  Add a relation element
-                </Button>
+                <AddButton onClick={this.onAddClick}>+</AddButton>
               )}
               {/* PART edge list */}
               {relationsStatus !== Status.Ok ? (
@@ -184,9 +203,9 @@ class RelationsScreen extends React.Component<Props> {
           {realKey2 ? (
             <div>
               <EntityDetails key={realKey2} entityKey={realKey2} />
-              <Button onClick={this.onEntity2Cleared}>
+              <ClearButton small onClick={this.onEntity2Cleared}>
                 Search another entity
-              </Button>
+              </ClearButton>
             </div>
           ) : (
             <EntitySearch onChange={this.onEntity2Selected} />

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
-import Button from "../components/buttons/Button";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
 import {
@@ -14,7 +13,8 @@ import {
   RelationRenderData,
   EdgePreview,
   NodeRenderData,
-  NodeRenderType
+  NodeRenderType,
+  RelationType
 } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import GraphEntityNode from "./entityGraph/GraphEntityNode";
@@ -246,7 +246,9 @@ class EntityGraph extends Component<Props> {
         const e2Primary = e2.type === NodeRenderType.Primary;
         // Filter out secondary relationships of secondary entities
         if (
-          link.type === CONSTS.RELATION_TYPES.COMMON_ACTIVITES &&
+          (link.type === RelationType.Other ||
+            link.type === RelationType.ValueExchange ||
+            link.type === RelationType.Attendance) &&
           !e1Primary &&
           !e2Primary
         )
@@ -292,9 +294,6 @@ class EntityGraph extends Component<Props> {
 
     return (
       <Content>
-        <Button to={`/${ROUTES.relation}/${baseEntityKey}/${CONSTS.EMPTY_KEY}`}>
-          New relation
-        </Button>
         {/* <GraphSVG width={W} height={H} xmlns="http://www.w3.org/2000/svg">
           {rRelations.map(rRelation => (
             <Link

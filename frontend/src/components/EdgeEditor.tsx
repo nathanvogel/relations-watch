@@ -1,6 +1,5 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import styled from "styled-components";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { connect } from "react-redux";
 
@@ -17,19 +16,14 @@ import { Edge, Status, SourceLink } from "../utils/types";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import Meta from "./meta/Meta";
 import EdgeForm from "./edgeEditor/EdgeForm";
-import Button from "./buttons/Button";
-
-const Content = styled.div`
-  display: block;
-  padding: 12px;
-`;
+import IconButton from "./buttons/IconButton";
 
 type OwnProps = {
   entity1Key: string;
   entity2Key: string;
   editorId: string;
   edgeKey?: string;
-  dismiss?: () => void;
+  dismiss: () => void;
 };
 
 type Props = ReturnType<typeof mapStateToProps> &
@@ -38,10 +32,23 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { entity1Key, entity2Key, editorId, edgeKey } = props;
-  if (!entity1Key)
+
+  var entity1 = null;
+  var entity1Status = null;
+  if (entity1Key) {
+    entity1 = state.entities.data[entity1Key];
+    entity1Status = state.entities.status[entity1Key];
+  } else {
     console.warn("EdgeEditor: Invalid entity1Key parameter:", entity1Key);
-  if (!entity2Key)
+  }
+  var entity2 = null;
+  var entity2Status = null;
+  if (entity2Key) {
+    entity2 = state.entities.data[entity2Key];
+    entity2Status = state.entities.status[entity2Key];
+  } else {
     console.warn("EdgeEditor: Invalid entity2Key parameter:", entity2Key);
+  }
   // It's safe to assume we'll get an ID because entity1Key and entity2Key
   // are not nullable.
   const relationId = getRelationId(entity1Key, entity2Key);
@@ -64,6 +71,10 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     postData,
     postStatus,
     postError,
+    entity1,
+    entity1Status,
+    entity2,
+    entity2Status,
     edge,
     edgeStatus,
     edgeError
@@ -113,14 +124,13 @@ class EdgeEditor extends React.Component<Props> {
     const { entity1Key, entity2Key } = this.props;
     const { postStatus, postError } = this.props;
     const { edgeKey, edge, edgeStatus, edgeError } = this.props;
+    const { entity1, entity1Status, entity2, entity2Status } = this.props;
 
     // First of all, we need to load the edge to edit (if any)
     if (edgeKey && edgeStatus !== Status.Ok)
-      return (
-        <Content>
-          <Meta status={edgeStatus} error={edgeError} />
-        </Content>
-      );
+      return <Meta status={edgeStatus} error={edgeError} />;
+    if (!entity1) return <Meta status={entity1Status} />;
+    if (!entity2) return <Meta status={entity2Status} />;
 
     // Render loading status and error.
     if (postStatus === Status.Ok) {
@@ -132,28 +142,26 @@ class EdgeEditor extends React.Component<Props> {
       }
       // If we're adding an edge: show a confirmation + offer back/new choice
       return (
-        <Content>
-          <p>
-            Saved!{" "}
-            <Button onClick={this.clearPostRequest.bind(this, true)}>Ok</Button>
-          </p>
-          {/*edgeKey || (
-            <Button onClick={this.clearPostRequest.bind(this, false)}>
-              New
-            </Button>
-          )*/}
-        </Content>
+        <p>
+          Saved!{" "}
+          <IconButton onClick={this.clearPostRequest.bind(this, true)}>
+            Ok
+          </IconButton>
+        </p>
       );
     }
 
     return (
-      <Content>
+      <React.Fragment>
         <EdgeForm
           entity1Key={entity1Key}
           entity2Key={entity2Key}
+          entity1={entity1}
+          entity2={entity2}
           key={edgeKey}
           initialEdge={edge}
           onFormSubmit={this.onFormSubmit}
+          onFormCancel={this.props.dismiss}
           onDelete={this.onDelete}
           disabled={postStatus === Status.Requested}
           sourceEditorId={this.props.sourceEditorId}
@@ -161,7 +169,7 @@ class EdgeEditor extends React.Component<Props> {
           sourceFormData={this.props.sourceFormData}
         />
         <MetaPostStatus status={postStatus} error={postError} />
-      </Content>
+      </React.Fragment>
     );
   }
 }

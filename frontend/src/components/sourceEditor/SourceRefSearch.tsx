@@ -1,6 +1,7 @@
 import React from "react";
+
 import api from "../../utils/api";
-import StyledAsyncSelect from "../select/StyledAsyncSelect";
+import StyledAsyncCreatableSelect from "../select/StyledAsyncCreatableSelect";
 import { ReactSelectOption } from "../../utils/types";
 
 interface SourceSuggestion {
@@ -39,12 +40,13 @@ const promiseAutocomplete = async (inputValue: string) => {
   }
 };
 
-export interface Props {
+type Props = {
   onChange?: (value: ReactSelectOption) => void;
   onInputChange?: (value: string) => void;
   inputValue?: string;
   onCreateSource: (value: string) => void;
-}
+  className?: string;
+};
 
 // object is the state type
 class SourceRefSearch extends React.Component<Props, object> {
@@ -62,16 +64,15 @@ class SourceRefSearch extends React.Component<Props, object> {
 
   render() {
     return (
-      <StyledAsyncSelect
+      <StyledAsyncCreatableSelect
+        className={this.props.className}
         cacheOptions
         defaultOptions
-        classNamePrefix="rs"
         onChange={this.onChange}
         onInputChange={this.onInputChange}
         inputValue={
           this.props.onInputChange ? this.props.inputValue : undefined
         }
-        autoFocus
         allowCreateWhileLoading
         onCreateOption={this.props.onCreateSource}
         noOptionsMessage={(d: ReactSelectInputValue) => {

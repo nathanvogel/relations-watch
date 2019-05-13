@@ -1,40 +1,58 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 
 import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
-import { Theme } from "../utils/media-styles";
-import Button from "./buttons/Button";
+import { TP } from "../utils/theme";
+import { ReactSelectOption } from "../utils/types";
+import IconButton from "./buttons/IconButton";
+import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 
 const Bar = styled.nav`
   display: block;
-  height: ${Theme.NAV_HEIGHT};
+  height: ${(props: TP) => props.theme.navBarHeight};
   background: #eee;
 `;
 
 const BarContent = styled.div`
   max-width: 1280px;
-  padding-left: ${Theme.MAIN_PADDING};
-  padding-right: ${Theme.MAIN_PADDING};
+  padding-left: ${(props: TP) => props.theme.appPadding};
+  padding-right: ${(props: TP) => props.theme.appPadding};
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: ${Theme.NAV_HEIGHT};
+  height: ${(props: TP) => props.theme.navBarHeight};
 `;
 
 const ActionBar = styled.span``;
 
 const HomeLink = styled(Link)`
-  text-decoration: none;
   font-weight: 700;
-  color: black;
-  font-size: 22px;
+  &:link,
+  &:active,
+  &:visited {
+    text-decoration: none;
+    color: ${(props: TP) => props.theme.mainTextColor};
+  }
+  &:hover {
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  font-size: ${(props: TP) => props.theme.fontSizeL};
 `;
 
 const StyledSearch = styled(EntitySearch)`
-  max-width: 100px;
+  & > .rs__control {
+    // border-color: ${(props: TP) => props.theme.borderHover};
+  }
+  margin-left: ${(props: TP) => props.theme.inputLRSpacing};
+  margin-right: ${(props: TP) => props.theme.inputLRSpacing};
+  // height: 32px;
+  width: 150px;
+  min-width: 60px;
+  max-width: 100%;
 `;
 
 type State = {
@@ -50,8 +68,14 @@ class AppBar extends React.Component<RouteComponentProps> {
     this.setState({ searchValue: value });
   };
 
-  onSearch = (entityKey: string) => {
-    const url = `/${ROUTES.entity}/${entityKey}`;
+  onSearch = (option: ReactSelectOption) => {
+    this.setState({ searchValue: "" });
+    const url = `/${ROUTES.entity}/${option.value}`;
+    this.props.history.push(url);
+  };
+
+  onAddEntity = () => {
+    const url = `/${ROUTES.add}/${ROUTES.entity}`;
     this.props.history.push(url);
   };
 
@@ -61,12 +85,14 @@ class AppBar extends React.Component<RouteComponentProps> {
         <BarContent>
           <HomeLink to="/">Home</HomeLink>
           <ActionBar>
-            {/* <StyledSearch
+            <StyledSearch
               onChange={this.onSearch}
               onInputChange={this.onInputChange}
               inputValue={this.state.searchValue}
-            /> */}
-            <Button to={`/${ROUTES.add}/${ROUTES.entity}`}>+</Button>
+            />
+            <IconButton onClick={this.onAddEntity}>
+              <AddIcon />
+            </IconButton>
           </ActionBar>
         </BarContent>
       </Bar>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import Button from "./Button";
+import IconButton from "./IconButton";
 
 interface Props {
   textCancel: string;
@@ -27,19 +27,19 @@ class ButtonWithConfirmation extends React.Component<Props> {
     this.setState({ confirming: false });
   };
 
-  onConfirm = () => {};
-
   render() {
     const { textCancel, children } = this.props;
     return (
-      <div>
+      <React.Fragment>
         {this.state.confirming && (
-          <React.Fragment>
-            <Button onClick={this.onCancelClick}>{textCancel}</Button>{" "}
-          </React.Fragment>
+          <IconButton type="button" onClick={this.onCancelClick}>
+            {textCancel}
+          </IconButton>
         )}
-        <Button onClick={this.onClick}>{children}</Button>
-      </div>
+        <IconButton type="button" onClick={this.onClick}>
+          {children}
+        </IconButton>
+      </React.Fragment>
     );
   }
 }

@@ -7,15 +7,14 @@ import { RootStore } from "../Store";
 import { SourceLink, Status, SourceType } from "../utils/types";
 import Meta from "./meta/Meta";
 import SourceEntityPreview from "./sourceDetails/SourceEntityPreview";
-import Button from "./buttons/Button";
 import SourceForm from "./SourceForm";
 import { patchSource } from "../features/sourcesAC";
 import MetaPostStatus from "./meta/MetaPostStatus";
+import SourceListItemContainerCSS from "./sourceDetails/SourceListItemContainer";
+import IconButton from "./buttons/IconButton";
 
-const Content = styled.div`
-  display: block;
-  border: 1px solid #333;
-  padding: 8px;
+const SourceListItemContainer = styled.div`
+  ${SourceListItemContainerCSS}
 `;
 
 const SourceEntitiesContainer = styled.div`
@@ -90,7 +89,8 @@ class SourceDetails extends React.Component<Props> {
     const { source, status, error } = this.props;
     // Wait for loading
     const meta = <Meta status={status} error={error} />;
-    if (status !== Status.Ok) return <Content>{meta}</Content>;
+    if (status !== Status.Ok)
+      return <SourceListItemContainer>{meta}</SourceListItemContainer>;
 
     const isLink: boolean = source.type === SourceType.Link;
     const { postStatus, postError } = this.props;
@@ -110,35 +110,34 @@ class SourceDetails extends React.Component<Props> {
       return <MetaPostStatus status={postStatus} error={postError} />;
 
     // Separate the domain to bolden it.
-    var domain: string = "";
-    var refEnd: string = "";
-    if (isLink) {
-      domain = source.domain as string;
-      refEnd = source.ref.replace(domain, ""); // = only the first occurence
-    }
+    // var domain: string = "";
+    // var refEnd: string = "";
+    // if (isLink) {
+    //   domain = source.domain as string;
+    //   refEnd = source.ref.replace(domain, ""); // = only the first occurence
+    //     // <strong>{domain}</strong>
+    //     // {refEnd}
+    // }
 
     return (
-      <Content>
+      <SourceListItemContainer>
         <Actions>
           {this.props.editable && (
-            <Button onClick={this.toggleClick}>Edit</Button>
+            <IconButton onClick={this.toggleClick}>Edit</IconButton>
           )}
         </Actions>
+        <div>{source.pTitle || source.description}</div>
         {isLink ? (
-          <StyledSourceA href={source.fullUrl}>
-            <strong>{domain}</strong>
-            {refEnd}
-          </StyledSourceA>
+          <StyledSourceA href={source.fullUrl}>{source.ref}</StyledSourceA>
         ) : (
           <strong>{source.ref}</strong>
         )}
-        <div>{source.pTitle || source.description}</div>
         <SourceEntitiesContainer>
           {source.authors.map(entityKey => (
             <SourceEntityPreview key={entityKey} entityKey={entityKey} />
           ))}
         </SourceEntitiesContainer>
-      </Content>
+      </SourceListItemContainer>
     );
   }
 }

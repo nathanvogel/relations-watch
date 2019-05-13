@@ -36,7 +36,7 @@ export const EntityS = {
 
 export const getEntitySAsset = (type: EntityType) => {
   switch (type) {
-    case EntityType.PhysicalPerson:
+    case EntityType.Human:
       return pphysicalS;
     case EntityType.MoralPerson:
       return pmoralS;
@@ -55,7 +55,7 @@ export const getEntityLAsset = (type: EntityType) => {
       return groupL;
     case EntityType.MoralPerson:
       return pmoralL;
-    case EntityType.PhysicalPerson:
+    case EntityType.Human:
       return pphysicalL;
   }
 };
