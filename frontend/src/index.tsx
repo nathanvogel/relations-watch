@@ -11,15 +11,17 @@ import "normalize.css";
 // i18n
 import "./i18n/i18n";
 // My files
-import "./index.css";
+// import "./index.css";
 import App from "./screens/App";
 import * as serviceWorker from "./serviceWorker";
 import theme from "./utils/theme";
+import GlobalStyle from "./GlobalStyle";
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <Provider store={Store}>
       <Router>
+        <GlobalStyle />
         <App />
       </Router>
     </Provider>

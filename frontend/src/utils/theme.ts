@@ -2,7 +2,7 @@ import { RelationType } from "./types";
 
 const theme = {
   mainFont:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    '"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   fontSizeS: "12px",
   fontSizeM: "18px",
   fontSizeL: "24px",
