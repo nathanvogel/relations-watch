@@ -109,7 +109,7 @@ class EdgeForm extends React.Component<Props> {
     initialEdge: {
       text: "",
       type: undefined,
-      amount: 0,
+      amount: CONSTS.AMOUNT_UNKNOWN,
       exactAmount: false,
       familialLink: undefined,
       owned: 100,
