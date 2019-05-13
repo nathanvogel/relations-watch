@@ -3,7 +3,7 @@ import { RelationType } from "./types";
 const theme = {
   mainFont:
     '"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
-  fontSizeS: "12px",
+  fontSizeS: "13px",
   fontSizeM: "18px",
   fontSizeL: "24px",
   mainTextColor: "rgb(0, 0, 0, 0.84)" /* Stolen from Medium */,

@@ -49,7 +49,7 @@ const StyledSearch = styled(EntitySearch)`
   }
   margin-left: ${(props: TP) => props.theme.inputLRSpacing};
   margin-right: ${(props: TP) => props.theme.inputLRSpacing};
-  height: 32px;
+  // height: 32px;
   width: 150px;
   min-width: 60px;
   max-width: 100%;
