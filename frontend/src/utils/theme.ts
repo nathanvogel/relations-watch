@@ -1,8 +1,7 @@
 import { RelationType } from "./types";
 
 const theme = {
-  mainFont:
-    '"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
+  mainFont: '"Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   fontSizeS: "13px",
   fontSizeM: "18px",
   fontSizeL: "24px",
