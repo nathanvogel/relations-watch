@@ -105,6 +105,7 @@ export type Entity = {
   linkFacebook?: string;
   linkYoutube?: string;
   linkWebsite?: string;
+  ds?: { mfn?: string; mfid?: string };
 };
 
 export type EntityPreview = {
