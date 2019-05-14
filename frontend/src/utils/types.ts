@@ -94,6 +94,8 @@ export enum Status {
   Error
 }
 
+export type DatasetId = "mfn" | "mfid";
+
 export type Entity = {
   _key?: string;
   name: string;
@@ -105,7 +107,7 @@ export type Entity = {
   linkFacebook?: string;
   linkYoutube?: string;
   linkWebsite?: string;
-  ds?: { mfn?: string; mfid?: string };
+  ds?: { [key in DatasetId]: string };
 };
 
 export type EntityPreview = {

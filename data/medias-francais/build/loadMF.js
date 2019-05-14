@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs_extra_1 = __importDefault(require("fs-extra"));
 var csv_parse_1 = __importDefault(require("csv-parse"));
 var types_1 = require("./utils/types");
-// Code sharing at its finest.
-// import { Entity, EntityType } from "../../frontend/src/utils/types";
 var FILENAME = "Medias_francais/medias_francais.tsv";
 var dataset = [];
 var recordToEntity = function (record) {

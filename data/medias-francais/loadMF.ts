@@ -1,8 +1,6 @@
 import fs from "fs-extra";
 import parse from "csv-parse";
 import { Entity, EntityType } from "./utils/types";
-// Code sharing at its finest.
-// import { Entity, EntityType } from "../../frontend/src/utils/types";
 
 const FILENAME = "Medias_francais/medias_francais.tsv";
 const dataset: Entity[] = [];
@@ -52,7 +50,10 @@ const stream = fs
     }
   });
 
-const loadMediasFrancaisEntities = new Promise(function(resolve, reject) {
+const loadMediasFrancaisEntities = new Promise<typeof dataset>(function(
+  resolve,
+  reject
+) {
   stream
     .on("end", function() {
       console.log("Done reading:", FILENAME);
