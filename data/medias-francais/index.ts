@@ -5,12 +5,16 @@ import { Entity, DatasetId } from "./utils/types";
 import C from "./utils/constants";
 import { areConsistent } from "./utils/consistency";
 import askYesNo from "./utils/ask";
+import api, { checkResponse } from "./utils/api";
+import { AxiosError } from "axios";
+import { getKeyObject } from "./utils/utils";
 
 const db = new Database({
-  url: "http://localhost:8529"
+  url: C.DEV ? "http://localhost:8529" : ""
 });
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
+const OP = C.DEV ? "dev" : "prod";
 const entColl = db.collection(C.entCollectionName);
 const relColl = db.collection(C.relCollectionName);
 
@@ -61,6 +65,14 @@ const getEntityUpdates = async (
   }
   return { newEntities, existingEntities };
 };
+
+/**
+ * Search for entities similar to the ones in the dataset
+ * and asks the user if he wants to merge them.
+ * @param  datasetEntities from the dataset we're importing
+ * @param  datasetId       the id of this dataset
+ * @return                 The entities judged similar by the user and ready to be saved
+ */
 const findSimilarEntities = async (
   datasetEntities: Entity[],
   datasetId: DatasetId
@@ -96,11 +108,11 @@ const findSimilarEntities = async (
     while (cursor.hasNext()) {
       const dbEntity: Entity = await cursor.next();
       console.log(`Found ${cursor.count} similar entities:`);
-      console.log(dbEntity);
-      console.log("... is similar to ...");
       console.log(entity);
+      console.log("... is similar to ...");
+      console.log(dbEntity);
       if (await askYesNo("Merge them together?")) {
-        // Check that we aren't merging anything.
+        // Check that we aren't merging incompatible stuff.
         if (!areConsistent(dbEntity, entity, ["type"])) {
           throw new Error("Inconsistent entities");
         }
@@ -114,23 +126,77 @@ const findSimilarEntities = async (
   return similarEntities;
 };
 
+/**
+ * The main process
+ */
 const updateMediasFrancais = async () => {
+  var patchedEntities: Entity[] = [];
+  var postedEntities: Entity[] = [];
+
   try {
     const dataset = await loadMediasFrancaisEntities;
     console.log(dataset.length + " entities loaded.");
-    const updates = await getEntityUpdates(dataset, "mfid");
-    console.log("==== Entities already in the DB: ====");
-    console.log(updates.existingEntities);
-    console.log("==== Entities to POST: ====");
-    console.log(updates.newEntities);
+
+    // First of all, we search existing entities in the database that
+    // could be similar to the ones we have in the dataset.
+    // We save thoses "merges" back to the database BEFORE checking which
+    // entities already exists in the database
     console.log("🔍🔍🔍 Searching similar entities:");
     const entitiesToPatch = await findSimilarEntities(dataset, "mfid");
     console.log("==== Entities to patch: ====");
     console.log(entitiesToPatch);
+    if (entitiesToPatch.length > 0) {
+      console.log("==== PATCHing entities ====");
+      patchedEntities = await api
+        .patch(`/entities`, entitiesToPatch)
+        .then(res => {
+          const potentialError = checkResponse(res);
+          if (potentialError) throw potentialError;
+          else return res.data;
+        })
+        .catch((error: AxiosError) => {
+          throw error;
+        });
+      await saveJSON(
+        `logs/${OP}-${Date.now()}-patch-entities.json`,
+        patchedEntities
+      );
+    }
 
-    // POST newEntities
-    // Save JSON response with dbURL
-    // merge POST response with existingEntities into a datasetIdKey-based index
+    const updates = await getEntityUpdates(dataset, "mfid");
+    console.log("==== Entities already in the DB: ====");
+    console.log(updates.existingEntities.length + "/" + dataset.length);
+    //console.log(updates.existingEntities);
+
+    console.log("==== Entities to POST: ====");
+    console.log(updates.newEntities);
+    if (updates.newEntities.length > 0) {
+      console.log("==== POSTing entities ====");
+      postedEntities = await api
+        .post(`/entities`, updates.newEntities)
+        .then(res => {
+          const potentialError = checkResponse(res);
+          if (potentialError) throw potentialError;
+          else return res.data;
+        })
+        .catch((error: AxiosError) => {
+          throw error;
+        });
+      await saveJSON(
+        `logs/${OP}-${Date.now()}-post-entities.json`,
+        postedEntities
+      );
+    }
+
+    const allEntities = Object.assign(
+      {},
+      getKeyObject(patchedEntities, "_key"),
+      getKeyObject(updates.existingEntities, "_key"),
+      getKeyObject(postedEntities, "_key")
+    );
+    console.log("===== Done importing entities =====");
+    await saveJSON(`logs/${OP}-${Date.now()}-allEntities.json`, allEntities);
+
     // load edges.
     // Create DB edges objects from the dataset, using a manual source ID.
     // Look for existing edges

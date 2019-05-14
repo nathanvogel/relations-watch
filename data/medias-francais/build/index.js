@@ -41,18 +41,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var arangojs_1 = require("arangojs");
+var saveJSON_1 = __importDefault(require("./fileIO/saveJSON"));
 var loadMF_1 = __importDefault(require("./loadMF"));
 var constants_1 = __importDefault(require("./utils/constants"));
 var consistency_1 = require("./utils/consistency");
 var ask_1 = __importDefault(require("./utils/ask"));
+var api_1 = __importStar(require("./utils/api"));
+var utils_1 = require("./utils/utils");
 var db = new arangojs_1.Database({
-    url: "http://localhost:8529"
+    url: constants_1.default.DEV ? "http://localhost:8529" : ""
 });
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
+var OP = constants_1.default.DEV ? "dev" : "prod";
 var entColl = db.collection(constants_1.default.entCollectionName);
 var relColl = db.collection(constants_1.default.relCollectionName);
 var getEntityUpdates = function (datasetEntities, datasetId) { return __awaiter(_this, void 0, void 0, function () {
@@ -103,6 +114,13 @@ var getEntityUpdates = function (datasetEntities, datasetId) { return __awaiter(
         }
     });
 }); };
+/**
+ * Search for entities similar to the ones in the dataset
+ * and asks the user if he wants to merge them.
+ * @param  datasetEntities from the dataset we're importing
+ * @param  datasetId       the id of this dataset
+ * @return                 The entities judged similar by the user and ready to be saved
+ */
 var findSimilarEntities = function (datasetEntities, datasetId) { return __awaiter(_this, void 0, void 0, function () {
     var similarEntities, _i, datasetEntities_2, entity, cursor, dbEntity;
     return __generator(this, function (_a) {
@@ -136,13 +154,13 @@ var findSimilarEntities = function (datasetEntities, datasetId) { return __await
             case 4:
                 dbEntity = _a.sent();
                 console.log("Found " + cursor.count + " similar entities:");
-                console.log(dbEntity);
-                console.log("... is similar to ...");
                 console.log(entity);
+                console.log("... is similar to ...");
+                console.log(dbEntity);
                 return [4 /*yield*/, ask_1.default("Merge them together?")];
             case 5:
                 if (_a.sent()) {
-                    // Check that we aren't merging anything.
+                    // Check that we aren't merging incompatible stuff.
                     if (!consistency_1.areConsistent(dbEntity, entity, ["type"])) {
                         throw new Error("Inconsistent entities");
                     }
@@ -159,39 +177,97 @@ var findSimilarEntities = function (datasetEntities, datasetId) { return __await
         }
     });
 }); };
+/**
+ * The main process
+ */
 var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0, function () {
-    var dataset, updates, entitiesToPatch, err_1;
+    var patchedEntities, postedEntities, dataset, entitiesToPatch, updates, allEntities, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
-                return [4 /*yield*/, loadMF_1.default];
+                patchedEntities = [];
+                postedEntities = [];
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 12, , 13]);
+                return [4 /*yield*/, loadMF_1.default];
+            case 2:
                 dataset = _a.sent();
                 console.log(dataset.length + " entities loaded.");
-                return [4 /*yield*/, getEntityUpdates(dataset, "mfid")];
-            case 2:
-                updates = _a.sent();
-                console.log("==== Entities already in the DB: ====");
-                console.log(updates.existingEntities);
-                console.log("==== Entities to POST: ====");
-                console.log(updates.newEntities);
+                // First of all, we search existing entities in the database that
+                // could be similar to the ones we have in the dataset.
+                // We save thoses "merges" back to the database BEFORE checking which
+                // entities already exists in the database
                 console.log("🔍🔍🔍 Searching similar entities:");
                 return [4 /*yield*/, findSimilarEntities(dataset, "mfid")];
             case 3:
                 entitiesToPatch = _a.sent();
                 console.log("==== Entities to patch: ====");
                 console.log(entitiesToPatch);
-                return [3 /*break*/, 5];
+                if (!(entitiesToPatch.length > 0)) return [3 /*break*/, 6];
+                console.log("==== PATCHing entities ====");
+                return [4 /*yield*/, api_1.default
+                        .patch("/entities", entitiesToPatch)
+                        .then(function (res) {
+                        var potentialError = api_1.checkResponse(res);
+                        if (potentialError)
+                            throw potentialError;
+                        else
+                            return res.data;
+                    })
+                        .catch(function (error) {
+                        throw error;
+                    })];
             case 4:
+                patchedEntities = _a.sent();
+                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-patch-entities.json", patchedEntities)];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6: return [4 /*yield*/, getEntityUpdates(dataset, "mfid")];
+            case 7:
+                updates = _a.sent();
+                console.log("==== Entities already in the DB: ====");
+                console.log(updates.existingEntities.length + "/" + dataset.length);
+                //console.log(updates.existingEntities);
+                console.log("==== Entities to POST: ====");
+                console.log(updates.newEntities);
+                if (!(updates.newEntities.length > 0)) return [3 /*break*/, 10];
+                console.log("==== POSTing entities ====");
+                return [4 /*yield*/, api_1.default
+                        .post("/entities", updates.newEntities)
+                        .then(function (res) {
+                        var potentialError = api_1.checkResponse(res);
+                        if (potentialError)
+                            throw potentialError;
+                        else
+                            return res.data;
+                    })
+                        .catch(function (error) {
+                        throw error;
+                    })];
+            case 8:
+                postedEntities = _a.sent();
+                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-post-entities.json", postedEntities)];
+            case 9:
+                _a.sent();
+                _a.label = 10;
+            case 10:
+                allEntities = Object.assign({}, utils_1.getKeyObject(patchedEntities, "_key"), utils_1.getKeyObject(updates.existingEntities, "_key"), utils_1.getKeyObject(postedEntities, "_key"));
+                console.log("===== Done importing entities =====");
+                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-allEntities.json", allEntities)];
+            case 11:
+                _a.sent();
+                return [3 /*break*/, 13];
+            case 12:
                 err_1 = _a.sent();
                 console.error("ERROR: Failed to load and update the dataset:");
                 if (err_1 && err_1.stack)
                     console.error(err_1.stack);
                 else
                     console.error(err_1);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                return [3 /*break*/, 13];
+            case 13: return [2 /*return*/];
         }
     });
 }); };

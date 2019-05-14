@@ -1,0 +1,10 @@
+[
+  {
+    "_key": "1000345",
+    "_id": "entities/1000345",
+    "_rev": "_Ypdar_O--_",
+    "name": "Le Monde",
+    "type": 2,
+    "ds": { "mfn": "Le Monde", "mfid": "19" }
+  }
+]
