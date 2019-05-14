@@ -1,0 +1,18 @@
+{
+  "name": "medias-francais",
+  "version": "1.0.0",
+  "description": "Import the dataset from Le Monde Diplomatique to the ArangoDB database",
+  "main": "index.ts",
+  "author": "Nathan Vogel",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "tsc": "tsc",
+    "start": "tsc --watch",
+    "import-data": "node build/index.js"
+  },
+  "dependencies": {
+    "arangojs": "^6.10.0",
+    "typescript": "^3.4.5"
+  }
+}
