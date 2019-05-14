@@ -12,7 +12,9 @@
     "import-data": "node build/index.js"
   },
   "dependencies": {
+    "@types/fs-extra": "^7.0.0",
     "arangojs": "^6.10.0",
+    "fs-extra": "^8.0.1",
     "typescript": "^3.4.5"
   }
 }

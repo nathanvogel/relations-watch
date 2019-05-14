@@ -1,8 +1,4 @@
 "use strict";
-var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -42,50 +38,64 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var arangojs_1 = require("arangojs");
-var saveJSON_1 = __importDefault(require("./fileIO/saveJSON"));
-var db = new arangojs_1.Database({
-    url: "http://localhost:8529"
-});
-db.useDatabase("_system");
-db.useBasicAuth("root", "");
-(function () {
+var fs_extra_1 = __importDefault(require("fs-extra"));
+var path_1 = require("path");
+function ensureDir(directory) {
     return __awaiter(this, void 0, void 0, function () {
-        var now, cursor, result, err_1, err_2;
+        var err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    now = Date.now();
-                    _a.label = 1;
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, fs_extra_1.default.ensureDir(directory)];
                 case 1:
-                    _a.trys.push([1, 8, , 9]);
-                    return [4 /*yield*/, db.query(arangojs_1.aql(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n      RETURN ", "\n    "], ["\n      RETURN ", "\n    "])), now))];
-                case 2:
-                    cursor = _a.sent();
-                    return [4 /*yield*/, cursor.next()];
-                case 3:
-                    result = _a.sent();
-                    console.log("Result:", result);
-                    _a.label = 4;
-                case 4:
-                    _a.trys.push([4, 6, , 7]);
-                    return [4 /*yield*/, saveJSON_1.default("exports/test-" + Date.now() + ".json", { test: result })];
-                case 5:
                     _a.sent();
-                    return [3 /*break*/, 7];
-                case 6:
+                    return [3 /*break*/, 3];
+                case 2:
                     err_1 = _a.sent();
-                    console.log("Couldn't save JSON:", err_1);
-                    return [3 /*break*/, 7];
-                case 7: return [3 /*break*/, 9];
-                case 8:
-                    err_2 = _a.sent();
-                    console.log("Error getting now");
-                    console.error(err_2.stack);
-                    return [2 /*return*/];
-                case 9: return [2 /*return*/];
+                    console.error("Couldn't create dir " + directory, err_1);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     });
-})();
-var templateObject_1;
+}
+function mkdirAndWriteFile(path, contents) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, ensureDir(path_1.dirname(path))];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, fs_extra_1.default.writeFile(path, contents)];
+                case 2:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function saveJSON(filename, data) {
+    return __awaiter(this, void 0, void 0, function () {
+        var output, err_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    output = JSON.stringify(data, null, 2);
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, mkdirAndWriteFile(filename, output)];
+                case 2:
+                    _a.sent();
+                    console.log(filename + " saved.");
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_2 = _a.sent();
+                    throw err_2;
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.default = saveJSON;
