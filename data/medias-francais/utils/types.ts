@@ -4,7 +4,9 @@ export enum EntityType {
   Human = 1,
   MoralPerson = 2,
   Event = 10,
-  Group = 100
+  Group = 100,
+  Media = 200,
+  State = 300
 }
 
 export enum RelationType {
@@ -67,6 +69,7 @@ export type Edge = {
   owned?: number;
   sources: SourceLink[];
   sourceText?: string;
+  ds?: { [key in DatasetId]: string };
 };
 
 export type EdgePreview = {

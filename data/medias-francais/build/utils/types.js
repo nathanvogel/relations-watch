@@ -7,6 +7,8 @@ var EntityType;
     EntityType[EntityType["MoralPerson"] = 2] = "MoralPerson";
     EntityType[EntityType["Event"] = 10] = "Event";
     EntityType[EntityType["Group"] = 100] = "Group";
+    EntityType[EntityType["Media"] = 200] = "Media";
+    EntityType[EntityType["State"] = 300] = "State";
 })(EntityType = exports.EntityType || (exports.EntityType = {}));
 var RelationType;
 (function (RelationType) {
