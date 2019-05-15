@@ -58,12 +58,16 @@ function typeLibelleToType(t: string): EntityType {
   }
 }
 
+function getMfnId(nameInDataset: string) {
+  return nameInDataset.toLowerCase();
+}
+
 const recordToEntity = (record: EntityRecord): Entity => {
   return {
     type: typeLibelleToType(record.typeLibelle),
     name: record.nom,
     ds: {
-      mfn: record.nom.toLowerCase(),
+      mfn: getMfnId(record.nom),
       mfid: record.id
     }
   };
@@ -93,12 +97,32 @@ export const loadMediasFrancaisEntities = () =>
       .on("error", reject);
   });
 
-// const yo: { [key: string]: number } = {};
-//
-// function addYo(key: string) {
-//   if (yo[key]) yo[key]++;
-//   else yo[key] = 1;
-// }
+/**
+ * Necessary because the dataset relations doesn't contain IDs for the cible.
+ * @param  mfnId the ID extracted from the dataset record
+ * @param  letkeyindbEntities entities to search in
+ * @return                    [description]
+ */
+const findMfidWithMfn = (
+  mfnId: string,
+  dbEntities: { [key: string]: Entity }
+) => {
+  var cibleId: string | null = null;
+  // Find the cible ID, because it's missing in the current state of
+  // the relations_media_francais.tsv file.
+  for (let key in dbEntities) {
+    const entity = dbEntities[key];
+    if (!entity.ds || !entity.ds.mfid || !entity.ds.mfn)
+      throw new Error(
+        "missing mfid/mfn on " + entity.name + " - " + entity._key
+      );
+    if (entity.ds.mfn === mfnId) {
+      cibleId = entity.ds.mfid;
+      break;
+    }
+  }
+  return cibleId;
+};
 
 const recordToEdge = (
   record: EdgeRecord,
@@ -107,18 +131,7 @@ const recordToEdge = (
   const type = RelationType.IsOwned;
   const owned = 100;
   const origineId = record.id;
-  var cibleId: string | null = null;
-  // Find the cible ID, because it's missing in the current state of
-  // the relations_media_francais.tsv file.
-  for (let key in dbEntities) {
-    const entity = dbEntities[key];
-    if (entity.name === record.cible) {
-      if (!entity.ds || !entity.ds.mfid)
-        throw new Error("missing mfid on " + entity.name + " - " + entity._key);
-      cibleId = entity.ds.mfid;
-      break;
-    }
-  }
+  const cibleId = findMfidWithMfn(getMfnId(record.cible), dbEntities);
   if (!cibleId) throw new Error("### Unable to find cible " + record.cible);
   // Safe to cast, the server would refuse the write anyway.
   const origineKey = dbEntities[origineId]._key as string;

@@ -33,3 +33,24 @@ export function getDsKeyObject<T extends DatasetObject>(
   }
   return list;
 }
+
+export function selectiveExtract<
+  T extends Object,
+  P extends Extract<keyof T, string>
+>(e2: T, overridingPropNames: P[]): any {
+  const overrider: { [key: string]: any } = {};
+  for (let p of overridingPropNames) {
+    overrider[p] = e2[p];
+  }
+  return overrider;
+}
+
+export function selectiveDiff<
+  T extends Object,
+  P extends Extract<keyof T, string>
+>(e1: T, e2: T, overridingPropNames: P[]): boolean {
+  for (let p of overridingPropNames) {
+    if (e1[p] !== e2[p]) return true;
+  }
+  return false;
+}

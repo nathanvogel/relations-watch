@@ -7,7 +7,7 @@ function askYesNo(query: string) {
   });
 
   return new Promise(resolve =>
-    rl.question(query + " (y/n)", ans => {
+    rl.question(query + " (y/N) ", ans => {
       rl.close();
       if (ans === "y") resolve(true);
       resolve(false);

@@ -4,20 +4,20 @@ import {
   loadMediasFrancaisEntities,
   loadMediasFrancaisRelations
 } from "./loadMF";
-import { Entity, DatasetId } from "./utils/types";
+import { Entity, DatasetId, Edge } from "./utils/types";
 import C from "./utils/constants";
 import { areConsistent } from "./utils/consistency";
 import askYesNo from "./utils/ask";
 import api, { getResponseData } from "./utils/api";
-import { AxiosError } from "axios";
-import { getKeyObject, getDsKeyObject } from "./utils/utils";
+import { getDsKeyObject, selectiveDiff, selectiveExtract } from "./utils/utils";
 
 const db = new Database({
   url: C.DEV ? "http://localhost:8529" : ""
 });
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
-const UPDATE_EXISTING_ENTITIES = true;
+const ENT_OVERRIDING_PROPS: Array<keyof Entity> = ["type"];
+const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = [];
 const LOGDIR = C.DEV ? "logs/dev/" : "logs/prod/";
 const ts = () => Date.now();
 const entColl = db.collection(C.entCollectionName);
@@ -27,26 +27,14 @@ const getEntityUpdates = async (
   datasetEntities: Entity[],
   datasetId: DatasetId
 ) => {
-  const newEntities: Entity[] = [];
+  const entitiesToPost: Entity[] = [];
   const existingEntities: Entity[] = [];
   const entitiesToPatch: Entity[] = [];
 
   for (let entity of datasetEntities) {
-    // Make sure we have access to the entity ID in this dataset.
-    if (!entity.ds || !entity.ds[datasetId]) {
-      console.error("The dataset loader didn't include the proper origin ID.");
-      continue;
-    }
-    const entityDatasetId = entity.ds[datasetId];
+    const entityDatasetId = getDatasetId(entity, datasetId);
     // Check if we already have put/linked this entity in the database.
-    const cursor = await db.query(
-      aql`
-        FOR entity IN ${entColl}
-          FILTER entity.ds.${datasetId} == ${entityDatasetId}
-          RETURN entity
-      `,
-      { count: true }
-    );
+    const cursor = await getByDatasetId(datasetId, entityDatasetId, true);
     // There should be maximum 1 such entity.
     if (cursor.count > 1) {
       // Just abort for now. If it ever happens, we'll log the problems.
@@ -56,29 +44,72 @@ const getEntityUpdates = async (
     else if (cursor.count == 1) {
       console.log("Found a correspondance for:", entity.name);
       const dbEntity: Entity = await cursor.next();
-      // Maybe we want to overwrite the values in the DB.
-      if (UPDATE_EXISTING_ENTITIES) {
-        // WARNING: We should do a selective deep merge here!
-        entitiesToPatch.push(Object.assign({}, dbEntity, entity));
-      }
       // If we detect a fundamental consistency problem with an
       // existing entity, we just abort for now.
       // If the name is different, update the name? Only for some datasets?
-      else if (!areConsistent(dbEntity, entity, [])) {
-        throw new Error("Inconsistent entities");
+      if (!areConsistent(dbEntity, entity, ENT_UNCHANGEABLE_PROPS))
+        throw new Error(
+          `Inconsistent entities: ${entityDatasetId} (${entity.name})`
+        );
+      // Maybe we want to overwrite the values in the DB.
+      if (selectiveDiff(dbEntity, entity, ENT_OVERRIDING_PROPS)) {
+        const patchedEntity = Object.assign(
+          {},
+          dbEntity,
+          selectiveExtract(entity, ENT_OVERRIDING_PROPS),
+          Object.assign({}, { ds: dbEntity.ds }, { ds: entity.ds })
+        );
+        entitiesToPatch.push(patchedEntity);
       }
-      // If the entity doesn't exist, it's easy, we can just create it.
-      // WARNING : We should avoid doing that if the entity has already
-      // been selected by the user for a linking PATCH
+      // If the entity exists and doesn't need to be patched, simply push
+      // it to RAM for later use.
       else existingEntities.push(dbEntity);
     }
     // If the entity doesn't already exists, we can simply create it.
     // (if it was manually linked, it now does.)
-    else {
-      newEntities.push(entity);
-    }
+    // We could also do the similarity search here and it would save us
+    // one request per item to the database, but I'm not sure it would actually
+    // be easier or lead to less code being duplicated (we would have to
+    // merge also here + it might be harder to deal with Edge types later)
+    else entitiesToPost.push(entity);
   }
-  return { newEntities, existingEntities, entitiesToPatch };
+  return { entitiesToPost, existingEntities, entitiesToPatch };
+};
+
+/**
+ * Get the dataset ID of the entity, throw if it's absent.
+ * @param  elements  the element to search in
+ * @param  elements  The ID of the dataset
+ * @return           The element ID in element.ds[ID]
+ */
+const getDatasetId = (element: Entity | Edge, datasetId: DatasetId) => {
+  // Make sure we have access to the element ID in this dataset.
+  if (!element.ds || !element.ds[datasetId])
+    throw new Error("The dataset loader didn't include the proper origin ID.");
+  return element.ds[datasetId];
+};
+
+/**
+ * Fetches the entity in the database with it's datasetId
+ * @param  datasetId       The ID of the dataset to search in
+ * @param  entityDatasetId The ID of the entity in that dataset
+ * @param  count           wether to include "count" in the cursor or not
+ * @return                 The fresh database cursor
+ */
+const getByDatasetId = async (
+  datasetId: string,
+  entityDatasetId: string,
+  count: boolean
+) => {
+  const cursor = await db.query(
+    aql`
+      FOR entity IN ${entColl}
+        FILTER entity.ds.${datasetId} == ${entityDatasetId}
+        RETURN entity
+    `,
+    { count: count }
+  );
+  return cursor;
 };
 
 /**
@@ -95,12 +126,11 @@ const findSimilarEntities = async (
   const similarEntities: Entity[] = [];
 
   for (let entity of datasetEntities) {
-    // Make sure we have access to the entity ID in this dataset.
-    if (!entity.ds || !entity.ds[datasetId]) {
-      console.error(
-        "The dataset loader didn't include the proper origin ID for" +
-          entity.name
-      );
+    // Skip entities that are already linked in the database.
+    const entityDatasetId = getDatasetId(entity, datasetId);
+    const cursor1 = await getByDatasetId(datasetId, entityDatasetId, false);
+    if (cursor1.hasNext()) {
+      console.log("Skipping " + entityDatasetId);
       continue;
     }
     // Check if we have a similar but unlinked entity in the database.
@@ -108,9 +138,8 @@ const findSimilarEntities = async (
       aql`
         FOR entity IN ${entColl}
           FILTER entity.ds.${datasetId} == null
-          FILTER entity.name LIKE ${entity.name} OR ${
-        entity.name
-      } LIKE entity.name
+          FILTER entity.name LIKE  ${"%" + entity.name + "%"}
+            OR ${entity.name} LIKE CONCAT("%", entity.name, "%")
           RETURN entity
       `,
       { count: true }
@@ -128,11 +157,12 @@ const findSimilarEntities = async (
       console.log(dbEntity);
       if (await askYesNo("Merge them together?")) {
         // Check that we aren't merging incompatible stuff.
-        if (!areConsistent(dbEntity, entity, [])) {
-          throw new Error("Inconsistent entities");
-        }
+        if (!areConsistent(dbEntity, entity, ENT_UNCHANGEABLE_PROPS))
+          throw new Error(`Inconsistent entities: ${entity.name}`);
         // Link the database entity (by merging, because we might be using
         // multiple datasetIds in one operation)
+        // If there're different props, they'll be merged later when this
+        // entity will be freshly refetched.
         dbEntity.ds = Object.assign({}, dbEntity.ds, entity.ds);
         similarEntities.push(dbEntity);
         // Only one entity can be logically linked.
@@ -165,6 +195,7 @@ const updateMediasFrancais = async () => {
     console.log("==== Entities to LINK: ====");
     console.log(entitiesToPatch);
     if (entitiesToPatch.length > 0) {
+      if (!(await askYesNo("Link them?"))) return;
       console.log("==== LINKing entities ====");
       const linkedEntities = await api
         .patch(`/entities`, entitiesToPatch)
@@ -178,11 +209,12 @@ const updateMediasFrancais = async () => {
     //console.log(updates.existingEntities);
 
     console.log("==== Entities to POST: ====");
-    console.log(updates.newEntities);
-    if (updates.newEntities.length > 0) {
+    console.log(updates.entitiesToPost);
+    if (updates.entitiesToPost.length > 0) {
+      if (!(await askYesNo("Post them?"))) return;
       console.log("==== POSTing entities ====");
       postedEntities = await api
-        .post(`/entities`, updates.newEntities)
+        .post(`/entities`, updates.entitiesToPost)
         .then(getResponseData);
       await saveJSON(`${LOGDIR}${ts()}-post-entities.json`, postedEntities);
     }
@@ -190,6 +222,7 @@ const updateMediasFrancais = async () => {
     console.log("==== Entities to PATCH: ====");
     console.log(updates.entitiesToPatch);
     if (updates.entitiesToPatch.length > 0) {
+      if (!(await askYesNo("Patch them?"))) return;
       console.log("==== PATCHing entities ====");
       patchedEntities = await api
         .patch(`/entities`, updates.entitiesToPatch)
