@@ -8,7 +8,7 @@ import { Entity, DatasetId } from "./utils/types";
 import C from "./utils/constants";
 import { areConsistent } from "./utils/consistency";
 import askYesNo from "./utils/ask";
-import api, { checkResponse } from "./utils/api";
+import api, { getResponseData } from "./utils/api";
 import { AxiosError } from "axios";
 import { getKeyObject, getDsKeyObject } from "./utils/utils";
 
@@ -161,20 +161,13 @@ const updateMediasFrancais = async () => {
     // entities already exists in the database
     console.log("🔍🔍🔍 Searching similar entities:");
     const entitiesToPatch = await findSimilarEntities(dataset, "mfid");
-    console.log("==== Entities to (link)PATCH: ====");
+    console.log("==== Entities to LINK: ====");
     console.log(entitiesToPatch);
     if (entitiesToPatch.length > 0) {
       console.log("==== PATCHing entities ====");
       patchedEntities = await api
         .patch(`/entities`, entitiesToPatch)
-        .then(res => {
-          const potentialError = checkResponse(res);
-          if (potentialError) throw potentialError;
-          else return res.data;
-        })
-        .catch((error: AxiosError) => {
-          throw error;
-        });
+        .then(getResponseData);
       await saveJSON(
         `logs/${OP}-${Date.now()}-link-entities.json`,
         patchedEntities
@@ -192,14 +185,7 @@ const updateMediasFrancais = async () => {
       console.log("==== POSTing entities ====");
       postedEntities = await api
         .post(`/entities`, updates.newEntities)
-        .then(res => {
-          const potentialError = checkResponse(res);
-          if (potentialError) throw potentialError;
-          else return res.data;
-        })
-        .catch((error: AxiosError) => {
-          throw error;
-        });
+        .then(getResponseData);
       await saveJSON(
         `logs/${OP}-${Date.now()}-post-entities.json`,
         postedEntities
@@ -212,14 +198,7 @@ const updateMediasFrancais = async () => {
       console.log("==== PATCHing entities ====");
       patchedEntities2 = await api
         .patch(`/entities`, updates.entitiesToPatch)
-        .then(res => {
-          const potentialError = checkResponse(res);
-          if (potentialError) throw potentialError;
-          else return res.data;
-        })
-        .catch((error: AxiosError) => {
-          throw error;
-        });
+        .then(getResponseData);
       await saveJSON(
         `logs/${OP}-${Date.now()}-patch-entities.json`,
         patchedEntities2

@@ -7,13 +7,13 @@ const api = axios.create({
   headers: {}
 });
 
-export function checkResponse(response: AxiosResponse) {
+export function getResponseData(response: AxiosResponse): any {
   if (response.status !== 200) {
     console.error("Error in response " + response.status);
     console.log(response.data);
-    return new Error("Error:" + response.status + ": " + response.statusText);
+    throw new Error("Error:" + response.status + ": " + response.statusText);
   }
-  return null;
+  return response.data;
 }
 
 export default api;

@@ -10,13 +10,13 @@ var api = axios_1.default.create({
     // baseURL: "https://diploman.westeurope.cloudapp.azure.com/api1", // Azure VM
     headers: {}
 });
-function checkResponse(response) {
+function getResponseData(response) {
     if (response.status !== 200) {
         console.error("Error in response " + response.status);
         console.log(response.data);
-        return new Error("Error:" + response.status + ": " + response.statusText);
+        throw new Error("Error:" + response.status + ": " + response.statusText);
     }
-    return null;
+    return response.data;
 }
-exports.checkResponse = checkResponse;
+exports.getResponseData = getResponseData;
 exports.default = api;

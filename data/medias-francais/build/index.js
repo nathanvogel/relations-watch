@@ -217,22 +217,13 @@ var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0,
                 return [4 /*yield*/, findSimilarEntities(dataset, "mfid")];
             case 3:
                 entitiesToPatch = _a.sent();
-                console.log("==== Entities to (link)PATCH: ====");
+                console.log("==== Entities to LINK: ====");
                 console.log(entitiesToPatch);
                 if (!(entitiesToPatch.length > 0)) return [3 /*break*/, 6];
                 console.log("==== PATCHing entities ====");
                 return [4 /*yield*/, api_1.default
                         .patch("/entities", entitiesToPatch)
-                        .then(function (res) {
-                        var potentialError = api_1.checkResponse(res);
-                        if (potentialError)
-                            throw potentialError;
-                        else
-                            return res.data;
-                    })
-                        .catch(function (error) {
-                        throw error;
-                    })];
+                        .then(api_1.getResponseData)];
             case 4:
                 patchedEntities = _a.sent();
                 return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-link-entities.json", patchedEntities)];
@@ -251,16 +242,7 @@ var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0,
                 console.log("==== POSTing entities ====");
                 return [4 /*yield*/, api_1.default
                         .post("/entities", updates.newEntities)
-                        .then(function (res) {
-                        var potentialError = api_1.checkResponse(res);
-                        if (potentialError)
-                            throw potentialError;
-                        else
-                            return res.data;
-                    })
-                        .catch(function (error) {
-                        throw error;
-                    })];
+                        .then(api_1.getResponseData)];
             case 8:
                 postedEntities = _a.sent();
                 return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-post-entities.json", postedEntities)];
@@ -274,16 +256,7 @@ var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0,
                 console.log("==== PATCHing entities ====");
                 return [4 /*yield*/, api_1.default
                         .patch("/entities", updates.entitiesToPatch)
-                        .then(function (res) {
-                        var potentialError = api_1.checkResponse(res);
-                        if (potentialError)
-                            throw potentialError;
-                        else
-                            return res.data;
-                    })
-                        .catch(function (error) {
-                        throw error;
-                    })];
+                        .then(api_1.getResponseData)];
             case 11:
                 patchedEntities2 = _a.sent();
                 return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-patch-entities.json", patchedEntities2)];
