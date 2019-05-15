@@ -18,7 +18,8 @@ const db = new Database({
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
 const UPDATE_EXISTING_ENTITIES = true;
-const OP = C.DEV ? "dev" : "prod";
+const LOGDIR = C.DEV ? "logs/dev/" : "logs/prod/";
+const ts = () => Date.now();
 const entColl = db.collection(C.entCollectionName);
 const relColl = db.collection(C.relCollectionName);
 
@@ -148,7 +149,6 @@ const findSimilarEntities = async (
  */
 const updateMediasFrancais = async () => {
   var patchedEntities: Entity[] = [];
-  var patchedEntities2: Entity[] = [];
   var postedEntities: Entity[] = [];
 
   try {
@@ -158,20 +158,18 @@ const updateMediasFrancais = async () => {
     // First of all, we search existing entities in the database that
     // could be similar to the ones we have in the dataset.
     // We save thoses "merges" back to the database BEFORE checking which
-    // entities already exists in the database
+    // entities already exists in the database.
+    // PS: This could potentially be a separate tool.
     console.log("🔍🔍🔍 Searching similar entities:");
     const entitiesToPatch = await findSimilarEntities(dataset, "mfid");
     console.log("==== Entities to LINK: ====");
     console.log(entitiesToPatch);
     if (entitiesToPatch.length > 0) {
-      console.log("==== PATCHing entities ====");
-      patchedEntities = await api
+      console.log("==== LINKing entities ====");
+      const linkedEntities = await api
         .patch(`/entities`, entitiesToPatch)
         .then(getResponseData);
-      await saveJSON(
-        `logs/${OP}-${Date.now()}-link-entities.json`,
-        patchedEntities
-      );
+      await saveJSON(`${LOGDIR}${ts()}-link-entities.json`, linkedEntities);
     }
 
     const updates = await getEntityUpdates(dataset, "mfid");
@@ -186,37 +184,33 @@ const updateMediasFrancais = async () => {
       postedEntities = await api
         .post(`/entities`, updates.newEntities)
         .then(getResponseData);
-      await saveJSON(
-        `logs/${OP}-${Date.now()}-post-entities.json`,
-        postedEntities
-      );
+      await saveJSON(`${LOGDIR}${ts()}-post-entities.json`, postedEntities);
     }
 
     console.log("==== Entities to PATCH: ====");
     console.log(updates.entitiesToPatch);
     if (updates.entitiesToPatch.length > 0) {
       console.log("==== PATCHing entities ====");
-      patchedEntities2 = await api
+      patchedEntities = await api
         .patch(`/entities`, updates.entitiesToPatch)
         .then(getResponseData);
-      await saveJSON(
-        `logs/${OP}-${Date.now()}-patch-entities.json`,
-        patchedEntities2
-      );
+      await saveJSON(`${LOGDIR}${ts()}-patch-entities.json`, patchedEntities);
     }
 
+    // The manually linked entities were already fetched back into
+    // existing entities, so no need to put them in allEntities
     const allEntities = Object.assign(
       {},
-      getDsKeyObject(patchedEntities, "mfid"),
       getDsKeyObject(updates.existingEntities, "mfid"),
       getDsKeyObject(postedEntities, "mfid"),
-      getDsKeyObject(patchedEntities2, "mfid")
+      getDsKeyObject(patchedEntities, "mfid")
     );
-    console.log("===== Done importing entities =====");
-    await saveJSON(`logs/${OP}-${Date.now()}-allEntities.json`, allEntities);
+    const entitiesCount = Object.keys(allEntities).length;
+    console.log(`===== Done importing ${entitiesCount} entities =====`);
+    await saveJSON(`${LOGDIR}${ts()}-allEntities.json`, allEntities);
 
     const edgeDataset = await loadMediasFrancaisRelations(allEntities);
-    await saveJSON(`logs/${OP}-${Date.now()}-edgeDataset.json`, edgeDataset);
+    await saveJSON(`${LOGDIR}${ts()}-edgeDataset.json`, edgeDataset);
 
     // load edges.
     // Create DB edges objects from the dataset, using a manual source ID.
