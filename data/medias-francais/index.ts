@@ -129,10 +129,7 @@ const findSimilarEntities = async (
     // Skip entities that are already linked in the database.
     const entityDatasetId = getDatasetId(entity, datasetId);
     const cursor1 = await getByDatasetId(datasetId, entityDatasetId, false);
-    if (cursor1.hasNext()) {
-      console.log("Skipping " + entityDatasetId);
-      continue;
-    }
+    if (cursor1.hasNext()) continue;
     // Check if we have a similar but unlinked entity in the database.
     const cursor = await db.query(
       aql`

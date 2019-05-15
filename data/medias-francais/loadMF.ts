@@ -1,7 +1,15 @@
 import fs from "fs-extra";
 import parse from "csv-parse";
-import { Entity, EntityType, Edge, RelationType } from "./utils/types";
+import {
+  Entity,
+  EntityType,
+  Edge,
+  RelationType,
+  SourceLinkType
+} from "./utils/types";
+import C from "./utils/constants";
 
+const MF_SOURCE_KEY = C.DEV ? "1065719" : "1179508";
 const FILENAME_ENTITIES = "Medias_francais/medias_francais.tsv";
 const FILENAME_RELATIONS = "Medias_francais/relations_medias_francais.tsv";
 const mfParserOptions = {
@@ -33,14 +41,22 @@ type EdgeRecord = {
   dateConsultation: string;
 };
 
-export function getMFEdgeId(id1: string, id2: string): string {
-  return id1 > id2 ? id1 + "__" + id2 : id2 + "__" + id1;
+type EntityList = { [key: string]: Entity };
+
+function getMFEdgeId(id1: string, id2: string): string {
+  // We can keep the order for this dataset.
+  return id1 + "__" + id2;
 }
 
 function getMFEdgeName(record: EdgeRecord): string {
-  const id1 = record.origine.toLowerCase();
-  const id2 = record.cible.toLowerCase();
-  return id1 > id2 ? id1 + "__" + id2 : id2 + "__" + id1;
+  const id1 = getMfnId(record.origine);
+  const id2 = getMfnId(record.cible);
+  // We can keep the order for this dataset.
+  return id1 + "__" + id2;
+}
+
+function getMfnId(nameInDataset: string) {
+  return nameInDataset.toLowerCase();
 }
 
 function typeLibelleToType(t: string): EntityType {
@@ -58,11 +74,7 @@ function typeLibelleToType(t: string): EntityType {
   }
 }
 
-function getMfnId(nameInDataset: string) {
-  return nameInDataset.toLowerCase();
-}
-
-const recordToEntity = (record: EntityRecord): Entity => {
+function recordToEntity(record: EntityRecord): Entity {
   return {
     type: typeLibelleToType(record.typeLibelle),
     name: record.nom,
@@ -71,7 +83,7 @@ const recordToEntity = (record: EntityRecord): Entity => {
       mfid: record.id
     }
   };
-};
+}
 
 export const loadMediasFrancaisEntities = () =>
   new Promise<Entity[]>((resolve, reject) => {
@@ -100,13 +112,10 @@ export const loadMediasFrancaisEntities = () =>
 /**
  * Necessary because the dataset relations doesn't contain IDs for the cible.
  * @param  mfnId the ID extracted from the dataset record
- * @param  letkeyindbEntities entities to search in
+ * @param  dbEntities entities to search in
  * @return                    [description]
  */
-const findMfidWithMfn = (
-  mfnId: string,
-  dbEntities: { [key: string]: Entity }
-) => {
+function findMfidWithMfn(mfnId: string, dbEntities: EntityList) {
   var cibleId: string | null = null;
   // Find the cible ID, because it's missing in the current state of
   // the relations_media_francais.tsv file.
@@ -122,14 +131,39 @@ const findMfidWithMfn = (
     }
   }
   return cibleId;
-};
+}
 
-const recordToEdge = (
-  record: EdgeRecord,
-  dbEntities: { [key: string]: Entity }
-): Edge => {
-  const type = RelationType.IsOwned;
-  const owned = 100;
+function recordToEdge(record: EdgeRecord, dbEntities: EntityList): Edge | null {
+  var type = RelationType.IsOwned;
+  var owned = 0;
+  var text = "";
+  switch (record.valeur) {
+    case undefined:
+    case null:
+      return null;
+    case "participe":
+      type = RelationType.Other;
+      text = `${record.origine} participe à ${record.cible}.`;
+      owned = 0;
+      break;
+    case "contrôle":
+      type = RelationType.IsControlled;
+      text = "D'après le Monde diplomatique.";
+      break;
+    case "<50":
+      owned = 0;
+      text = "Le pourcentage précis est inconnu, mais inférieur à 50%.";
+      break;
+    case ">50":
+      owned = 51;
+      text = "Le pourcentage précis est inconnu, mais supérieur à 50%.";
+      break;
+    default:
+      owned = parseFloat(record.valeur.replace(",", "."));
+      if (owned === NaN)
+        throw new Error("Could not parse valeur:" + record.valeur);
+      break;
+  }
   const origineId = record.id;
   const cibleId = findMfidWithMfn(getMfnId(record.cible), dbEntities);
   if (!cibleId) throw new Error("### Unable to find cible " + record.cible);
@@ -139,22 +173,24 @@ const recordToEdge = (
   const edgeMfid = getMFEdgeId(origineId, cibleId);
   const edgeMfn = getMFEdgeName(record);
   return {
-    _from: origineKey,
-    _to: cibleKey,
+    _from: cibleKey, // our order is the reverse
+    _to: origineKey,
     type,
-    text: "",
+    text,
     owned,
-    sources: [],
+    // amount: -1,
+    // exactAmount: false,
+    sources: [
+      { type: SourceLinkType.Confirms, comments: [], sourceKey: MF_SOURCE_KEY }
+    ],
     ds: {
       mfid: edgeMfid,
       mfn: edgeMfn
     }
   };
-};
+}
 
-export const loadMediasFrancaisRelations = (dbEntities: {
-  [key: string]: Entity;
-}) =>
+export const loadMediasFrancaisRelations = (dbEntities: EntityList) =>
   new Promise<Edge[]>((resolve, reject) => {
     const dataset: Edge[] = [];
     fs.createReadStream(FILENAME_RELATIONS)
