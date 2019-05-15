@@ -17,6 +17,7 @@ const db = new Database({
 });
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
+const UPDATE_EXISTING_ENTITIES = true;
 const OP = C.DEV ? "dev" : "prod";
 const entColl = db.collection(C.entCollectionName);
 const relColl = db.collection(C.relCollectionName);
@@ -27,6 +28,7 @@ const getEntityUpdates = async (
 ) => {
   const newEntities: Entity[] = [];
   const existingEntities: Entity[] = [];
+  const entitiesToPatch: Entity[] = [];
 
   for (let entity of datasetEntities) {
     // Make sure we have access to the entity ID in this dataset.
@@ -53,20 +55,29 @@ const getEntityUpdates = async (
     else if (cursor.count == 1) {
       console.log("Found a correspondance for:", entity.name);
       const dbEntity: Entity = await cursor.next();
-      if (!areConsistent(dbEntity, entity, [])) {
-        // If we detect a fundamental consistency problem with an
-        // existing entity, we just abort for now.
-        // If the name is different, update the name? Only for some datasets?
+      // Maybe we want to overwrite the values in the DB.
+      if (UPDATE_EXISTING_ENTITIES) {
+        // WARNING: We should do a selective deep merge here!
+        entitiesToPatch.push(Object.assign({}, dbEntity, entity));
+      }
+      // If we detect a fundamental consistency problem with an
+      // existing entity, we just abort for now.
+      // If the name is different, update the name? Only for some datasets?
+      else if (!areConsistent(dbEntity, entity, [])) {
         throw new Error("Inconsistent entities");
       }
-      existingEntities.push(dbEntity);
+      // If the entity doesn't exist, it's easy, we can just create it.
+      // WARNING : We should avoid doing that if the entity has already
+      // been selected by the user for a linking PATCH
+      else existingEntities.push(dbEntity);
     }
-    // If the entity doesn't already exists, we can simply push it.
+    // If the entity doesn't already exists, we can simply create it.
+    // (if it was manually linked, it now does.)
     else {
       newEntities.push(entity);
     }
   }
-  return { newEntities, existingEntities };
+  return { newEntities, existingEntities, entitiesToPatch };
 };
 
 /**
@@ -137,6 +148,7 @@ const findSimilarEntities = async (
  */
 const updateMediasFrancais = async () => {
   var patchedEntities: Entity[] = [];
+  var patchedEntities2: Entity[] = [];
   var postedEntities: Entity[] = [];
 
   try {
@@ -149,24 +161,24 @@ const updateMediasFrancais = async () => {
     // entities already exists in the database
     console.log("🔍🔍🔍 Searching similar entities:");
     const entitiesToPatch = await findSimilarEntities(dataset, "mfid");
-    console.log("==== Entities to patch: ====");
+    console.log("==== Entities to (link)PATCH: ====");
     console.log(entitiesToPatch);
     if (entitiesToPatch.length > 0) {
-      // console.log("==== PATCHing entities ====");
-      // patchedEntities = await api
-      //   .patch(`/entities`, entitiesToPatch)
-      //   .then(res => {
-      //     const potentialError = checkResponse(res);
-      //     if (potentialError) throw potentialError;
-      //     else return res.data;
-      //   })
-      //   .catch((error: AxiosError) => {
-      //     throw error;
-      //   });
-      // await saveJSON(
-      //   `logs/${OP}-${Date.now()}-patch-entities.json`,
-      //   patchedEntities
-      // );
+      console.log("==== PATCHing entities ====");
+      patchedEntities = await api
+        .patch(`/entities`, entitiesToPatch)
+        .then(res => {
+          const potentialError = checkResponse(res);
+          if (potentialError) throw potentialError;
+          else return res.data;
+        })
+        .catch((error: AxiosError) => {
+          throw error;
+        });
+      await saveJSON(
+        `logs/${OP}-${Date.now()}-link-entities.json`,
+        patchedEntities
+      );
     }
 
     const updates = await getEntityUpdates(dataset, "mfid");
@@ -178,32 +190,54 @@ const updateMediasFrancais = async () => {
     console.log(updates.newEntities);
     if (updates.newEntities.length > 0) {
       console.log("==== POSTing entities ====");
-      // postedEntities = await api
-      //   .post(`/entities`, updates.newEntities)
-      //   .then(res => {
-      //     const potentialError = checkResponse(res);
-      //     if (potentialError) throw potentialError;
-      //     else return res.data;
-      //   })
-      //   .catch((error: AxiosError) => {
-      //     throw error;
-      //   });
-      // await saveJSON(
-      //   `logs/${OP}-${Date.now()}-post-entities.json`,
-      //   postedEntities
-      // );
+      postedEntities = await api
+        .post(`/entities`, updates.newEntities)
+        .then(res => {
+          const potentialError = checkResponse(res);
+          if (potentialError) throw potentialError;
+          else return res.data;
+        })
+        .catch((error: AxiosError) => {
+          throw error;
+        });
+      await saveJSON(
+        `logs/${OP}-${Date.now()}-post-entities.json`,
+        postedEntities
+      );
+    }
+
+    console.log("==== Entities to PATCH: ====");
+    console.log(updates.entitiesToPatch);
+    if (updates.entitiesToPatch.length > 0) {
+      console.log("==== PATCHing entities ====");
+      patchedEntities2 = await api
+        .patch(`/entities`, updates.entitiesToPatch)
+        .then(res => {
+          const potentialError = checkResponse(res);
+          if (potentialError) throw potentialError;
+          else return res.data;
+        })
+        .catch((error: AxiosError) => {
+          throw error;
+        });
+      await saveJSON(
+        `logs/${OP}-${Date.now()}-patch-entities.json`,
+        patchedEntities2
+      );
     }
 
     const allEntities = Object.assign(
       {},
       getDsKeyObject(patchedEntities, "mfid"),
       getDsKeyObject(updates.existingEntities, "mfid"),
-      getDsKeyObject(postedEntities, "mfid")
+      getDsKeyObject(postedEntities, "mfid"),
+      getDsKeyObject(patchedEntities2, "mfid")
     );
     console.log("===== Done importing entities =====");
     await saveJSON(`logs/${OP}-${Date.now()}-allEntities.json`, allEntities);
 
     const edgeDataset = await loadMediasFrancaisRelations(allEntities);
+    await saveJSON(`logs/${OP}-${Date.now()}-edgeDataset.json`, edgeDataset);
 
     // load edges.
     // Create DB edges objects from the dataset, using a manual source ID.

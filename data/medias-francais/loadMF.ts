@@ -34,13 +34,13 @@ type EdgeRecord = {
 };
 
 export function getMFEdgeId(id1: string, id2: string): string {
-  return id1 > id2 ? id1 + "_" + id2 : id2 + "_" + id1;
+  return id1 > id2 ? id1 + "__" + id2 : id2 + "__" + id1;
 }
 
 function getMFEdgeName(record: EdgeRecord): string {
   const id1 = record.origine.toLowerCase();
   const id2 = record.cible.toLowerCase();
-  return id1 > id2 ? id1 + "_" + id2 : id2 + "_" + id1;
+  return id1 > id2 ? id1 + "__" + id2 : id2 + "__" + id1;
 }
 
 function typeLibelleToType(t: string): EntityType {
@@ -93,12 +93,12 @@ export const loadMediasFrancaisEntities = () =>
       .on("error", reject);
   });
 
-const yo: { [key: string]: number } = {};
-
-function addYo(key: string) {
-  if (yo[key]) yo[key]++;
-  else yo[key] = 1;
-}
+// const yo: { [key: string]: number } = {};
+//
+// function addYo(key: string) {
+//   if (yo[key]) yo[key]++;
+//   else yo[key] = 1;
+// }
 
 const recordToEdge = (
   record: EdgeRecord,
@@ -119,8 +119,7 @@ const recordToEdge = (
       break;
     }
   }
-  if (!cibleId)
-    throw new Error("Unable to find cible " + record.cible + " in dbEntities");
+  if (!cibleId) throw new Error("### Unable to find cible " + record.cible);
   // Safe to cast, the server would refuse the write anyway.
   const origineKey = dbEntities[origineId]._key as string;
   const cibleKey = dbEntities[cibleId]._key as string;
@@ -145,31 +144,20 @@ export const loadMediasFrancaisRelations = (dbEntities: {
 }) =>
   new Promise<Edge[]>((resolve, reject) => {
     const dataset: Edge[] = [];
-    const stream = fs
-      .createReadStream(FILENAME_RELATIONS)
+    fs.createReadStream(FILENAME_RELATIONS)
       .pipe(parse(mfParserOptions))
       .on("data", function(record: any) {
         try {
           const edge = recordToEdge(record, dbEntities);
-          addYo(record.origine);
-          addYo(record.cible);
           if (edge) dataset.push(edge);
           // console.log(dataset.length, " => ", record);
         } catch (err) {
           console.error("Error while converting edge:", record);
           console.error(err);
-          stream.end();
         }
       })
       .on("end", function() {
         console.log("Done reading:", FILENAME_RELATIONS);
-        console.log("===========================");
-        console.log("===========================");
-        console.log("===========================");
-        console.log(yo);
-        console.log("===========================");
-        console.log("===========================");
-        console.log("===========================");
         resolve(dataset);
       })
       .on("error", reject);

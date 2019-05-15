@@ -41,6 +41,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var arangojs_1 = require("arangojs");
@@ -49,22 +56,25 @@ var loadMF_1 = require("./loadMF");
 var constants_1 = __importDefault(require("./utils/constants"));
 var consistency_1 = require("./utils/consistency");
 var ask_1 = __importDefault(require("./utils/ask"));
+var api_1 = __importStar(require("./utils/api"));
 var utils_1 = require("./utils/utils");
 var db = new arangojs_1.Database({
     url: constants_1.default.DEV ? "http://localhost:8529" : ""
 });
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
+var UPDATE_EXISTING_ENTITIES = true;
 var OP = constants_1.default.DEV ? "dev" : "prod";
 var entColl = db.collection(constants_1.default.entCollectionName);
 var relColl = db.collection(constants_1.default.relCollectionName);
 var getEntityUpdates = function (datasetEntities, datasetId) { return __awaiter(_this, void 0, void 0, function () {
-    var newEntities, existingEntities, _i, datasetEntities_1, entity, entityDatasetId, cursor, dbEntity;
+    var newEntities, existingEntities, entitiesToPatch, _i, datasetEntities_1, entity, entityDatasetId, cursor, dbEntity;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 newEntities = [];
                 existingEntities = [];
+                entitiesToPatch = [];
                 _i = 0, datasetEntities_1 = datasetEntities;
                 _a.label = 1;
             case 1:
@@ -88,13 +98,22 @@ var getEntityUpdates = function (datasetEntities, datasetId) { return __awaiter(
                 return [4 /*yield*/, cursor.next()];
             case 4:
                 dbEntity = _a.sent();
-                if (!consistency_1.areConsistent(dbEntity, entity, [])) {
-                    // If we detect a fundamental consistency problem with an
-                    // existing entity, we just abort for now.
-                    // If the name is different, update the name? Only for some datasets?
+                // Maybe we want to overwrite the values in the DB.
+                if (UPDATE_EXISTING_ENTITIES) {
+                    // WARNING: We should do a selective deep merge here!
+                    entitiesToPatch.push(Object.assign({}, dbEntity, entity));
+                }
+                // If we detect a fundamental consistency problem with an
+                // existing entity, we just abort for now.
+                // If the name is different, update the name? Only for some datasets?
+                else if (!consistency_1.areConsistent(dbEntity, entity, [])) {
                     throw new Error("Inconsistent entities");
                 }
-                existingEntities.push(dbEntity);
+                // If the entity doesn't exist, it's easy, we can just create it.
+                // WARNING : We should avoid doing that if the entity has already
+                // been selected by the user for a linking PATCH
+                else
+                    existingEntities.push(dbEntity);
                 return [3 /*break*/, 6];
             case 5:
                 newEntities.push(entity);
@@ -102,7 +121,7 @@ var getEntityUpdates = function (datasetEntities, datasetId) { return __awaiter(
             case 6:
                 _i++;
                 return [3 /*break*/, 1];
-            case 7: return [2 /*return*/, { newEntities: newEntities, existingEntities: existingEntities }];
+            case 7: return [2 /*return*/, { newEntities: newEntities, existingEntities: existingEntities, entitiesToPatch: entitiesToPatch }];
         }
     });
 }); };
@@ -176,15 +195,16 @@ var findSimilarEntities = function (datasetEntities, datasetId) { return __await
  * The main process
  */
 var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0, function () {
-    var patchedEntities, postedEntities, dataset, entitiesToPatch, updates, allEntities, edgeDataset, err_1;
+    var patchedEntities, patchedEntities2, postedEntities, dataset, entitiesToPatch, updates, allEntities, edgeDataset, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 patchedEntities = [];
+                patchedEntities2 = [];
                 postedEntities = [];
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 7, , 8]);
+                _a.trys.push([1, 17, , 18]);
                 return [4 /*yield*/, loadMF_1.loadMediasFrancaisEntities()];
             case 2:
                 dataset = _a.sent();
@@ -197,68 +217,101 @@ var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0,
                 return [4 /*yield*/, findSimilarEntities(dataset, "mfid")];
             case 3:
                 entitiesToPatch = _a.sent();
-                console.log("==== Entities to patch: ====");
+                console.log("==== Entities to (link)PATCH: ====");
                 console.log(entitiesToPatch);
-                if (entitiesToPatch.length > 0) {
-                    // console.log("==== PATCHing entities ====");
-                    // patchedEntities = await api
-                    //   .patch(`/entities`, entitiesToPatch)
-                    //   .then(res => {
-                    //     const potentialError = checkResponse(res);
-                    //     if (potentialError) throw potentialError;
-                    //     else return res.data;
-                    //   })
-                    //   .catch((error: AxiosError) => {
-                    //     throw error;
-                    //   });
-                    // await saveJSON(
-                    //   `logs/${OP}-${Date.now()}-patch-entities.json`,
-                    //   patchedEntities
-                    // );
-                }
-                return [4 /*yield*/, getEntityUpdates(dataset, "mfid")];
+                if (!(entitiesToPatch.length > 0)) return [3 /*break*/, 6];
+                console.log("==== PATCHing entities ====");
+                return [4 /*yield*/, api_1.default
+                        .patch("/entities", entitiesToPatch)
+                        .then(function (res) {
+                        var potentialError = api_1.checkResponse(res);
+                        if (potentialError)
+                            throw potentialError;
+                        else
+                            return res.data;
+                    })
+                        .catch(function (error) {
+                        throw error;
+                    })];
             case 4:
+                patchedEntities = _a.sent();
+                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-link-entities.json", patchedEntities)];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6: return [4 /*yield*/, getEntityUpdates(dataset, "mfid")];
+            case 7:
                 updates = _a.sent();
                 console.log("==== Entities already in the DB: ====");
                 console.log(updates.existingEntities.length + "/" + dataset.length);
                 //console.log(updates.existingEntities);
                 console.log("==== Entities to POST: ====");
                 console.log(updates.newEntities);
-                if (updates.newEntities.length > 0) {
-                    console.log("==== POSTing entities ====");
-                    // postedEntities = await api
-                    //   .post(`/entities`, updates.newEntities)
-                    //   .then(res => {
-                    //     const potentialError = checkResponse(res);
-                    //     if (potentialError) throw potentialError;
-                    //     else return res.data;
-                    //   })
-                    //   .catch((error: AxiosError) => {
-                    //     throw error;
-                    //   });
-                    // await saveJSON(
-                    //   `logs/${OP}-${Date.now()}-post-entities.json`,
-                    //   postedEntities
-                    // );
-                }
-                allEntities = Object.assign({}, utils_1.getDsKeyObject(patchedEntities, "mfid"), utils_1.getDsKeyObject(updates.existingEntities, "mfid"), utils_1.getDsKeyObject(postedEntities, "mfid"));
+                if (!(updates.newEntities.length > 0)) return [3 /*break*/, 10];
+                console.log("==== POSTing entities ====");
+                return [4 /*yield*/, api_1.default
+                        .post("/entities", updates.newEntities)
+                        .then(function (res) {
+                        var potentialError = api_1.checkResponse(res);
+                        if (potentialError)
+                            throw potentialError;
+                        else
+                            return res.data;
+                    })
+                        .catch(function (error) {
+                        throw error;
+                    })];
+            case 8:
+                postedEntities = _a.sent();
+                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-post-entities.json", postedEntities)];
+            case 9:
+                _a.sent();
+                _a.label = 10;
+            case 10:
+                console.log("==== Entities to PATCH: ====");
+                console.log(updates.entitiesToPatch);
+                if (!(updates.entitiesToPatch.length > 0)) return [3 /*break*/, 13];
+                console.log("==== PATCHing entities ====");
+                return [4 /*yield*/, api_1.default
+                        .patch("/entities", updates.entitiesToPatch)
+                        .then(function (res) {
+                        var potentialError = api_1.checkResponse(res);
+                        if (potentialError)
+                            throw potentialError;
+                        else
+                            return res.data;
+                    })
+                        .catch(function (error) {
+                        throw error;
+                    })];
+            case 11:
+                patchedEntities2 = _a.sent();
+                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-patch-entities.json", patchedEntities2)];
+            case 12:
+                _a.sent();
+                _a.label = 13;
+            case 13:
+                allEntities = Object.assign({}, utils_1.getDsKeyObject(patchedEntities, "mfid"), utils_1.getDsKeyObject(updates.existingEntities, "mfid"), utils_1.getDsKeyObject(postedEntities, "mfid"), utils_1.getDsKeyObject(patchedEntities2, "mfid"));
                 console.log("===== Done importing entities =====");
                 return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-allEntities.json", allEntities)];
-            case 5:
+            case 14:
                 _a.sent();
                 return [4 /*yield*/, loadMF_1.loadMediasFrancaisRelations(allEntities)];
-            case 6:
+            case 15:
                 edgeDataset = _a.sent();
-                return [3 /*break*/, 8];
-            case 7:
+                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-edgeDataset.json", edgeDataset)];
+            case 16:
+                _a.sent();
+                return [3 /*break*/, 18];
+            case 17:
                 err_1 = _a.sent();
                 console.error("ERROR: Failed to load and update the dataset:");
                 if (err_1 && err_1.stack)
                     console.error(err_1.stack);
                 else
                     console.error(err_1);
-                return [3 /*break*/, 8];
-            case 8: return [2 /*return*/];
+                return [3 /*break*/, 18];
+            case 18: return [2 /*return*/];
         }
     });
 }); };

@@ -1,0 +1,3522 @@
+{
+  "1": {
+    "_key": "1013471",
+    "_id": "entities/1013471",
+    "_rev": "_Ypd4DoW---",
+    "type": 1,
+    "name": "Claude Perdriel",
+    "ds": {
+      "mfn": "Claude Perdriel",
+      "mfid": "1"
+    }
+  },
+  "2": {
+    "_key": "1013473",
+    "_id": "entities/1013473",
+    "_rev": "_Ypd4Doa---",
+    "type": 2,
+    "name": "Sophia Publications",
+    "ds": {
+      "mfn": "Sophia Publications",
+      "mfid": "2"
+    }
+  },
+  "3": {
+    "_key": "1013475",
+    "_id": "entities/1013475",
+    "_rev": "_Ypd4Doa--A",
+    "type": 2,
+    "name": "Groupe Perdriel",
+    "ds": {
+      "mfn": "Groupe Perdriel",
+      "mfid": "3"
+    }
+  },
+  "4": {
+    "_key": "1013477",
+    "_id": "entities/1013477",
+    "_rev": "_Ypd4Doa--C",
+    "type": 2,
+    "name": "L’histoire",
+    "ds": {
+      "mfn": "L’histoire",
+      "mfid": "4"
+    }
+  },
+  "5": {
+    "_key": "1013479",
+    "_id": "entities/1013479",
+    "_rev": "_Ypd4Doa--E",
+    "type": 2,
+    "name": "Historia",
+    "ds": {
+      "mfn": "Historia",
+      "mfid": "5"
+    }
+  },
+  "6": {
+    "_key": "1013481",
+    "_id": "entities/1013481",
+    "_rev": "_Ypd4Doa--G",
+    "type": 2,
+    "name": "Challenges",
+    "ds": {
+      "mfn": "Challenges",
+      "mfid": "6"
+    }
+  },
+  "7": {
+    "_key": "1013483",
+    "_id": "entities/1013483",
+    "_rev": "_Ypd4Doa--I",
+    "type": 2,
+    "name": "Sciences & Avenir",
+    "ds": {
+      "mfn": "Sciences & Avenir",
+      "mfid": "7"
+    }
+  },
+  "8": {
+    "_key": "1013485",
+    "_id": "entities/1013485",
+    "_rev": "_Ypd4Doa--K",
+    "type": 2,
+    "name": "L’Opinion",
+    "ds": {
+      "mfn": "L’Opinion",
+      "mfid": "8"
+    }
+  },
+  "9": {
+    "_key": "1013487",
+    "_id": "entities/1013487",
+    "_rev": "_Ypd4Doe---",
+    "type": 2,
+    "name": "Prisa",
+    "ds": {
+      "mfn": "Prisa",
+      "mfid": "9"
+    }
+  },
+  "10": {
+    "_key": "1013489",
+    "_id": "entities/1013489",
+    "_rev": "_Ypd4Doe--A",
+    "type": 1,
+    "name": "Xavier Niel",
+    "ds": {
+      "mfn": "Xavier Niel",
+      "mfid": "10"
+    }
+  },
+  "11": {
+    "_key": "1013491",
+    "_id": "entities/1013491",
+    "_rev": "_Ypd4Doe--C",
+    "type": 1,
+    "name": "Matthieu Pigasse",
+    "ds": {
+      "mfn": "Matthieu Pigasse",
+      "mfid": "11"
+    }
+  },
+  "12": {
+    "_key": "1013493",
+    "_id": "entities/1013493",
+    "_rev": "_Ypd4Doe--E",
+    "type": 2,
+    "name": "Les Nouvelles Éditions indépendantes",
+    "ds": {
+      "mfn": "Les Nouvelles Éditions indépendantes",
+      "mfid": "12"
+    }
+  },
+  "13": {
+    "_key": "1013495",
+    "_id": "entities/1013495",
+    "_rev": "_Ypd4Doe--G",
+    "type": 2,
+    "name": "Le Nouveau Monde",
+    "ds": {
+      "mfn": "Le Nouveau Monde",
+      "mfid": "13"
+    }
+  },
+  "14": {
+    "_key": "1013497",
+    "_id": "entities/1013497",
+    "_rev": "_Ypd4Doe--I",
+    "type": 2,
+    "name": "Le Monde libre",
+    "ds": {
+      "mfn": "Le Monde libre",
+      "mfid": "14"
+    }
+  },
+  "15": {
+    "_key": "1013499",
+    "_id": "entities/1013499",
+    "_rev": "_Ypd4Doi---",
+    "type": 2,
+    "name": "Le Monde SA",
+    "ds": {
+      "mfn": "Le Monde SA",
+      "mfid": "15"
+    }
+  },
+  "16": {
+    "_key": "1013501",
+    "_id": "entities/1013501",
+    "_rev": "_Ypd4Doi--A",
+    "type": 2,
+    "name": "L’Obs",
+    "ds": {
+      "mfn": "L’Obs",
+      "mfid": "16"
+    }
+  },
+  "17": {
+    "_key": "1013503",
+    "_id": "entities/1013503",
+    "_rev": "_Ypd4Doi--C",
+    "type": 2,
+    "name": "Prier",
+    "ds": {
+      "mfn": "Prier",
+      "mfid": "17"
+    }
+  },
+  "18": {
+    "_key": "1013505",
+    "_id": "entities/1013505",
+    "_rev": "_Ypd4Doi--E",
+    "type": 2,
+    "name": "M, le magazine du Monde",
+    "ds": {
+      "mfn": "M, le magazine du Monde",
+      "mfid": "18"
+    }
+  },
+  "19": {
+    "_key": "1013507",
+    "_id": "entities/1013507",
+    "_rev": "_YphJCnG--_",
+    "type": 200,
+    "name": "Le Monde",
+    "ds": {
+      "mfn": "Le Monde",
+      "mfid": "19"
+    }
+  },
+  "20": {
+    "_key": "1013509",
+    "_id": "entities/1013509",
+    "_rev": "_Ypd4Doi--I",
+    "type": 2,
+    "name": "Télérama",
+    "ds": {
+      "mfn": "Télérama",
+      "mfid": "20"
+    }
+  },
+  "21": {
+    "_key": "1013511",
+    "_id": "entities/1013511",
+    "_rev": "_Ypd4Doi--K",
+    "type": 2,
+    "name": "Courrier international",
+    "ds": {
+      "mfn": "Courrier international",
+      "mfid": "21"
+    }
+  },
+  "22": {
+    "_key": "1013513",
+    "_id": "entities/1013513",
+    "_rev": "_Ypd4Doi--M",
+    "type": 2,
+    "name": "Le Monde des religions",
+    "ds": {
+      "mfn": "Le Monde des religions",
+      "mfid": "22"
+    }
+  },
+  "23": {
+    "_key": "1013515",
+    "_id": "entities/1013515",
+    "_rev": "_Ypd4Doi--O",
+    "type": 2,
+    "name": "La Vie",
+    "ds": {
+      "mfn": "La Vie",
+      "mfid": "23"
+    }
+  },
+  "24": {
+    "_key": "1013517",
+    "_id": "entities/1013517",
+    "_rev": "_Ypd4Dom---",
+    "type": 2,
+    "name": "Le Monde diplomatique",
+    "ds": {
+      "mfn": "Le Monde diplomatique",
+      "mfid": "24"
+    }
+  },
+  "25": {
+    "_key": "1013519",
+    "_id": "entities/1013519",
+    "_rev": "_Ypd4Dom--A",
+    "type": 2,
+    "name": "Manière de voir",
+    "ds": {
+      "mfn": "Manière de voir",
+      "mfid": "25"
+    }
+  },
+  "26": {
+    "_key": "1013521",
+    "_id": "entities/1013521",
+    "_rev": "_Ypd4Dom--C",
+    "type": 2,
+    "name": "Huffingtonpost.fr",
+    "ds": {
+      "mfn": "Huffingtonpost.fr",
+      "mfid": "26"
+    }
+  },
+  "27": {
+    "_key": "1013523",
+    "_id": "entities/1013523",
+    "_rev": "_Ypd4Dom--E",
+    "type": 2,
+    "name": "AOL",
+    "ds": {
+      "mfn": "AOL",
+      "mfid": "27"
+    }
+  },
+  "28": {
+    "_key": "1013525",
+    "_id": "entities/1013525",
+    "_rev": "_Ypd4Dom--G",
+    "type": 2,
+    "name": "Huffington Post",
+    "ds": {
+      "mfn": "Huffington Post",
+      "mfid": "28"
+    }
+  },
+  "30": {
+    "_key": "1013527",
+    "_id": "entities/1013527",
+    "_rev": "_Ypd4Dom--I",
+    "type": 2,
+    "name": "Radio Nova",
+    "ds": {
+      "mfn": "Radio Nova",
+      "mfid": "30"
+    }
+  },
+  "31": {
+    "_key": "1013529",
+    "_id": "entities/1013529",
+    "_rev": "_Ypd4Dom--K",
+    "type": 2,
+    "name": "Les Inrockuptibles",
+    "ds": {
+      "mfn": "Les Inrockuptibles",
+      "mfid": "31"
+    }
+  },
+  "32": {
+    "_key": "1013531",
+    "_id": "entities/1013531",
+    "_rev": "_Ypd4Dom--M",
+    "type": 2,
+    "name": "Vice.com",
+    "ds": {
+      "mfn": "Vice.com",
+      "mfid": "32"
+    }
+  },
+  "33": {
+    "_key": "1013533",
+    "_id": "entities/1013533",
+    "_rev": "_Ypd4Doq---",
+    "type": 2,
+    "name": "Les Amis du Monde diplomatique",
+    "ds": {
+      "mfn": "Les Amis du Monde diplomatique",
+      "mfid": "33"
+    }
+  },
+  "34": {
+    "_key": "1013535",
+    "_id": "entities/1013535",
+    "_rev": "_Ypd4Doq--A",
+    "type": 2,
+    "name": "Association Günter-Holzmann",
+    "ds": {
+      "mfn": "Association Günter-Holzmann",
+      "mfid": "34"
+    }
+  },
+  "35": {
+    "_key": "1013537",
+    "_id": "entities/1013537",
+    "_rev": "_Ypd4Doq--C",
+    "type": 1,
+    "name": "Famille Dassault",
+    "ds": {
+      "mfn": "Famille Dassault",
+      "mfid": "35"
+    }
+  },
+  "36": {
+    "_key": "1013539",
+    "_id": "entities/1013539",
+    "_rev": "_Ypd4Doq--E",
+    "type": 2,
+    "name": "Groupe Dassault",
+    "ds": {
+      "mfn": "Groupe Dassault",
+      "mfid": "36"
+    }
+  },
+  "37": {
+    "_key": "1013541",
+    "_id": "entities/1013541",
+    "_rev": "_Ypd4Doq--G",
+    "type": 2,
+    "name": "Groupe Figaro",
+    "ds": {
+      "mfn": "Groupe Figaro",
+      "mfid": "37"
+    }
+  },
+  "38": {
+    "_key": "1013543",
+    "_id": "entities/1013543",
+    "_rev": "_Ypd4Doq--I",
+    "type": 2,
+    "name": "Le Figaro",
+    "ds": {
+      "mfn": "Le Figaro",
+      "mfid": "38"
+    }
+  },
+  "39": {
+    "_key": "1013545",
+    "_id": "entities/1013545",
+    "_rev": "_Ypd4Dou---",
+    "type": 2,
+    "name": "Figaro Magazine",
+    "ds": {
+      "mfn": "Figaro Magazine",
+      "mfid": "39"
+    }
+  },
+  "40": {
+    "_key": "1013547",
+    "_id": "entities/1013547",
+    "_rev": "_Ypd4Dou--A",
+    "type": 2,
+    "name": "Le Particulier",
+    "ds": {
+      "mfn": "Le Particulier",
+      "mfid": "40"
+    }
+  },
+  "41": {
+    "_key": "1013549",
+    "_id": "entities/1013549",
+    "_rev": "_Ypd4Dou--C",
+    "type": 2,
+    "name": "La Lettre de l’Expansion",
+    "ds": {
+      "mfn": "La Lettre de l’Expansion",
+      "mfid": "41"
+    }
+  },
+  "42": {
+    "_key": "1013551",
+    "_id": "entities/1013551",
+    "_rev": "_Ypd4Dou--E",
+    "type": 1,
+    "name": "Bernard Arnault",
+    "ds": {
+      "mfn": "Bernard Arnault",
+      "mfid": "42"
+    }
+  },
+  "43": {
+    "_key": "1013553",
+    "_id": "entities/1013553",
+    "_rev": "_Ypd4Dou--G",
+    "type": 2,
+    "name": "LVMH",
+    "ds": {
+      "mfn": "LVMH",
+      "mfid": "43"
+    }
+  },
+  "44": {
+    "_key": "1013555",
+    "_id": "entities/1013555",
+    "_rev": "_Ypd4Dou--I",
+    "type": 2,
+    "name": "Le Parisien",
+    "ds": {
+      "mfn": "Le Parisien",
+      "mfid": "44"
+    }
+  },
+  "45": {
+    "_key": "1013557",
+    "_id": "entities/1013557",
+    "_rev": "_Ypd4Doy---",
+    "type": 2,
+    "name": "Le Parisien Week-End",
+    "ds": {
+      "mfn": "Le Parisien Week-End",
+      "mfid": "45"
+    }
+  },
+  "46": {
+    "_key": "1013559",
+    "_id": "entities/1013559",
+    "_rev": "_Ypd4Doy--A",
+    "type": 2,
+    "name": "Le Parisien économie",
+    "ds": {
+      "mfn": "Le Parisien économie",
+      "mfid": "46"
+    }
+  },
+  "47": {
+    "_key": "1013561",
+    "_id": "entities/1013561",
+    "_rev": "_Ypd4Doy--C",
+    "type": 2,
+    "name": "Aujourd’hui en France",
+    "ds": {
+      "mfn": "Aujourd’hui en France",
+      "mfid": "47"
+    }
+  },
+  "48": {
+    "_key": "1013563",
+    "_id": "entities/1013563",
+    "_rev": "_Ypd4Doy--E",
+    "type": 2,
+    "name": "Groupe Les Échos",
+    "ds": {
+      "mfn": "Groupe Les Échos",
+      "mfid": "48"
+    }
+  },
+  "49": {
+    "_key": "1013565",
+    "_id": "entities/1013565",
+    "_rev": "_Ypd4Doy--G",
+    "type": 2,
+    "name": "Les Échos",
+    "ds": {
+      "mfn": "Les Échos",
+      "mfid": "49"
+    }
+  },
+  "50": {
+    "_key": "1013567",
+    "_id": "entities/1013567",
+    "_rev": "_Ypd4Doy--I",
+    "type": 2,
+    "name": "Investir",
+    "ds": {
+      "mfn": "Investir",
+      "mfid": "50"
+    }
+  },
+  "51": {
+    "_key": "1013569",
+    "_id": "entities/1013569",
+    "_rev": "_Ypd4Doy--K",
+    "type": 2,
+    "name": "Investir Magazine",
+    "ds": {
+      "mfn": "Investir Magazine",
+      "mfid": "51"
+    }
+  },
+  "52": {
+    "_key": "1013571",
+    "_id": "entities/1013571",
+    "_rev": "_Ypd4Doy--M",
+    "type": 2,
+    "name": "Les Échos Week-End",
+    "ds": {
+      "mfn": "Les Échos Week-End",
+      "mfid": "52"
+    }
+  },
+  "53": {
+    "_key": "1013573",
+    "_id": "entities/1013573",
+    "_rev": "_Ypd4Do2---",
+    "type": 2,
+    "name": "Radio Classique",
+    "ds": {
+      "mfn": "Radio Classique",
+      "mfid": "53"
+    }
+  },
+  "54": {
+    "_key": "1013575",
+    "_id": "entities/1013575",
+    "_rev": "_Ypd4Do2--A",
+    "type": 1,
+    "name": "Famille Bettencourt",
+    "ds": {
+      "mfn": "Famille Bettencourt",
+      "mfid": "54"
+    }
+  },
+  "55": {
+    "_key": "1013577",
+    "_id": "entities/1013577",
+    "_rev": "_Ypd4Do2--C",
+    "type": 1,
+    "name": "Nicolas Beytout",
+    "ds": {
+      "mfn": "Nicolas Beytout",
+      "mfid": "55"
+    }
+  },
+  "56": {
+    "_key": "1013579",
+    "_id": "entities/1013579",
+    "_rev": "_Ypd4Do2--E",
+    "type": 1,
+    "name": "Patrick Drahi",
+    "ds": {
+      "mfn": "Patrick Drahi",
+      "mfid": "56"
+    }
+  },
+  "57": {
+    "_key": "1013581",
+    "_id": "entities/1013581",
+    "_rev": "_Ypd4Do2--G",
+    "type": 2,
+    "name": "Altice",
+    "ds": {
+      "mfn": "Altice",
+      "mfid": "57"
+    }
+  },
+  "58": {
+    "_key": "1013583",
+    "_id": "entities/1013583",
+    "_rev": "_Ypd4Do2--I",
+    "type": 2,
+    "name": "Altice France",
+    "ds": {
+      "mfn": "Altice France",
+      "mfid": "58"
+    }
+  },
+  "59": {
+    "_key": "1013585",
+    "_id": "entities/1013585",
+    "_rev": "_Ypd4Do2--K",
+    "type": 2,
+    "name": "L’Express",
+    "ds": {
+      "mfn": "L’Express",
+      "mfid": "59"
+    }
+  },
+  "60": {
+    "_key": "1013587",
+    "_id": "entities/1013587",
+    "_rev": "_Ypd4Do2--M",
+    "type": 2,
+    "name": "Libération",
+    "ds": {
+      "mfn": "Libération",
+      "mfid": "60"
+    }
+  },
+  "61": {
+    "_key": "1013589",
+    "_id": "entities/1013589",
+    "_rev": "_Ypd4Do2--O",
+    "type": 2,
+    "name": "NextRadioTV",
+    "ds": {
+      "mfn": "NextRadioTV",
+      "mfid": "61"
+    }
+  },
+  "62": {
+    "_key": "1013591",
+    "_id": "entities/1013591",
+    "_rev": "_Ypd4Do6---",
+    "type": 2,
+    "name": "BFM TV",
+    "ds": {
+      "mfn": "BFM TV",
+      "mfid": "62"
+    }
+  },
+  "63": {
+    "_key": "1013593",
+    "_id": "entities/1013593",
+    "_rev": "_Ypd4Do6--A",
+    "type": 2,
+    "name": "RMC Découverte",
+    "ds": {
+      "mfn": "RMC Découverte",
+      "mfid": "63"
+    }
+  },
+  "64": {
+    "_key": "1013595",
+    "_id": "entities/1013595",
+    "_rev": "_Ypd4Do6--C",
+    "type": 2,
+    "name": "RMC",
+    "ds": {
+      "mfn": "RMC",
+      "mfid": "64"
+    }
+  },
+  "65": {
+    "_key": "1013597",
+    "_id": "entities/1013597",
+    "_rev": "_Ypd4Do6--E",
+    "type": 2,
+    "name": "BFM Business",
+    "ds": {
+      "mfn": "BFM Business",
+      "mfid": "65"
+    }
+  },
+  "66": {
+    "_key": "1013599",
+    "_id": "entities/1013599",
+    "_rev": "_Ypd4Do6--G",
+    "type": 2,
+    "name": "Numéro 23",
+    "ds": {
+      "mfn": "Numéro 23",
+      "mfid": "66"
+    }
+  },
+  "67": {
+    "_key": "1013601",
+    "_id": "entities/1013601",
+    "_rev": "_Ypd4Do6--I",
+    "type": 1,
+    "name": "Arnaud Lagardère",
+    "ds": {
+      "mfn": "Arnaud Lagardère",
+      "mfid": "67"
+    }
+  },
+  "68": {
+    "_key": "1013603",
+    "_id": "entities/1013603",
+    "_rev": "_Ypd4Do6--K",
+    "type": 2,
+    "name": "Qatar Investment Authority",
+    "ds": {
+      "mfn": "Qatar Investment Authority",
+      "mfid": "68"
+    }
+  },
+  "69": {
+    "_key": "1013605",
+    "_id": "entities/1013605",
+    "_rev": "_Ypd4Do6--M",
+    "type": 2,
+    "name": "Lagardère SCA",
+    "ds": {
+      "mfn": "Lagardère SCA",
+      "mfid": "69"
+    }
+  },
+  "70": {
+    "_key": "1013607",
+    "_id": "entities/1013607",
+    "_rev": "_Ypd4Do6--O",
+    "type": 2,
+    "name": "Lagardère Active",
+    "ds": {
+      "mfn": "Lagardère Active",
+      "mfid": "70"
+    }
+  },
+  "71": {
+    "_key": "1013609",
+    "_id": "entities/1013609",
+    "_rev": "_Ypd4Dp----",
+    "type": 2,
+    "name": "Le Journal du dimanche",
+    "ds": {
+      "mfn": "Le Journal du dimanche",
+      "mfid": "71"
+    }
+  },
+  "72": {
+    "_key": "1013611",
+    "_id": "entities/1013611",
+    "_rev": "_Ypd4Dp---A",
+    "type": 2,
+    "name": "Paris Match",
+    "ds": {
+      "mfn": "Paris Match",
+      "mfid": "72"
+    }
+  },
+  "73": {
+    "_key": "1013613",
+    "_id": "entities/1013613",
+    "_rev": "_Ypd4Dp---C",
+    "type": 2,
+    "name": "Gulli",
+    "ds": {
+      "mfn": "Gulli",
+      "mfid": "73"
+    }
+  },
+  "74": {
+    "_key": "1013615",
+    "_id": "entities/1013615",
+    "_rev": "_Ypd4Dp---E",
+    "type": 2,
+    "name": "Europe 1",
+    "ds": {
+      "mfn": "Europe 1",
+      "mfid": "74"
+    }
+  },
+  "75": {
+    "_key": "1013617",
+    "_id": "entities/1013617",
+    "_rev": "_Ypd4Dp---G",
+    "type": 2,
+    "name": "RFM",
+    "ds": {
+      "mfn": "RFM",
+      "mfid": "75"
+    }
+  },
+  "76": {
+    "_key": "1013619",
+    "_id": "entities/1013619",
+    "_rev": "_Ypd4Dp---I",
+    "type": 2,
+    "name": "Virgin Radio",
+    "ds": {
+      "mfn": "Virgin Radio",
+      "mfid": "76"
+    }
+  },
+  "77": {
+    "_key": "1013621",
+    "_id": "entities/1013621",
+    "_rev": "_Ypd4Dp---K",
+    "type": 1,
+    "name": "Vincent Bolloré",
+    "ds": {
+      "mfn": "Vincent Bolloré",
+      "mfid": "77"
+    }
+  },
+  "78": {
+    "_key": "1013623",
+    "_id": "entities/1013623",
+    "_rev": "_Ypd4DpC---",
+    "type": 2,
+    "name": "Financière de l‘Odet",
+    "ds": {
+      "mfn": "Financière de l‘Odet",
+      "mfid": "78"
+    }
+  },
+  "79": {
+    "_key": "1013625",
+    "_id": "entities/1013625",
+    "_rev": "_Ypd4DpC--A",
+    "type": 2,
+    "name": "Bolloré",
+    "ds": {
+      "mfn": "Bolloré",
+      "mfid": "79"
+    }
+  },
+  "80": {
+    "_key": "1013627",
+    "_id": "entities/1013627",
+    "_rev": "_Ypd4DpC--C",
+    "type": 2,
+    "name": "CNews matin",
+    "ds": {
+      "mfn": "CNews matin",
+      "mfid": "80"
+    }
+  },
+  "81": {
+    "_key": "1013629",
+    "_id": "entities/1013629",
+    "_rev": "_Ypd4DpC--E",
+    "type": 2,
+    "name": "Vivendi",
+    "ds": {
+      "mfn": "Vivendi",
+      "mfid": "81"
+    }
+  },
+  "82": {
+    "_key": "1013631",
+    "_id": "entities/1013631",
+    "_rev": "_Ypd4DpC--G",
+    "type": 2,
+    "name": "Canal +",
+    "ds": {
+      "mfn": "Canal +",
+      "mfid": "82"
+    }
+  },
+  "83": {
+    "_key": "1013633",
+    "_id": "entities/1013633",
+    "_rev": "_Ypd4DpC--I",
+    "type": 2,
+    "name": "C8",
+    "ds": {
+      "mfn": "C8",
+      "mfid": "83"
+    }
+  },
+  "84": {
+    "_key": "1013635",
+    "_id": "entities/1013635",
+    "_rev": "_Ypd4DpC--K",
+    "type": 2,
+    "name": "CNews",
+    "ds": {
+      "mfn": "CNews",
+      "mfid": "84"
+    }
+  },
+  "85": {
+    "_key": "1013637",
+    "_id": "entities/1013637",
+    "_rev": "_Ypd4DpC--M",
+    "type": 2,
+    "name": "CStar",
+    "ds": {
+      "mfn": "CStar",
+      "mfid": "85"
+    }
+  },
+  "86": {
+    "_key": "1013639",
+    "_id": "entities/1013639",
+    "_rev": "_Ypd4DpC--O",
+    "type": 1,
+    "name": "Iskandar Safa",
+    "ds": {
+      "mfn": "Iskandar Safa",
+      "mfid": "86"
+    }
+  },
+  "87": {
+    "_key": "1013641",
+    "_id": "entities/1013641",
+    "_rev": "_Ypd4DpG---",
+    "type": 2,
+    "name": "Privinvest",
+    "ds": {
+      "mfn": "Privinvest",
+      "mfid": "87"
+    }
+  },
+  "88": {
+    "_key": "1013643",
+    "_id": "entities/1013643",
+    "_rev": "_Ypd4DpG--A",
+    "type": 2,
+    "name": "Groupe Valmonde",
+    "ds": {
+      "mfn": "Groupe Valmonde",
+      "mfid": "88"
+    }
+  },
+  "89": {
+    "_key": "1013645",
+    "_id": "entities/1013645",
+    "_rev": "_Ypd4DpG--C",
+    "type": 2,
+    "name": "Valeurs actuelles",
+    "ds": {
+      "mfn": "Valeurs actuelles",
+      "mfid": "89"
+    }
+  },
+  "90": {
+    "_key": "1013647",
+    "_id": "entities/1013647",
+    "_rev": "_Ypd4DpG--E",
+    "type": 2,
+    "name": "Mieux vivre votre argent",
+    "ds": {
+      "mfn": "Mieux vivre votre argent",
+      "mfid": "90"
+    }
+  },
+  "91": {
+    "_key": "1013649",
+    "_id": "entities/1013649",
+    "_rev": "_Ypd4DpG--G",
+    "type": 1,
+    "name": "Yves de Chaisemartin",
+    "ds": {
+      "mfn": "Yves de Chaisemartin",
+      "mfid": "91"
+    }
+  },
+  "92": {
+    "_key": "1013651",
+    "_id": "entities/1013651",
+    "_rev": "_Ypd4DpG--I",
+    "type": 1,
+    "name": "Daniel Křetínský",
+    "ds": {
+      "mfn": "Daniel Křetínský",
+      "mfid": "92"
+    }
+  },
+  "93": {
+    "_key": "1013653",
+    "_id": "entities/1013653",
+    "_rev": "_Ypd4DpG--K",
+    "type": 2,
+    "name": "Czech Media Invest",
+    "ds": {
+      "mfn": "Czech Media Invest",
+      "mfid": "93"
+    }
+  },
+  "94": {
+    "_key": "1013655",
+    "_id": "entities/1013655",
+    "_rev": "_Ypd4DpG--M",
+    "type": 2,
+    "name": "Marianne",
+    "ds": {
+      "mfn": "Marianne",
+      "mfid": "94"
+    }
+  },
+  "95": {
+    "_key": "1013657",
+    "_id": "entities/1013657",
+    "_rev": "_Ypd4DpG--O",
+    "type": 1,
+    "name": "François Pinault",
+    "ds": {
+      "mfn": "François Pinault",
+      "mfid": "95"
+    }
+  },
+  "96": {
+    "_key": "1013659",
+    "_id": "entities/1013659",
+    "_rev": "_Ypd4DpK---",
+    "type": 2,
+    "name": "Artémis",
+    "ds": {
+      "mfn": "Artémis",
+      "mfid": "96"
+    }
+  },
+  "97": {
+    "_key": "1013661",
+    "_id": "entities/1013661",
+    "_rev": "_Ypd4DpK--A",
+    "type": 2,
+    "name": "Groupe Sebdo-Le Point",
+    "ds": {
+      "mfn": "Groupe Sebdo-Le Point",
+      "mfid": "97"
+    }
+  },
+  "98": {
+    "_key": "1013663",
+    "_id": "entities/1013663",
+    "_rev": "_Ypd4DpK--C",
+    "type": 2,
+    "name": "Groupe L’Agefi",
+    "ds": {
+      "mfn": "Groupe L’Agefi",
+      "mfid": "98"
+    }
+  },
+  "99": {
+    "_key": "1013665",
+    "_id": "entities/1013665",
+    "_rev": "_Ypd4DpK--E",
+    "type": 2,
+    "name": "Point de vue",
+    "ds": {
+      "mfn": "Point de vue",
+      "mfid": "99"
+    }
+  },
+  "100": {
+    "_key": "1013667",
+    "_id": "entities/1013667",
+    "_rev": "_Ypd4DpK--G",
+    "type": 2,
+    "name": "Le Point",
+    "ds": {
+      "mfn": "Le Point",
+      "mfid": "100"
+    }
+  },
+  "101": {
+    "_key": "1013669",
+    "_id": "entities/1013669",
+    "_rev": "_Ypd4DpK--I",
+    "type": 2,
+    "name": "L’Agefi hebdo",
+    "ds": {
+      "mfn": "L’Agefi hebdo",
+      "mfid": "101"
+    }
+  },
+  "102": {
+    "_key": "1013671",
+    "_id": "entities/1013671",
+    "_rev": "_Ypd4DpK--K",
+    "type": 1,
+    "name": "Famille Mohn",
+    "ds": {
+      "mfn": "Famille Mohn",
+      "mfid": "102"
+    }
+  },
+  "103": {
+    "_key": "1013673",
+    "_id": "entities/1013673",
+    "_rev": "_Ypd4DpK--M",
+    "type": 2,
+    "name": "Bertelsmann",
+    "ds": {
+      "mfn": "Bertelsmann",
+      "mfid": "103"
+    }
+  },
+  "104": {
+    "_key": "1013675",
+    "_id": "entities/1013675",
+    "_rev": "_Ypd4DpK--O",
+    "type": 2,
+    "name": "Gruner + Jahr",
+    "ds": {
+      "mfn": "Gruner + Jahr",
+      "mfid": "104"
+    }
+  },
+  "105": {
+    "_key": "1013677",
+    "_id": "entities/1013677",
+    "_rev": "_Ypd4DpO---",
+    "type": 2,
+    "name": "RTL Group",
+    "ds": {
+      "mfn": "RTL Group",
+      "mfid": "105"
+    }
+  },
+  "106": {
+    "_key": "1013679",
+    "_id": "entities/1013679",
+    "_rev": "_Ypd4DpO--A",
+    "type": 2,
+    "name": "Prisma Media",
+    "ds": {
+      "mfn": "Prisma Media",
+      "mfid": "106"
+    }
+  },
+  "107": {
+    "_key": "1013681",
+    "_id": "entities/1013681",
+    "_rev": "_Ypd4DpO--C",
+    "type": 2,
+    "name": "Capital",
+    "ds": {
+      "mfn": "Capital",
+      "mfid": "107"
+    }
+  },
+  "108": {
+    "_key": "1013683",
+    "_id": "entities/1013683",
+    "_rev": "_Ypd4DpO--E",
+    "type": 2,
+    "name": "Management",
+    "ds": {
+      "mfn": "Management",
+      "mfid": "108"
+    }
+  },
+  "109": {
+    "_key": "1013685",
+    "_id": "entities/1013685",
+    "_rev": "_Ypd4DpO--G",
+    "type": 2,
+    "name": "Harvard Business Review",
+    "ds": {
+      "mfn": "Harvard Business Review",
+      "mfid": "109"
+    }
+  },
+  "110": {
+    "_key": "1013687",
+    "_id": "entities/1013687",
+    "_rev": "_Ypd4DpO--I",
+    "type": 2,
+    "name": "Groupe M6",
+    "ds": {
+      "mfn": "Groupe M6",
+      "mfid": "110"
+    }
+  },
+  "111": {
+    "_key": "1013689",
+    "_id": "entities/1013689",
+    "_rev": "_Ypd4DpO--K",
+    "type": 2,
+    "name": "M6",
+    "ds": {
+      "mfn": "M6",
+      "mfid": "111"
+    }
+  },
+  "112": {
+    "_key": "1013691",
+    "_id": "entities/1013691",
+    "_rev": "_Ypd4DpO--M",
+    "type": 2,
+    "name": "W9",
+    "ds": {
+      "mfn": "W9",
+      "mfid": "112"
+    }
+  },
+  "113": {
+    "_key": "1013693",
+    "_id": "entities/1013693",
+    "_rev": "_Ypd4DpO--O",
+    "type": 2,
+    "name": "6ter",
+    "ds": {
+      "mfn": "6ter",
+      "mfid": "113"
+    }
+  },
+  "114": {
+    "_key": "1013695",
+    "_id": "entities/1013695",
+    "_rev": "_Ypd4DpS---",
+    "type": 2,
+    "name": "RTL",
+    "ds": {
+      "mfn": "RTL",
+      "mfid": "114"
+    }
+  },
+  "115": {
+    "_key": "1013697",
+    "_id": "entities/1013697",
+    "_rev": "_Ypd4DpS--A",
+    "type": 2,
+    "name": "RTL2",
+    "ds": {
+      "mfn": "RTL2",
+      "mfid": "115"
+    }
+  },
+  "116": {
+    "_key": "1013699",
+    "_id": "entities/1013699",
+    "_rev": "_Ypd4DpS--C",
+    "type": 2,
+    "name": "Fun Radio",
+    "ds": {
+      "mfn": "Fun Radio",
+      "mfid": "116"
+    }
+  },
+  "117": {
+    "_key": "1013701",
+    "_id": "entities/1013701",
+    "_rev": "_Ypd4DpS--E",
+    "type": 1,
+    "name": "Georges Ghosn",
+    "ds": {
+      "mfn": "Georges Ghosn",
+      "mfid": "117"
+    }
+  },
+  "118": {
+    "_key": "1013703",
+    "_id": "entities/1013703",
+    "_rev": "_Ypd4DpS--G",
+    "type": 2,
+    "name": "Ghosn Capital",
+    "ds": {
+      "mfn": "Ghosn Capital",
+      "mfid": "118"
+    }
+  },
+  "119": {
+    "_key": "1013705",
+    "_id": "entities/1013705",
+    "_rev": "_Ypd4DpS--I",
+    "type": 2,
+    "name": "VSD",
+    "ds": {
+      "mfn": "VSD",
+      "mfid": "119"
+    }
+  },
+  "120": {
+    "_key": "1013707",
+    "_id": "entities/1013707",
+    "_rev": "_Ypd4DpS--K",
+    "type": 1,
+    "name": "Martin et Olivier Bouygues",
+    "ds": {
+      "mfn": "Martin et Olivier Bouygues",
+      "mfid": "120"
+    }
+  },
+  "121": {
+    "_key": "1013709",
+    "_id": "entities/1013709",
+    "_rev": "_Ypd4DpS--M",
+    "type": 2,
+    "name": "Bouygues",
+    "ds": {
+      "mfn": "Bouygues",
+      "mfid": "121"
+    }
+  },
+  "122": {
+    "_key": "1013711",
+    "_id": "entities/1013711",
+    "_rev": "_Ypd4DpS--O",
+    "type": 2,
+    "name": "Groupe TF1",
+    "ds": {
+      "mfn": "Groupe TF1",
+      "mfid": "122"
+    }
+  },
+  "123": {
+    "_key": "1013713",
+    "_id": "entities/1013713",
+    "_rev": "_Ypd4DpW---",
+    "type": 2,
+    "name": "TF1",
+    "ds": {
+      "mfn": "TF1",
+      "mfid": "123"
+    }
+  },
+  "124": {
+    "_key": "1013715",
+    "_id": "entities/1013715",
+    "_rev": "_Ypd4DpW--A",
+    "type": 2,
+    "name": "TFX",
+    "ds": {
+      "mfn": "TFX",
+      "mfid": "124"
+    }
+  },
+  "125": {
+    "_key": "1013717",
+    "_id": "entities/1013717",
+    "_rev": "_Ypd4DpW--C",
+    "type": 2,
+    "name": "LCI",
+    "ds": {
+      "mfn": "LCI",
+      "mfid": "125"
+    }
+  },
+  "126": {
+    "_key": "1013719",
+    "_id": "entities/1013719",
+    "_rev": "_Ypd4DpW--E",
+    "type": 2,
+    "name": "TF1 Séries Films",
+    "ds": {
+      "mfn": "TF1 Séries Films",
+      "mfid": "126"
+    }
+  },
+  "127": {
+    "_key": "1013721",
+    "_id": "entities/1013721",
+    "_rev": "_Ypd4DpW--G",
+    "type": 2,
+    "name": "TMC",
+    "ds": {
+      "mfn": "TMC",
+      "mfid": "127"
+    }
+  },
+  "128": {
+    "_key": "1013723",
+    "_id": "entities/1013723",
+    "_rev": "_Ypd4DpW--I",
+    "type": 2,
+    "name": "République française",
+    "ds": {
+      "mfn": "République française",
+      "mfid": "128"
+    }
+  },
+  "129": {
+    "_key": "1013725",
+    "_id": "entities/1013725",
+    "_rev": "_Ypd4DpW--K",
+    "type": 2,
+    "name": "République fédérale d’Allemagne",
+    "ds": {
+      "mfn": "République fédérale d’Allemagne",
+      "mfid": "129"
+    }
+  },
+  "130": {
+    "_key": "1013727",
+    "_id": "entities/1013727",
+    "_rev": "_Ypd4DpW--M",
+    "type": 2,
+    "name": "Renault",
+    "ds": {
+      "mfn": "Renault",
+      "mfid": "130"
+    }
+  },
+  "131": {
+    "_key": "1013729",
+    "_id": "entities/1013729",
+    "_rev": "_Ypd4DpW--O",
+    "type": 2,
+    "name": "La Chaîne parlementaire",
+    "ds": {
+      "mfn": "La Chaîne parlementaire",
+      "mfid": "131"
+    }
+  },
+  "132": {
+    "_key": "1013731",
+    "_id": "entities/1013731",
+    "_rev": "_Ypd4Dpa---",
+    "type": 2,
+    "name": "Public Sénat",
+    "ds": {
+      "mfn": "Public Sénat",
+      "mfid": "132"
+    }
+  },
+  "133": {
+    "_key": "1013733",
+    "_id": "entities/1013733",
+    "_rev": "_Ypd4Dpa--A",
+    "type": 2,
+    "name": "France Médias Monde",
+    "ds": {
+      "mfn": "France Médias Monde",
+      "mfid": "133"
+    }
+  },
+  "134": {
+    "_key": "1013735",
+    "_id": "entities/1013735",
+    "_rev": "_Ypd4Dpa--C",
+    "type": 2,
+    "name": "France Télévision",
+    "ds": {
+      "mfn": "France Télévision",
+      "mfid": "134"
+    }
+  },
+  "135": {
+    "_key": "1013737",
+    "_id": "entities/1013737",
+    "_rev": "_Ypd4Dpa--E",
+    "type": 2,
+    "name": "Radio France",
+    "ds": {
+      "mfn": "Radio France",
+      "mfid": "135"
+    }
+  },
+  "136": {
+    "_key": "1013739",
+    "_id": "entities/1013739",
+    "_rev": "_Ypd4Dpa--G",
+    "type": 2,
+    "name": "Arte France",
+    "ds": {
+      "mfn": "Arte France",
+      "mfid": "136"
+    }
+  },
+  "137": {
+    "_key": "1013741",
+    "_id": "entities/1013741",
+    "_rev": "_Ypd4Dpa--I",
+    "type": 2,
+    "name": "Monte Carlo Doualiya",
+    "ds": {
+      "mfn": "Monte Carlo Doualiya",
+      "mfid": "137"
+    }
+  },
+  "138": {
+    "_key": "1013743",
+    "_id": "entities/1013743",
+    "_rev": "_Ypd4Dpa--K",
+    "type": 2,
+    "name": "Radio France International",
+    "ds": {
+      "mfn": "Radio France International",
+      "mfid": "138"
+    }
+  },
+  "139": {
+    "_key": "1013745",
+    "_id": "entities/1013745",
+    "_rev": "_Ypd4Dpa--M",
+    "type": 2,
+    "name": "France 24",
+    "ds": {
+      "mfn": "France 24",
+      "mfid": "139"
+    }
+  },
+  "140": {
+    "_key": "1013747",
+    "_id": "entities/1013747",
+    "_rev": "_Ypd4Dpe---",
+    "type": 2,
+    "name": "TV5 Monde",
+    "ds": {
+      "mfn": "TV5 Monde",
+      "mfid": "140"
+    }
+  },
+  "141": {
+    "_key": "1013749",
+    "_id": "entities/1013749",
+    "_rev": "_Ypd4Dpe--A",
+    "type": 2,
+    "name": "France 2",
+    "ds": {
+      "mfn": "France 2",
+      "mfid": "141"
+    }
+  },
+  "142": {
+    "_key": "1013751",
+    "_id": "entities/1013751",
+    "_rev": "_Ypd4Dpe--C",
+    "type": 2,
+    "name": "France 3",
+    "ds": {
+      "mfn": "France 3",
+      "mfid": "142"
+    }
+  },
+  "143": {
+    "_key": "1013753",
+    "_id": "entities/1013753",
+    "_rev": "_Ypd4Dpe--E",
+    "type": 2,
+    "name": "France 5",
+    "ds": {
+      "mfn": "France 5",
+      "mfid": "143"
+    }
+  },
+  "144": {
+    "_key": "1013755",
+    "_id": "entities/1013755",
+    "_rev": "_Ypd4Dpe--G",
+    "type": 2,
+    "name": "France 4",
+    "ds": {
+      "mfn": "France 4",
+      "mfid": "144"
+    }
+  },
+  "145": {
+    "_key": "1013757",
+    "_id": "entities/1013757",
+    "_rev": "_Ypd4Dpe--I",
+    "type": 2,
+    "name": "France Ô",
+    "ds": {
+      "mfn": "France Ô",
+      "mfid": "145"
+    }
+  },
+  "147": {
+    "_key": "1013761",
+    "_id": "entities/1013761",
+    "_rev": "_Ypd4Dpe--M",
+    "type": 2,
+    "name": "France Inter",
+    "ds": {
+      "mfn": "France Inter",
+      "mfid": "147"
+    }
+  },
+  "148": {
+    "_key": "1013763",
+    "_id": "entities/1013763",
+    "_rev": "_Ypd4Dpi---",
+    "type": 2,
+    "name": "France Musique",
+    "ds": {
+      "mfn": "France Musique",
+      "mfid": "148"
+    }
+  },
+  "149": {
+    "_key": "1013765",
+    "_id": "entities/1013765",
+    "_rev": "_Ypd4Dpi--A",
+    "type": 2,
+    "name": "France Culture",
+    "ds": {
+      "mfn": "France Culture",
+      "mfid": "149"
+    }
+  },
+  "150": {
+    "_key": "1013767",
+    "_id": "entities/1013767",
+    "_rev": "_Ypd4Dpi--C",
+    "type": 2,
+    "name": "FIP",
+    "ds": {
+      "mfn": "FIP",
+      "mfid": "150"
+    }
+  },
+  "151": {
+    "_key": "1013769",
+    "_id": "entities/1013769",
+    "_rev": "_Ypd4Dpi--E",
+    "type": 2,
+    "name": "France Bleu",
+    "ds": {
+      "mfn": "France Bleu",
+      "mfid": "151"
+    }
+  },
+  "152": {
+    "type": 200,
+    "name": "France Info",
+    "ds": {
+      "mfn": "france info",
+      "mfid": "152"
+    },
+    "_id": "entities/1033161",
+    "_key": "1033161",
+    "_rev": "_YpjRoxq---"
+  },
+  "153": {
+    "_key": "1013773",
+    "_id": "entities/1013773",
+    "_rev": "_Ypd4Dpi--I",
+    "type": 2,
+    "name": "Mouv’",
+    "ds": {
+      "mfn": "Mouv’",
+      "mfid": "153"
+    }
+  },
+  "154": {
+    "_key": "1013775",
+    "_id": "entities/1013775",
+    "_rev": "_Ypd4Dpi--K",
+    "type": 2,
+    "name": "Arte",
+    "ds": {
+      "mfn": "Arte",
+      "mfid": "154"
+    }
+  },
+  "155": {
+    "_key": "1013777",
+    "_id": "entities/1013777",
+    "_rev": "_Ypd4Dpm---",
+    "type": 2,
+    "name": "ARD / ZDF",
+    "ds": {
+      "mfn": "ARD / ZDF",
+      "mfid": "155"
+    }
+  },
+  "156": {
+    "_key": "1013779",
+    "_id": "entities/1013779",
+    "_rev": "_Ypd4Dpm--A",
+    "type": 2,
+    "name": "Arte Deutschland TV GmbH",
+    "ds": {
+      "mfn": "Arte Deutschland TV GmbH",
+      "mfid": "156"
+    }
+  },
+  "157": {
+    "_key": "1013781",
+    "_id": "entities/1013781",
+    "_rev": "_Ypd4Dpm--C",
+    "type": 2,
+    "name": "Les Augustins de l’Assomption",
+    "ds": {
+      "mfn": "Les Augustins de l’Assomption",
+      "mfid": "157"
+    }
+  },
+  "158": {
+    "_key": "1013783",
+    "_id": "entities/1013783",
+    "_rev": "_Ypd4Dpm--E",
+    "type": 2,
+    "name": "Bayard",
+    "ds": {
+      "mfn": "Bayard",
+      "mfid": "158"
+    }
+  },
+  "159": {
+    "_key": "1013785",
+    "_id": "entities/1013785",
+    "_rev": "_Ypd4Dpm--G",
+    "type": 2,
+    "name": "La Croix",
+    "ds": {
+      "mfn": "La Croix",
+      "mfid": "159"
+    }
+  },
+  "160": {
+    "_key": "1013787",
+    "_id": "entities/1013787",
+    "_rev": "_Ypd4Dpm--I",
+    "type": 2,
+    "name": "Pèlerin",
+    "ds": {
+      "mfn": "Pèlerin",
+      "mfid": "160"
+    }
+  },
+  "161": {
+    "_key": "1013789",
+    "_id": "entities/1013789",
+    "_rev": "_Ypd4Dpm--K",
+    "type": 2,
+    "name": "Notre temps",
+    "ds": {
+      "mfn": "Notre temps",
+      "mfid": "161"
+    }
+  },
+  "162": {
+    "_key": "1013791",
+    "_id": "entities/1013791",
+    "_rev": "_Ypd4Dpm--M",
+    "type": 1,
+    "name": "Jean-Paul Baudecroux",
+    "ds": {
+      "mfn": "Jean-Paul Baudecroux",
+      "mfid": "162"
+    }
+  },
+  "163": {
+    "_key": "1013793",
+    "_id": "entities/1013793",
+    "_rev": "_Ypd4Dpq---",
+    "type": 2,
+    "name": "NRJ Group",
+    "ds": {
+      "mfn": "NRJ Group",
+      "mfid": "163"
+    }
+  },
+  "164": {
+    "_key": "1013795",
+    "_id": "entities/1013795",
+    "_rev": "_Ypd4Dpq--A",
+    "type": 2,
+    "name": "NRJ 12",
+    "ds": {
+      "mfn": "NRJ 12",
+      "mfid": "164"
+    }
+  },
+  "165": {
+    "_key": "1013797",
+    "_id": "entities/1013797",
+    "_rev": "_Ypd4Dpq--C",
+    "type": 2,
+    "name": "Chérie 25",
+    "ds": {
+      "mfn": "Chérie 25",
+      "mfid": "165"
+    }
+  },
+  "166": {
+    "_key": "1013799",
+    "_id": "entities/1013799",
+    "_rev": "_Ypd4Dpq--E",
+    "type": 2,
+    "name": "NRJ",
+    "ds": {
+      "mfn": "NRJ",
+      "mfid": "166"
+    }
+  },
+  "167": {
+    "_key": "1013801",
+    "_id": "entities/1013801",
+    "_rev": "_Ypd4Dpq--G",
+    "type": 2,
+    "name": "Rire et Chansons",
+    "ds": {
+      "mfn": "Rire et Chansons",
+      "mfid": "167"
+    }
+  },
+  "168": {
+    "_key": "1013803",
+    "_id": "entities/1013803",
+    "_rev": "_Ypd4Dpq--I",
+    "type": 2,
+    "name": "Chérie FM",
+    "ds": {
+      "mfn": "Chérie FM",
+      "mfid": "168"
+    }
+  },
+  "169": {
+    "_key": "1013805",
+    "_id": "entities/1013805",
+    "_rev": "_Ypd4Dpq--K",
+    "type": 2,
+    "name": "Nostalgie",
+    "ds": {
+      "mfn": "Nostalgie",
+      "mfid": "169"
+    }
+  },
+  "170": {
+    "_key": "1013807",
+    "_id": "entities/1013807",
+    "_rev": "_Ypd4Dpu---",
+    "type": 1,
+    "name": "Famille Hutin",
+    "ds": {
+      "mfn": "Famille Hutin",
+      "mfid": "170"
+    }
+  },
+  "171": {
+    "_key": "1013809",
+    "_id": "entities/1013809",
+    "_rev": "_Ypd4Dpu--A",
+    "type": 1,
+    "name": "Famille Hurbain",
+    "ds": {
+      "mfn": "Famille Hurbain",
+      "mfid": "171"
+    }
+  },
+  "172": {
+    "_key": "1013811",
+    "_id": "entities/1013811",
+    "_rev": "_Ypd4Dpu--C",
+    "type": 2,
+    "name": "Crédit Agricole Nord de France",
+    "ds": {
+      "mfn": "Crédit Agricole Nord de France",
+      "mfid": "172"
+    }
+  },
+  "173": {
+    "_key": "1013813",
+    "_id": "entities/1013813",
+    "_rev": "_Ypd4Dpu--E",
+    "type": 2,
+    "name": "Association pour le soutien des principes de la démocratie humaniste",
+    "ds": {
+      "mfn": "Association pour le soutien des principes de la démocratie humaniste",
+      "mfid": "173"
+    }
+  },
+  "174": {
+    "_key": "1013815",
+    "_id": "entities/1013815",
+    "_rev": "_Ypd4Dpu--G",
+    "type": 2,
+    "name": "Groupe SIPA - Ouest",
+    "ds": {
+      "mfn": "Groupe SIPA - Ouest",
+      "mfid": "174"
+    }
+  },
+  "175": {
+    "_key": "1013817",
+    "_id": "entities/1013817",
+    "_rev": "_Ypd4Dpy---",
+    "type": 2,
+    "name": "Ouest France",
+    "ds": {
+      "mfn": "Ouest France",
+      "mfid": "175"
+    }
+  },
+  "176": {
+    "_key": "1013819",
+    "_id": "entities/1013819",
+    "_rev": "_Ypd4Dpy--A",
+    "type": 2,
+    "name": "Le Courrier de l’Ouest",
+    "ds": {
+      "mfn": "Le Courrier de l’Ouest",
+      "mfid": "176"
+    }
+  },
+  "177": {
+    "_key": "1013821",
+    "_id": "entities/1013821",
+    "_rev": "_Ypd4Dpy--C",
+    "type": 2,
+    "name": "Le Maine libre",
+    "ds": {
+      "mfn": "Le Maine libre",
+      "mfid": "177"
+    }
+  },
+  "178": {
+    "_key": "1013823",
+    "_id": "entities/1013823",
+    "_rev": "_Ypd4Dpy--E",
+    "type": 2,
+    "name": "Presse-Océan",
+    "ds": {
+      "mfn": "Presse-Océan",
+      "mfid": "178"
+    }
+  },
+  "179": {
+    "_key": "1013825",
+    "_id": "entities/1013825",
+    "_rev": "_Ypd4Dpy--G",
+    "type": 2,
+    "name": "La Presse de la Manche",
+    "ds": {
+      "mfn": "La Presse de la Manche",
+      "mfid": "179"
+    }
+  },
+  "180": {
+    "_key": "1013827",
+    "_id": "entities/1013827",
+    "_rev": "_Ypd4Dpy--I",
+    "type": 2,
+    "name": "Publi Hebdos",
+    "ds": {
+      "mfn": "Publi Hebdos",
+      "mfid": "180"
+    }
+  },
+  "181": {
+    "_key": "1013829",
+    "_id": "entities/1013829",
+    "_rev": "_Ypd4Dpy--K",
+    "type": 2,
+    "name": "Sofiouest",
+    "ds": {
+      "mfn": "Sofiouest",
+      "mfid": "181"
+    }
+  },
+  "182": {
+    "_key": "1013831",
+    "_id": "entities/1013831",
+    "_rev": "_Ypd4Dpy--M",
+    "type": 2,
+    "name": "20 Minutes",
+    "ds": {
+      "mfn": "20 Minutes",
+      "mfid": "182"
+    }
+  },
+  "183": {
+    "_key": "1013833",
+    "_id": "entities/1013833",
+    "_rev": "_Ypd4Dp2---",
+    "type": 2,
+    "name": "Groupe Rossel",
+    "ds": {
+      "mfn": "Groupe Rossel",
+      "mfid": "183"
+    }
+  },
+  "184": {
+    "_key": "1013835",
+    "_id": "entities/1013835",
+    "_rev": "_Ypd4Dp2--A",
+    "type": 2,
+    "name": "Groupe Rossel La Voix",
+    "ds": {
+      "mfn": "Groupe Rossel La Voix",
+      "mfid": "184"
+    }
+  },
+  "185": {
+    "_key": "1013837",
+    "_id": "entities/1013837",
+    "_rev": "_Ypd4Dp2--C",
+    "type": 2,
+    "name": "La Voix du Nord SA",
+    "ds": {
+      "mfn": "La Voix du Nord SA",
+      "mfid": "185"
+    }
+  },
+  "186": {
+    "_key": "1013839",
+    "_id": "entities/1013839",
+    "_rev": "_Ypd4Dp2--E",
+    "type": 2,
+    "name": "La Voix du Nord",
+    "ds": {
+      "mfn": "La Voix du Nord",
+      "mfid": "186"
+    }
+  },
+  "187": {
+    "_key": "1013841",
+    "_id": "entities/1013841",
+    "_rev": "_Ypd4Dp2--G",
+    "type": 2,
+    "name": "Nord éclair",
+    "ds": {
+      "mfn": "Nord éclair",
+      "mfid": "187"
+    }
+  },
+  "188": {
+    "_key": "1013843",
+    "_id": "entities/1013843",
+    "_rev": "_Ypd4Dp2--I",
+    "type": 2,
+    "name": "Nord Littoral",
+    "ds": {
+      "mfn": "Nord Littoral",
+      "mfid": "188"
+    }
+  },
+  "189": {
+    "_key": "1013845",
+    "_id": "entities/1013845",
+    "_rev": "_Ypd4Dp2--K",
+    "type": 2,
+    "name": "Courrier picard",
+    "ds": {
+      "mfn": "Courrier picard",
+      "mfid": "189"
+    }
+  },
+  "190": {
+    "_key": "1013847",
+    "_id": "entities/1013847",
+    "_rev": "_Ypd4Dp2--M",
+    "type": 2,
+    "name": "L’aisne Nouvelle",
+    "ds": {
+      "mfn": "L’aisne Nouvelle",
+      "mfid": "190"
+    }
+  },
+  "191": {
+    "_key": "1013849",
+    "_id": "entities/1013849",
+    "_rev": "_Ypd4Dp6---",
+    "type": 2,
+    "name": "L’Union - L’Ardennais",
+    "ds": {
+      "mfn": "L’Union - L’Ardennais",
+      "mfid": "191"
+    }
+  },
+  "192": {
+    "_key": "1013851",
+    "_id": "entities/1013851",
+    "_rev": "_Ypd4Dp6--A",
+    "type": 2,
+    "name": "L’Est-éclair - Libération Champagne",
+    "ds": {
+      "mfn": "L’Est-éclair - Libération Champagne",
+      "mfid": "192"
+    }
+  },
+  "193": {
+    "_key": "1013853",
+    "_id": "entities/1013853",
+    "_rev": "_Ypd4Dp6--C",
+    "type": 2,
+    "name": "L’Avenir de l’Artois",
+    "ds": {
+      "mfn": "L’Avenir de l’Artois",
+      "mfid": "193"
+    }
+  },
+  "194": {
+    "_key": "1013855",
+    "_id": "entities/1013855",
+    "_rev": "_Ypd4Dp6--E",
+    "type": 2,
+    "name": "Les Echos du Touquet",
+    "ds": {
+      "mfn": "Les Echos du Touquet",
+      "mfid": "194"
+    }
+  },
+  "195": {
+    "_key": "1013857",
+    "_id": "entities/1013857",
+    "_rev": "_Ypd4Dp6--G",
+    "type": 2,
+    "name": "Le Journal des Flandres",
+    "ds": {
+      "mfn": "Le Journal des Flandres",
+      "mfid": "195"
+    }
+  },
+  "196": {
+    "_key": "1013859",
+    "_id": "entities/1013859",
+    "_rev": "_Ypd4Dp6--I",
+    "type": 2,
+    "name": "Le Messager",
+    "ds": {
+      "mfn": "Le Messager",
+      "mfid": "196"
+    }
+  },
+  "197": {
+    "_key": "1013861",
+    "_id": "entities/1013861",
+    "_rev": "_Ypd4Dp6--K",
+    "type": 2,
+    "name": "L’Essor savoyard",
+    "ds": {
+      "mfn": "L’Essor savoyard",
+      "mfid": "197"
+    }
+  },
+  "198": {
+    "_key": "1013863",
+    "_id": "entities/1013863",
+    "_rev": "_Ypd4Dp6--M",
+    "type": 2,
+    "name": "Le Pays gessien",
+    "ds": {
+      "mfn": "Le Pays gessien",
+      "mfid": "198"
+    }
+  },
+  "199": {
+    "_key": "1013865",
+    "_id": "entities/1013865",
+    "_rev": "_Ypd4Dp6--O",
+    "type": 2,
+    "name": "La Tribune républicaine",
+    "ds": {
+      "mfn": "La Tribune républicaine",
+      "mfid": "199"
+    }
+  },
+  "200": {
+    "_key": "1013867",
+    "_id": "entities/1013867",
+    "_rev": "_Ypd4Dq----",
+    "type": 2,
+    "name": "La Savoie",
+    "ds": {
+      "mfn": "La Savoie",
+      "mfid": "200"
+    }
+  },
+  "201": {
+    "_key": "1013869",
+    "_id": "entities/1013869",
+    "_rev": "_Ypd4Dq---A",
+    "type": 2,
+    "name": "Le Phare Dunkerquois",
+    "ds": {
+      "mfn": "Le Phare Dunkerquois",
+      "mfid": "201"
+    }
+  },
+  "202": {
+    "_key": "1013871",
+    "_id": "entities/1013871",
+    "_rev": "_Ypd4Dq---C",
+    "type": 2,
+    "name": "La Semaine dans le Boulonnais",
+    "ds": {
+      "mfn": "La Semaine dans le Boulonnais",
+      "mfid": "202"
+    }
+  },
+  "203": {
+    "_key": "1013873",
+    "_id": "entities/1013873",
+    "_rev": "_Ypd4Dq---E",
+    "type": 2,
+    "name": "Le Réveil de Berck",
+    "ds": {
+      "mfn": "Le Réveil de Berck",
+      "mfid": "203"
+    }
+  },
+  "204": {
+    "_key": "1013875",
+    "_id": "entities/1013875",
+    "_rev": "_Ypd4Dq---G",
+    "type": 2,
+    "name": "Le Journal de Montreuil",
+    "ds": {
+      "mfn": "Le Journal de Montreuil",
+      "mfid": "204"
+    }
+  },
+  "205": {
+    "_key": "1013877",
+    "_id": "entities/1013877",
+    "_rev": "_Ypd4Dq---I",
+    "type": 2,
+    "name": "L’indicateur",
+    "ds": {
+      "mfn": "L’indicateur",
+      "mfid": "205"
+    }
+  },
+  "206": {
+    "_key": "1013879",
+    "_id": "entities/1013879",
+    "_rev": "_Ypd4Dq---K",
+    "type": 2,
+    "name": "L’Echo de la Lys",
+    "ds": {
+      "mfn": "L’Echo de la Lys",
+      "mfid": "206"
+    }
+  },
+  "207": {
+    "_key": "1013881",
+    "_id": "entities/1013881",
+    "_rev": "_Ypd4Dq---M",
+    "type": 2,
+    "name": "Crédit Mutuel",
+    "ds": {
+      "mfn": "Crédit Mutuel",
+      "mfid": "207"
+    }
+  },
+  "208": {
+    "_key": "1013883",
+    "_id": "entities/1013883",
+    "_rev": "_Ypd4DqC---",
+    "type": 2,
+    "name": "Groupe EBRA",
+    "ds": {
+      "mfn": "Groupe EBRA",
+      "mfid": "208"
+    }
+  },
+  "209": {
+    "_key": "1013885",
+    "_id": "entities/1013885",
+    "_rev": "_Ypd4DqC--A",
+    "type": 2,
+    "name": "L’Est républicain",
+    "ds": {
+      "mfn": "L’Est républicain",
+      "mfid": "209"
+    }
+  },
+  "210": {
+    "_key": "1013887",
+    "_id": "entities/1013887",
+    "_rev": "_Ypd4DqC--C",
+    "type": 2,
+    "name": "Le Républicain lorrain",
+    "ds": {
+      "mfn": "Le Républicain lorrain",
+      "mfid": "210"
+    }
+  },
+  "211": {
+    "_key": "1013889",
+    "_id": "entities/1013889",
+    "_rev": "_Ypd4DqC--E",
+    "type": 2,
+    "name": "DNA",
+    "ds": {
+      "mfn": "DNA",
+      "mfid": "211"
+    }
+  },
+  "212": {
+    "_key": "1013891",
+    "_id": "entities/1013891",
+    "_rev": "_Ypd4DqC--G",
+    "type": 2,
+    "name": "Vosges Matin",
+    "ds": {
+      "mfn": "Vosges Matin",
+      "mfid": "212"
+    }
+  },
+  "213": {
+    "_key": "1013893",
+    "_id": "entities/1013893",
+    "_rev": "_Ypd4DqC--I",
+    "type": 2,
+    "name": "L’Alsace",
+    "ds": {
+      "mfn": "L’Alsace",
+      "mfid": "213"
+    }
+  },
+  "214": {
+    "_key": "1013895",
+    "_id": "entities/1013895",
+    "_rev": "_Ypd4DqC--K",
+    "type": 2,
+    "name": "Le Bien public",
+    "ds": {
+      "mfn": "Le Bien public",
+      "mfid": "214"
+    }
+  },
+  "215": {
+    "_key": "1013897",
+    "_id": "entities/1013897",
+    "_rev": "_Ypd4DqC--M",
+    "type": 2,
+    "name": "Le Journal de Saône-et-Loire",
+    "ds": {
+      "mfn": "Le Journal de Saône-et-Loire",
+      "mfid": "215"
+    }
+  },
+  "216": {
+    "_key": "1013899",
+    "_id": "entities/1013899",
+    "_rev": "_Ypd4DqC--O",
+    "type": 2,
+    "name": "Le Progrès",
+    "ds": {
+      "mfn": "Le Progrès",
+      "mfid": "216"
+    }
+  },
+  "217": {
+    "_key": "1013901",
+    "_id": "entities/1013901",
+    "_rev": "_Ypd4DqG---",
+    "type": 2,
+    "name": "Le Dauphiné libéré",
+    "ds": {
+      "mfn": "Le Dauphiné libéré",
+      "mfid": "217"
+    }
+  },
+  "218": {
+    "_key": "1013903",
+    "_id": "entities/1013903",
+    "_rev": "_Ypd4DqG--A",
+    "type": 2,
+    "name": "Vaucluse Matin",
+    "ds": {
+      "mfn": "Vaucluse Matin",
+      "mfid": "218"
+    }
+  },
+  "219": {
+    "_key": "1013905",
+    "_id": "entities/1013905",
+    "_rev": "_Ypd4DqG--C",
+    "type": 2,
+    "name": "Le Journal de la Haute-Marne",
+    "ds": {
+      "mfn": "Le Journal de la Haute-Marne",
+      "mfid": "219"
+    }
+  },
+  "220": {
+    "_key": "1013907",
+    "_id": "entities/1013907",
+    "_rev": "_Ypd4DqG--E",
+    "type": 2,
+    "name": "Fondation Varenne",
+    "ds": {
+      "mfn": "Fondation Varenne",
+      "mfid": "220"
+    }
+  },
+  "221": {
+    "_key": "1013909",
+    "_id": "entities/1013909",
+    "_rev": "_Ypd4DqG--G",
+    "type": 1,
+    "name": "Famille Saint-Cricq",
+    "ds": {
+      "mfn": "Famille Saint-Cricq",
+      "mfid": "221"
+    }
+  },
+  "222": {
+    "_key": "1013911",
+    "_id": "entities/1013911",
+    "_rev": "_Ypd4DqG--I",
+    "type": 2,
+    "name": "Groupe La Montagne",
+    "ds": {
+      "mfn": "Groupe La Montagne",
+      "mfid": "222"
+    }
+  },
+  "223": {
+    "_key": "1013913",
+    "_id": "entities/1013913",
+    "_rev": "_Ypd4DqG--K",
+    "type": 2,
+    "name": "La Montagne",
+    "ds": {
+      "mfn": "La Montagne",
+      "mfid": "223"
+    }
+  },
+  "224": {
+    "_key": "1013915",
+    "_id": "entities/1013915",
+    "_rev": "_Ypd4DqK---",
+    "type": 2,
+    "name": "Le Populaire du centre",
+    "ds": {
+      "mfn": "Le Populaire du centre",
+      "mfid": "224"
+    }
+  },
+  "225": {
+    "_key": "1013917",
+    "_id": "entities/1013917",
+    "_rev": "_Ypd4DqK--A",
+    "type": 2,
+    "name": "Le Journal du centre",
+    "ds": {
+      "mfn": "Le Journal du centre",
+      "mfid": "225"
+    }
+  },
+  "226": {
+    "_key": "1013919",
+    "_id": "entities/1013919",
+    "_rev": "_Ypd4DqK--C",
+    "type": 2,
+    "name": "Le Berry républicain",
+    "ds": {
+      "mfn": "Le Berry républicain",
+      "mfid": "226"
+    }
+  },
+  "227": {
+    "_key": "1013921",
+    "_id": "entities/1013921",
+    "_rev": "_Ypd4DqK--E",
+    "type": 2,
+    "name": "L’Yonne Républicaine",
+    "ds": {
+      "mfn": "L’Yonne Républicaine",
+      "mfid": "227"
+    }
+  },
+  "228": {
+    "_key": "1013923",
+    "_id": "entities/1013923",
+    "_rev": "_Ypd4DqK--G",
+    "type": 2,
+    "name": "L’Echo Républicain",
+    "ds": {
+      "mfn": "L’Echo Républicain",
+      "mfid": "228"
+    }
+  },
+  "229": {
+    "_key": "1013925",
+    "_id": "entities/1013925",
+    "_rev": "_Ypd4DqK--I",
+    "type": 2,
+    "name": "Courrier du Loiret",
+    "ds": {
+      "mfn": "Courrier du Loiret",
+      "mfid": "229"
+    }
+  },
+  "230": {
+    "_key": "1013927",
+    "_id": "entities/1013927",
+    "_rev": "_Ypd4DqK--K",
+    "type": 2,
+    "name": "L’Eclaireur du Gâtinais",
+    "ds": {
+      "mfn": "L’Eclaireur du Gâtinais",
+      "mfid": "230"
+    }
+  },
+  "231": {
+    "_key": "1013929",
+    "_id": "entities/1013929",
+    "_rev": "_Ypd4DqK--M",
+    "type": 2,
+    "name": "Régional de Cosne",
+    "ds": {
+      "mfn": "Régional de Cosne",
+      "mfid": "231"
+    }
+  },
+  "232": {
+    "_key": "1013931",
+    "_id": "entities/1013931",
+    "_rev": "_Ypd4DqO---",
+    "type": 2,
+    "name": "L’Echo Charitois",
+    "ds": {
+      "mfn": "L’Echo Charitois",
+      "mfid": "232"
+    }
+  },
+  "233": {
+    "_key": "1013933",
+    "_id": "entities/1013933",
+    "_rev": "_Ypd4DqO--A",
+    "type": 2,
+    "name": "Pays Roannais",
+    "ds": {
+      "mfn": "Pays Roannais",
+      "mfid": "233"
+    }
+  },
+  "234": {
+    "_key": "1013935",
+    "_id": "entities/1013935",
+    "_rev": "_Ypd4DqO--C",
+    "type": 2,
+    "name": "La Liberté",
+    "ds": {
+      "mfn": "La Liberté",
+      "mfid": "234"
+    }
+  },
+  "235": {
+    "_key": "1013937",
+    "_id": "entities/1013937",
+    "_rev": "_Ypd4DqO--E",
+    "type": 2,
+    "name": "Journal de Gien",
+    "ds": {
+      "mfn": "Journal de Gien",
+      "mfid": "235"
+    }
+  },
+  "236": {
+    "_key": "1013939",
+    "_id": "entities/1013939",
+    "_rev": "_Ypd4DqO--G",
+    "type": 2,
+    "name": "La République du Centre",
+    "ds": {
+      "mfn": "La République du Centre",
+      "mfid": "236"
+    }
+  },
+  "237": {
+    "_key": "1013941",
+    "_id": "entities/1013941",
+    "_rev": "_Ypd4DqO--I",
+    "type": 2,
+    "name": "Groupe NRCO",
+    "ds": {
+      "mfn": "Groupe NRCO",
+      "mfid": "237"
+    }
+  },
+  "238": {
+    "_key": "1013943",
+    "_id": "entities/1013943",
+    "_rev": "_Ypd4DqO--K",
+    "type": 2,
+    "name": "Nouvelle République du Centre",
+    "ds": {
+      "mfn": "Nouvelle République du Centre",
+      "mfid": "238"
+    }
+  },
+  "239": {
+    "_key": "1013945",
+    "_id": "entities/1013945",
+    "_rev": "_Ypd4DqO--M",
+    "type": 2,
+    "name": "Centre Presse",
+    "ds": {
+      "mfn": "Centre Presse",
+      "mfid": "239"
+    }
+  },
+  "240": {
+    "_key": "1013947",
+    "_id": "entities/1013947",
+    "_rev": "_Ypd4DqO--O",
+    "type": 2,
+    "name": "TV Tours",
+    "ds": {
+      "mfn": "TV Tours",
+      "mfid": "240"
+    }
+  },
+  "241": {
+    "_key": "1013949",
+    "_id": "entities/1013949",
+    "_rev": "_Ypd4DqS---",
+    "type": 1,
+    "name": "Famille Baylet",
+    "ds": {
+      "mfn": "Famille Baylet",
+      "mfid": "241"
+    }
+  },
+  "242": {
+    "_key": "1013951",
+    "_id": "entities/1013951",
+    "_rev": "_Ypd4DqS--A",
+    "type": 2,
+    "name": "Groupe La Dépêche",
+    "ds": {
+      "mfn": "Groupe La Dépêche",
+      "mfid": "242"
+    }
+  },
+  "243": {
+    "_key": "1013953",
+    "_id": "entities/1013953",
+    "_rev": "_Ypd4DqS--C",
+    "type": 2,
+    "name": "La Dépêche du midi",
+    "ds": {
+      "mfn": "La Dépêche du midi",
+      "mfid": "243"
+    }
+  },
+  "244": {
+    "_key": "1013955",
+    "_id": "entities/1013955",
+    "_rev": "_Ypd4DqS--E",
+    "type": 2,
+    "name": "Le Petit Bleu",
+    "ds": {
+      "mfn": "Le Petit Bleu",
+      "mfid": "244"
+    }
+  },
+  "245": {
+    "_key": "1013957",
+    "_id": "entities/1013957",
+    "_rev": "_Ypd4DqS--G",
+    "type": 2,
+    "name": "La Nouvelle République des Pyrénées",
+    "ds": {
+      "mfn": "La Nouvelle République des Pyrénées",
+      "mfid": "245"
+    }
+  },
+  "246": {
+    "_key": "1013959",
+    "_id": "entities/1013959",
+    "_rev": "_Ypd4DqS--I",
+    "type": 2,
+    "name": "Le Villefranchois",
+    "ds": {
+      "mfn": "Le Villefranchois",
+      "mfid": "246"
+    }
+  },
+  "247": {
+    "_key": "1013961",
+    "_id": "entities/1013961",
+    "_rev": "_Ypd4DqS--K",
+    "type": 2,
+    "name": "La Gazette du Comminges",
+    "ds": {
+      "mfn": "La Gazette du Comminges",
+      "mfid": "247"
+    }
+  },
+  "248": {
+    "_key": "1013963",
+    "_id": "entities/1013963",
+    "_rev": "_Ypd4DqS--M",
+    "type": 2,
+    "name": "Les Journaux du midi",
+    "ds": {
+      "mfn": "Les Journaux du midi",
+      "mfid": "248"
+    }
+  },
+  "249": {
+    "_key": "1013965",
+    "_id": "entities/1013965",
+    "_rev": "_Ypd4DqW---",
+    "type": 2,
+    "name": "Midi libre",
+    "ds": {
+      "mfn": "Midi libre",
+      "mfid": "249"
+    }
+  },
+  "250": {
+    "_key": "1013967",
+    "_id": "entities/1013967",
+    "_rev": "_Ypd4DqW--A",
+    "type": 2,
+    "name": "L’Indépendant",
+    "ds": {
+      "mfn": "L’Indépendant",
+      "mfid": "250"
+    }
+  },
+  "251": {
+    "_key": "1013969",
+    "_id": "entities/1013969",
+    "_rev": "_Ypd4DqW--C",
+    "type": 2,
+    "name": "Centre Presse Aveyron",
+    "ds": {
+      "mfn": "Centre Presse Aveyron",
+      "mfid": "251"
+    }
+  },
+  "252": {
+    "_key": "1013971",
+    "_id": "entities/1013971",
+    "_rev": "_Ypd4DqW--E",
+    "type": 1,
+    "name": "Famille Lemoine",
+    "ds": {
+      "mfn": "Famille Lemoine",
+      "mfid": "252"
+    }
+  },
+  "253": {
+    "_key": "1013973",
+    "_id": "entities/1013973",
+    "_rev": "_Ypd4DqW--G",
+    "type": 2,
+    "name": "Groupe Sud Ouest",
+    "ds": {
+      "mfn": "Groupe Sud Ouest",
+      "mfid": "253"
+    }
+  },
+  "254": {
+    "_key": "1013975",
+    "_id": "entities/1013975",
+    "_rev": "_Ypd4DqW--I",
+    "type": 2,
+    "name": "Sud Ouest",
+    "ds": {
+      "mfn": "Sud Ouest",
+      "mfid": "254"
+    }
+  },
+  "255": {
+    "_key": "1013977",
+    "_id": "entities/1013977",
+    "_rev": "_Ypd4DqW--K",
+    "type": 2,
+    "name": "Charente Libre",
+    "ds": {
+      "mfn": "Charente Libre",
+      "mfid": "255"
+    }
+  },
+  "256": {
+    "_key": "1013979",
+    "_id": "entities/1013979",
+    "_rev": "_Ypd4DqW--M",
+    "type": 2,
+    "name": "Dordogne Libre",
+    "ds": {
+      "mfn": "Dordogne Libre",
+      "mfid": "256"
+    }
+  },
+  "257": {
+    "_key": "1013981",
+    "_id": "entities/1013981",
+    "_rev": "_Ypd4DqW--O",
+    "type": 2,
+    "name": "Haute Saintonge",
+    "ds": {
+      "mfn": "Haute Saintonge",
+      "mfid": "257"
+    }
+  },
+  "258": {
+    "_key": "1013983",
+    "_id": "entities/1013983",
+    "_rev": "_Ypd4Dqa---",
+    "type": 2,
+    "name": "Haute Gironde",
+    "ds": {
+      "mfn": "Haute Gironde",
+      "mfid": "258"
+    }
+  },
+  "259": {
+    "_key": "1013985",
+    "_id": "entities/1013985",
+    "_rev": "_Ypd4Dqa--A",
+    "type": 2,
+    "name": "Le Résistant",
+    "ds": {
+      "mfn": "Le Résistant",
+      "mfid": "259"
+    }
+  },
+  "260": {
+    "_key": "1013987",
+    "_id": "entities/1013987",
+    "_rev": "_Ypd4Dqa--C",
+    "type": 2,
+    "name": "L’Hebdo de Charente-Maritime",
+    "ds": {
+      "mfn": "L’Hebdo de Charente-Maritime",
+      "mfid": "260"
+    }
+  },
+  "261": {
+    "_key": "1013989",
+    "_id": "entities/1013989",
+    "_rev": "_Ypd4Dqa--E",
+    "type": 2,
+    "name": "La Dépêche du Bassin",
+    "ds": {
+      "mfn": "La Dépêche du Bassin",
+      "mfid": "261"
+    }
+  },
+  "262": {
+    "_key": "1013991",
+    "_id": "entities/1013991",
+    "_rev": "_Ypd4Dqa--G",
+    "type": 2,
+    "name": "Le Journal du Médoc",
+    "ds": {
+      "mfn": "Le Journal du Médoc",
+      "mfid": "262"
+    }
+  },
+  "263": {
+    "_key": "1013993",
+    "_id": "entities/1013993",
+    "_rev": "_Ypd4Dqa--I",
+    "type": 2,
+    "name": "Pyrénées Presse",
+    "ds": {
+      "mfn": "Pyrénées Presse",
+      "mfid": "263"
+    }
+  },
+  "264": {
+    "_key": "1013995",
+    "_id": "entities/1013995",
+    "_rev": "_Ypd4Dqa--K",
+    "type": 2,
+    "name": "La République des Pyrénées",
+    "ds": {
+      "mfn": "La République des Pyrénées",
+      "mfid": "264"
+    }
+  },
+  "265": {
+    "_key": "1013997",
+    "_id": "entities/1013997",
+    "_rev": "_Ypd4Dqa--M",
+    "type": 2,
+    "name": "L’Eclair",
+    "ds": {
+      "mfn": "L’Eclair",
+      "mfid": "265"
+    }
+  },
+  "266": {
+    "_key": "1013999",
+    "_id": "entities/1013999",
+    "_rev": "_Ypd4Dqe---",
+    "type": 1,
+    "name": "Édouard Coudurier",
+    "ds": {
+      "mfn": "Édouard Coudurier",
+      "mfid": "266"
+    }
+  },
+  "267": {
+    "_key": "1014001",
+    "_id": "entities/1014001",
+    "_rev": "_Ypd4Dqe--A",
+    "type": 2,
+    "name": "Groupe Télégramme",
+    "ds": {
+      "mfn": "Groupe Télégramme",
+      "mfid": "267"
+    }
+  },
+  "268": {
+    "_key": "1014003",
+    "_id": "entities/1014003",
+    "_rev": "_Ypd4Dqe--C",
+    "type": 2,
+    "name": "Le Télégramme",
+    "ds": {
+      "mfn": "Le Télégramme",
+      "mfid": "268"
+    }
+  },
+  "269": {
+    "_key": "1014005",
+    "_id": "entities/1014005",
+    "_rev": "_Ypd4Dqe--E",
+    "type": 2,
+    "name": "Le Poher",
+    "ds": {
+      "mfn": "Le Poher",
+      "mfid": "269"
+    }
+  },
+  "270": {
+    "_key": "1014007",
+    "_id": "entities/1014007",
+    "_rev": "_Ypd4Dqe--G",
+    "type": 2,
+    "name": "Tébéo",
+    "ds": {
+      "mfn": "Tébéo",
+      "mfid": "270"
+    }
+  },
+  "271": {
+    "_key": "1014009",
+    "_id": "entities/1014009",
+    "_rev": "_Ypd4Dqe--I",
+    "type": 2,
+    "name": "Tébésud",
+    "ds": {
+      "mfn": "Tébésud",
+      "mfid": "271"
+    }
+  },
+  "272": {
+    "_key": "1014011",
+    "_id": "entities/1014011",
+    "_rev": "_Ypd4Dqe--K",
+    "type": 2,
+    "name": "Le Mensuel de Rennes",
+    "ds": {
+      "mfn": "Le Mensuel de Rennes",
+      "mfid": "272"
+    }
+  },
+  "273": {
+    "_key": "1014013",
+    "_id": "entities/1014013",
+    "_rev": "_Ypd4Dqe--M",
+    "type": 2,
+    "name": "Sept Jours à Brest",
+    "ds": {
+      "mfn": "Sept Jours à Brest",
+      "mfid": "273"
+    }
+  },
+  "274": {
+    "_key": "1014015",
+    "_id": "entities/1014015",
+    "_rev": "_Ypd4Dqi---",
+    "type": 2,
+    "name": "Le Journal des entreprises",
+    "ds": {
+      "mfn": "Le Journal des entreprises",
+      "mfid": "274"
+    }
+  },
+  "275": {
+    "_key": "1014017",
+    "_id": "entities/1014017",
+    "_rev": "_Ypd4Dqi--A",
+    "type": 2,
+    "name": "Bretagne magazine",
+    "ds": {
+      "mfn": "Bretagne magazine",
+      "mfid": "275"
+    }
+  },
+  "276": {
+    "_key": "1014019",
+    "_id": "entities/1014019",
+    "_rev": "_Ypd4Dqi--C",
+    "type": 1,
+    "name": "Bernard Tapie",
+    "ds": {
+      "mfn": "Bernard Tapie",
+      "mfid": "276"
+    }
+  },
+  "277": {
+    "_key": "1014021",
+    "_id": "entities/1014021",
+    "_rev": "_Ypd4Dqi--E",
+    "type": 2,
+    "name": "Nethys",
+    "ds": {
+      "mfn": "Nethys",
+      "mfid": "277"
+    }
+  },
+  "278": {
+    "_key": "1014023",
+    "_id": "entities/1014023",
+    "_rev": "_Ypd4Dqi--G",
+    "type": 2,
+    "name": "Publifin",
+    "ds": {
+      "mfn": "Publifin",
+      "mfid": "278"
+    }
+  },
+  "279": {
+    "_key": "1014025",
+    "_id": "entities/1014025",
+    "_rev": "_Ypd4Dqi--I",
+    "type": 2,
+    "name": "Province de Liège",
+    "ds": {
+      "mfn": "Province de Liège",
+      "mfid": "279"
+    }
+  },
+  "280": {
+    "_key": "1014027",
+    "_id": "entities/1014027",
+    "_rev": "_Ypd4Dqi--K",
+    "type": 2,
+    "name": "Groupe La Provence",
+    "ds": {
+      "mfn": "Groupe La Provence",
+      "mfid": "280"
+    }
+  },
+  "281": {
+    "_key": "1014029",
+    "_id": "entities/1014029",
+    "_rev": "_Ypd4Dqm---",
+    "type": 2,
+    "name": "Nice-Matin",
+    "ds": {
+      "mfn": "Nice-Matin",
+      "mfid": "281"
+    }
+  },
+  "282": {
+    "_key": "1014031",
+    "_id": "entities/1014031",
+    "_rev": "_Ypd4Dqm--A",
+    "type": 2,
+    "name": "Corse Matin",
+    "ds": {
+      "mfn": "Corse Matin",
+      "mfid": "282"
+    }
+  },
+  "283": {
+    "_key": "1014033",
+    "_id": "entities/1014033",
+    "_rev": "_Ypd4Dqm--C",
+    "type": 2,
+    "name": "La Provence",
+    "ds": {
+      "mfn": "La Provence",
+      "mfid": "283"
+    }
+  },
+  "284": {
+    "_key": "1014035",
+    "_id": "entities/1014035",
+    "_rev": "_Ypd4Dqm--E",
+    "type": 1,
+    "name": "Jean-Louis Louvel",
+    "ds": {
+      "mfn": "Jean-Louis Louvel",
+      "mfid": "284"
+    }
+  },
+  "285": {
+    "_key": "1014037",
+    "_id": "entities/1014037",
+    "_rev": "_Ypd4Dqq---",
+    "type": 2,
+    "name": "Société Normande d’Information et de Communication",
+    "ds": {
+      "mfn": "Société Normande d’Information et de Communication",
+      "mfid": "285"
+    }
+  },
+  "286": {
+    "_key": "1014039",
+    "_id": "entities/1014039",
+    "_rev": "_Ypd4Dqq--A",
+    "type": 2,
+    "name": "Paris-Normandie",
+    "ds": {
+      "mfn": "Paris-Normandie",
+      "mfid": "286"
+    }
+  },
+  "287": {
+    "_key": "1014041",
+    "_id": "entities/1014041",
+    "_rev": "_Ypd4Dqq--C",
+    "type": 2,
+    "name": "Havre Libre",
+    "ds": {
+      "mfn": "Havre Libre",
+      "mfid": "287"
+    }
+  },
+  "288": {
+    "_key": "1014043",
+    "_id": "entities/1014043",
+    "_rev": "_Ypd4Dqq--E",
+    "type": 2,
+    "name": "Le Progrès de Fécamp",
+    "ds": {
+      "mfn": "Le Progrès de Fécamp",
+      "mfid": "288"
+    }
+  },
+  "289": {
+    "_key": "1014045",
+    "_id": "entities/1014045",
+    "_rev": "_Ypd4Dqq--G",
+    "type": 2,
+    "name": "Liberté Dimanche",
+    "ds": {
+      "mfn": "Liberté Dimanche",
+      "mfid": "289"
+    }
+  },
+  "290": {
+    "_key": "1014047",
+    "_id": "entities/1014047",
+    "_rev": "_Ypd4Dqq--I",
+    "type": 2,
+    "name": "Havre Dimanche",
+    "ds": {
+      "mfn": "Havre Dimanche",
+      "mfid": "290"
+    }
+  },
+  "291": {
+    "_key": "1014049",
+    "_id": "entities/1014049",
+    "_rev": "_Ypd4Dqu---",
+    "type": 2,
+    "name": "Normandie Dimanche",
+    "ds": {
+      "mfn": "Normandie Dimanche",
+      "mfid": "291"
+    }
+  },
+  "292": {
+    "_key": "1014051",
+    "_id": "entities/1014051",
+    "_rev": "_Ypd4Dqu--A",
+    "type": 1,
+    "name": "Philippe Hersant",
+    "ds": {
+      "mfn": "Philippe Hersant",
+      "mfid": "292"
+    }
+  },
+  "293": {
+    "_key": "1014053",
+    "_id": "entities/1014053",
+    "_rev": "_Ypd4Dqu--C",
+    "type": 2,
+    "name": "Éditions Suisses Holding",
+    "ds": {
+      "mfn": "Éditions Suisses Holding",
+      "mfid": "293"
+    }
+  },
+  "294": {
+    "_key": "1014055",
+    "_id": "entities/1014055",
+    "_rev": "_Ypd4Dqu--E",
+    "type": 2,
+    "name": "Groupe Hersant Média",
+    "ds": {
+      "mfn": "Groupe Hersant Média",
+      "mfid": "294"
+    }
+  },
+  "295": {
+    "_key": "1014057",
+    "_id": "entities/1014057",
+    "_rev": "_Ypd4Dqu--G",
+    "type": 2,
+    "name": "Groupe Filanosa",
+    "ds": {
+      "mfn": "Groupe Filanosa",
+      "mfid": "295"
+    }
+  },
+  "296": {
+    "_key": "1014059",
+    "_id": "entities/1014059",
+    "_rev": "_Ypd4Dqu--I",
+    "type": 2,
+    "name": "Rhône Média",
+    "ds": {
+      "mfn": "Rhône Média",
+      "mfid": "296"
+    }
+  },
+  "297": {
+    "_key": "1014061",
+    "_id": "entities/1014061",
+    "_rev": "_Ypd4Dqu--K",
+    "type": 2,
+    "name": "La Côte (Nyon)",
+    "ds": {
+      "mfn": "La Côte (Nyon)",
+      "mfid": "297"
+    }
+  },
+  "298": {
+    "_key": "1014063",
+    "_id": "entities/1014063",
+    "_rev": "_Ypd4Dqy---",
+    "type": 2,
+    "name": "L’Express (Neuchâtel)",
+    "ds": {
+      "mfn": "L’Express (Neuchâtel)",
+      "mfid": "298"
+    }
+  },
+  "299": {
+    "_key": "1014065",
+    "_id": "entities/1014065",
+    "_rev": "_Ypd4Dqy--A",
+    "type": 2,
+    "name": "L’Impartial (La Chaux-de-Fonds)",
+    "ds": {
+      "mfn": "L’Impartial (La Chaux-de-Fonds)",
+      "mfid": "299"
+    }
+  },
+  "300": {
+    "_key": "1014067",
+    "_id": "entities/1014067",
+    "_rev": "_Ypd4Dqy--C",
+    "type": 2,
+    "name": "Le Nouvelliste",
+    "ds": {
+      "mfn": "Le Nouvelliste",
+      "mfid": "300"
+    }
+  },
+  "301": {
+    "_key": "1014069",
+    "_id": "entities/1014069",
+    "_rev": "_Ypd4Dqy--E",
+    "type": 2,
+    "name": "La Gazette de Martigny",
+    "ds": {
+      "mfn": "La Gazette de Martigny",
+      "mfid": "301"
+    }
+  },
+  "302": {
+    "_key": "1014071",
+    "_id": "entities/1014071",
+    "_rev": "_Ypd4Dqy--G",
+    "type": 2,
+    "name": "Le Journal de Sierre",
+    "ds": {
+      "mfn": "Le Journal de Sierre",
+      "mfid": "302"
+    }
+  },
+  "303": {
+    "_key": "1014073",
+    "_id": "entities/1014073",
+    "_rev": "_Ypd4Dq2---",
+    "type": 2,
+    "name": "France Antilles",
+    "ds": {
+      "mfn": "France Antilles",
+      "mfid": "303"
+    }
+  },
+  "304": {
+    "_key": "1014075",
+    "_id": "entities/1014075",
+    "_rev": "_Ypd4Dq2--A",
+    "type": 2,
+    "name": "France Guyane",
+    "ds": {
+      "mfn": "France Guyane",
+      "mfid": "304"
+    }
+  },
+  "305": {
+    "_key": "1014077",
+    "_id": "entities/1014077",
+    "_rev": "_Ypd4Dq2--C",
+    "type": 1,
+    "name": "Abdoul Cadjee",
+    "ds": {
+      "mfn": "Abdoul Cadjee",
+      "mfid": "305"
+    }
+  },
+  "306": {
+    "_key": "1014079",
+    "_id": "entities/1014079",
+    "_rev": "_Ypd4Dq2--E",
+    "type": 2,
+    "name": "Le Journal de l’Île de la Réunion",
+    "ds": {
+      "mfn": "Le Journal de l’Île de la Réunion",
+      "mfid": "306"
+    }
+  },
+  "307": {
+    "_key": "1014081",
+    "_id": "entities/1014081",
+    "_rev": "_Ypd4Dq2--G",
+    "type": 1,
+    "name": "Benjamin et Ariane de Rothschild",
+    "ds": {
+      "mfn": "Benjamin et Ariane de Rothschild",
+      "mfid": "307"
+    }
+  },
+  "308": {
+    "_key": "1014083",
+    "_id": "entities/1014083",
+    "_rev": "_Ypd4Dq2--I",
+    "type": 2,
+    "name": "Lampsane Investissement SA",
+    "ds": {
+      "mfn": "Lampsane Investissement SA",
+      "mfid": "308"
+    }
+  },
+  "309": {
+    "_key": "1014085",
+    "_id": "entities/1014085",
+    "_rev": "_Ypd4Dq6---",
+    "type": 2,
+    "name": "Slate.fr",
+    "ds": {
+      "mfn": "Slate.fr",
+      "mfid": "309"
+    }
+  },
+  "310": {
+    "_key": "1014087",
+    "_id": "entities/1014087",
+    "_rev": "_Ypd4Dq6--A",
+    "type": 1,
+    "name": "Jean-Sébastien Ferjou",
+    "ds": {
+      "mfn": "Jean-Sébastien Ferjou",
+      "mfid": "310"
+    }
+  },
+  "311": {
+    "_key": "1014089",
+    "_id": "entities/1014089",
+    "_rev": "_Ypd4Dq6--C",
+    "type": 1,
+    "name": "Pierre Guyot",
+    "ds": {
+      "mfn": "Pierre Guyot",
+      "mfid": "311"
+    }
+  },
+  "312": {
+    "_key": "1014091",
+    "_id": "entities/1014091",
+    "_rev": "_Ypd4Dq6--E",
+    "type": 1,
+    "name": "Gérard Lignac",
+    "ds": {
+      "mfn": "Gérard Lignac",
+      "mfid": "312"
+    }
+  },
+  "313": {
+    "_key": "1014093",
+    "_id": "entities/1014093",
+    "_rev": "_Ypd4Dq6--G",
+    "type": 2,
+    "name": "Atlantico.fr",
+    "ds": {
+      "mfn": "Atlantico.fr",
+      "mfid": "313"
+    }
+  },
+  "314": {
+    "_key": "1014095",
+    "_id": "entities/1014095",
+    "_rev": "_Ypd4Dq6--I",
+    "type": 1,
+    "name": "Franck Julien",
+    "ds": {
+      "mfn": "Franck Julien",
+      "mfid": "314"
+    }
+  },
+  "315": {
+    "_key": "1014097",
+    "_id": "entities/1014097",
+    "_rev": "_Ypd4Dq6--K",
+    "type": 2,
+    "name": "Edi Invest",
+    "ds": {
+      "mfn": "Edi Invest",
+      "mfid": "315"
+    }
+  },
+  "316": {
+    "_key": "1014099",
+    "_id": "entities/1014099",
+    "_rev": "_Ypd4Dq6--M",
+    "type": 1,
+    "name": "Jean Christophe Tortora",
+    "ds": {
+      "mfn": "Jean Christophe Tortora",
+      "mfid": "316"
+    }
+  },
+  "317": {
+    "_key": "1014101",
+    "_id": "entities/1014101",
+    "_rev": "_Ypd4Dr----",
+    "type": 1,
+    "name": "Laurent Alexandre",
+    "ds": {
+      "mfn": "Laurent Alexandre",
+      "mfid": "317"
+    }
+  },
+  "318": {
+    "_key": "1014103",
+    "_id": "entities/1014103",
+    "_rev": "_Ypd4Dr---A",
+    "type": 2,
+    "name": "Hima Groupe",
+    "ds": {
+      "mfn": "Hima Groupe",
+      "mfid": "318"
+    }
+  },
+  "319": {
+    "_key": "1014105",
+    "_id": "entities/1014105",
+    "_rev": "_Ypd4Dr---C",
+    "type": 2,
+    "name": "La Tribune",
+    "ds": {
+      "mfn": "La Tribune",
+      "mfid": "319"
+    }
+  },
+  "320": {
+    "_key": "1014107",
+    "_id": "entities/1014107",
+    "_rev": "_Ypd4Dr---E",
+    "type": 2,
+    "name": "i24 News",
+    "ds": {
+      "mfn": "i24 News",
+      "mfid": "320"
+    }
+  },
+  "321": {
+    "_key": "1014109",
+    "_id": "entities/1014109",
+    "_rev": "_Ypd4Dr---G",
+    "type": 2,
+    "name": "Elle",
+    "ds": {
+      "mfn": "Elle",
+      "mfid": "321"
+    }
+  },
+  "322": {
+    "_key": "1014111",
+    "_id": "entities/1014111",
+    "_rev": "_Ypd4Dr---I",
+    "type": 2,
+    "name": "Le Nouveau Magazine littéraire",
+    "ds": {
+      "mfn": "Le Nouveau Magazine littéraire",
+      "mfid": "322"
+    }
+  }
+}

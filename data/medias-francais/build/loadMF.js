@@ -15,13 +15,13 @@ var mfParserOptions = {
     skip_empty_lines: true
 };
 function getMFEdgeId(id1, id2) {
-    return id1 > id2 ? id1 + "_" + id2 : id2 + "_" + id1;
+    return id1 > id2 ? id1 + "__" + id2 : id2 + "__" + id1;
 }
 exports.getMFEdgeId = getMFEdgeId;
 function getMFEdgeName(record) {
     var id1 = record.origine.toLowerCase();
     var id2 = record.cible.toLowerCase();
-    return id1 > id2 ? id1 + "_" + id2 : id2 + "_" + id1;
+    return id1 > id2 ? id1 + "__" + id2 : id2 + "__" + id1;
 }
 function typeLibelleToType(t) {
     switch (t.trim()) {
@@ -72,13 +72,12 @@ exports.loadMediasFrancaisEntities = function () {
             .on("error", reject);
     });
 };
-var yo = {};
-function addYo(key) {
-    if (yo[key])
-        yo[key]++;
-    else
-        yo[key] = 1;
-}
+// const yo: { [key: string]: number } = {};
+//
+// function addYo(key: string) {
+//   if (yo[key]) yo[key]++;
+//   else yo[key] = 1;
+// }
 var recordToEdge = function (record, dbEntities) {
     var type = types_1.RelationType.IsOwned;
     var owned = 100;
@@ -96,7 +95,7 @@ var recordToEdge = function (record, dbEntities) {
         }
     }
     if (!cibleId)
-        throw new Error("Unable to find cible " + record.cible + " in dbEntities");
+        throw new Error("### Unable to find cible " + record.cible);
     // Safe to cast, the server would refuse the write anyway.
     var origineKey = dbEntities[origineId]._key;
     var cibleKey = dbEntities[cibleId]._key;
@@ -118,14 +117,11 @@ var recordToEdge = function (record, dbEntities) {
 exports.loadMediasFrancaisRelations = function (dbEntities) {
     return new Promise(function (resolve, reject) {
         var dataset = [];
-        var stream = fs_extra_1.default
-            .createReadStream(FILENAME_RELATIONS)
+        fs_extra_1.default.createReadStream(FILENAME_RELATIONS)
             .pipe(csv_parse_1.default(mfParserOptions))
             .on("data", function (record) {
             try {
                 var edge = recordToEdge(record, dbEntities);
-                addYo(record.origine);
-                addYo(record.cible);
                 if (edge)
                     dataset.push(edge);
                 // console.log(dataset.length, " => ", record);
@@ -133,18 +129,10 @@ exports.loadMediasFrancaisRelations = function (dbEntities) {
             catch (err) {
                 console.error("Error while converting edge:", record);
                 console.error(err);
-                stream.end();
             }
         })
             .on("end", function () {
             console.log("Done reading:", FILENAME_RELATIONS);
-            console.log("===========================");
-            console.log("===========================");
-            console.log("===========================");
-            console.log(yo);
-            console.log("===========================");
-            console.log("===========================");
-            console.log("===========================");
             resolve(dataset);
         })
             .on("error", reject);
