@@ -17,7 +17,9 @@ import {
 } from "./utils/utils";
 
 const db = new Database({
-  url: C.DEV ? "http://localhost:8529" : ""
+  url: C.DEV
+    ? "http://localhost:8529"
+    : "https://diploman.westeurope.cloudapp.azure.com"
 });
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
@@ -250,10 +252,10 @@ const updateMediasFrancais = async () => {
     );
     const entitiesCount = Object.keys(allEntities).length;
     console.log(`===== Done importing ${entitiesCount} entities =====`);
-    await saveJSON(`${LOGDIR}${ts()}-allEntities.json`, allEntities);
+    // await saveJSON(`${LOGDIR}${ts()}-allEntities.json`, allEntities);
 
     const edgeDataset = await loadMediasFrancaisRelations(allEntities);
-    await saveJSON(`${LOGDIR}${ts()}-edgeDataset.json`, edgeDataset);
+    // await saveJSON(`${LOGDIR}${ts()}-edgeDataset.json`, edgeDataset);
 
     // On to the same process, but with edges!
     const relUpdates = await getElementUpdates(

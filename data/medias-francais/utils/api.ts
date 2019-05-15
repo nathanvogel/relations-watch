@@ -2,8 +2,9 @@ import axios, { AxiosResponse } from "axios";
 import C from "./constants";
 
 const api = axios.create({
-  baseURL: C.DEV ? "http://127.0.0.1:8529/_db/_system/api1" : "", // local dev
-  // baseURL: "https://diploman.westeurope.cloudapp.azure.com/api1", // Azure VM
+  baseURL: C.DEV
+    ? "http://127.0.0.1:8529/_db/_system/api1"
+    : "https://diploman.westeurope.cloudapp.azure.com/api1",
   headers: {}
 });
 
