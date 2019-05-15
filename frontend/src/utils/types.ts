@@ -131,6 +131,7 @@ export type Edge = {
   owned?: number;
   sources: SourceLink[];
   sourceText?: string;
+  ds?: { [key in DatasetId]: string };
 };
 
 export type EdgePreview = {

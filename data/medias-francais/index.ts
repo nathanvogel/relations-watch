@@ -1,13 +1,16 @@
 import { Database, aql } from "arangojs";
 import saveJSON from "./fileIO/saveJSON";
-import loadMediasFrancaisEntities from "./loadMF";
+import {
+  loadMediasFrancaisEntities,
+  loadMediasFrancaisRelations
+} from "./loadMF";
 import { Entity, DatasetId } from "./utils/types";
 import C from "./utils/constants";
 import { areConsistent } from "./utils/consistency";
 import askYesNo from "./utils/ask";
 import api, { checkResponse } from "./utils/api";
 import { AxiosError } from "axios";
-import { getKeyObject } from "./utils/utils";
+import { getKeyObject, getDsKeyObject } from "./utils/utils";
 
 const db = new Database({
   url: C.DEV ? "http://localhost:8529" : ""
@@ -50,7 +53,7 @@ const getEntityUpdates = async (
     else if (cursor.count == 1) {
       console.log("Found a correspondance for:", entity.name);
       const dbEntity: Entity = await cursor.next();
-      if (!areConsistent(dbEntity, entity, ["type"])) {
+      if (!areConsistent(dbEntity, entity, [])) {
         // If we detect a fundamental consistency problem with an
         // existing entity, we just abort for now.
         // If the name is different, update the name? Only for some datasets?
@@ -113,13 +116,16 @@ const findSimilarEntities = async (
       console.log(dbEntity);
       if (await askYesNo("Merge them together?")) {
         // Check that we aren't merging incompatible stuff.
-        if (!areConsistent(dbEntity, entity, ["type"])) {
+        if (!areConsistent(dbEntity, entity, [])) {
           throw new Error("Inconsistent entities");
         }
         // Link the database entity (by merging, because we might be using
         // multiple datasetIds in one operation)
         dbEntity.ds = Object.assign({}, dbEntity.ds, entity.ds);
         similarEntities.push(dbEntity);
+        // Only one entity can be logically linked.
+        // (The server would reject a second PATCH thanks to _rev anyway)
+        break;
       }
     }
   }
@@ -134,7 +140,7 @@ const updateMediasFrancais = async () => {
   var postedEntities: Entity[] = [];
 
   try {
-    const dataset = await loadMediasFrancaisEntities;
+    const dataset = await loadMediasFrancaisEntities();
     console.log(dataset.length + " entities loaded.");
 
     // First of all, we search existing entities in the database that
@@ -146,21 +152,21 @@ const updateMediasFrancais = async () => {
     console.log("==== Entities to patch: ====");
     console.log(entitiesToPatch);
     if (entitiesToPatch.length > 0) {
-      console.log("==== PATCHing entities ====");
-      patchedEntities = await api
-        .patch(`/entities`, entitiesToPatch)
-        .then(res => {
-          const potentialError = checkResponse(res);
-          if (potentialError) throw potentialError;
-          else return res.data;
-        })
-        .catch((error: AxiosError) => {
-          throw error;
-        });
-      await saveJSON(
-        `logs/${OP}-${Date.now()}-patch-entities.json`,
-        patchedEntities
-      );
+      // console.log("==== PATCHing entities ====");
+      // patchedEntities = await api
+      //   .patch(`/entities`, entitiesToPatch)
+      //   .then(res => {
+      //     const potentialError = checkResponse(res);
+      //     if (potentialError) throw potentialError;
+      //     else return res.data;
+      //   })
+      //   .catch((error: AxiosError) => {
+      //     throw error;
+      //   });
+      // await saveJSON(
+      //   `logs/${OP}-${Date.now()}-patch-entities.json`,
+      //   patchedEntities
+      // );
     }
 
     const updates = await getEntityUpdates(dataset, "mfid");
@@ -172,30 +178,32 @@ const updateMediasFrancais = async () => {
     console.log(updates.newEntities);
     if (updates.newEntities.length > 0) {
       console.log("==== POSTing entities ====");
-      postedEntities = await api
-        .post(`/entities`, updates.newEntities)
-        .then(res => {
-          const potentialError = checkResponse(res);
-          if (potentialError) throw potentialError;
-          else return res.data;
-        })
-        .catch((error: AxiosError) => {
-          throw error;
-        });
-      await saveJSON(
-        `logs/${OP}-${Date.now()}-post-entities.json`,
-        postedEntities
-      );
+      // postedEntities = await api
+      //   .post(`/entities`, updates.newEntities)
+      //   .then(res => {
+      //     const potentialError = checkResponse(res);
+      //     if (potentialError) throw potentialError;
+      //     else return res.data;
+      //   })
+      //   .catch((error: AxiosError) => {
+      //     throw error;
+      //   });
+      // await saveJSON(
+      //   `logs/${OP}-${Date.now()}-post-entities.json`,
+      //   postedEntities
+      // );
     }
 
     const allEntities = Object.assign(
       {},
-      getKeyObject(patchedEntities, "_key"),
-      getKeyObject(updates.existingEntities, "_key"),
-      getKeyObject(postedEntities, "_key")
+      getDsKeyObject(patchedEntities, "mfid"),
+      getDsKeyObject(updates.existingEntities, "mfid"),
+      getDsKeyObject(postedEntities, "mfid")
     );
     console.log("===== Done importing entities =====");
     await saveJSON(`logs/${OP}-${Date.now()}-allEntities.json`, allEntities);
+
+    const edgeDataset = await loadMediasFrancaisRelations(allEntities);
 
     // load edges.
     // Create DB edges objects from the dataset, using a manual source ID.

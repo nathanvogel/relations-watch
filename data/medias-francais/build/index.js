@@ -41,22 +41,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var arangojs_1 = require("arangojs");
 var saveJSON_1 = __importDefault(require("./fileIO/saveJSON"));
-var loadMF_1 = __importDefault(require("./loadMF"));
+var loadMF_1 = require("./loadMF");
 var constants_1 = __importDefault(require("./utils/constants"));
 var consistency_1 = require("./utils/consistency");
 var ask_1 = __importDefault(require("./utils/ask"));
-var api_1 = __importStar(require("./utils/api"));
 var utils_1 = require("./utils/utils");
 var db = new arangojs_1.Database({
     url: constants_1.default.DEV ? "http://localhost:8529" : ""
@@ -96,7 +88,7 @@ var getEntityUpdates = function (datasetEntities, datasetId) { return __awaiter(
                 return [4 /*yield*/, cursor.next()];
             case 4:
                 dbEntity = _a.sent();
-                if (!consistency_1.areConsistent(dbEntity, entity, ["type"])) {
+                if (!consistency_1.areConsistent(dbEntity, entity, [])) {
                     // If we detect a fundamental consistency problem with an
                     // existing entity, we just abort for now.
                     // If the name is different, update the name? Only for some datasets?
@@ -161,13 +153,16 @@ var findSimilarEntities = function (datasetEntities, datasetId) { return __await
             case 5:
                 if (_a.sent()) {
                     // Check that we aren't merging incompatible stuff.
-                    if (!consistency_1.areConsistent(dbEntity, entity, ["type"])) {
+                    if (!consistency_1.areConsistent(dbEntity, entity, [])) {
                         throw new Error("Inconsistent entities");
                     }
                     // Link the database entity (by merging, because we might be using
                     // multiple datasetIds in one operation)
                     dbEntity.ds = Object.assign({}, dbEntity.ds, entity.ds);
                     similarEntities.push(dbEntity);
+                    // Only one entity can be logically linked.
+                    // (The server would reject a second PATCH thanks to _rev anyway)
+                    return [3 /*break*/, 6];
                 }
                 return [3 /*break*/, 3];
             case 6:
@@ -181,7 +176,7 @@ var findSimilarEntities = function (datasetEntities, datasetId) { return __await
  * The main process
  */
 var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0, function () {
-    var patchedEntities, postedEntities, dataset, entitiesToPatch, updates, allEntities, err_1;
+    var patchedEntities, postedEntities, dataset, entitiesToPatch, updates, allEntities, edgeDataset, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -189,8 +184,8 @@ var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0,
                 postedEntities = [];
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 12, , 13]);
-                return [4 /*yield*/, loadMF_1.default];
+                _a.trys.push([1, 7, , 8]);
+                return [4 /*yield*/, loadMF_1.loadMediasFrancaisEntities()];
             case 2:
                 dataset = _a.sent();
                 console.log(dataset.length + " entities loaded.");
@@ -204,70 +199,66 @@ var updateMediasFrancais = function () { return __awaiter(_this, void 0, void 0,
                 entitiesToPatch = _a.sent();
                 console.log("==== Entities to patch: ====");
                 console.log(entitiesToPatch);
-                if (!(entitiesToPatch.length > 0)) return [3 /*break*/, 6];
-                console.log("==== PATCHing entities ====");
-                return [4 /*yield*/, api_1.default
-                        .patch("/entities", entitiesToPatch)
-                        .then(function (res) {
-                        var potentialError = api_1.checkResponse(res);
-                        if (potentialError)
-                            throw potentialError;
-                        else
-                            return res.data;
-                    })
-                        .catch(function (error) {
-                        throw error;
-                    })];
+                if (entitiesToPatch.length > 0) {
+                    // console.log("==== PATCHing entities ====");
+                    // patchedEntities = await api
+                    //   .patch(`/entities`, entitiesToPatch)
+                    //   .then(res => {
+                    //     const potentialError = checkResponse(res);
+                    //     if (potentialError) throw potentialError;
+                    //     else return res.data;
+                    //   })
+                    //   .catch((error: AxiosError) => {
+                    //     throw error;
+                    //   });
+                    // await saveJSON(
+                    //   `logs/${OP}-${Date.now()}-patch-entities.json`,
+                    //   patchedEntities
+                    // );
+                }
+                return [4 /*yield*/, getEntityUpdates(dataset, "mfid")];
             case 4:
-                patchedEntities = _a.sent();
-                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-patch-entities.json", patchedEntities)];
-            case 5:
-                _a.sent();
-                _a.label = 6;
-            case 6: return [4 /*yield*/, getEntityUpdates(dataset, "mfid")];
-            case 7:
                 updates = _a.sent();
                 console.log("==== Entities already in the DB: ====");
                 console.log(updates.existingEntities.length + "/" + dataset.length);
                 //console.log(updates.existingEntities);
                 console.log("==== Entities to POST: ====");
                 console.log(updates.newEntities);
-                if (!(updates.newEntities.length > 0)) return [3 /*break*/, 10];
-                console.log("==== POSTing entities ====");
-                return [4 /*yield*/, api_1.default
-                        .post("/entities", updates.newEntities)
-                        .then(function (res) {
-                        var potentialError = api_1.checkResponse(res);
-                        if (potentialError)
-                            throw potentialError;
-                        else
-                            return res.data;
-                    })
-                        .catch(function (error) {
-                        throw error;
-                    })];
-            case 8:
-                postedEntities = _a.sent();
-                return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-post-entities.json", postedEntities)];
-            case 9:
-                _a.sent();
-                _a.label = 10;
-            case 10:
-                allEntities = Object.assign({}, utils_1.getKeyObject(patchedEntities, "_key"), utils_1.getKeyObject(updates.existingEntities, "_key"), utils_1.getKeyObject(postedEntities, "_key"));
+                if (updates.newEntities.length > 0) {
+                    console.log("==== POSTing entities ====");
+                    // postedEntities = await api
+                    //   .post(`/entities`, updates.newEntities)
+                    //   .then(res => {
+                    //     const potentialError = checkResponse(res);
+                    //     if (potentialError) throw potentialError;
+                    //     else return res.data;
+                    //   })
+                    //   .catch((error: AxiosError) => {
+                    //     throw error;
+                    //   });
+                    // await saveJSON(
+                    //   `logs/${OP}-${Date.now()}-post-entities.json`,
+                    //   postedEntities
+                    // );
+                }
+                allEntities = Object.assign({}, utils_1.getDsKeyObject(patchedEntities, "mfid"), utils_1.getDsKeyObject(updates.existingEntities, "mfid"), utils_1.getDsKeyObject(postedEntities, "mfid"));
                 console.log("===== Done importing entities =====");
                 return [4 /*yield*/, saveJSON_1.default("logs/" + OP + "-" + Date.now() + "-allEntities.json", allEntities)];
-            case 11:
+            case 5:
                 _a.sent();
-                return [3 /*break*/, 13];
-            case 12:
+                return [4 /*yield*/, loadMF_1.loadMediasFrancaisRelations(allEntities)];
+            case 6:
+                edgeDataset = _a.sent();
+                return [3 /*break*/, 8];
+            case 7:
                 err_1 = _a.sent();
                 console.error("ERROR: Failed to load and update the dataset:");
                 if (err_1 && err_1.stack)
                     console.error(err_1.stack);
                 else
                     console.error(err_1);
-                return [3 /*break*/, 13];
-            case 13: return [2 /*return*/];
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
         }
     });
 }); };
