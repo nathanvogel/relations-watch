@@ -17,7 +17,7 @@
 //   return noConflictFound;
 // };
 
-function logConsistencyError<T, P extends Extract<keyof T, string>>(
+function logConsistencyError<T, P extends keyof T>(
   t1: T,
   t2: T,
   propName: P
@@ -31,7 +31,7 @@ function logConsistencyError<T, P extends Extract<keyof T, string>>(
 /**
  * Detects unsolvable conflicts between entities.
  */
-export function areConsistent<T, P extends Extract<keyof T, string>>(
+export function areConsistent<T, P extends keyof T>(
   dbT: T,
   t: T,
   propNames: P[]

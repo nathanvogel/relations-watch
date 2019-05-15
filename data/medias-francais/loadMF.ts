@@ -198,6 +198,14 @@ export const loadMediasFrancaisRelations = (dbEntities: EntityList) =>
       .on("data", function(record: any) {
         try {
           const edge = recordToEdge(record, dbEntities);
+          if (
+            record.origine == "Radio France" &&
+            record.valeur == "contrôle" &&
+            record.cible == "France Info"
+          ) {
+            console.log("Manually ignoring deduplicated Edge on France Info.");
+            return;
+          }
           if (edge) dataset.push(edge);
           // console.log(dataset.length, " => ", record);
         } catch (err) {

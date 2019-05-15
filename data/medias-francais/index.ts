@@ -1,93 +1,94 @@
-import { Database, aql } from "arangojs";
+import { Database, aql, DocumentCollection } from "arangojs";
 import saveJSON from "./fileIO/saveJSON";
 import {
   loadMediasFrancaisEntities,
   loadMediasFrancaisRelations
 } from "./loadMF";
-import { Entity, DatasetId, Edge } from "./utils/types";
+import { Entity, DatasetId, Edge, isEntity } from "./utils/types";
 import C from "./utils/constants";
 import { areConsistent } from "./utils/consistency";
 import askYesNo from "./utils/ask";
 import api, { getResponseData } from "./utils/api";
-import { getDsKeyObject, selectiveDiff, selectiveExtract } from "./utils/utils";
+import {
+  getDsKeyObject,
+  selectiveDiff,
+  selectiveExtract,
+  getElementDatasetId
+} from "./utils/utils";
 
 const db = new Database({
   url: C.DEV ? "http://localhost:8529" : ""
 });
 db.useDatabase("_system");
 db.useBasicAuth("root", "");
-const ENT_OVERRIDING_PROPS: Array<keyof Entity> = ["type"];
-const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = [];
+const ENT_OVERRIDING_PROPS: Array<keyof Entity> = [];
+const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = ["type"];
+const REL_OVERRIDING_PROPS: Array<keyof Edge> = ["type", "text", "owned"];
+const REL_UNCHANGEABLE_PROPS: Array<keyof Edge> = [];
 const LOGDIR = C.DEV ? "logs/dev/" : "logs/prod/";
 const ts = () => Date.now();
 const entColl = db.collection(C.entCollectionName);
 const relColl = db.collection(C.relCollectionName);
 
-const getEntityUpdates = async (
-  datasetEntities: Entity[],
-  datasetId: DatasetId
-) => {
-  const entitiesToPost: Entity[] = [];
-  const existingEntities: Entity[] = [];
-  const entitiesToPatch: Entity[] = [];
+async function getElementUpdates<T extends Edge | Entity>(
+  datasetElements: T[],
+  datasetId: DatasetId,
+  coll: DocumentCollection,
+  OVERRIDING_PROPS: Array<keyof T>,
+  UNCHANGEABLE_PROPS: Array<keyof T>
+) {
+  const elementsToPost: T[] = [];
+  const existingElements: T[] = [];
+  const elementsToPatch: T[] = [];
 
-  for (let entity of datasetEntities) {
-    const entityDatasetId = getDatasetId(entity, datasetId);
-    // Check if we already have put/linked this entity in the database.
-    const cursor = await getByDatasetId(datasetId, entityDatasetId, true);
-    // There should be maximum 1 such entity.
+  for (let element of datasetElements) {
+    const elDatasetId = getElementDatasetId(element, datasetId);
+    // Check if we already have put/linked this element in the database.
+    const cursor = await getByDatasetId(coll, datasetId, elDatasetId, true);
+    var logIdentifier = elDatasetId;
+    if (isEntity(element)) logIdentifier = element.name;
+    // There should be maximum 1 such element.
     if (cursor.count > 1) {
-      // Just abort for now. If it ever happens, we'll log the problems.
-      throw new Error("Duplicate entities for " + entityDatasetId);
+      console.log("Found multiple elements with the same ID:");
+      while (cursor.hasNext())
+        console.log("Key:", ((await cursor.next()) as T)._key);
+      throw new Error("Duplicate elements corresponding to " + elDatasetId);
     }
-    // If the entity already exists
+    // If the element already exists
     else if (cursor.count == 1) {
-      console.log("Found a correspondance for:", entity.name);
-      const dbEntity: Entity = await cursor.next();
+      console.log("Found a correspondance for:", logIdentifier);
+      const dbElement: T = await cursor.next();
       // If we detect a fundamental consistency problem with an
-      // existing entity, we just abort for now.
+      // existing element, we just abort for now.
       // If the name is different, update the name? Only for some datasets?
-      if (!areConsistent(dbEntity, entity, ENT_UNCHANGEABLE_PROPS))
+      if (!areConsistent(dbElement, element, UNCHANGEABLE_PROPS))
         throw new Error(
-          `Inconsistent entities: ${entityDatasetId} (${entity.name})`
+          `Inconsistent elements: ${elDatasetId} (${logIdentifier})`
         );
       // Maybe we want to overwrite the values in the DB.
-      if (selectiveDiff(dbEntity, entity, ENT_OVERRIDING_PROPS)) {
-        const patchedEntity = Object.assign(
+      if (selectiveDiff(dbElement, element, OVERRIDING_PROPS)) {
+        const patchedElement = Object.assign(
           {},
-          dbEntity,
-          selectiveExtract(entity, ENT_OVERRIDING_PROPS),
-          Object.assign({}, { ds: dbEntity.ds }, { ds: entity.ds })
+          dbElement,
+          selectiveExtract(element, OVERRIDING_PROPS),
+          Object.assign({}, { ds: dbElement.ds }, { ds: element.ds })
         );
-        entitiesToPatch.push(patchedEntity);
+        elementsToPatch.push(patchedElement);
       }
-      // If the entity exists and doesn't need to be patched, simply push
+      // If the element exists and doesn't need to be patched, simply push
       // it to RAM for later use.
-      else existingEntities.push(dbEntity);
+      else existingElements.push(dbElement);
     }
-    // If the entity doesn't already exists, we can simply create it.
+    // If the element doesn't already exists, we can simply create it.
     // (if it was manually linked, it now does.)
     // We could also do the similarity search here and it would save us
     // one request per item to the database, but I'm not sure it would actually
     // be easier or lead to less code being duplicated (we would have to
     // merge also here + it might be harder to deal with Edge types later)
-    else entitiesToPost.push(entity);
+    else elementsToPost.push(element);
   }
-  return { entitiesToPost, existingEntities, entitiesToPatch };
-};
-
-/**
- * Get the dataset ID of the entity, throw if it's absent.
- * @param  elements  the element to search in
- * @param  elements  The ID of the dataset
- * @return           The element ID in element.ds[ID]
- */
-const getDatasetId = (element: Entity | Edge, datasetId: DatasetId) => {
-  // Make sure we have access to the element ID in this dataset.
-  if (!element.ds || !element.ds[datasetId])
-    throw new Error("The dataset loader didn't include the proper origin ID.");
-  return element.ds[datasetId];
-};
+  return { elementsToPost, existingElements, elementsToPatch };
+}
 
 /**
  * Fetches the entity in the database with it's datasetId
@@ -97,13 +98,14 @@ const getDatasetId = (element: Entity | Edge, datasetId: DatasetId) => {
  * @return                 The fresh database cursor
  */
 const getByDatasetId = async (
+  coll: DocumentCollection,
   datasetId: string,
   entityDatasetId: string,
   count: boolean
 ) => {
   const cursor = await db.query(
     aql`
-      FOR entity IN ${entColl}
+      FOR entity IN ${coll}
         FILTER entity.ds.${datasetId} == ${entityDatasetId}
         RETURN entity
     `,
@@ -127,8 +129,13 @@ const findSimilarEntities = async (
 
   for (let entity of datasetEntities) {
     // Skip entities that are already linked in the database.
-    const entityDatasetId = getDatasetId(entity, datasetId);
-    const cursor1 = await getByDatasetId(datasetId, entityDatasetId, false);
+    const entityDatasetId = getElementDatasetId(entity, datasetId);
+    const cursor1 = await getByDatasetId(
+      entColl,
+      datasetId,
+      entityDatasetId,
+      false
+    );
     if (cursor1.hasNext()) continue;
     // Check if we have a similar but unlinked entity in the database.
     const cursor = await db.query(
@@ -200,29 +207,35 @@ const updateMediasFrancais = async () => {
       await saveJSON(`${LOGDIR}${ts()}-link-entities.json`, linkedEntities);
     }
 
-    const updates = await getEntityUpdates(dataset, "mfid");
+    const entUpdates = await getElementUpdates(
+      dataset,
+      "mfid",
+      entColl,
+      ENT_OVERRIDING_PROPS,
+      ENT_UNCHANGEABLE_PROPS
+    );
     console.log("==== Entities already in the DB: ====");
-    console.log(updates.existingEntities.length + "/" + dataset.length);
-    //console.log(updates.existingEntities);
+    console.log(entUpdates.existingElements.length + "/" + dataset.length);
+    //console.log(entUpdates.existingElements);
 
     console.log("==== Entities to POST: ====");
-    console.log(updates.entitiesToPost);
-    if (updates.entitiesToPost.length > 0) {
+    console.log(entUpdates.elementsToPost);
+    if (entUpdates.elementsToPost.length > 0) {
       if (!(await askYesNo("Post them?"))) return;
       console.log("==== POSTing entities ====");
       postedEntities = await api
-        .post(`/entities`, updates.entitiesToPost)
+        .post(`/entities`, entUpdates.elementsToPost)
         .then(getResponseData);
       await saveJSON(`${LOGDIR}${ts()}-post-entities.json`, postedEntities);
     }
 
     console.log("==== Entities to PATCH: ====");
-    console.log(updates.entitiesToPatch);
-    if (updates.entitiesToPatch.length > 0) {
+    console.log(entUpdates.elementsToPost);
+    if (entUpdates.elementsToPost.length > 0) {
       if (!(await askYesNo("Patch them?"))) return;
       console.log("==== PATCHing entities ====");
       patchedEntities = await api
-        .patch(`/entities`, updates.entitiesToPatch)
+        .patch(`/entities`, entUpdates.elementsToPost)
         .then(getResponseData);
       await saveJSON(`${LOGDIR}${ts()}-patch-entities.json`, patchedEntities);
     }
@@ -231,7 +244,7 @@ const updateMediasFrancais = async () => {
     // existing entities, so no need to put them in allEntities
     const allEntities = Object.assign(
       {},
-      getDsKeyObject(updates.existingEntities, "mfid"),
+      getDsKeyObject(entUpdates.existingElements, "mfid"),
       getDsKeyObject(postedEntities, "mfid"),
       getDsKeyObject(patchedEntities, "mfid")
     );
@@ -242,11 +255,39 @@ const updateMediasFrancais = async () => {
     const edgeDataset = await loadMediasFrancaisRelations(allEntities);
     await saveJSON(`${LOGDIR}${ts()}-edgeDataset.json`, edgeDataset);
 
-    // load edges.
-    // Create DB edges objects from the dataset, using a manual source ID.
-    // Look for existing edges
-    // PATCH existing (don't care for now, we can implement it when a dataset actually changes/is reused); Or actually a full replace might be okay.
-    // POST new
+    // On to the same process, but with edges!
+    const relUpdates = await getElementUpdates(
+      edgeDataset,
+      "mfid",
+      relColl,
+      REL_OVERRIDING_PROPS,
+      REL_UNCHANGEABLE_PROPS
+    );
+    console.log("==== Edges already in the DB: ====");
+    console.log(relUpdates.existingElements.length + "/" + edgeDataset.length);
+    //console.log(relUpdates.existingElements);
+
+    console.log("==== Edges to POST: ====");
+    console.log(relUpdates.elementsToPost);
+    if (relUpdates.elementsToPost.length > 0) {
+      if (!(await askYesNo("Post them?"))) return;
+      console.log("==== POSTing edges ====");
+      const postedEdges = await api
+        .post(`/relations`, relUpdates.elementsToPost)
+        .then(getResponseData);
+      await saveJSON(`${LOGDIR}${ts()}-post-edges.json`, postedEdges);
+    }
+
+    console.log("==== Edges to PATCH: ====");
+    console.log(relUpdates.elementsToPatch);
+    if (relUpdates.elementsToPatch.length > 0) {
+      if (!(await askYesNo("Patch them?"))) return;
+      console.log("==== PATCHing edges ====");
+      const patchedEdges = await api
+        .patch(`/relations`, relUpdates.elementsToPatch)
+        .then(getResponseData);
+      await saveJSON(`${LOGDIR}${ts()}-patch-edges.json`, patchedEdges);
+    }
   } catch (err) {
     console.error("ERROR: Failed to load and update the dataset:");
     if (err && err.stack) console.error(err.stack);

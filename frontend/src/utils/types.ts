@@ -255,3 +255,10 @@ export type AmountSelectOption = {
  * in order to get static (dynamic) Typescript autocomplete.
  */
 export type KeyList<T> = { readonly [P in keyof T]: P };
+
+export function isEdge(element: Edge | Entity): element is Edge {
+  return (<Edge>element)._from !== undefined;
+}
+export function isEntity(element: Edge | Entity): element is Entity {
+  return (<Edge>element)._from === undefined;
+}

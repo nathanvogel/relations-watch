@@ -116,3 +116,10 @@ export enum SourceLinkType {
   Confirms,
   Refutes
 }
+
+export function isEdge(element: Edge | Entity): element is Edge {
+  return (<Edge>element)._from !== undefined;
+}
+export function isEntity(element: Edge | Entity): element is Entity {
+  return (<Edge>element)._from === undefined;
+}

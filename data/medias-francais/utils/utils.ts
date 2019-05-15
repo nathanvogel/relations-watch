@@ -16,9 +16,25 @@ export function getKeyObject<T, P extends Extract<keyof T, string>>(
   return list;
 }
 
-type DatasetObject = {
+/**
+ * Get the dataset ID of the entity, throw if it's absent.
+ * @param  elements  the element to search in
+ * @param  elements  The ID of the dataset
+ * @return           The element ID in element.ds[ID]
+ */
+export function getElementDatasetId(
+  element: DatasetObject,
+  datasetId: DatasetId
+) {
+  // Make sure we have access to the element ID in this dataset.
+  if (!element.ds || !element.ds[datasetId])
+    throw new Error("The dataset loader didn't include the proper origin ID.");
+  return element.ds[datasetId];
+}
+
+interface DatasetObject {
   ds?: { [key in DatasetId]: string };
-};
+}
 
 export function getDsKeyObject<T extends DatasetObject>(
   array: T[],
@@ -34,21 +50,22 @@ export function getDsKeyObject<T extends DatasetObject>(
   return list;
 }
 
-export function selectiveExtract<
-  T extends Object,
-  P extends Extract<keyof T, string>
->(e2: T, overridingPropNames: P[]): any {
+export function selectiveExtract<T extends Object, P extends keyof T>(
+  e2: T,
+  overridingPropNames: P[]
+): any {
   const overrider: { [key: string]: any } = {};
   for (let p of overridingPropNames) {
-    overrider[p] = e2[p];
+    overrider[p as string] = e2[p];
   }
   return overrider;
 }
 
-export function selectiveDiff<
-  T extends Object,
-  P extends Extract<keyof T, string>
->(e1: T, e2: T, overridingPropNames: P[]): boolean {
+export function selectiveDiff<T extends Object, P extends keyof T>(
+  e1: T,
+  e2: T,
+  overridingPropNames: P[]
+): boolean {
   for (let p of overridingPropNames) {
     if (e1[p] !== e2[p]) return true;
   }
