@@ -230,12 +230,12 @@ const updateMediasFrancais = async () => {
     }
 
     console.log("==== Entities to PATCH: ====");
-    console.log(entUpdates.elementsToPost);
-    if (entUpdates.elementsToPost.length > 0) {
+    console.log(entUpdates.elementsToPatch);
+    if (entUpdates.elementsToPatch.length > 0) {
       if (!(await askYesNo("Patch them?"))) return;
       console.log("==== PATCHing entities ====");
       patchedEntities = await api
-        .patch(`/entities`, entUpdates.elementsToPost)
+        .patch(`/entities`, entUpdates.elementsToPatch)
         .then(getResponseData);
       await saveJSON(`${LOGDIR}${ts()}-patch-entities.json`, patchedEntities);
     }
