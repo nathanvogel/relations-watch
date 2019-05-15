@@ -5,7 +5,9 @@ export enum EntityType {
   Human = 1,
   MoralPerson = 2,
   Event = 10,
-  Group = 100
+  Group = 100,
+  Media = 200,
+  State = 300
 }
 export const EntityTypeValues: EntityType[] = Object.values(EntityType).filter(
   x => typeof x === "number"
