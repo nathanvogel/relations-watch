@@ -9,7 +9,7 @@ import {
 } from "./utils/types";
 import C from "./utils/constants";
 
-const MF_SOURCE_KEY = C.DEV ? "1065719" : "1179508";
+const MF_SOURCE_KEY = C.DEV ? "1179508" : "1179508";
 const FILENAME_ENTITIES = "Medias_francais/medias_francais.tsv";
 const FILENAME_RELATIONS = "Medias_francais/relations_medias_francais.tsv";
 const mfParserOptions = {
