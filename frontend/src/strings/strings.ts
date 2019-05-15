@@ -23,7 +23,9 @@ export const ENTITY_TYPES: StringTypeRes = {
   [EntityType.Human]: "Human",
   [EntityType.MoralPerson]: "Moral person",
   [EntityType.Event]: "Event",
-  [EntityType.Group]: "Group"
+  [EntityType.Group]: "Group",
+  [EntityType.State]: "State",
+  [EntityType.Media]: "Media"
 };
 
 export const FAMILIAL_LINK_STR: StringTypeRes = {
