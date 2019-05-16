@@ -34,7 +34,7 @@ const get = function(coll, req, res) {
     if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
       throw e;
     }
-    res.throw(404, "The entity does not exist", e);
+    res.throw(404, "The requested item does not exist", e);
   }
 };
 
@@ -58,7 +58,7 @@ const getMany = function(coll, req, res) {
     if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
       throw e;
     }
-    res.throw(404, "One of the entities does not exist.", e);
+    res.throw(404, "One of the requested item does not exist.", e);
   }
 };
 
@@ -70,7 +70,7 @@ const remove = function(coll, req, res) {
     if (!e.isArangoError || e.errorNum !== DOC_NOT_FOUND) {
       throw e;
     }
-    res.throw(404, "The relation does not exist", e);
+    res.throw(404, "The item does not exist", e);
   }
 };
 

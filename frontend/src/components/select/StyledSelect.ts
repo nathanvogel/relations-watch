@@ -15,8 +15,8 @@ import { TP } from "../../utils/theme";
 // </div>
 
 export const styledSelectCSS = css`
-  ${"" /* min-width: 150px; */}
   display: inline-block;
+  width: 100%;
 
   .rs__dropdown-indicator {
     padding: 0px ${(props: TP) => props.theme.inputPaddingLR};
@@ -46,6 +46,12 @@ export const styledSelectCSS = css`
     border-radius: ${(props: TP) => props.theme.radius};
     outline: none;
     box-shadow: none;
+  }
+
+  .rs__menu {
+    border-radius: ${(props: TP) => props.theme.radius};
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 `;
 

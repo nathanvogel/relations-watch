@@ -8,6 +8,7 @@ import { TP } from "../utils/theme";
 import { ReactSelectOption } from "../utils/types";
 import IconButton from "./buttons/IconButton";
 import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
+import { ReactComponent as AppIcon } from "../assets/ic_app.svg";
 
 const Bar = styled.nav`
   display: block;
@@ -26,10 +27,24 @@ const BarContent = styled.div`
   height: ${(props: TP) => props.theme.navBarHeight};
 `;
 
-const ActionBar = styled.span``;
+const StyledAppIcon = styled(AppIcon)`
+  height: calc(${(props: TP) => props.theme.navBarHeight} - 6px);
+  width: calc(${(props: TP) => props.theme.navBarHeight} - 6px);
+  // width: 100%;
+  // max-height: 100%;
+`;
+
+const AppBarButton = styled(IconButton)`
+  height: calc(${(props: TP) => props.theme.navBarHeight} - 4px);
+  max-height: 100%;
+  margin-left: ${(props: TP) => props.theme.marginLR};
+  margin-right: ${(props: TP) => props.theme.marginLR};
+`;
 
 const HomeLink = styled(Link)`
   font-weight: 700;
+  display: flex;
+  // height: 100%;
   &:link,
   &:active,
   &:visited {
@@ -44,12 +59,15 @@ const HomeLink = styled(Link)`
 `;
 
 const StyledSearch = styled(EntitySearch)`
+  flex-grow: 1;
   & > .rs__control {
-    // border-color: ${(props: TP) => props.theme.borderHover};
+    height: 100%;
   }
-  margin-left: ${(props: TP) => props.theme.inputLRSpacing};
-  margin-right: ${(props: TP) => props.theme.inputLRSpacing};
-  // height: 32px;
+  margin-left: ${(props: TP) => props.theme.marginLR};
+  margin-right: ${(props: TP) => props.theme.marginLR};
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: 100%;
   width: 150px;
   min-width: 60px;
   max-width: 100%;
@@ -83,17 +101,18 @@ class AppBar extends React.Component<RouteComponentProps> {
     return (
       <Bar>
         <BarContent>
-          <HomeLink to="/">Home</HomeLink>
-          <ActionBar>
-            <StyledSearch
-              onChange={this.onSearch}
-              onInputChange={this.onInputChange}
-              inputValue={this.state.searchValue}
-            />
-            <IconButton onClick={this.onAddEntity}>
-              <AddIcon />
-            </IconButton>
-          </ActionBar>
+          <HomeLink to="/">
+            <StyledAppIcon />
+          </HomeLink>
+          <StyledSearch
+            onChange={this.onSearch}
+            onInputChange={this.onInputChange}
+            inputValue={this.state.searchValue}
+            selection={null}
+          />
+          <AppBarButton onClick={this.onAddEntity}>
+            <AddIcon />
+          </AppBarButton>
         </BarContent>
       </Bar>
     );

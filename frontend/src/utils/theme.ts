@@ -27,7 +27,7 @@ const theme = {
   inputMarginTB: "12px",
   blockPadding: "12px",
   blockSpacingTB: "20px",
-  navBarHeight: "42px",
+  navBarHeight: "54px",
   appMaxWidth: "1280px",
   appPadding: "24px",
   longFieldHeight: "3em",
