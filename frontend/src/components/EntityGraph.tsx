@@ -237,8 +237,8 @@ class EntityGraph extends Component<Props> {
       const relationId = getRelationId(link._from, link._to) as string;
       if (
         rEntitiesByKey.hasOwnProperty(link._from) &&
-        rEntitiesByKey.hasOwnProperty(link._to) &&
-        !rRelationsByKey[relationId]
+        rEntitiesByKey.hasOwnProperty(link._to)
+        // && !rRelationsByKey[relationId]
       ) {
         const e1 = rEntitiesByKey[link._from];
         const e2 = rEntitiesByKey[link._to];
@@ -254,8 +254,8 @@ class EntityGraph extends Component<Props> {
         )
           continue;
 
-        const from = e2Primary ? e2.entityKey : e1.entityKey;
-        const to = e2Primary ? e1.entityKey : e2.entityKey;
+        const from = e1.entityKey; //e2Primary ? e2.entityKey : e1.entityKey;
+        const to = e2.entityKey; // e2Primary ? e1.entityKey : e2.entityKey;
         const rRelation: RelationRenderData = {
           bx1: e1.bx,
           by1: e1.by,
@@ -272,7 +272,7 @@ class EntityGraph extends Component<Props> {
               ? NodeRenderType.Primary
               : NodeRenderType.Secondary,
           visited: e1.visited && e2.visited,
-          types: [] // Will be completed in a second pass.
+          types: [link.type] // Will be completed in a second pass.
         };
         rRelations.push(rRelation);
         rRelationsByKey[rRelation.relationId] = rRelation;
@@ -280,17 +280,17 @@ class EntityGraph extends Component<Props> {
     }
 
     // Computes which types need to be rendered
-    for (const link of this.props.connectedEdges) {
-      const relationId = getRelationId(link._from, link._to) as string;
-      if (rRelationsByKey.hasOwnProperty(relationId)) {
-        const t = rRelationsByKey[relationId].types;
-        if (t.indexOf(link.type) < 0) t.push(link.type);
-      }
-    }
-    // Sort the types simply for consistency across relations.
-    for (let r of rRelations) {
-      r.types.sort((a, b) => a - b);
-    }
+    // for (const link of this.props.connectedEdges) {
+    //   const relationId = getRelationId(link._from, link._to) as string;
+    //   if (rRelationsByKey.hasOwnProperty(relationId)) {
+    //     const t = rRelationsByKey[relationId].types;
+    //     if (t.indexOf(link.type) < 0) t.push(link.type);
+    //   }
+    // }
+    // // Sort the types simply for consistency across relations.
+    // for (let r of rRelations) {
+    //   r.types.sort((a, b) => a - b);
+    // }
 
     return (
       <Content>

@@ -9,7 +9,8 @@ import forceBoundary from "../utils/d3/d3-force-boundary";
 import {
   RelationRenderData,
   NodeRenderData,
-  NodeRenderType
+  NodeRenderType,
+  RelationType
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
@@ -57,6 +58,14 @@ function collisionSize(d: NodeRenderData): number {
     case NodeRenderType.Tertiary:
       return 42;
   }
+}
+
+function isDirectedType(t: RelationType) {
+  return (
+    t === RelationType.IsOwned ||
+    t === RelationType.IsControlled ||
+    t === RelationType.JobDependsOn
+  );
 }
 
 function nodeTranslate(d: NodeRenderData): string {
@@ -284,31 +293,31 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("class", "relation")
       .append("line")
       .classed("visual", true)
-      .attr("stroke-width", 2)
-      .attr("stroke", "#aaaaaa")
+      .attr("stroke-width", 1)
+      .attr("stroke", relationColor)
       .select(goToParent)
       .append("circle")
       .attr("r", 4)
       .attr("fill", relationColor)
-      .attr("stroke-width", 1)
+      .attr("stroke-width", 0)
       .attr("stroke", "#aaaaaa")
+      .attr("opacity", d => (isDirectedType(d.types[0]) ? 1 : 0))
       .select(goToParent)
       .append("line")
       .classed("interaction", true)
       .attr("stroke-width", 11)
-      .attr("opacity", 0.3)
+      .attr("opacity", 0)
       .on("click", this.onRelationClick)
       .on("mouseover", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
-          .attr("stroke", "#000000")
-          .attr("stroke-width", d => (d as any).types.length * 2);
+          .attr("stroke-width", 8);
       })
       .on("mouseout", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
           .attr("stroke", relationColor as any)
-          .attr("stroke-width", d => (d as any).types.length);
+          .attr("stroke-width", 1);
       })
       .select(goToParent)
       .merge(links as any);
@@ -316,7 +325,7 @@ class GraphD3Simple extends React.Component<Props> {
     var linksInteraction = links2
       .select("line.interaction")
       .attr("stroke", d => (d.visited ? "#E6E2FF" : "transparent"));
-    var linksC = links2.select("circle").attr("opacity", linkOpacity);
+    var linksC = links2.select("circle"); //.attr("opacity", linkOpacity);
     links.exit().remove();
 
     // NODES rendering
@@ -404,8 +413,8 @@ class GraphD3Simple extends React.Component<Props> {
         .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
 
       linksC
-        .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.84))
-        .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.84));
+        .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.15))
+        .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.15));
       // linksC
       //   .attr("cx", d => betweenOffD(d, 20).x)
       //   .attr("cy", d => betweenOffD(d, 15).y);
