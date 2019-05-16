@@ -19,5 +19,10 @@
   "relationType_f_other": "They're in the same family.",
   "relationType_friends": "They're friends.",
   "relationType_love": "They're in love.",
-  "relationType_opposition": "They're in opposition."
+  "relationType_opposition": "They're in opposition.",
+  "faq_data_q": "Where does the data come from?",
+  "faq_data_a": "On this prototype, anyone can add and edit data. Some databases like Wikidata or LittleSis might come to complete our data, but for now, only the <0>small database</0> by Le Monde diplomatique on the french medias was imported.",
+  "faq_about_q": "About this project",
+  "faq_about_a": "In response to the environmental crisis and the erosion of democracies, this project was created to provide a 'right to see' on interests conflicts. It's a tool for everyone to better understand a person or an company by having a quick overview of its dependencies, wether financial, ideological or hierarchical, etc.",
+  "slogan": "Democracy lives on information."
 }

@@ -21,6 +21,7 @@
     "d3-force": "^2.0.1",
     "env-cmd": "^8.0.2",
     "i18next": "^15.1.0",
+    "i18next-browser-languagedetector": "^3.0.1",
     "immutability-helper": "^3.0.0",
     "normalize.css": "^8.0.1",
     "qs": "^6.7.0",
