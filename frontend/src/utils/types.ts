@@ -26,7 +26,7 @@ export enum RelationType {
   Friendship = 310,
   Love = 320,
   Opposition = 330,
-  Influences = 500,
+  IsInfluenced = 500,
   Attendance = 1000,
   GroupMember = 2000,
   Other = 3000

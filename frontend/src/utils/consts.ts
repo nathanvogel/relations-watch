@@ -43,7 +43,7 @@ export const POSSIBLE_LINKS = {
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
   ],
-  [RelationType.Influences]: [
+  [RelationType.IsInfluenced]: [
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
   ],
@@ -61,6 +61,13 @@ export const POSSIBLE_LINKS = {
   ]
 };
 
+export const DirectedLinks = [
+  RelationType.IsOwned,
+  RelationType.IsControlled,
+  RelationType.JobDependsOn,
+  RelationType.IsInfluenced
+];
+
 type Requirements = {
   [key: number]: RelationTypeRequirements;
 };
@@ -73,7 +80,7 @@ export const RELATION_REQUIREMENTS: Requirements = {
   [RelationType.Friendship]: { descriptionRequired: true },
   [RelationType.Love]: {},
   [RelationType.Opposition]: { descriptionRequired: true },
-  [RelationType.Influences]: { descriptionRequired: true },
+  [RelationType.IsInfluenced]: { descriptionRequired: true },
   [RelationType.Attendance]: {},
   [RelationType.GroupMember]: {},
   [RelationType.Other]: { descriptionRequired: true }

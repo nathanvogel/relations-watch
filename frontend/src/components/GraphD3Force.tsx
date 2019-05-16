@@ -15,6 +15,7 @@ import {
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import { RELATION_COLORS } from "../utils/theme";
+import { DirectedLinks } from "../utils/consts";
 
 const GraphSVG = styled.svg`
   display: block;
@@ -61,11 +62,7 @@ function collisionSize(d: NodeRenderData): number {
 }
 
 function isDirectedType(t: RelationType) {
-  return (
-    t === RelationType.IsOwned ||
-    t === RelationType.IsControlled ||
-    t === RelationType.JobDependsOn
-  );
+  return DirectedLinks.indexOf(t) >= 0;
 }
 
 function nodeTranslate(d: NodeRenderData): string {

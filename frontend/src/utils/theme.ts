@@ -54,7 +54,7 @@ export const RELATION_COLORS = {
   [RelationType.Friendship]: "#00b8b8",
   [RelationType.Love]: "#de3d83",
   [RelationType.Opposition]: "#db2f27",
-  [RelationType.Influences]: "#f45844",
+  [RelationType.IsInfluenced]: "#f45844",
   [RelationType.Attendance]: "#00b8b8",
   [RelationType.GroupMember]: "#0095a3",
   [RelationType.Other]: "#444444"

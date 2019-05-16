@@ -6,7 +6,7 @@ const regularMapping: { [key: number]: string } = {
   [RT.Attendance]: R.relationType_attended,
   [RT.Friendship]: R.relationType_friends,
   [RT.GroupMember]: R.relationType_member,
-  [RT.Influences]: R.relationType_ideas,
+  [RT.IsInfluenced]: R.relationType_ideas,
   [RT.IsControlled]: R.relationType_controlled,
   [RT.Love]: R.relationType_love,
   [RT.Opposition]: R.relationType_opposition

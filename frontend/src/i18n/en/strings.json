@@ -9,7 +9,7 @@
   "relationType_controlled": "{{nameFrom}} is controlled by {{nameTo}}.",
   "relationType_member": "{{nameFrom}} is a member of {{nameTo}}.",
   "relationType_attended": "{{nameFrom}} attended {{nameTo}}.",
-  "relationType_ideas": "{{nameFrom}} inflenced the ideas of {{nameTo}}.",
+  "relationType_ideas": "{{nameFrom}} is influenced by {{nameTo}}.",
   "relationType_f_child": "{{nameFrom}} is a child of {{nameTo}}.",
   "relationType_f_grandchild": "{{nameFrom}} is a grandchild of {{nameTo}}.",
   "relationType_f_married": "They're married.",

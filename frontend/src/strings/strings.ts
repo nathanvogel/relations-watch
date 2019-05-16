@@ -13,7 +13,7 @@ export const RELATION_TYPES_STR: StringTypeRes = {
   [RelationType.Friendship]: "Friends",
   [RelationType.Love]: "Love",
   [RelationType.Opposition]: "Opposition",
-  [RelationType.Influences]: "influences the ideas of",
+  [RelationType.IsInfluenced]: "is influenced by",
   [RelationType.Attendance]: "attended",
   [RelationType.GroupMember]: "is a group member of",
   [RelationType.Other]: "Other"
