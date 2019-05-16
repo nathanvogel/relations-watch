@@ -69,11 +69,17 @@ export const styledSelectCSS = css`
         border-radius: 0px;
         padding-top: ${(props: TP) => props.theme.inputPaddingTB};
         padding-bottom: ${(props: TP) => props.theme.inputPaddingTB};
+        color: ${(props: TP) => props.theme.mainTextColor};
       }
 
       .rs__option--is-focused {
         border-color: ${(props: TP) => props.theme.borderHover};
         border-radius: ${(props: TP) => props.theme.radius};
+      }
+
+      .rs__option--is-selected {
+        color: ${(props: TP) => props.theme.mainTextColor};
+        background-color: ${(props: TP) => props.theme.inputBG};
       }
     }
   }
