@@ -21,37 +21,43 @@ import {
 
 export const POSSIBLE_LINKS = {
   [RelationType.IsOwned]: [
-    [E.MoralPerson, E.Event],
-    [E.MoralPerson, E.Group, E.Human]
+    [E.MoralPerson, E.Event, E.Media],
+    [E.MoralPerson, E.Group, E.Human, E.State]
   ],
   [RelationType.JobDependsOn]: [
-    [E.Human, E.MoralPerson],
-    [E.MoralPerson, E.Group, E.Human]
+    [E.Human, E.MoralPerson, E.Media, E.State],
+    [E.Human, E.MoralPerson, E.Group, E.Media, E.State]
   ],
   [RelationType.IsControlled]: [
-    [E.Group, E.MoralPerson],
-    [E.Human, E.MoralPerson, E.Group]
+    [E.Group, E.MoralPerson, E.Media, E.State],
+    [E.Human, E.MoralPerson, E.Group, E.State]
   ],
   [RelationType.ValueExchange]: [
-    [E.MoralPerson, E.Group, E.Human],
-    [E.MoralPerson, E.Group, E.Human]
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
   ],
   [RelationType.Family]: [[E.Human], [E.Human]],
   [RelationType.Friendship]: [[E.Human], [E.Human]],
   [RelationType.Love]: [[E.Human], [E.Human]],
   [RelationType.Opposition]: [
-    [E.MoralPerson, E.Group, E.Human],
-    [E.MoralPerson, E.Group, E.Human]
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
   ],
   [RelationType.Influences]: [
-    [E.MoralPerson, E.Group, E.Human],
-    [E.MoralPerson, E.Group, E.Human]
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
   ],
-  [RelationType.Attendance]: [[E.MoralPerson, E.Group, E.Human], [E.Event]],
-  [RelationType.GroupMember]: [[E.MoralPerson, E.Human], [E.Group]],
+  [RelationType.Attendance]: [
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
+    [E.Event]
+  ],
+  [RelationType.GroupMember]: [
+    [E.MoralPerson, E.Human, E.Human, E.State],
+    [E.Group]
+  ],
   [RelationType.Other]: [
-    [E.MoralPerson, E.Group, E.Human, E.Event],
-    [E.MoralPerson, E.Group, E.Human, E.Event]
+    [E.MoralPerson, E.Group, E.Human, E.Event, E.Human, E.State],
+    [E.MoralPerson, E.Group, E.Human, E.Event, E.Human, E.State]
   ]
 };
 
