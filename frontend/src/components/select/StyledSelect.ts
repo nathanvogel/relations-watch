@@ -49,9 +49,33 @@ export const styledSelectCSS = css`
   }
 
   .rs__menu {
-    border-radius: ${(props: TP) => props.theme.radius};
     margin-top: 0px;
     margin-bottom: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: ${(props: TP) => props.theme.radius};
+    border-bottom-right-radius: ${(props: TP) => props.theme.radius};
+
+    .rs__menu-list {
+      padding-top: 0px;
+      padding-bottom: 0px;
+
+      .rs__option {
+        box-sizing: border-box;
+        background-color: ${(props: TP) => props.theme.appBG};
+        border-color: ${(props: TP) => props.theme.appBG};
+        border-width: ${(props: TP) => props.theme.borderWidth};
+        border-style: solid;
+        border-radius: 0px;
+        padding-top: ${(props: TP) => props.theme.inputPaddingTB};
+        padding-bottom: ${(props: TP) => props.theme.inputPaddingTB};
+      }
+
+      .rs__option--is-focused {
+        border-color: ${(props: TP) => props.theme.borderHover};
+        border-radius: ${(props: TP) => props.theme.radius};
+      }
+    }
   }
 `;
 

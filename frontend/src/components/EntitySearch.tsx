@@ -19,7 +19,7 @@ interface ReactSelectInputValue {
 
 const promiseAutocomplete = async (inputValue: string) => {
   // No need to query the server too fast
-  if (!inputValue || inputValue.length <= 1) return;
+  if (!inputValue || inputValue.length <= 1) return []; //[{ value: "1", label: "oawjeoifja awoiefj ", type: 1 }];
   // Query our beautiful API
   const response = await api.get("/entities/autocomplete/" + inputValue);
   if (response.status === 200) {
@@ -142,6 +142,7 @@ class EntitySearch extends React.Component<Props, object> {
         loadOptions={promiseAutocomplete}
         isValidNewOption={this.isValidNewOption}
         allowCreateWhileLoading={false}
+        menuIsOpen={true}
       />
     );
   }
