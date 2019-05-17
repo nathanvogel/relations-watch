@@ -6,7 +6,7 @@ import cuid from "cuid";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
-import { media } from "../utils/media-styles";
+import { media } from "../styles/media-styles";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";
@@ -20,7 +20,7 @@ import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
 import { EditorContainerCSS } from "../components/EditorContainer";
-import { TP } from "../utils/theme";
+import { TP } from "../styles/theme";
 
 const Content = styled.div`
   display: flex;

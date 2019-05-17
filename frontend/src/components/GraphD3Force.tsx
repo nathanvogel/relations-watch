@@ -14,7 +14,7 @@ import {
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
-import { RELATION_COLORS } from "../utils/theme";
+import { RELATION_COLORS } from "../styles/theme";
 import { DirectedLinks } from "../utils/consts";
 
 const GraphSVG = styled.svg`

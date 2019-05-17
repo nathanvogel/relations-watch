@@ -26,7 +26,7 @@ import StyledSelect from "../select/StyledSelect";
 import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
 import { ReactComponent as CloseIcon } from "../../assets/ic_close.svg";
 import IconButton from "../buttons/IconButton";
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 import ButtonBar from "../buttons/ButtonBar";
 import CONSTS, {
   POSSIBLE_LINKS,

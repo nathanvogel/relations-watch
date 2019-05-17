@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Edge, Status } from "../utils/types";
 import EdgeEditor from "./EdgeEditor";
-import { RELATION_COLORS, TP } from "../utils/theme";
+import { RELATION_COLORS, TP } from "../styles/theme";
 import SourceDetails from "./SourceDetails";
 import EdgeSummary from "./edgeDetails/EdgeSummary";
 import { RootStore } from "../Store";

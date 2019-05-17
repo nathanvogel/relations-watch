@@ -1,5 +1,5 @@
 import { createGlobalStyle, css } from "styled-components";
-import { TP } from "./utils/theme";
+import { TP } from "./theme";
 
 // Put the CSS in a separate css template to get babel coloring
 const GlobalStyleCSS = css`

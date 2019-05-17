@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import AsyncCreatable from "react-select/lib/AsyncCreatable";
 
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 import { styledSelectCSS } from "./StyledSelect";
 
 const StyledAsyncCreatableSelect = styled(AsyncCreatable).attrs({

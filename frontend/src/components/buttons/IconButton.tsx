@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 
 const withTextCSS = css`
   margin-right: ${(props: TP) => props.theme.inputLRSpacing};

@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { TP } from "../utils/theme";
+import { TP } from "../styles/theme";
 
 const withButton = css`
   padding-top: 32px; // For the close button

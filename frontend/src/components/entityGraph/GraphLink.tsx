@@ -1,7 +1,7 @@
 import React from "react";
 
 import { RelationRenderData } from "../../utils/types";
-import { RELATION_COLORS } from "../../utils/theme";
+import { RELATION_COLORS } from "../../styles/theme";
 
 type OwnProps = {
   data: RelationRenderData;

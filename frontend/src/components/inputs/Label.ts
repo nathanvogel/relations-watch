@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 
 const Label = styled.div`
   color: ${(props: TP) => props.theme.secondaryTextColor};

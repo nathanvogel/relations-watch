@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Edge } from "../utils/types";
 import { RELATION_TYPES_STR } from "../strings/strings";
-import { RELATION_COLORS } from "../utils/theme";
+import { RELATION_COLORS } from "../styles/theme";
 
 const Header = styled.header`
   min-height: 200px;

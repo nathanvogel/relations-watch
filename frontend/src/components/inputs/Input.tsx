@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 
 export const cssInput = css`
   padding-left: ${(props: TP) => props.theme.inputPaddingLR};

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 import { cssInput } from "./Input";
 
 const TextArea = styled.textarea`

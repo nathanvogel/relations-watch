@@ -10,7 +10,7 @@ import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
 import { getEntityLAsset } from "../assets/EntityIcons";
 import MainPersonImage from "./entityDetails/MainPersonImage";
-import { TP } from "../utils/theme";
+import { TP } from "../styles/theme";
 
 const Content = styled.div`
   width: 100%;

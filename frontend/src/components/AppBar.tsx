@@ -4,7 +4,7 @@ import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 
 import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
-import { TP } from "../utils/theme";
+import { TP } from "../styles/theme";
 import { ReactSelectOption } from "../utils/types";
 import IconButton from "./buttons/IconButton";
 import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
@@ -17,14 +17,12 @@ const Bar = styled.nav`
 `;
 
 const BarContent = styled.div`
-  max-width: 1280px;
-  padding-left: ${(props: TP) => props.theme.appPadding};
-  padding-right: ${(props: TP) => props.theme.appPadding};
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: ${(props: TP) => props.theme.navBarHeight};
+  padding-left: ${(props: TP) => props.theme.appPaddingLR};
+  padding-right: ${(props: TP) => props.theme.appPaddingLR};
 `;
 
 const StyledAppIcon = styled(AppIcon)`

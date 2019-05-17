@@ -14,8 +14,8 @@ import "./i18n/i18n";
 // import "./index.css";
 import App from "./screens/App";
 import * as serviceWorker from "./serviceWorker";
-import theme from "./utils/theme";
-import GlobalStyle from "./GlobalStyle";
+import theme from "./styles/theme";
+import GlobalStyle from "./styles/GlobalStyle";
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>

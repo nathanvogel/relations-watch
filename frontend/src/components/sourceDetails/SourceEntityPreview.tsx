@@ -7,7 +7,7 @@ import { RootStore } from "../../Store";
 import ROUTES from "../../utils/ROUTES";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { getEntitySAsset } from "../../assets/EntityIcons";
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 
 const Content = styled.span`
   display: flex;

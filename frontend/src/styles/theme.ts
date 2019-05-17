@@ -1,4 +1,4 @@
-import { RelationType } from "./types";
+import { RelationType } from "../utils/types";
 
 const theme = {
   mainFont: '"Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
@@ -30,7 +30,8 @@ const theme = {
   blockSpacingTB: "20px",
   navBarHeight: "54px",
   appMaxWidth: "1280px",
-  appPadding: "24px",
+  appPaddingLR: "24px",
+  appPaddingTB: "12px",
   longFieldHeight: "3em",
   radius: "4px"
 };

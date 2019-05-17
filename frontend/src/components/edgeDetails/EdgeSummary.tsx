@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { RelationType, Entity, Edge } from "../../utils/types";
 import { getEdgeSummary } from "../../strings/getEdgeSummary";
-import { RELATION_COLORS } from "../../utils/theme";
+import { RELATION_COLORS } from "../../styles/theme";
 
 const Span = styled.span`
   & {

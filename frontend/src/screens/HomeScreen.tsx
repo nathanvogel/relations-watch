@@ -1,20 +1,36 @@
-import React, { Component, FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import { RouterProps } from "react-router";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useTranslation, Trans } from "react-i18next";
 
 import EntitySearch from "../components/EntitySearch";
 import ROUTES from "../utils/ROUTES";
 import { ReactSelectOption } from "../utils/types";
-import { TP } from "../utils/theme";
+import { TP } from "../styles/theme";
 import R from "../strings/R";
+import { PageWidthSizer, PagePadder } from "../styles/sizers";
+
+const Content = styled.main`
+  ${PageWidthSizer}
+  ${PagePadder}
+
+  display: flex;
+  min-height: calc(100vh - ${(props: TP) => props.theme.navBarHeight});
+  flex-direction: column;
+`;
 
 const Header = styled.header`
   margin-top: 16vh;
 `;
 
-const Footer = styled.footer``;
+const Article = styled.article`
+  flex-grow: 1;
+`;
+
+const Footer = styled.footer`
+  min-height: 2em;
+  margin-top: 1em;
+`;
 
 const CentralSearch = styled(EntitySearch)`
   font-size: 22px;
@@ -44,10 +60,12 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
   };
 
   return (
-    <div>
+    <Content>
       <Header>
         <CentralTitle>Explore the relation graph</CentralTitle>
         <CentralSearch onChange={onSearch} />
+      </Header>
+      <Article>
         <h2>{t(R.slogan)}</h2>
         <h3>{t(R.faq_about_q)}</h3>
         <p>{t(R.faq_about_a)}</p>
@@ -57,11 +75,11 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
             <a href="https://www.monde-diplomatique.fr/cartes/PPA" />
           </Trans>
         </p>
-      </Header>
+      </Article>
       <Footer>
         <a href="/?lng=en">EN</a> / <a href="/?lng=fr">FR</a>
       </Footer>
-    </div>
+    </Content>
   );
 };
 

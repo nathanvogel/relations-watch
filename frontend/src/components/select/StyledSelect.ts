@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import Select from "react-select";
-import { TP } from "../../utils/theme";
+import { TP } from "../../styles/theme";
 
 // <div class="rs-container">
 //   <div class="rs__control">
