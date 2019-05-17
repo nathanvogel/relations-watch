@@ -5,7 +5,7 @@ const withTextCSS = css`
   margin-right: ${(props: TP) => props.theme.inputLRSpacing};
 `;
 
-const IconButton = styled.button`
+const IconButton = styled.button.attrs({ type: "button" })`
   height: auto;
   min-height: ${props => (props.small ? "16px" : "28px")};
   min-width: ${props => (props.small ? "16px" : "28px")};

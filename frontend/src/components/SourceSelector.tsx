@@ -6,8 +6,11 @@ import { connect } from "react-redux";
 import SourceForm from "./SourceForm";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { RootStore } from "../Store";
-import { getSourceFromRef } from "../features/sourcesAC";
-import { Status, ReactSelectOption } from "../utils/types";
+import {
+  getSourceFromRef,
+  clearGetSourceFromRefRequest
+} from "../features/sourcesAC";
+import { Status, ReactSelectOption, SourceLinkType } from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
 import IconButton from "./buttons/IconButton";
@@ -23,7 +26,7 @@ const StyledSourceRefSearch = styled(SourceRefSearch)`
 type OwnProps = {
   editorId: string;
   sourceKey?: string;
-  onSourceSelected: (sourceKey?: string) => void;
+  onSourceSelected: (sourceKey?: string, fullUrl?: string) => void;
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
@@ -53,7 +56,8 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
-      getSourceFromRef
+      getSourceFromRef,
+      clearGetSourceFromRefRequest
     },
     dispatch
   );
@@ -88,7 +92,7 @@ class SourceSelector extends React.Component<Props> {
   };
 
   onSelectSource = (option: ReactSelectOption) => {
-    this.props.onSourceSelected(option.value);
+    this.props.onSourceSelected(option.value, this.state.sourceRef);
     this.setState({ mode: SelectorMode.SourceSelected });
   };
 
@@ -117,7 +121,17 @@ class SourceSelector extends React.Component<Props> {
         return (
           <Content>
             {refGetStatus !== Status.Ok ? (
-              <MetaPostStatus isGet status={refGetStatus} error={refGetError} />
+              <MetaPostStatus
+                isGet
+                status={refGetStatus}
+                error={refGetError}
+                clearRequest={() => {
+                  this.setState({ mode: SelectorMode.EditingRef });
+                  this.props.clearGetSourceFromRefRequest(
+                    this.props.refEditorId
+                  );
+                }}
+              />
             ) : (
               <SourceForm
                 key={this.props.editorId}
@@ -138,7 +152,14 @@ class SourceSelector extends React.Component<Props> {
               Pick another
             </IconButton>
             {this.props.sourceKey ? (
-              <SourceDetails sourceKey={this.props.sourceKey} />
+              <SourceDetails
+                sourceKey={this.props.sourceKey}
+                sourceLink={{
+                  comments: [],
+                  fullUrl: this.state.sourceRef,
+                  type: SourceLinkType.Neutral
+                }}
+              />
             ) : (
               "Missing source key!"
             )}

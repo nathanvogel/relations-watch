@@ -101,6 +101,7 @@ type State = {
   ownedPercent: number | undefined;
   comment: string;
   sourceKey?: string;
+  fullUrl: string | undefined;
   invertDirection: boolean;
 };
 
@@ -127,6 +128,7 @@ class EdgeForm extends React.Component<Props> {
     ownedPercent: this.props.initialEdge.owned,
     comment: "",
     sourceKey: undefined,
+    fullUrl: undefined,
     invertDirection: this.props.entity1Key === this.props.initialEdge._to
   };
 
@@ -203,8 +205,11 @@ class EdgeForm extends React.Component<Props> {
     this.setState({ comment: event.target.value });
   };
 
-  onSourceSelected = (sourceKey?: string) => {
-    this.setState({ sourceKey });
+  onSourceSelected = (sourceKey?: string, fullUserInput?: string) => {
+    this.setState({
+      sourceKey,
+      fullUrl: fullUserInput ? fullUserInput.trim() : undefined
+    });
     // One day, loadSources will handle not re-requesting sources.
     if (sourceKey) this.props.loadSources([sourceKey], true);
   };
@@ -246,11 +251,17 @@ class EdgeForm extends React.Component<Props> {
       return;
     }
 
+    if (!this.state.fullUrl) {
+      console.log("Missing source URL. Can't submit edge");
+      return;
+    }
+
     // sourceKey is undefined if it's a new source. If so, the onFormSubmit
     // function should look for the sourceForm with the given sourceFormId
     // in the Redux store.
     const { sourceKey, comment } = this.state;
     const sourceLink: SourceLink = {
+      fullUrl: this.state.fullUrl,
       comments: comment ? [{ t: comment }] : [],
       type: confirms ? SourceLinkType.Confirms : SourceLinkType.Refutes,
       sourceKey: sourceKey // Optional

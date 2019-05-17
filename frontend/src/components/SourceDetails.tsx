@@ -34,7 +34,7 @@ const Actions = styled.div`
 
 type OwnProps = {
   sourceKey: string;
-  sourceLink?: SourceLink;
+  sourceLink: SourceLink;
   editable?: boolean;
 };
 
@@ -128,7 +128,9 @@ class SourceDetails extends React.Component<Props> {
         </Actions>
         <div>{source.pTitle || source.description}</div>
         {isLink ? (
-          <StyledSourceA href={source.fullUrl}>{source.ref}</StyledSourceA>
+          <StyledSourceA href={this.props.sourceLink.fullUrl || source.fullUrl}>
+            {source.ref}
+          </StyledSourceA>
         ) : (
           <strong>{source.ref}</strong>
         )}

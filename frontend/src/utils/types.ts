@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
 import { SimulationNodeDatum } from "d3-force";
+import validator from "validator";
 
 export enum EntityType {
   Human = 1,
@@ -208,13 +209,14 @@ export type Source = {
   ref: string;
   type: number;
   authors: string[];
-  fullUrl?: string; // Should be in SourceLink
   description: string;
   pAuthor?: string;
   pTitle?: string;
   pDescription?: string;
   rootDomain?: string;
   domain?: string;
+  // Only the first one linked, but it should be unused except for legacy support
+  fullUrl?: string;
 };
 
 export enum SourceType {
@@ -222,7 +224,23 @@ export enum SourceType {
   TextRef = 2
 }
 
+export function getRefType(fullRef: string) {
+  const isURL = validator.isURL(fullRef, {
+    protocols: ["http", "https", "ftp"],
+    require_tld: true,
+    require_protocol: false,
+    require_host: true,
+    require_valid_protocol: true,
+    allow_underscores: false,
+    allow_trailing_dot: false,
+    allow_protocol_relative_urls: false,
+    disallow_auth: false
+  });
+  return isURL ? SourceType.Link : SourceType.TextRef;
+}
+
 export type SourceLink = {
+  fullUrl: string; // Should be in SourceLink
   type: SourceLinkType;
   comments: Comment[];
   sourceKey?: string;
