@@ -1,6 +1,10 @@
 import { AnyAction } from "redux";
 import { SimulationNodeDatum } from "d3-force";
 
+export interface Dictionary<T> {
+  [key: string]: T;
+}
+
 export enum EntityType {
   Human = 1,
   MoralPerson = 2,
@@ -96,11 +100,16 @@ export enum Status {
   Error
 }
 
-export type DatasetId = "mfn" | "mfid";
+export enum DatasetId {
+  MediasFrancais = "mfid",
+  MediasFrancaisByName = "mfn",
+  Wikidata = "wd"
+}
 
 export type Entity = {
   _key?: string;
   name: string;
+  text?: string;
   type: EntityType;
   imageId?: string;
   linkWikipedia?: string;
@@ -109,7 +118,7 @@ export type Entity = {
   linkFacebook?: string;
   linkYoutube?: string;
   linkWebsite?: string;
-  ds?: { [key in DatasetId]: string };
+  ds?: { [key in DatasetId]?: string };
 };
 
 export type EntityPreview = {
@@ -131,7 +140,7 @@ export type Edge = {
   owned?: number;
   sources: SourceLink[];
   sourceText?: string;
-  ds?: { [key in DatasetId]: string };
+  ds?: { [key in DatasetId]?: string };
 };
 
 export type EdgePreview = {

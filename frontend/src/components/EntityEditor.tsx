@@ -19,6 +19,8 @@ import Meta from "./meta/Meta";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { shouldLoad } from "../utils/utils";
 import IconButton from "./buttons/IconButton";
+import { importWikidataGraph } from "../features/wikidataAC";
+import Input from "./inputs/Input";
 
 const Content = styled.div`
   display: block;
@@ -76,12 +78,17 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       loadEntity,
       postEntity,
       patchEntity,
-      clearPostRequest
+      clearPostRequest,
+      importWikidataGraph
     },
     dispatch
   );
 
 class EntityEditor extends React.Component<Props> {
+  readonly state = {
+    wikidataField: "Q22686"
+  };
+
   componentDidMount() {
     // If we're in "add new entity" mode and the inital entity isn't loaded:
     if (this.props.entityKey && shouldLoad(this.props.entityStatus))
@@ -103,6 +110,18 @@ class EntityEditor extends React.Component<Props> {
 
   onCancelClick = () => {
     if (this.props.onDone) this.props.onDone();
+  };
+
+  onImportWikidata = (e: React.FormEvent) => {
+    e.preventDefault();
+    this.props.importWikidataGraph(
+      this.state.wikidataField,
+      "wd_" + this.props.editorId
+    );
+  };
+
+  onWikidataFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ wikidataField: event.target.value });
   };
 
   render() {
@@ -137,6 +156,12 @@ class EntityEditor extends React.Component<Props> {
 
     return (
       <Content>
+        <form onSubmit={this.onImportWikidata}>
+          <Input
+            onChange={this.onWikidataFieldChange}
+            value={this.state.wikidataField}
+          />
+        </form>
         <EntityForm
           key={this.props.entityKey}
           initialEntity={this.props.entity}
