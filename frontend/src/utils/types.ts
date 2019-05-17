@@ -57,9 +57,9 @@ export enum FamilialLink {
   childOf = 1,
   siblingOf = 2,
   spouseOf = 3,
-  grandchildOf = 14,
+  // grandchildOf = 14,
   cousinOf = 15,
-  niblingOf = 16,
+  // niblingOf = 16,
   other = 100 // son-in-law, etc.
 }
 export const FamilialLinkValues: FamilialLink[] = Object.values(

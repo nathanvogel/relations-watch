@@ -32,8 +32,8 @@ export const FAMILIAL_LINK_STR: StringTypeRes = {
   [FamilialLink.childOf]: "is a child of",
   [FamilialLink.siblingOf]: "is a sibling of",
   [FamilialLink.spouseOf]: "is married with",
-  [FamilialLink.grandchildOf]: "is a grandchild of",
+  // [FamilialLink.grandchildOf]: "is a grandchild of",
   [FamilialLink.cousinOf]: "is a cousin of",
-  [FamilialLink.niblingOf]: "is a nibling of",
+  // [FamilialLink.niblingOf]: "is a nibling of",
   [FamilialLink.other]: "Other"
 };

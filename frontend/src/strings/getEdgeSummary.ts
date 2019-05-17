@@ -14,10 +14,10 @@ const regularMapping: { [key: number]: string } = {
 
 const familyMapping: { [key: number]: string } = {
   [FamilialLink.childOf]: R.relationType_f_child,
-  [FamilialLink.grandchildOf]: R.relationType_f_grandchild,
+  // [FamilialLink.grandchildOf]: R.relationType_f_grandchild,
   [FamilialLink.spouseOf]: R.relationType_f_married,
   [FamilialLink.cousinOf]: R.relationType_f_cousin,
-  [FamilialLink.niblingOf]: R.relationType_f_nibling,
+  // [FamilialLink.niblingOf]: R.relationType_f_nibling,
   [FamilialLink.siblingOf]: R.relationType_f_sibling,
   [FamilialLink.other]: R.relationType_f_other
 };
