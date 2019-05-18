@@ -133,7 +133,9 @@ class EdgeDetails extends React.Component<Props> {
         {edge.sources && edge.sources.length > 0 ? (
           edge.sources.map((sourceLink, index) => (
             <SourceDetails
-              key={sourceLink.sourceKey}
+              // Need the index because sourceLink doesn't have its own key
+              // and we can link the same source multiple times
+              key={sourceLink.sourceKey + index.toString()}
               sourceKey={sourceLink.sourceKey || "MISSING_SOURCE_KEY"}
               sourceLink={sourceLink}
             />

@@ -2,13 +2,7 @@ import React from "react";
 
 import api from "../../utils/api";
 import StyledAsyncCreatableSelect from "../select/StyledAsyncCreatableSelect";
-import { ReactSelectOption } from "../../utils/types";
-
-interface SourceSuggestion {
-  _key: string;
-  ref: string;
-  title: string;
-}
+import { SourceSelectOption, SourceSuggestion } from "../../utils/types";
 
 interface ReactSelectInputValue {
   inputValue: string;
@@ -23,13 +17,15 @@ const promiseAutocomplete = async (inputValue: string) => {
   });
   if (response.status === 200) {
     // Convert the API data to react-select format.
-    const suggestions: Array<ReactSelectOption> = [];
     const data = response.data as Array<SourceSuggestion>;
+    const suggestions: Array<SourceSelectOption> = [];
     for (var i = 0; i < data.length; i += 1) {
       suggestions.push({
         value: data[i]._key,
-        label: data[i].ref,
-        title: data[i].title
+        label: data[i].pTitle || data[i].ref,
+        ref: data[i].ref,
+        pTitle: data[i].pTitle,
+        fullUrl: data[i].fullUrl
       });
     }
     return suggestions;
@@ -41,7 +37,7 @@ const promiseAutocomplete = async (inputValue: string) => {
 };
 
 type Props = {
-  onChange?: (value: ReactSelectOption) => void;
+  onChange?: (value: SourceSelectOption) => void;
   onInputChange?: (value: string) => void;
   inputValue?: string;
   onCreateSource: (value: string) => void;
@@ -56,8 +52,15 @@ class SourceRefSearch extends React.Component<Props, object> {
 
   onInputChange = (text: any, a: any) => {
     const action: string = a.action;
-    if (action === "menu-close" || action === "input-blur") return;
-    else if (this.props.onInputChange) {
+    if (
+      action === "menu-close" ||
+      action === "input-blur" ||
+      action === "set-value"
+    )
+      return;
+    console.log("Text = ", text);
+    console.log(action);
+    if (this.props.onInputChange) {
       this.props.onInputChange(text);
     }
   };

@@ -128,10 +128,12 @@ router
       dbSearchTerm = getSimplifiedLink(searchTerm);
     }
 
+    // TODO: use KEEP() ?
     const entities = query`
       FOR source IN ${souColl}
-        FILTER source.ref LIKE ${"%" + dbSearchTerm + "%"}
-        RETURN {"ref": source.ref, "_key": source._key, "title": source.title }
+        FILTER source.pTitle LIKE ${"%" + dbSearchTerm + "%"}
+          OR source.ref LIKE ${"%" + dbSearchTerm + "%"}
+        RETURN {"ref": source.ref, "_key": source._key, "pTitle": source.pTitle, "fullUrl": source.fullUrl }
     `;
     res.send(entities);
   })

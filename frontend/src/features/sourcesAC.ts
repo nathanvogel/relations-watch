@@ -32,9 +32,6 @@ async function getUrlInfo(fullRef: string) {
   }
 }
 
-/**
- * Upload new entities to the database.
- */
 export const getSourceFromRef = (fullRef: string, requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
@@ -51,36 +48,39 @@ export const getSourceFromRef = (fullRef: string, requestId: string) => async (
   }
 
   dispatch(actionRefGetRequest(requestId));
-  return getUrlInfo(fullRef).then(async urlData => {
-    try {
-      const res = await api.get("/sources/ref", {
-        params: { fullRef: fullRef }
-      });
-      const potentialError = checkResponse(res);
-      if (potentialError) {
-        dispatch(actionRefGetError(requestId, potentialError));
-        return;
-      }
-      // Everything is fine, we got the data, send it!
-      const source =
-        isLink && urlData
-          ? Object.assign({}, res.data, {
-              pTitle: urlData.title,
-              pAuthor: urlData.author,
-              pDescription: urlData.description
-            })
-          : res.data;
-      dispatch(actionRefGetReceived(requestId, source));
-    } catch (error) {
-      const errorPayload = checkError(error);
-      console.error(
-        `Error trying to get a new source with ref ${fullRef}`,
-        requestId,
-        errorPayload
-      );
-      dispatch(actionRefGetError(requestId, errorPayload));
+  try {
+    const res = await api.get("/sources/ref", {
+      params: { fullRef: fullRef }
+    });
+    const potentialError = checkResponse(res);
+    if (potentialError) {
+      dispatch(actionRefGetError(requestId, potentialError));
+      return;
     }
-  });
+    const serverSource: Source = res.data;
+    if (serverSource._key) {
+      // The source exists already on the server, we can just reuse it.
+      dispatch(actionRefGetReceived(requestId, serverSource));
+    } else {
+      const urlData = await getUrlInfo(fullRef);
+      const newSource: Source = !urlData
+        ? serverSource
+        : Object.assign({}, serverSource, {
+            pTitle: urlData.title,
+            pAuthor: urlData.author,
+            pDescription: urlData.description
+          });
+      dispatch(actionRefGetReceived(requestId, newSource));
+    }
+  } catch (error) {
+    const errorPayload = checkError(error);
+    console.error(
+      `Error trying to get a new source with ref ${fullRef}`,
+      requestId,
+      errorPayload
+    );
+    dispatch(actionRefGetError(requestId, errorPayload));
+  }
 };
 
 export const clearGetSourceFromRefRequest = (requestId: string) => (

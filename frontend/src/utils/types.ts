@@ -268,6 +268,21 @@ export type AmountSelectOption = {
   label: string;
 };
 
+export type SourceSuggestion = {
+  _key: string;
+  ref: string;
+  pTitle?: string;
+  fullUrl?: string;
+};
+
+export type SourceSelectOption = {
+  value: string;
+  label: string;
+  ref: string;
+  pTitle?: string;
+  fullUrl?: string;
+};
+
 /**
  * Useful to generate key lists from JSON files
  * in order to get static (dynamic) Typescript autocomplete.
@@ -279,4 +294,13 @@ export function isEdge(element: Edge | Entity): element is Edge {
 }
 export function isEntity(element: Edge | Entity): element is Entity {
   return (<Edge>element)._from === undefined;
+}
+
+/**
+ * Possible states of the SourceSelector component.
+ */
+export enum SourceSelectorMode {
+  SourceSelected,
+  EditingRef,
+  EditingNewSource
 }

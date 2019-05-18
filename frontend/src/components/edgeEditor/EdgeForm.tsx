@@ -11,17 +11,17 @@ import {
   RelationTypeOption,
   EntityPreview,
   Entity,
-  RelationTypeRequirements,
   FamilialLink,
   FamilialLinkOption,
-  AmountSelectOption
+  AmountSelectOption,
+  SourceSelectOption,
+  SourceSelectorMode
 } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
 import SourceDetails from "../SourceDetails";
 import TextArea from "../inputs/TextArea";
 import Label from "../inputs/Label";
-import Input from "../inputs/Input";
 import StyledSelect from "../select/StyledSelect";
 import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
 import { ReactComponent as CloseIcon } from "../../assets/ic_close.svg";
@@ -101,8 +101,9 @@ type State = {
   ownedPercent: number | undefined;
   comment: string;
   sourceKey?: string;
-  fullUrl: string | undefined;
+  refUserInput: string | undefined;
   invertDirection: boolean;
+  sourceSelectorMode: SourceSelectorMode;
 };
 
 class EdgeForm extends React.Component<Props> {
@@ -128,13 +129,14 @@ class EdgeForm extends React.Component<Props> {
     ownedPercent: this.props.initialEdge.owned,
     comment: "",
     sourceKey: undefined,
-    fullUrl: undefined,
+    refUserInput: "",
+    sourceSelectorMode: SourceSelectorMode.EditingRef,
     invertDirection: this.props.entity1Key === this.props.initialEdge._to
   };
 
-  get hasSource() {
-    return this.state.sourceKey || this.props.sourceFormData;
-  }
+  // get hasSource() {
+  //   return this.state.sourceKey || this.props.sourceFormData;
+  // }
 
   get isNew() {
     return !Boolean(this.props.initialEdge._key);
@@ -205,13 +207,33 @@ class EdgeForm extends React.Component<Props> {
     this.setState({ comment: event.target.value });
   };
 
-  onSourceSelected = (sourceKey?: string, fullUserInput?: string) => {
+  onSourceRefChange = (value: string) => {
+    console.log("onSourceRefChange:", value);
+    this.setState({ refUserInput: value });
+  };
+
+  onSourceSelected = (option: SourceSelectOption) => {
+    console.log("Source selected: ", option);
+    console.log("onSourceRefChange selected:", option.value);
+    const sourceKey = option.value;
     this.setState({
       sourceKey,
-      fullUrl: fullUserInput ? fullUserInput.trim() : undefined
+      refUserInput: option.fullUrl,
+      sourceSelectorMode: SourceSelectorMode.SourceSelected
     });
     // One day, loadSources will handle not re-requesting sources.
     if (sourceKey) this.props.loadSources([sourceKey], true);
+  };
+
+  onSourceDeselected = () => {
+    this.setState({
+      sourceKey: undefined,
+      sourceSelectorMode: SourceSelectorMode.EditingRef
+    });
+  };
+
+  onSourceSelectorModeChange = (sourceSelectorMode: SourceSelectorMode) => {
+    this.setState({ sourceSelectorMode });
   };
 
   onRefutingSubmit = (event: React.MouseEvent) => {
@@ -246,22 +268,23 @@ class EdgeForm extends React.Component<Props> {
 
     // If we are updating an existing edge without adding a source,
     // no need to compute the sourceLink
-    if (!this.isNew && !this.hasSource) {
+    // if (!this.isNew && !this.hasSource) {
+    if (this.state.sourceSelectorMode === SourceSelectorMode.EditingRef) {
       this.props.onFormSubmit(edge);
-      return;
-    }
-
-    if (!this.state.fullUrl) {
-      console.log("Missing source URL. Can't submit edge");
       return;
     }
 
     // sourceKey is undefined if it's a new source. If so, the onFormSubmit
     // function should look for the sourceForm with the given sourceFormId
     // in the Redux store.
-    const { sourceKey, comment } = this.state;
+    const { sourceKey, comment, refUserInput } = this.state;
+    if (!refUserInput) {
+      console.error(
+        "Missing refUserInput! Can't have a full URL for the SourceLink"
+      );
+    }
     const sourceLink: SourceLink = {
-      fullUrl: this.state.fullUrl,
+      fullUrl: refUserInput ? refUserInput.trim() : "The full URL is missing.", // TODO: handle that better
       comments: comment ? [{ t: comment }] : [],
       type: confirms ? SourceLinkType.Confirms : SourceLinkType.Refutes,
       sourceKey: sourceKey // Optional
@@ -344,6 +367,8 @@ class EdgeForm extends React.Component<Props> {
     const requirements = this.getRequirements();
     const ownedPercent =
       this.state.ownedPercent === undefined ? 100 : this.state.ownedPercent;
+    const hasSource =
+      this.state.sourceSelectorMode !== SourceSelectorMode.EditingRef;
 
     return (
       <EditorContainer withButton>
@@ -436,10 +461,15 @@ class EdgeForm extends React.Component<Props> {
           <Label>Add a reference</Label>
           <SourceSelector
             sourceKey={this.state.sourceKey}
-            onSourceSelected={this.onSourceSelected}
             editorId={this.props.sourceEditorId}
+            onSourceSelected={this.onSourceSelected}
+            onSourceDeselected={this.onSourceDeselected}
+            refInputValue={this.state.refUserInput || ""}
+            refInputChange={this.onSourceRefChange}
+            mode={this.state.sourceSelectorMode}
+            changeMode={this.onSourceSelectorModeChange}
           />
-          {this.hasSource && (
+          {hasSource && (
             <React.Fragment>
               <Label htmlFor="sourceComment">
                 Comment what this source says (optional)
@@ -457,10 +487,10 @@ class EdgeForm extends React.Component<Props> {
                 Delete this relation element
               </ButtonWithConfirmation>
             )}
-            <IconButton disabled={this.isNew && !this.hasSource} type="submit">
+            <IconButton disabled={this.isNew && !hasSource} type="submit">
               Save
             </IconButton>
-            {this.hasSource && (
+            {hasSource && (
               <IconButton type="button" onClick={this.onRefutingSubmit}>
                 Save with refuting reference
               </IconButton>
@@ -471,7 +501,9 @@ class EdgeForm extends React.Component<Props> {
         {initialEdge.sources.length > 0 && <Label>Existing references</Label>}
         {initialEdge.sources.map((sourceLink, index) => (
           <SourceDetails
-            key={sourceLink.sourceKey}
+            // Need the index because sourceLink doesn't have its own key
+            // and we can link the same source multiple times
+            key={sourceLink.sourceKey + index.toString()}
             sourceKey={sourceLink.sourceKey as string}
             sourceLink={sourceLink}
             editable
