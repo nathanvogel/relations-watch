@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Edge, Status } from "../utils/types";
+import { Edge, Status, SourceLinkType } from "../utils/types";
 import EdgeEditor from "./EdgeEditor";
 import { RELATION_COLORS, TP } from "../styles/theme";
 import SourceDetails from "./SourceDetails";
@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import SourceListItemContainerCSS from "./sourceDetails/SourceListItemContainer";
 import IconButton from "./buttons/IconButton";
+import SourceList from "./edgeDetails/SourceList";
 
 const Content = styled.section`
   box-sizing: border-box;
@@ -130,21 +131,7 @@ class EdgeDetails extends React.Component<Props> {
         {edge.sourceText && (!edge.sources || edge.sources.length === 0) && (
           <div>Previous source: {edge.sourceText}</div>
         )}
-        {edge.sources && edge.sources.length > 0 ? (
-          edge.sources.map((sourceLink, index) => (
-            <SourceDetails
-              // Need the index because sourceLink doesn't have its own key
-              // and we can link the same source multiple times
-              key={sourceLink.sourceKey + index.toString()}
-              sourceKey={sourceLink.sourceKey || "MISSING_SOURCE_KEY"}
-              sourceLink={sourceLink}
-            />
-          ))
-        ) : (
-          <div>
-            <em>UNSOURCED INFORMATION</em>
-          </div>
-        )}
+        <SourceList sources={edge.sources} />
         <AddSourceButton onClick={this.onEditClick}>
           <EditIcon />
         </AddSourceButton>

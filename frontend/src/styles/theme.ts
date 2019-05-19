@@ -1,4 +1,5 @@
 import { RelationType } from "../utils/types";
+import baseStyled, { ThemedStyledInterface } from "styled-components";
 
 const theme = {
   mainFont: '"Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
@@ -18,6 +19,8 @@ const theme = {
   border: "#ededed",
   borderHover: "#8A879B",
   surfaceHover: "#B8B7BC",
+  confirmingTextColor: "#366936",
+  refutingTextColor: "#752F40",
   borderWidth: "2px",
   inputPaddingLR: "8px",
   inputPaddingTB: "4px",
@@ -40,7 +43,10 @@ export type AppTheme = typeof theme;
 
 /**
  * Theme Props for auto-complete of theme props.
+ * Source: https://github.com/styled-components/styled-components/issues/1589#issuecomment-435613664
  */
+export const styled = baseStyled as ThemedStyledInterface<AppTheme>;
+
 export type TP = {
   theme: AppTheme;
   [key: string]: any;
