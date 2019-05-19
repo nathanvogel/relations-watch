@@ -5,24 +5,18 @@ const db = require("@arangodb").db;
 // const errors = require("@arangodb").errors;
 const query = require("@arangodb").query;
 const validator = require("validator");
-const Url = require("url-parse");
+const UrlParse = require("url-parse");
 
 const apiFactory = require("../utils/apiFactory");
 const souSchema = require("../utils/schemas").souSchema;
 const getRootDomain = require("../utils/utils").getRootDomain;
 const CONST = require("../utils/const.js");
 const souColl = db._collection(CONST.souCollectionName);
+const { getSimplifiedLink } = require("../utils/refFromUrl");
 // const DOC_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
 
 const router = createRouter();
 module.exports = router;
-
-function getSimplifiedLink(fullUrl) {
-  var url = fullUrl.replace(/^https?:\/\//, "");
-  // TODO : remove hash
-  // TODO : remove useless YouTube query parameters, etc.
-  return url;
-}
 
 function getRefType(fullRef) {
   const isURL = validator.isURL(fullRef, {
@@ -164,10 +158,10 @@ router
     var ref = fullRef;
     var domain, rootDomain;
     if (isLink) {
-      ref = getSimplifiedLink(fullRef);
-      const url = new Url(fullRef);
-      domain = url.hostname;
+      const parsedUrl = new UrlParse(fullRef);
+      domain = parsedUrl.hostname;
       rootDomain = getRootDomain(domain);
+      ref = getSimplifiedLink(fullRef, parsedUrl, rootDomain);
     }
 
     const cursor = query`
@@ -184,11 +178,12 @@ router
     //   res.throw(500, "Multiple sources correspond to this ref.")
     // }
 
+    var fullUrl = isLink ? fullRef : null;
     // The ref doesn't already exist, so we generate a model for the user
     // to start with when creating the source.
     const newRef = {
       ref: ref,
-      fullUrl: isLink ? fullRef : null,
+      fullUrl: fullUrl,
       description: "",
       domain: domain,
       rootDomain: rootDomain,

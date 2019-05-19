@@ -98,7 +98,13 @@ class SourceForm extends React.Component<Props> {
         <TopRightButton type="button" onClick={this.props.onCancelClick}>
           <CloseIcon />
         </TopRightButton>
-        <strong>{formData.ref}</strong>
+        {isLink ? (
+          <a href={formData.fullUrl}>
+            <strong>{formData.ref}</strong>
+          </a>
+        ) : (
+          <strong>{formData.ref}</strong>
+        )}
         {!isLink && (
           <p>
             <em>
