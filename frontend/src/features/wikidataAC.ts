@@ -15,8 +15,8 @@ import {
   DatasetId,
   EntityTypeValues,
   Edge,
-  RelationType,
-  FamilialLink,
+  RelationType as RT,
+  FamilialLink as FL,
   SourceLinkType,
   isClaimSnakEntityValue
 } from "../utils/types";
@@ -174,38 +174,61 @@ function entityFromEntry(entry: WDEntity): Entity | null {
   };
 }
 
-function fatherEdgesFromEntry(
+type PropertyMapping = {
+  invert?: boolean;
+  type: RT;
+  fType?: FL;
+};
+const invert = true;
+const propertiesToEdgeType: Dictionary<PropertyMapping> = {
+  P22: { type: RT.Family, fType: FL.childOf }, // Father
+  P25: { type: RT.Family, fType: FL.childOf }, // Mother
+  P40: { type: RT.Family, fType: FL.childOf, invert }, // Child
+  P26: { type: RT.Family, fType: FL.spouseOf }, // Spouse
+  P3373: { type: RT.Family, fType: FL.siblingOf }, // Sibling
+  P1038: { type: RT.Family, fType: FL.other } // Relative
+};
+
+function familyEdges(
   entryId: string,
   claims: WDDictionary<wd.Claim[]>
 ): Dictionary<Edge> {
   const edges: Dictionary<Edge> = {};
-  if (!claims.P22) {
-    console.log("No father claims in ", claims);
-    return edges;
-  }
-  for (let claim of claims.P22) {
-    if (isClaimSnakEntityValue(claim.mainsnak.datavalue)) {
-      const edgeId = claim.id;
-      edges[edgeId] = {
-        type: RelationType.Family,
-        fType: FamilialLink.childOf,
-        text: "",
-        _from: entryId,
-        _to: claim.mainsnak.datavalue.value.id,
-        ds: {
-          [DatasetId.Wikidata]: edgeId
-        },
-        sources: [
-          {
-            fullUrl: wd.getSitelinkUrl("wikidata", entryId),
-            sourceKey: CONSTS.WIKIDATA_SOURCE_KEY,
-            comments: [],
-            type: SourceLinkType.Confirms
-          }
-        ]
-      };
-    } else {
-      console.log("Missing claim value", claim);
+  for (let propertyId in propertiesToEdgeType) {
+    // Check if we have a property of this type
+    if (!claims.hasOwnProperty(propertyId)) {
+      console.log("No " + propertyId + " claims");
+      continue;
+    }
+    // We do! So we can select the appropriate mapping
+    const mapping = propertiesToEdgeType[propertyId];
+    // There might be multiple claims, pointing to different entities (or not)
+    // -> Convert them all!
+    for (let claim of claims[propertyId]) {
+      if (isClaimSnakEntityValue(claim.mainsnak.datavalue)) {
+        const edgeId = claim.id;
+        const entryId2 = claim.mainsnak.datavalue.value.id;
+        edges[edgeId] = {
+          type: mapping.type,
+          fType: mapping.fType,
+          text: "",
+          _from: invert ? entryId2 : entryId,
+          _to: invert ? entryId : entryId2,
+          ds: {
+            [DatasetId.Wikidata]: edgeId
+          },
+          sources: [
+            {
+              fullUrl: wd.getSitelinkUrl("wikidata", entryId),
+              sourceKey: CONSTS.WIKIDATA_SOURCE_KEY,
+              comments: [],
+              type: SourceLinkType.Confirms
+            }
+          ]
+        };
+      } else {
+        console.log("Missing claim value", claim);
+      }
     }
   }
   return edges;
@@ -217,7 +240,7 @@ function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
     console.log("No claims to search edges in ", entry.id);
     return edges;
   }
-  Object.assign(edges, fatherEdgesFromEntry(entry.id, entry.claims));
+  Object.assign(edges, familyEdges(entry.id, entry.claims));
   return edges;
 }
 
