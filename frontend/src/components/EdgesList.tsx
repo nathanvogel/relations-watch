@@ -25,9 +25,11 @@ class RelationEdgesList extends React.Component<OwnProps> {
 
     return (
       <Content>
-        {relations.map(relation => (
-          <EdgeDetails key={relation._key} edge={relation} />
-        ))}
+        {relations
+          .sort((a, b) => parseInt(b._key || "0") - parseInt(a._key || "0"))
+          .map(relation => (
+            <EdgeDetails key={relation._key} edge={relation} />
+          ))}
       </Content>
     );
   }
