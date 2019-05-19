@@ -494,6 +494,7 @@ class EdgeForm extends React.Component<Props> {
             )}
           </ButtonBar>
         </Form>
+        {this.props.children}
         {initialEdge.sources.length > 0 && <br />}
         {initialEdge.sources.length > 0 && <Label>Existing references</Label>}
         {initialEdge.sources.map((sourceLink, index) => (

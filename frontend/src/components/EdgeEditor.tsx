@@ -100,6 +100,12 @@ class EdgeEditor extends React.Component<Props> {
       this.props.loadEdge(this.props.edgeKey);
   }
 
+  componentDidUpdate() {
+    if (this.props.postStatus === Status.Ok) {
+      this.clearPostRequest();
+    }
+  }
+
   onFormSubmit = (edge: Edge, sourceLink?: SourceLink) => {
     this.props.saveEdge(
       this.props.editorId,
@@ -115,9 +121,9 @@ class EdgeEditor extends React.Component<Props> {
     else console.warn("Can't delete an edge that doesn't exist yet");
   };
 
-  clearPostRequest = (doDismiss: boolean) => {
+  clearPostRequest = () => {
     this.props.clearPostRequest(this.props.editorId);
-    if (doDismiss && this.props.dismiss) this.props.dismiss();
+    this.props.dismiss();
   };
 
   render() {
@@ -132,43 +138,30 @@ class EdgeEditor extends React.Component<Props> {
     if (!entity1) return <Meta status={entity1Status} />;
     if (!entity2) return <Meta status={entity2Status} />;
 
-    // Render loading status and error.
-    if (postStatus === Status.Ok) {
-      // If we're successfully editing an edge, no need to show the confirmation
-      // TODO : Change, this is NOT a good React practice at all...
-      if (edgeKey) {
-        this.clearPostRequest(true);
-        return null;
-      }
-      // If we're adding an edge: show a confirmation + offer back/new choice
-      return (
-        <p>
-          Saved!{" "}
-          <IconButton onClick={this.clearPostRequest.bind(this, true)}>
-            Ok
-          </IconButton>
-        </p>
-      );
-    }
-
     return (
       <React.Fragment>
-        <EdgeForm
-          entity1Key={entity1Key}
-          entity2Key={entity2Key}
-          entity1={entity1}
-          entity2={entity2}
-          key={edgeKey}
-          initialEdge={edge}
-          onFormSubmit={this.onFormSubmit}
-          onFormCancel={this.props.dismiss}
-          onDelete={this.onDelete}
-          disabled={postStatus === Status.Requested}
-          sourceEditorId={this.props.sourceEditorId}
-          loadSources={this.props.loadSources}
-          sourceFormData={this.props.sourceFormData}
+        {postStatus !== Status.Ok && (
+          <EdgeForm
+            entity1Key={entity1Key}
+            entity2Key={entity2Key}
+            entity1={entity1}
+            entity2={entity2}
+            key={edgeKey}
+            initialEdge={edge}
+            onFormSubmit={this.onFormSubmit}
+            onFormCancel={this.props.dismiss}
+            onDelete={this.onDelete}
+            disabled={postStatus === Status.Requested}
+            sourceEditorId={this.props.sourceEditorId}
+            loadSources={this.props.loadSources}
+            sourceFormData={this.props.sourceFormData}
+          />
+        )}
+        <MetaPostStatus
+          status={postStatus}
+          error={postError}
+          clearRequest={this.clearPostRequest}
         />
-        <MetaPostStatus status={postStatus} error={postError} />
       </React.Fragment>
     );
   }

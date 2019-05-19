@@ -25,6 +25,12 @@ export default function MetaPostStatus(props: Props) {
           {clearRequest && <IconButton onClick={clearRequest}>Ok</IconButton>}
         </React.Fragment>
       )}
+      {status === Status.Ok && (
+        <React.Fragment>
+          <p className={props.className}>Successfully saved!</p>
+          {clearRequest && <IconButton onClick={clearRequest}>Ok</IconButton>}
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 }
