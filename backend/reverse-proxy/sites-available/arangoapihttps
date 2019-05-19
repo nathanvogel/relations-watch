@@ -52,7 +52,7 @@ server {
 		allow all;
 		proxy_pass http://127.0.0.1:8529/_db;
 		# Allow big file transfers, notably to upload Foxx services
-		client_max_body_size 20m;
+		client_max_body_size 50m;
 	}
 
 	# Quick test endpoint
