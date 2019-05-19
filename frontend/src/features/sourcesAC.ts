@@ -40,7 +40,7 @@ export const getSourceFromRef = (fullRef: string, requestId: string) => async (
     dispatch(
       actionRefGetError(requestId, {
         eData: {},
-        eMessage: "The reference needs to be a link.",
+        eMessage: "The reference needs to be a link (with https://).",
         eStatus: ERROR_CODES.NOT_A_LINK
       })
     );

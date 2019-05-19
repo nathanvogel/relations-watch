@@ -28,7 +28,7 @@ function getRefType(fullRef) {
   const isURL = validator.isURL(fullRef, {
     protocols: ["http", "https", "ftp"],
     require_tld: true,
-    require_protocol: false,
+    require_protocol: true,
     require_host: true,
     require_valid_protocol: true,
     allow_underscores: false,
