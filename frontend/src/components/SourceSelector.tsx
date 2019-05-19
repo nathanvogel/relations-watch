@@ -84,7 +84,6 @@ type Props = ReturnType<typeof mapStateToProps> &
  */
 class SourceSelector extends React.Component<Props> {
   onCreateSource = (value: string) => {
-    console.log("Creating source");
     this.props.getSourceFromRef(value, this.props.refEditorId);
     // Now we wait for the server response about this ref.
     // this.props.changeMode(SourceSelectorMode.EditingNewSource);

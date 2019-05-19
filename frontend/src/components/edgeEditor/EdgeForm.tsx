@@ -208,13 +208,10 @@ class EdgeForm extends React.Component<Props> {
   };
 
   onSourceRefChange = (value: string) => {
-    console.log("onSourceRefChange:", value);
     this.setState({ refUserInput: value });
   };
 
   onSourceSelected = (option: SourceSelectOption) => {
-    console.log("Source selected: ", option);
-    console.log("onSourceRefChange selected:", option.value);
     const sourceKey = option.value;
     this.setState({
       sourceKey,
@@ -280,11 +277,11 @@ class EdgeForm extends React.Component<Props> {
     const { sourceKey, comment, refUserInput } = this.state;
     if (!refUserInput) {
       console.error(
-        "Missing refUserInput! Can't have a full URL for the SourceLink"
+        "Missing refUserInput! Couldn't get a full URL for the SourceLink"
       );
     }
     const sourceLink: SourceLink = {
-      fullUrl: refUserInput ? refUserInput.trim() : "The full URL is missing.", // TODO: handle that better
+      fullUrl: refUserInput ? refUserInput.trim() : "", // TODO: handle that better
       comments: comment ? [{ t: comment }] : [],
       type: confirms ? SourceLinkType.Confirms : SourceLinkType.Refutes,
       sourceKey: sourceKey // Optional

@@ -24,5 +24,9 @@
   "faq_data_a": "Sur ce prototype, n'importe qui peut ajouter et éditer les données du site. Certaines bases de données pourront venir en renfort (Wikidata, LittleSis, etc.), mais pour l'instant seul <0>la petite base de données</0> du Monde diplomatique sur les Médias Français a été importée.",
   "faq_about_q": "À propos de ce projet",
   "faq_about_a": "En réponse à l'urgence environnementale et l'érosion des démocraties, ce projet offre un droit de regard sur les conflits d'intérêts. C'est un outil pour permettre à chacun de mieux comprendre une personne ou une entreprise en ayant un aperçu rapide de ses dépendances financières, idéologiques, hiérarchiques, etc.",
-  "slogan": "La démocratie vit d'information."
+  "slogan": "La démocratie vit d'information.",
+  "label_select_add": "Ajouter {{userInput}}",
+  "label_no_element_found": "Aucun élément trouvé",
+  "placeholder_search": "Recherche...",
+  "placeholder_add_reference": "http://... (Collez un lien ou recherchez une de vos sources)"
 }
