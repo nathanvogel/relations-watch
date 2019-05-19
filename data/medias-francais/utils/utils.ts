@@ -25,15 +25,15 @@ export function getKeyObject<T, P extends Extract<keyof T, string>>(
 export function getElementDatasetId(
   element: DatasetObject,
   datasetId: DatasetId
-) {
+): DatasetId {
   // Make sure we have access to the element ID in this dataset.
   if (!element.ds || !element.ds[datasetId])
-    throw new Error("The dataset loader didn't include the proper origin ID.");
-  return element.ds[datasetId];
+    throw new Error("The dataset loader didn't include the .ds object.");
+  return element.ds[datasetId] as DatasetId;
 }
 
 interface DatasetObject {
-  ds?: { [key in DatasetId]: string };
+  ds?: { [key in DatasetId]?: string };
 }
 
 export function getDsKeyObject<T extends DatasetObject>(

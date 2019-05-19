@@ -47,7 +47,7 @@ async function getElementUpdates<T extends Edge | Entity>(
     const elDatasetId = getElementDatasetId(element, datasetId);
     // Check if we already have put/linked this element in the database.
     const cursor = await getByDatasetId(coll, datasetId, elDatasetId, true);
-    var logIdentifier = elDatasetId;
+    var logIdentifier: string = elDatasetId;
     if (isEntity(element)) logIdentifier = element.name;
     // There should be maximum 1 such element.
     if (cursor.count > 1) {
@@ -197,7 +197,10 @@ const updateMediasFrancais = async () => {
     // entities already exists in the database.
     // PS: This could potentially be a separate tool.
     console.log("🔍🔍🔍 Searching similar entities:");
-    const entitiesToPatch = await findSimilarEntities(dataset, "mfid");
+    const entitiesToPatch = await findSimilarEntities(
+      dataset,
+      DatasetId.MediasFrancais
+    );
     console.log("==== Entities to LINK: ====");
     console.log(entitiesToPatch);
     if (entitiesToPatch.length > 0) {
@@ -211,7 +214,7 @@ const updateMediasFrancais = async () => {
 
     const entUpdates = await getElementUpdates(
       dataset,
-      "mfid",
+      DatasetId.MediasFrancais,
       entColl,
       ENT_OVERRIDING_PROPS,
       ENT_UNCHANGEABLE_PROPS
@@ -246,9 +249,9 @@ const updateMediasFrancais = async () => {
     // existing entities, so no need to put them in allEntities
     const allEntities = Object.assign(
       {},
-      getDsKeyObject(entUpdates.existingElements, "mfid"),
-      getDsKeyObject(postedEntities, "mfid"),
-      getDsKeyObject(patchedEntities, "mfid")
+      getDsKeyObject(entUpdates.existingElements, DatasetId.MediasFrancais),
+      getDsKeyObject(postedEntities, DatasetId.MediasFrancais),
+      getDsKeyObject(patchedEntities, DatasetId.MediasFrancais)
     );
     const entitiesCount = Object.keys(allEntities).length;
     console.log(`===== Done importing ${entitiesCount} entities =====`);
@@ -260,7 +263,7 @@ const updateMediasFrancais = async () => {
     // On to the same process, but with edges!
     const relUpdates = await getElementUpdates(
       edgeDataset,
-      "mfid",
+      DatasetId.MediasFrancais,
       relColl,
       REL_OVERRIDING_PROPS,
       REL_UNCHANGEABLE_PROPS

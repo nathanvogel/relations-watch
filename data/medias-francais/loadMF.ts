@@ -9,6 +9,7 @@ import {
 } from "./utils/types";
 import C from "./utils/constants";
 
+const MF_SOURCE_URL = "https://www.monde-diplomatique.fr/cartes/PPA";
 const MF_SOURCE_KEY = C.DEV ? "1179508" : "1179508";
 const FILENAME_ENTITIES = "Medias_francais/medias_francais.tsv";
 const FILENAME_RELATIONS = "Medias_francais/relations_medias_francais.tsv";
@@ -181,7 +182,12 @@ function recordToEdge(record: EdgeRecord, dbEntities: EntityList): Edge | null {
     // amount: -1,
     // exactAmount: false,
     sources: [
-      { type: SourceLinkType.Confirms, comments: [], sourceKey: MF_SOURCE_KEY }
+      {
+        fullUrl: MF_SOURCE_URL,
+        type: SourceLinkType.Confirms,
+        comments: [],
+        sourceKey: MF_SOURCE_KEY
+      }
     ],
     ds: {
       mfid: edgeMfid,
