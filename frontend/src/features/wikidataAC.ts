@@ -243,19 +243,29 @@ function checkWDEntityData(data: WDResponseData) {
   return data.entities;
 }
 
-async function getWikidataGraph(entryPoint: string, depth: 3) {
+/**
+ * Fetch a list of entries and put the entities and edges that could be
+ * converted from it in the given object under their respective ID.
+ * This mutates dsEntities and dsEdges.
+ * @param  entryIds   [description]
+ * @param  dsEntities [description]
+ * @param  dsEdges    [description]
+ * @return            [description]
+ */
+async function getElementsFromWikidataEntries(
+  entryIds: string[],
+  dsEntities: Dictionary<Entity>,
+  dsEdges: Dictionary<Edge>
+) {
   const url = wd.getEntities(
-    entryPoint,
+    entryIds,
     WD_PARAMS.languages,
     WD_PARAMS.props,
     "json"
   );
   const wdEntities = checkWDEntityData(checkWDResponse(await axios.get(url)));
-  // console.log("Response data:", wdEntities);
 
   // Convert the results to our format
-  const dsEntities: Dictionary<Entity> = {};
-  const dsEdges: Dictionary<Edge> = {};
   if (wdEntities) {
     for (let wdId in wdEntities) {
       const entity = entityFromEntry(wdEntities[wdId]);
@@ -265,6 +275,36 @@ async function getWikidataGraph(entryPoint: string, depth: 3) {
       } else console.log("Failed to convert Entry " + wdId);
     }
   }
+}
+
+/**
+ * Tries to find relations and people up to the (depth) degree
+ * @param  entryPoint [description]
+ * @param  depth      [description]
+ * @return            [description]
+ */
+async function getWikidataGraph(entryPoint: string, depth: number) {
+  const dsEntities: Dictionary<Entity> = {};
+  const dsEdges: Dictionary<Edge> = {};
+  var entriesToQuery: string[] = [entryPoint];
+  for (let i = 0; i < depth && entriesToQuery.length > 0; i += 1) {
+    await getElementsFromWikidataEntries(entriesToQuery, dsEntities, dsEdges);
+    // Select the next entities that will need to be queried.
+    entriesToQuery = [];
+    for (let edgeId in dsEdges) {
+      let potentialId1 = dsEdges[edgeId]._to;
+      let potentialId2 = dsEdges[edgeId]._from;
+      if (!dsEntities.hasOwnProperty(potentialId1))
+        entriesToQuery.push(potentialId1);
+      if (!dsEntities.hasOwnProperty(potentialId2))
+        entriesToQuery.push(potentialId2);
+      entriesToQuery = arrayWithoutDuplicates(entriesToQuery);
+    }
+  }
+  console.log(
+    "Arrived at maximum depth. Will not query those elements any further: ",
+    entriesToQuery
+  );
 
   // Send it back
   console.log("Found entities: ", dsEntities);
