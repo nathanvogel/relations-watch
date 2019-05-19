@@ -1,6 +1,7 @@
 import { AnyAction } from "redux";
 import { SimulationNodeDatum } from "d3-force";
 import validator from "validator";
+import { ClaimSnakEntityValue, ClaimSnakValue } from "wikidata-sdk";
 
 export interface Dictionary<T> {
   [key: string]: T;
@@ -312,4 +313,26 @@ export enum SourceSelectorMode {
   SourceSelected,
   EditingRef,
   EditingNewSource
+}
+
+/**
+ * Manually checks if a datavalue returned by Wikidata corresponds to a
+ * wd.Entity ID.
+ * @param  datavalue The datavalue to check
+ * @return           true if the datavalue corresponds to an wd.Entity ID.
+ */
+export function isClaimSnakEntityValue(
+  datavalue: unknown
+): datavalue is ClaimSnakEntityValue {
+  return isClaimSnakValue(datavalue) && datavalue.type === "wikibase-entityid";
+}
+
+export function isClaimSnakValue(
+  datavalue: unknown
+): datavalue is ClaimSnakValue {
+  return (
+    datavalue &&
+    typeof datavalue === "object" &&
+    typeof (datavalue as any).type === "string"
+  );
 }

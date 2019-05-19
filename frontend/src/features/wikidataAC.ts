@@ -14,15 +14,17 @@ import {
   EntityType,
   DatasetId,
   EntityTypeValues,
-  Edge
-  RelationType
-  FamilialLink,,
+  Edge,
+  RelationType,
+  FamilialLink,
+  SourceLinkType,
+  isClaimSnakEntityValue
 } from "../utils/types";
 import CONSTS from "../utils/consts";
 import { RootStore } from "../Store";
 import { arrayWithoutDuplicates } from "../utils/utils";
 import { loadEntities } from "./entitiesLoadAC";
-import wd, { Property, Entity as WDEntity, Claim } from "wikidata-sdk";
+import wd, { Property, Entity as WDEntity } from "wikidata-sdk";
 import { Dictionary as WDDictionary } from "wikidata-sdk/types/helper";
 
 // const wikidata = axios.create({
@@ -172,38 +174,52 @@ function entityFromEntry(entry: WDEntity): Entity | null {
   };
 }
 
-function fatherEdgesFromEntry(entryId: string, claims:WDDictionary<wd.Claim[]>): Dictionary<Edge>  {
-  const edges:Dictionary<Edge> = {};
-  if (!claims.P22) return edges;
-  for (let claim of claims.P22) {
-    if (!claim.mainsnak.datavalue || typeof claim.mainsnak.datavalue.value !== "string") {console.log("Missing claim value");continue;}
-    const edgeId = claim.id;
-    edges[edgeId] = {
-      type: RelationType.Family, 
-      fType: FamilialLink.childOf,
-      text:"",
-      _from: entryId,
-      _to: claim.mainsnak.datavalue.value,
-      ds: {
-        [DatasetId.Wikidata]: edgeId
-      },
-      sources: [{
-        fullUrl: 
-      }]
-    }
-  }
-}
-
-function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
-  const edges:Dictionary<Edge> = {};
-  if (!entry.claims) {
-    console.log("No claims to search edges in ", entry.id)
+function fatherEdgesFromEntry(
+  entryId: string,
+  claims: WDDictionary<wd.Claim[]>
+): Dictionary<Edge> {
+  const edges: Dictionary<Edge> = {};
+  if (!claims.P22) {
+    console.log("No father claims in ", claims);
     return edges;
   }
-  Object.assign(edges, fatherEdgesFromEntry(entry.id, entry.claims))
+  for (let claim of claims.P22) {
+    if (isClaimSnakEntityValue(claim.mainsnak.datavalue)) {
+      const edgeId = claim.id;
+      edges[edgeId] = {
+        type: RelationType.Family,
+        fType: FamilialLink.childOf,
+        text: "",
+        _from: entryId,
+        _to: claim.mainsnak.datavalue.value.id,
+        ds: {
+          [DatasetId.Wikidata]: edgeId
+        },
+        sources: [
+          {
+            fullUrl: wd.getSitelinkUrl("wikidata", entryId),
+            sourceKey: CONSTS.WIKIDATA_SOURCE_KEY,
+            comments: [],
+            type: SourceLinkType.Confirms
+          }
+        ]
+      };
+    } else {
+      console.log("Missing claim value", claim);
+    }
+  }
   return edges;
 }
 
+function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
+  const edges: Dictionary<Edge> = {};
+  if (!entry.claims) {
+    console.log("No claims to search edges in ", entry.id);
+    return edges;
+  }
+  Object.assign(edges, fatherEdgesFromEntry(entry.id, entry.claims));
+  return edges;
+}
 
 function checkWDResponse(response: AxiosResponse) {
   if (response.status !== 200) {
@@ -243,13 +259,16 @@ async function getWikidataGraph(entryPoint: string, depth: 3) {
   if (wdEntities) {
     for (let wdId in wdEntities) {
       const entity = entityFromEntry(wdEntities[wdId]);
-      if (entity) dsEntities[wdId] = entity;
-      else console.log("Failed to convert Entry " + wdId);
+      if (entity) {
+        dsEntities[wdId] = entity;
+        Object.assign(dsEdges, edgesFromEntry(wdEntities[wdId]));
+      } else console.log("Failed to convert Entry " + wdId);
     }
   }
 
   // Send it back
-  console.log("Found entities: ", dsEntities); 
+  console.log("Found entities: ", dsEntities);
+  console.log("Found edges: ", dsEdges);
   return { dsEntities, dsEdges };
 }
 

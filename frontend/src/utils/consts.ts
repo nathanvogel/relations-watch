@@ -145,6 +145,7 @@ const CONSTS = {
   relCollectionName: "relations",
   entCollectionName: "entities",
   EMPTY_KEY: "_",
+  WIKIDATA_SOURCE_KEY: "1379121",
   AMOUNT_UNKNOWN,
   AMOUNT_DO_ENTER,
   ERROR_CODES
