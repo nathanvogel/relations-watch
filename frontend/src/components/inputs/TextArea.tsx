@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { TP } from "../../styles/theme";
 import { cssInput } from "./Input";
 
 const TextArea = styled.textarea`
@@ -7,7 +6,7 @@ const TextArea = styled.textarea`
 
   display: block;
   width: 100%;
-  min-height: ${(props: TP) => props.theme.longFieldHeight};
+  min-height: ${props => props.theme.longFieldHeight};
 `;
 
 // const TextArea: React.FunctionComponent<

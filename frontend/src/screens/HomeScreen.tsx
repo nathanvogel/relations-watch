@@ -6,7 +6,6 @@ import { useTranslation, Trans } from "react-i18next";
 import EntitySearch from "../components/EntitySearch";
 import ROUTES from "../utils/ROUTES";
 import { ReactSelectOption } from "../utils/types";
-import { TP } from "../styles/theme";
 import R from "../strings/R";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 
@@ -15,7 +14,7 @@ const Content = styled.main`
   ${PagePadder}
 
   display: flex;
-  min-height: calc(100vh - ${(props: TP) => props.theme.navBarHeight});
+  min-height: calc(100vh - ${props => props.theme.navBarHeight});
   flex-direction: column;
 `;
 
@@ -41,7 +40,7 @@ const CentralSearch = styled(EntitySearch)`
   margin-bottom: 12vh;
 
   .rs__control {
-    padding: 4px ${(props: TP) => props.theme.inputPaddingLR};
+    padding: 4px ${props => props.theme.inputPaddingLR};
   }
 `;
 

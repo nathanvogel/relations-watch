@@ -35,6 +35,7 @@ const sourceLinkSchema = joi
       .number()
       .integer()
       .required(),
+    fullUrl: joi.string(),
     sourceKey: joi.string(),
     comments: joi.array().items(commentSchema.optional())
   });

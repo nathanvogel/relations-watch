@@ -142,6 +142,7 @@ export const saveEdge = (
       } else {
         dispatch(actionEdgeSaveSuccess(requestId, res.data));
       }
+      // dispatch(actionClearSaveRequest(requestId));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);

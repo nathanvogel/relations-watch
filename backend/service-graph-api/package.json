@@ -4,15 +4,25 @@
   "main": "index.js",
   "author": "Nathan Vogel",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "@types/arangodb": "^3.4.9",
+    "@types/jest": "^24.0.13",
     "@types/joi": "^14.3.2",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-jest": "^22.5.1",
     "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^24.8.0",
     "prettier": "^1.16.4"
   },
   "dependencies": {
+    "@types/url-parse": "^1.4.3",
     "@types/validator": "^10.11.0",
     "immutability-helper": "^3.0.0",
     "url-parse": "^1.4.6",

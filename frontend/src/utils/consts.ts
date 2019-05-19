@@ -137,7 +137,8 @@ export const unkownAmountOption = AmountOptions[0];
 
 export const ERROR_CODES = {
   MISSING_SOURCE_FORM: "MISSING_SOURCE_FORM",
-  MISSING_SOURCE_LINK: "MISSING_SOURCE_LINK"
+  MISSING_SOURCE_LINK: "MISSING_SOURCE_LINK",
+  NOT_A_LINK: "NOT_A_LINK"
 };
 
 const CONSTS = {

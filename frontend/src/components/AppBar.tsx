@@ -4,7 +4,6 @@ import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 
 import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
-import { TP } from "../styles/theme";
 import { ReactSelectOption } from "../utils/types";
 import IconButton from "./buttons/IconButton";
 import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
@@ -12,31 +11,31 @@ import { ReactComponent as AppIcon } from "../assets/ic_app.svg";
 
 const Bar = styled.nav`
   display: block;
-  height: ${(props: TP) => props.theme.navBarHeight};
-  background: #eee;
+  height: ${props => props.theme.navBarHeight};
+  background: ${props => props.theme.lightBG};
 `;
 
 const BarContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: ${(props: TP) => props.theme.navBarHeight};
-  padding-left: ${(props: TP) => props.theme.appPaddingLR};
-  padding-right: ${(props: TP) => props.theme.appPaddingLR};
+  height: ${props => props.theme.navBarHeight};
+  padding-left: ${props => props.theme.appPaddingLR};
+  padding-right: ${props => props.theme.appPaddingLR};
 `;
 
 const StyledAppIcon = styled(AppIcon)`
-  height: calc(${(props: TP) => props.theme.navBarHeight} - 6px);
-  width: calc(${(props: TP) => props.theme.navBarHeight} - 6px);
+  height: calc(${props => props.theme.navBarHeight} - 6px);
+  width: calc(${props => props.theme.navBarHeight} - 6px);
   // width: 100%;
   // max-height: 100%;
 `;
 
 const AppBarButton = styled(IconButton)`
-  height: calc(${(props: TP) => props.theme.navBarHeight} - 4px);
+  height: calc(${props => props.theme.navBarHeight} - 4px);
   max-height: 100%;
-  margin-left: ${(props: TP) => props.theme.marginLR};
-  margin-right: ${(props: TP) => props.theme.marginLR};
+  margin-left: ${props => props.theme.marginLR};
+  margin-right: ${props => props.theme.marginLR};
 `;
 
 const HomeLink = styled(Link)`
@@ -47,13 +46,13 @@ const HomeLink = styled(Link)`
   &:active,
   &:visited {
     text-decoration: none;
-    color: ${(props: TP) => props.theme.mainTextColor};
+    color: ${props => props.theme.mainTextColor};
   }
   &:hover {
     text-decoration: none;
     opacity: 0.7;
   }
-  font-size: ${(props: TP) => props.theme.fontSizeL};
+  font-size: ${props => props.theme.fontSizeL};
 `;
 
 const StyledSearch = styled(EntitySearch)`
@@ -61,8 +60,8 @@ const StyledSearch = styled(EntitySearch)`
   & > .rs__control {
     height: 100%;
   }
-  margin-left: ${(props: TP) => props.theme.marginLR};
-  margin-right: ${(props: TP) => props.theme.marginLR};
+  margin-left: ${props => props.theme.marginLR};
+  margin-right: ${props => props.theme.marginLR};
   padding-top: 2px;
   padding-bottom: 2px;
   height: 100%;

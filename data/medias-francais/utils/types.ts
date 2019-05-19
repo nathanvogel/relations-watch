@@ -90,13 +90,14 @@ export type Source = {
   ref: string;
   type: number;
   authors: string[];
-  fullUrl?: string; // Should be in SourceLink
   description: string;
   pAuthor?: string;
   pTitle?: string;
   pDescription?: string;
   rootDomain?: string;
   domain?: string;
+  // Only the first one linked, but it should be unused except for legacy support
+  fullUrl?: string;
 };
 
 export enum SourceType {
@@ -105,6 +106,7 @@ export enum SourceType {
 }
 
 export type SourceLink = {
+  fullUrl: string; // Should be in SourceLink
   type: SourceLinkType;
   comments: Comment[];
   sourceKey?: string;

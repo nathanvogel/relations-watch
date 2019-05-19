@@ -1,10 +1,11 @@
 import { RelationType } from "../utils/types";
+import { DefaultTheme } from "styled-components";
 
-const theme = {
+const theme: DefaultTheme = {
   mainFont: '"Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   fontSizeS: "13px",
   fontSizeM: "18px",
-  fontSizeL: "24px",
+  fontSizeL: "25px",
   mainTextColor: "rgb(0, 0, 0, 0.84)" /* Stolen from Medium */,
   lightTextColor: "#ffffff",
   linkTextColor: "#0077CC", // Stackoverflow
@@ -18,6 +19,9 @@ const theme = {
   border: "#ededed",
   borderHover: "#8A879B",
   surfaceHover: "#B8B7BC",
+  confirmingTextColor: "#366936",
+  refutingTextColor: "#752F40",
+  refutingBackgroundColor: "#F3DFD7",
   borderWidth: "2px",
   inputPaddingLR: "8px",
   inputPaddingTB: "4px",
@@ -29,21 +33,11 @@ const theme = {
   blockPadding: "12px",
   blockSpacingTB: "20px",
   navBarHeight: "54px",
-  appMaxWidth: "1280px",
+  appMaxWidth: "1024px",
   appPaddingLR: "24px",
   appPaddingTB: "12px",
   longFieldHeight: "3em",
   radius: "4px"
-};
-
-export type AppTheme = typeof theme;
-
-/**
- * Theme Props for auto-complete of theme props.
- */
-export type TP = {
-  theme: AppTheme;
-  [key: string]: any;
 };
 
 export const RELATION_COLORS = {

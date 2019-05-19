@@ -7,14 +7,13 @@ import { RootStore } from "../../Store";
 import ROUTES from "../../utils/ROUTES";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import { getEntitySAsset } from "../../assets/EntityIcons";
-import { TP } from "../../styles/theme";
 
 const Content = styled.span`
   display: flex;
   align-items: center;
   flex-direction: row;
 
-  font-size: ${(props: TP) => props.theme.fontSizeS};
+  font-size: ${props => props.theme.fontSizeS};
   // font-weight: bold;
   margin: 3px;
   padding: 3px;
@@ -23,13 +22,13 @@ const Content = styled.span`
   border-radius: 2px;
 
   background-color: #fff;
-  // color: ${(props: TP) => props.theme.lightTextColor};
+  // color: ${props => props.theme.lightTextColor};
   // background-color: #245;
   // border-style: solid;
   // border-color: #fff;
-  // border-width: ${(props: TP) => props.theme.borderWidth};
+  // border-width: ${props => props.theme.borderWidth};
   &:hover {
-    background-color: ${(props: TP) => props.theme.surfaceHover};
+    background-color: ${props => props.theme.surfaceHover};
   }
 `;
 
@@ -43,7 +42,7 @@ const StyledLink = styled(Link)`
   &:active,
   &:visited {
     text-decoration: none;
-    color: ${(props: TP) => props.theme.mainTextColor};
+    color: ${props => props.theme.mainTextColor};
   }
   &:hover {
     text-decoration: underline;

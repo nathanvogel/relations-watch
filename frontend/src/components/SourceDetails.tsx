@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { AnyAction, bindActionCreators, Dispatch } from "redux";
 
 import { RootStore } from "../Store";
-import { SourceLink, Status, SourceType } from "../utils/types";
+import { SourceLink, Status, SourceType, SourceLinkType } from "../utils/types";
 import Meta from "./meta/Meta";
 import SourceEntityPreview from "./sourceDetails/SourceEntityPreview";
 import SourceForm from "./SourceForm";
@@ -34,7 +34,7 @@ const Actions = styled.div`
 
 type OwnProps = {
   sourceKey: string;
-  sourceLink?: SourceLink;
+  sourceLink: SourceLink;
   editable?: boolean;
 };
 
@@ -120,7 +120,9 @@ class SourceDetails extends React.Component<Props> {
     // }
 
     return (
-      <SourceListItemContainer>
+      <SourceListItemContainer
+        isRefuting={this.props.sourceLink.type === SourceLinkType.Refutes}
+      >
         <Actions>
           {this.props.editable && (
             <IconButton onClick={this.toggleClick}>Edit</IconButton>
@@ -128,7 +130,9 @@ class SourceDetails extends React.Component<Props> {
         </Actions>
         <div>{source.pTitle || source.description}</div>
         {isLink ? (
-          <StyledSourceA href={source.fullUrl}>{source.ref}</StyledSourceA>
+          <StyledSourceA href={this.props.sourceLink.fullUrl || source.fullUrl}>
+            {source.ref}
+          </StyledSourceA>
         ) : (
           <strong>{source.ref}</strong>
         )}

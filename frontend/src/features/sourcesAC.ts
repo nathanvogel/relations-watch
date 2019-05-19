@@ -1,6 +1,5 @@
 import { Dispatch } from "redux";
 import axios, { AxiosError } from "axios";
-import validator from "validator";
 import qs from "qs";
 
 import api, { checkError, checkResponse } from "../utils/api";
@@ -10,9 +9,10 @@ import {
   ErrorPayload,
   Status,
   Source,
-  SourceType
+  SourceType,
+  getRefType
 } from "../utils/types";
-import CONSTS from "../utils/consts";
+import { ERROR_CODES } from "../utils/consts";
 import { RootStore } from "../Store";
 import { arrayWithoutDuplicates } from "../utils/utils";
 import { loadEntities } from "./entitiesLoadAC";
@@ -22,73 +22,70 @@ const microlink = axios.create({
   headers: {}
 });
 
-function getRefType(fullRef: string) {
-  const isURL = validator.isURL(fullRef, {
-    protocols: ["http", "https", "ftp"],
-    require_tld: true,
-    require_protocol: false,
-    require_host: true,
-    require_valid_protocol: true,
-    allow_underscores: false,
-    allow_trailing_dot: false,
-    allow_protocol_relative_urls: false,
-    disallow_auth: false
-  });
-  return isURL ? SourceType.Link : SourceType.TextRef;
+async function getUrlInfo(fullRef: string) {
+  try {
+    const res = await microlink.get("/", { params: { url: fullRef } });
+    if (res.status < 400) return res.data.data;
+    else return 0;
+  } catch (reason) {
+    return 0;
+  }
 }
 
-function getUrlInfo(fullRef: string) {
-  return microlink
-    .get("/", { params: { url: fullRef } })
-    .then(res => {
-      if (res.status < 400) return res.data.data;
-      else return 0;
-    })
-    .catch(reason => 0);
-}
-
-/**
- * Upload new entities to the database.
- */
 export const getSourceFromRef = (fullRef: string, requestId: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
-  dispatch(actionRefGetRequest(requestId));
-
   const isLink = getRefType(fullRef) === SourceType.Link;
-  return (isLink ? getUrlInfo(fullRef) : Promise.resolve(0)).then(urlData => {
-    return api
-      .get("/sources/ref", { params: { fullRef: fullRef } })
-      .then(res => {
-        const potentialError = checkResponse(res);
-        if (potentialError) {
-          dispatch(actionRefGetError(requestId, potentialError));
-          return;
-        }
-        // Everything is fine, we got the data, send it!
-        const source =
-          isLink && urlData
-            ? Object.assign({}, res.data, {
-                pTitle: urlData.title,
-                pAuthor: urlData.author,
-                pDescription: urlData.description
-              })
-            : res.data;
-        dispatch(actionRefGetReceived(requestId, source));
+  if (!isLink) {
+    dispatch(
+      actionRefGetError(requestId, {
+        eData: {},
+        eMessage: "The reference needs to be a link (with https://).",
+        eStatus: ERROR_CODES.NOT_A_LINK
       })
-      .catch((error: AxiosError) => {
-        const errorPayload = checkError(error);
-        console.error(
-          `Error trying to get a new source with ref ${fullRef}`,
-          requestId,
-          errorPayload
-        );
-        dispatch(actionRefGetError(requestId, errorPayload));
-      });
-  });
+    );
+    return;
+  }
+
+  dispatch(actionRefGetRequest(requestId));
+  try {
+    const res = await api.get("/sources/ref", {
+      params: { fullRef: fullRef }
+    });
+    const potentialError = checkResponse(res);
+    if (potentialError) {
+      dispatch(actionRefGetError(requestId, potentialError));
+      return;
+    }
+    const serverSource: Source = res.data;
+    if (serverSource._key) {
+      // The source exists already on the server, we can just reuse it.
+      dispatch(actionRefGetReceived(requestId, serverSource));
+    } else {
+      const urlData = await getUrlInfo(fullRef);
+      const newSource: Source = !urlData
+        ? serverSource
+        : Object.assign({}, serverSource, {
+            pTitle: urlData.title,
+            pAuthor: urlData.author,
+            pDescription: urlData.description
+          });
+      dispatch(actionRefGetReceived(requestId, newSource));
+    }
+  } catch (error) {
+    const errorPayload = checkError(error);
+    console.error(
+      `Error trying to get a new source with ref ${fullRef}`,
+      requestId,
+      errorPayload
+    );
+    dispatch(actionRefGetError(requestId, errorPayload));
+  }
 };
 
-export const clearPostRequest = (requestId: string) => (dispatch: Dispatch) => {
+export const clearGetSourceFromRefRequest = (requestId: string) => (
+  dispatch: Dispatch
+) => {
   dispatch(actionRefGetClearRequest(requestId));
 };
 

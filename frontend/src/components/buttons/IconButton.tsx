@@ -1,44 +1,48 @@
 import styled, { css } from "styled-components";
-import { TP } from "../../styles/theme";
+
+type IconButtonProps = {
+  small?: boolean;
+  withText?: boolean;
+};
 
 const withTextCSS = css`
-  margin-right: ${(props: TP) => props.theme.inputLRSpacing};
+  & > svg {
+    margin-right: ${props => props.theme.inputMarginTB};
+  }
 `;
 
-const IconButton = styled.button`
+const IconButton = styled.button<IconButtonProps>`
   height: auto;
   min-height: ${props => (props.small ? "16px" : "28px")};
   min-width: ${props => (props.small ? "16px" : "28px")};
-  font-size: ${(props: TP) => (props.small ? props.theme.fontSizeS : "inherit")}
-  padding: ${(props: TP) => props.theme.inputPaddingTB}
-    ${(props: TP) => props.theme.inputPaddingLR};
-  background-color: ${(props: TP) => props.theme.inputBG};
-  border-color: ${(props: TP) => props.theme.inputBG};
-  border-width: ${(props: TP) => props.theme.borderWidth};
+  font-size: ${props => (props.small ? props.theme.fontSizeS : "inherit")}
+  padding: ${props => props.theme.inputPaddingTB}
+    ${props => props.theme.inputPaddingLR};
+  background-color: ${props => props.theme.inputBG};
+  border-color: ${props => props.theme.inputBG};
+  border-width: ${props => props.theme.borderWidth};
   border-style: solid;
-  border-radius: ${(props: TP) => props.theme.radius};
+  border-radius: ${props => props.theme.radius};
 
   cursor: pointer;
   color: inherit;
 
   &:not([disabled]):hover {
-    background-color: ${(props: TP) => props.theme.surfaceHover};
-    border-color: ${(props: TP) => props.theme.surfaceHover};
+    background-color: ${props => props.theme.surfaceHover};
+    border-color: ${props => props.theme.surfaceHover};
   }
 
   &:focus {
-    border-color: ${(props: TP) => props.theme.focusColor};
+    border-color: ${props => props.theme.focusColor};
     outline: none;
   }
 
   &:disabled {
-    color: ${(props: TP) => props.theme.secondaryTextColor};
+    color: ${props => props.theme.secondaryTextColor};
     cursor: not-allowed;
   }
 
-  & > svg {
-    ${props => props.withText && withTextCSS}
-  }
+  ${props => props.withText && withTextCSS}
 `;
 
 export default IconButton;

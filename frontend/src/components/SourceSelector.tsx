@@ -6,24 +6,30 @@ import { connect } from "react-redux";
 import SourceForm from "./SourceForm";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { RootStore } from "../Store";
-import { getSourceFromRef } from "../features/sourcesAC";
-import { Status, ReactSelectOption } from "../utils/types";
+import {
+  getSourceFromRef,
+  clearGetSourceFromRefRequest
+} from "../features/sourcesAC";
+import {
+  Status,
+  SourceLinkType,
+  SourceSelectorMode,
+  Source,
+  SourceSelectOption
+} from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
 import IconButton from "./buttons/IconButton";
 
-const Content = styled.div`
-  display: block;
-`;
-
-const StyledSourceRefSearch = styled(SourceRefSearch)`
-  width: 100%;
-`;
-
 type OwnProps = {
   editorId: string;
   sourceKey?: string;
-  onSourceSelected: (sourceKey?: string) => void;
+  refInputValue: string;
+  refInputChange: (newValue: string) => void;
+  onSourceSelected: (option: SourceSelectOption) => void;
+  onSourceDeselected: () => void;
+  mode: SourceSelectorMode;
+  changeMode: (newMode: SourceSelectorMode) => void;
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
@@ -34,7 +40,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const postError = state.requests.errors[editorId];
   // Get the GET request state for the Source generator (from ref)
   const refEditorId = "ref_" + props.editorId;
-  const refGetData = state.requests.data[refEditorId];
+  const refGetData = state.requests.data[refEditorId] as Source | undefined;
   const refGetStatus = state.requests.status[refEditorId];
   const refGetError = state.requests.errors[refEditorId];
 
@@ -53,7 +59,8 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
-      getSourceFromRef
+      getSourceFromRef,
+      clearGetSourceFromRefRequest
     },
     dispatch
   );
@@ -61,88 +68,113 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
-enum SelectorMode {
-  SourceSelected,
-  EditingRef,
-  EditingNewSource
-}
-
+/**
+ * Possible scenarios:
+ *  - The user selects an existing ref:
+ *    -> Trust source.fullUrl as the fullUrl
+ *       (put it in SourceLink too, for good measure)
+ *  - The user inputs a URL + wants to "create it"
+ *    -> The URL input should be the fullUrl
+ *    -> Ask the server about this ref.
+ *       - It exists.
+ *          -> Link the existing source, no edit needed.
+ *       - It doesn't exist.
+ *          -> Create a new Source with the same fullUrl as SourceLink.
+ * @extends React
+ */
 class SourceSelector extends React.Component<Props> {
-  readonly state = {
-    mode: SelectorMode.EditingRef,
-    sourceRef: ""
-  };
-
-  onSourceRefChange = (value: string) => {
-    this.setState({
-      sourceRef: value
-    });
-  };
-
   onCreateSource = (value: string) => {
     this.props.getSourceFromRef(value, this.props.refEditorId);
-    // Now we want to edit the source.
-    // Put the ref value state again, because it's cleared with onChange by
-    // react-select when it's unmounted
-    this.setState({ mode: SelectorMode.EditingNewSource, sourceRef: value });
+    // Now we wait for the server response about this ref.
+    // this.props.changeMode(SourceSelectorMode.EditingNewSource);
   };
 
-  onSelectSource = (option: ReactSelectOption) => {
-    this.props.onSourceSelected(option.value);
-    this.setState({ mode: SelectorMode.SourceSelected });
-  };
+  componentDidUpdate() {
+    const { mode, refGetData } = this.props;
+    if (mode === SourceSelectorMode.EditingRef && refGetData) {
+      if (refGetData._key) {
+        this.props.changeMode(SourceSelectorMode.SourceSelected);
+        this.props.onSourceSelected({
+          value: refGetData._key,
+          label: refGetData.pTitle || refGetData.description || refGetData.ref,
+          ref: refGetData.ref,
+          pTitle: refGetData.pTitle || "",
+          fullUrl: refGetData.fullUrl
+        });
+      } else {
+        this.props.changeMode(SourceSelectorMode.EditingNewSource);
+      }
+    }
+  }
 
-  onDeselectSource = () => {
-    this.props.onSourceSelected();
-    this.setState({ mode: SelectorMode.EditingRef });
+  deselect = () => {
+    this.props.clearGetSourceFromRefRequest(this.props.refEditorId);
+    this.props.onSourceDeselected();
   };
 
   render() {
-    const { mode, sourceRef } = this.state;
-    const { refGetData, refGetStatus, refGetError } = this.props;
+    const { refGetData, refGetStatus, refGetError, mode } = this.props;
+
+    if (refGetStatus === Status.Requested || refGetStatus === Status.Error)
+      return (
+        <MetaPostStatus
+          isGet
+          status={refGetStatus}
+          error={refGetError}
+          clearRequest={() => {
+            this.props.changeMode(SourceSelectorMode.EditingRef);
+            this.props.clearGetSourceFromRefRequest(this.props.refEditorId);
+          }}
+        />
+      );
 
     switch (mode) {
-      case SelectorMode.EditingRef:
+      case SourceSelectorMode.EditingRef:
         return (
-          <Content>
-            <StyledSourceRefSearch
-              onChange={this.onSelectSource}
-              inputValue={sourceRef}
-              onInputChange={this.onSourceRefChange}
-              onCreateSource={this.onCreateSource}
-            />
-          </Content>
+          <SourceRefSearch
+            onChange={this.props.onSourceSelected}
+            inputValue={this.props.refInputValue}
+            onInputChange={this.props.refInputChange}
+            onCreateSource={this.onCreateSource}
+          />
         );
-      case SelectorMode.EditingNewSource:
+      case SourceSelectorMode.EditingNewSource:
+        if (!refGetData) {
+          console.error("Missing source");
+          return (
+            <div>
+              <em>Missing source data! Can't proceed.</em>
+            </div>
+          );
+        }
         return (
-          <Content>
-            {refGetStatus !== Status.Ok ? (
-              <MetaPostStatus isGet status={refGetStatus} error={refGetError} />
-            ) : (
-              <SourceForm
-                key={this.props.editorId}
-                editorId={this.props.editorId}
-                initialSource={refGetData}
-                onCancelClick={this.onDeselectSource}
-              />
-            )}
-          </Content>
+          <SourceForm
+            key={this.props.editorId}
+            editorId={this.props.editorId}
+            initialSource={refGetData}
+            onCancelClick={this.deselect}
+          />
         );
-      case SelectorMode.SourceSelected:
+      case SourceSelectorMode.SourceSelected:
         if (!this.props.sourceKey) {
           console.error("sourceKey is undefined, but mode is SourceSelected");
         }
         return (
-          <Content>
-            <IconButton onClick={this.onDeselectSource}>
-              Pick another
-            </IconButton>
+          <div>
+            <IconButton onClick={this.deselect}>Pick another</IconButton>
             {this.props.sourceKey ? (
-              <SourceDetails sourceKey={this.props.sourceKey} />
+              <SourceDetails
+                sourceKey={this.props.sourceKey}
+                sourceLink={{
+                  comments: [],
+                  fullUrl: this.props.refInputValue,
+                  type: SourceLinkType.Neutral
+                }}
+              />
             ) : (
               "Missing source key!"
             )}
-          </Content>
+          </div>
         );
     }
   }

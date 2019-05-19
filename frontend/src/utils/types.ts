@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
 import { SimulationNodeDatum } from "d3-force";
+import validator from "validator";
 
 export interface Dictionary<T> {
   [key: string]: T;
@@ -217,13 +218,14 @@ export type Source = {
   ref: string;
   type: number;
   authors: string[];
-  fullUrl?: string; // Should be in SourceLink
   description: string;
   pAuthor?: string;
   pTitle?: string;
   pDescription?: string;
   rootDomain?: string;
   domain?: string;
+  // Only the first one linked, but it should be unused except for legacy support
+  fullUrl?: string;
 };
 
 export enum SourceType {
@@ -231,7 +233,23 @@ export enum SourceType {
   TextRef = 2
 }
 
+export function getRefType(fullRef: string) {
+  const isURL = validator.isURL(fullRef, {
+    protocols: ["http", "https", "ftp"],
+    require_tld: true,
+    require_protocol: true,
+    require_host: true,
+    require_valid_protocol: true,
+    allow_underscores: false,
+    allow_trailing_dot: false,
+    allow_protocol_relative_urls: false,
+    disallow_auth: false
+  });
+  return isURL ? SourceType.Link : SourceType.TextRef;
+}
+
 export type SourceLink = {
+  fullUrl: string; // Should be in SourceLink
   type: SourceLinkType;
   comments: Comment[];
   sourceKey?: string;
@@ -259,6 +277,21 @@ export type AmountSelectOption = {
   label: string;
 };
 
+export type SourceSuggestion = {
+  _key: string;
+  ref: string;
+  pTitle?: string;
+  fullUrl?: string;
+};
+
+export type SourceSelectOption = {
+  value: string;
+  label: string;
+  ref: string;
+  pTitle?: string;
+  fullUrl?: string;
+};
+
 /**
  * Useful to generate key lists from JSON files
  * in order to get static (dynamic) Typescript autocomplete.
@@ -270,4 +303,13 @@ export function isEdge(element: Edge | Entity): element is Edge {
 }
 export function isEntity(element: Edge | Entity): element is Entity {
   return (<Edge>element)._from === undefined;
+}
+
+/**
+ * Possible states of the SourceSelector component.
+ */
+export enum SourceSelectorMode {
+  SourceSelected,
+  EditingRef,
+  EditingNewSource
 }

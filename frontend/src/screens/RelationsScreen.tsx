@@ -20,9 +20,12 @@ import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
 import { EditorContainerCSS } from "../components/EditorContainer";
-import { TP } from "../styles/theme";
+import { PageWidthSizer, PagePadder } from "../styles/sizers";
 
 const Content = styled.div`
+  ${PageWidthSizer}
+  ${PagePadder}
+
   display: flex;
   ${media.mobile`display: block;`}
 `;
@@ -31,7 +34,7 @@ const EntityColumn = styled.div`
   flex: 1;
 `;
 const RelationsColumn = styled.div`
-  flex: 2;
+  flex: 4;
   padding-left: 32px;
   padding-right: 32px;
 `;
@@ -40,8 +43,8 @@ const AddButton = styled(IconButton)`
   ${EditorContainerCSS}
   width:100%;
   display: block;
-  padding-top: ${(props: TP) => props.theme.inputPaddingTB};
-  padding-bottom: ${(props: TP) => props.theme.inputPaddingTB};
+  padding-top: ${props => props.theme.inputPaddingTB};
+  padding-bottom: ${props => props.theme.inputPaddingTB};
   margin-bottom: 0px; // It's the last element
   // font-size: 6px; // smaller than the icon so that it is centered
   background-color: white;

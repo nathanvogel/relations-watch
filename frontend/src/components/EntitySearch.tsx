@@ -7,6 +7,9 @@ import api from "../utils/api";
 import EntityEditor from "./EntityEditor";
 import { Entity, ReactSelectOption, EntityType } from "../utils/types";
 import StyledAsyncCreatableSelect from "./select/StyledAsyncCreatableSelect";
+import { FunctionComponent, useState } from "react";
+import { useTranslation } from "react-i18next";
+import R from "../strings/R";
 
 interface Suggestion {
   _key: string;
@@ -56,96 +59,85 @@ export interface Props {
   isMulti?: boolean;
 }
 
-// object is the state type
-class EntitySearch extends React.Component<Props, object> {
-  static defaultProps = {
-    autoFocus: false,
-    isMulti: false
+const defaultProps: Props = {
+  autoFocus: false,
+  isMulti: false
+};
+
+const EntitySearch: FunctionComponent<Props> = (
+  props: Props = defaultProps
+) => {
+  const [creatingEntity, setCreatingEntity] = useState(false);
+  const [newEntityName, setNewEntityName] = useState("");
+  const { t } = useTranslation();
+
+  const onChange = (object: any) => {
+    if (props.onChange) props.onChange(object);
   };
 
-  readonly state = {
-    creatingEntity: false,
-    newEntityName: ""
-  };
-
-  onChange = (object: any) => {
-    if (this.props.onChange) this.props.onChange(object);
-  };
-
-  onInputChange = (text: any, a: any) => {
+  const onInputChange = (text: any, a: any) => {
     const action: string = a.action;
     if (action === "menu-close" || action === "input-blur") return;
-    else if (this.props.onInputChange) {
-      this.props.onInputChange(text);
+    else if (props.onInputChange) {
+      props.onInputChange(text);
     }
   };
 
-  isValidNewOption = (inputValue: string) => {
+  const isValidNewOption = (inputValue: string) => {
     return Boolean(inputValue && inputValue.length >= 2);
   };
 
-  onCreateOption = (value: string) => {
-    this.setState({
-      newEntityName: value,
-      creatingEntity: true
-    });
+  const onCreateOption = (value: string) => {
+    setNewEntityName(value);
+    setCreatingEntity(true);
   };
 
-  onDoneCreating = (newEntity?: Entity) => {
-    this.setState({
-      creatingEntity: false
-    });
+  const onDoneCreating = (newEntity?: Entity) => {
+    setCreatingEntity(false);
+
     // TODO : change value
     if (newEntity && newEntity._key) {
       const newValue = { value: newEntity._key, label: newEntity.name };
-      this.onChange(
-        this.props.isMulti
-          ? update(this.props.selection || [], { $push: [newValue] })
+      onChange(
+        props.isMulti
+          ? update(props.selection || [], { $push: [newValue] })
           : newValue
       );
     }
   };
 
-  render() {
-    const { creatingEntity, newEntityName } = this.state;
-
-    if (creatingEntity) {
-      return (
-        <EntityEditor
-          onDone={this.onDoneCreating}
-          initialName={newEntityName}
-        />
-      );
-    }
-
-    return (
-      <MySelect
-        className={this.props.className}
-        cacheOptions
-        defaultOptions
-        classNamePrefix="rs"
-        value={this.props.selection}
-        onChange={this.onChange}
-        onInputChange={this.onInputChange}
-        inputValue={
-          this.props.onInputChange ? this.props.inputValue : undefined
-        }
-        autoFocus={this.props.autoFocus}
-        onCreateOption={this.onCreateOption}
-        isMulti={this.props.isMulti}
-        noOptionsMessage={(d: ReactSelectInputValue) => {
-          return d.inputValue && d.inputValue.length > 1
-            ? "Nothing found"
-            : null;
-        }}
-        placeholder="Search..."
-        loadOptions={promiseAutocomplete}
-        isValidNewOption={this.isValidNewOption}
-        allowCreateWhileLoading={false}
-        menuIsOpen={true}
-      />
-    );
+  if (creatingEntity) {
+    return <EntityEditor onDone={onDoneCreating} initialName={newEntityName} />;
   }
-}
+
+  return (
+    <MySelect
+      className={props.className}
+      cacheOptions
+      defaultOptions
+      classNamePrefix="rs"
+      value={props.selection}
+      onChange={onChange}
+      onInputChange={onInputChange}
+      inputValue={props.onInputChange ? props.inputValue : undefined}
+      autoFocus={props.autoFocus}
+      onCreateOption={onCreateOption}
+      isMulti={props.isMulti}
+      noOptionsMessage={(d: ReactSelectInputValue) => {
+        return d.inputValue && d.inputValue.length > 1
+          ? t(R.label_no_element_found)
+          : null;
+      }}
+      placeholder={t(R.placeholder_search)}
+      loadOptions={promiseAutocomplete}
+      isValidNewOption={isValidNewOption}
+      allowCreateWhileLoading={false}
+      menuIsOpen={true}
+      formatCreateLabel={(inputValue: string) =>
+        t(R.label_select_add, { userInput: inputValue })
+      }
+    />
+  );
+};
 
 export default EntitySearch;
