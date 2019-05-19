@@ -335,6 +335,20 @@ async function getWikidataGraph(entryPoint: string, depth: number) {
   return { dsEntities, dsEdges };
 }
 
+async function findFamiliarEntities(dsEntities: Entity[]) {
+  return api.post("/dataimport/similar/entities", dsEntities, {
+    params: {
+      datasetid: DatasetId.Wikidata,
+      unchangeable: ["type"]
+    },
+    // `paramsSerializer` is an optional function in charge of serializing `params`
+    // This is the format that the ArangoDB Foxx/joi backend supports
+    paramsSerializer: function(params) {
+      return qs.stringify(params, { arrayFormat: "repeat" });
+    }
+  });
+}
+
 /**
  * Upload new entities to the database.
  */
@@ -345,13 +359,17 @@ export const importWikidataGraph = (
   // dispatch(actionRequest(requestId));
 
   try {
-    const { dsEdges, dsEntities } = await getWikidataGraph(entryPointId, 3);
+    const { dsEdges, dsEntities } = await getWikidataGraph(entryPointId, 1);
     // They're just dataset edges for now, without _key and with local _from/to
     // We don't want to show the edges and entities before having checked
     // if they already exists in the DB, so don't dispatch them yet.
 
+    const familiarEntities = await findFamiliarEntities(
+      Object.keys(dsEntities).map(key => dsEntities[key])
+    );
+    console.log("Familiar?", familiarEntities);
+
     /*
-    const familiarEntities = await findFamiliarEntities(dsEntities);
     // distpach() dsEdges and entities to the requestId
     if (familiarEntities.length > 0) {
       // dispatch() familiarEntities + dsEdges + dsEntities
