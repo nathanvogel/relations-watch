@@ -17,7 +17,7 @@ const Content = styled.div`
 
 const PersonName = styled.div`
   text-align: center;
-  font-size: ${props => props.theme.fontSizeL};
+  font-size: ${props => props.theme.fontSizeM};
   margin: ${props => props.theme.marginTB};
   // text-decoration: none;
   // color: #001144;

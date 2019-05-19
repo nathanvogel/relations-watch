@@ -12,7 +12,7 @@ import { ReactComponent as AppIcon } from "../assets/ic_app.svg";
 const Bar = styled.nav`
   display: block;
   height: ${props => props.theme.navBarHeight};
-  background: #eee;
+  background: ${props => props.theme.lightBG};
 `;
 
 const BarContent = styled.div`
