@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import { TP } from "../../styles/theme";
 
-const Label = styled.div`
-  color: ${(props: TP) => props.theme.secondaryTextColor};
-  margin: ${(props: TP) => props.theme.marginTB} 0px;
-  margin-bottom: ${(props: TP) => props.theme.inputTBSpacing};
+const Label = styled.label`
+  display: block;
+  color: ${props => props.theme.secondaryTextColor};
+  margin: ${props => props.theme.marginTB} 0px;
+  margin-bottom: ${props => props.theme.inputTBSpacing};
 `;
 
 export default Label;

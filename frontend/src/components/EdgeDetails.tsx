@@ -1,10 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Edge, Status, SourceLinkType } from "../utils/types";
+import { Edge, Status } from "../utils/types";
 import EdgeEditor from "./EdgeEditor";
-import { RELATION_COLORS, TP } from "../styles/theme";
-import SourceDetails from "./SourceDetails";
+import { RELATION_COLORS } from "../styles/theme";
 import EdgeSummary from "./edgeDetails/EdgeSummary";
 import { RootStore } from "../Store";
 import { Dispatch, AnyAction, bindActionCreators } from "redux";
@@ -16,10 +15,10 @@ import SourceList from "./edgeDetails/SourceList";
 
 const Content = styled.section`
   box-sizing: border-box;
-  border-color: ${(props: TP) => props.theme.inputBG};
-  border-width: ${(props: TP) => props.theme.borderWidth};
+  border-color: ${props => props.theme.inputBG};
+  border-width: ${props => props.theme.borderWidth};
   border-style: solid;
-  border-radius: ${(props: TP) => props.theme.radius};
+  border-radius: ${props => props.theme.radius};
 
   transition: border-color 0.1s ease-in-out;
 
@@ -28,9 +27,9 @@ const Content = styled.section`
   }
 
   // background-color: #f4f4f4;
-  padding: ${(props: TP) => props.theme.blockPadding};
-  margin-top: ${(props: TP) => props.theme.blockSpacingTB};
-  margin-bottom: ${(props: TP) => props.theme.blockSpacingTB};
+  padding: ${props => props.theme.blockPadding};
+  margin-top: ${props => props.theme.blockSpacingTB};
+  margin-bottom: ${props => props.theme.blockSpacingTB};
 `;
 
 const EdgeMainText = styled.p`
@@ -43,8 +42,8 @@ const AddSourceButton = styled(IconButton)`
   ${SourceListItemContainerCSS}
   width: 100%;
   display: block;
-  padding-top: ${(props: TP) => props.theme.inputPaddingTB};
-  padding-bottom: ${(props: TP) => props.theme.inputPaddingTB};
+  padding-top: ${props => props.theme.inputPaddingTB};
+  padding-bottom: ${props => props.theme.inputPaddingTB};
   margin-bottom: 0px; // It's the last element
   font-size: 6px; // smaller than the icon so that it is centered
   // background-color: white;

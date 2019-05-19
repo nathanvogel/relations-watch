@@ -26,7 +26,6 @@ import StyledSelect from "../select/StyledSelect";
 import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
 import { ReactComponent as CloseIcon } from "../../assets/ic_close.svg";
 import IconButton from "../buttons/IconButton";
-import { TP } from "../../styles/theme";
 import ButtonBar from "../buttons/ButtonBar";
 import CONSTS, {
   POSSIBLE_LINKS,
@@ -46,7 +45,7 @@ const TypeContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr minmax(150px, 2fr) 1fr;
   align-items: center;
-  grid-column-gap: ${(props: TP) => props.theme.marginLR};
+  grid-column-gap: ${props => props.theme.marginLR};
 
   & > *:nth-child(1) {
     justify-self: end;
@@ -58,7 +57,7 @@ const TypeContainer = styled.div`
     display: flex;
 
     > div:nth-child(1) {
-      padding-right: ${(props: TP) => props.theme.inputLRSpacing};
+      padding-right: ${props => props.theme.inputLRSpacing};
       flex-grow: 100;
 
       > * {
@@ -74,7 +73,7 @@ const TypeContainer = styled.div`
 `;
 
 const Form = styled.form`
-  margin-bottom: ${(props: TP) => props.theme.marginTB};
+  margin-bottom: ${props => props.theme.marginTB};
 `;
 
 type Props = {
@@ -405,7 +404,7 @@ class EdgeForm extends React.Component<Props> {
                         currencySymbolPlacement="s"
                         decimalPlaces={0}
                       />
-                      <Label as="div" htmlFor="exactAmountCheckbox">
+                      <Label htmlFor="exactAmountCheckbox">
                         <input
                           name="exactAmountCheckbox"
                           type="checkbox"

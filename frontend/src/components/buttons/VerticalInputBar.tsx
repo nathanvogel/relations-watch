@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { TP } from "../../styles/theme";
 
 const VerticalInputBar = styled.div`
   & > * {
-    margin: ${(props: TP) => props.theme.inputTBSpacing} 0px;
+    margin: ${props => props.theme.inputTBSpacing} 0px;
   }
 
   & > *:first-child {

@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { TP } from "../../styles/theme";
 
 type Props = {
   to?: string;
@@ -14,7 +13,7 @@ const style = css`
   text-decoration: none;
 
   &:link {
-    color: ${(props: TP) => props.theme.mainTextColor};
+    color: ${props => props.theme.mainTextColor};
   }
 
   &:hover {

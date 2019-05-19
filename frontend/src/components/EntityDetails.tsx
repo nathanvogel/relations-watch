@@ -10,7 +10,6 @@ import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
 import { getEntityLAsset } from "../assets/EntityIcons";
 import MainPersonImage from "./entityDetails/MainPersonImage";
-import { TP } from "../styles/theme";
 
 const Content = styled.div`
   width: 100%;
@@ -18,8 +17,8 @@ const Content = styled.div`
 
 const PersonName = styled.div`
   text-align: center;
-  font-size: ${(props: TP) => props.theme.fontSizeL};
-  margin: ${(props: TP) => props.theme.marginTB};
+  font-size: ${props => props.theme.fontSizeL};
+  margin: ${props => props.theme.marginTB};
   // text-decoration: none;
   // color: #001144;
 `;

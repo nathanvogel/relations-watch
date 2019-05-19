@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
+import styled from "styled-components";
 import { SourceLink, SourceLinkType } from "../../utils/types";
 import SourceDetails from "../SourceDetails";
-import theme, { TP, styled } from "../../styles/theme";
 
 interface HeadProps {
   isRefuting: boolean;
@@ -12,11 +12,11 @@ const Head = styled.h5<HeadProps>`
     props.isRefuting
       ? props.theme.refutingTextColor
       : props.theme.mainTextColor};
-  margin-top: ${(props: TP) => props.theme.marginTB};
+  margin-top: ${props => props.theme.marginTB};
   margin-bottom: -12px;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: ${(props: TP) => props.theme.fontSizeS};
+  font-size: ${props => props.theme.fontSizeS};
 `;
 
 type Props = {

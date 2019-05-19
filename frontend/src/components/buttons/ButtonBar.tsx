@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { TP } from "../../styles/theme";
 
 type Props = {
   buttonsAlign?: string;
@@ -7,11 +6,11 @@ type Props = {
 
 const ButtonBar = styled.div`
   text-align: ${(props: Props) => props.buttonsAlign || "left"};
-  margin: ${(props: TP) => props.theme.inputTBSpacing} -${(props: TP) => props.theme.inputLRSpacing};
+  margin: ${props => props.theme.inputTBSpacing} -${props => props.theme.inputLRSpacing};
 
   & > * {
-    margin: ${(props: TP) => props.theme.inputTBSpacing}
-      ${(props: TP) => props.theme.inputLRSpacing};
+    margin: ${props => props.theme.inputTBSpacing}
+      ${props => props.theme.inputLRSpacing};
   }
 
   // *:first-child {

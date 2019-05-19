@@ -1,25 +1,24 @@
 import styled, { css } from "styled-components";
-import { TP } from "../../styles/theme";
 
 export const cssInput = css`
-  padding-left: ${(props: TP) => props.theme.inputPaddingLR};
-  padding-right: ${(props: TP) => props.theme.inputPaddingLR};
-  padding-top: ${(props: TP) => props.theme.inputPaddingTB};
-  padding-bottom: ${(props: TP) => props.theme.inputPaddingTB};
+  padding-left: ${props => props.theme.inputPaddingLR};
+  padding-right: ${props => props.theme.inputPaddingLR};
+  padding-top: ${props => props.theme.inputPaddingTB};
+  padding-bottom: ${props => props.theme.inputPaddingTB};
 
   box-sizing: border-box;
-  background-color: ${(props: TP) => props.theme.inputBG};
-  border-color: ${(props: TP) => props.theme.inputBG};
-  border-width: ${(props: TP) => props.theme.borderWidth};
+  background-color: ${props => props.theme.inputBG};
+  border-color: ${props => props.theme.inputBG};
+  border-width: ${props => props.theme.borderWidth};
   border-style: solid;
-  border-radius: ${(props: TP) => props.theme.radius};
+  border-radius: ${props => props.theme.radius};
 
   &:hover {
-    border-color: ${(props: TP) => props.theme.borderHover};
+    border-color: ${props => props.theme.borderHover};
   }
 
   &:focus {
-    border-color: ${(props: TP) => props.theme.focusColor};
+    border-color: ${props => props.theme.focusColor};
     outline: none;
   }
 `;
