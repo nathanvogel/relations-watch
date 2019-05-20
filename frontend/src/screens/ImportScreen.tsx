@@ -13,7 +13,7 @@ import * as instantActions from "../features/wikidataActions";
 import SimilarEntitiesSelector from "../components/dataimport/SimilarEntitiesSelector";
 import IconButton from "../components/buttons/IconButton";
 import ButtonBar from "../components/buttons/ButtonBar";
-import UpdateList from "../components/dataimport/ UpdateList";
+import UpdateList from "../components/dataimport/UpdateList";
 
 const Content = styled.div`
   ${PageWidthSizer}
