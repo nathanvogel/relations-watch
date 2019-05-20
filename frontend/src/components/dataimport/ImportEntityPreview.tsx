@@ -6,7 +6,7 @@ type Props = {
   entity: Entity;
 };
 
-const Container = styled.div`
+const Container = styled.span`
   padding: ${props => props.theme.inputPaddingTB}
     ${props => props.theme.inputPaddingTB};
   margin: ${props => props.theme.inputMarginTB} ${props => props.theme.marginLR};

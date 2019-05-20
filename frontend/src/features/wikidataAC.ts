@@ -361,7 +361,7 @@ export const fetchWikidataGraphAndFamiliarEntities = (
   dispatch(actions.requestedDataset(entryId));
 
   try {
-    const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 1);
+    const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 2);
 
     dispatch(actions.fetchedDataset(entryId, dsEdges, dsEntities));
     // They're just dataset edges for now, without _key and with local _from/to
