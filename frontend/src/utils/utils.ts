@@ -6,7 +6,8 @@ import {
   CommonEdge,
   Status,
   Entity,
-  EntityPreview
+  EntityPreview,
+  ErrorPayload
 } from "./types";
 import CONSTS from "./consts";
 
@@ -142,3 +143,12 @@ export function getEntityPreview(entity: Entity): EntityPreview {
     imageId: entity.imageId
   };
 }
+
+/**
+ * Quick and dirty ErrorPayload factory to passin any caught error.
+ */
+export const errToErrorPayload: (err: any) => ErrorPayload = (err: any) => ({
+  eData: err,
+  eMessage: err && err.message ? err.message : "Unknown error!",
+  eStatus: err ? err.code : "UNKOWN"
+});

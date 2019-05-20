@@ -1,6 +1,5 @@
 import { Dispatch } from "redux";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import validator from "validator";
 import qs from "qs";
 
 import api, { checkError, checkResponse } from "../utils/api";
@@ -19,12 +18,12 @@ import {
   FamilialLink as FL,
   SourceLinkType,
   isClaimSnakEntityValue,
-  SimilarEntities
+  SimilarEntities,
+  ImportStage
 } from "../utils/types";
 import CONSTS from "../utils/consts";
-import { RootStore } from "../Store";
-import { arrayWithoutDuplicates } from "../utils/utils";
-import { loadEntities } from "./entitiesLoadAC";
+import { RootStore, DataImportState } from "../Store";
+import { arrayWithoutDuplicates, errToErrorPayload } from "../utils/utils";
 import wd, { Property, Entity as WDEntity } from "wikidata-sdk";
 import { Dictionary as WDDictionary } from "wikidata-sdk/types/helper";
 import * as actions from "./wikidataActions";
@@ -246,9 +245,9 @@ function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
   return edges;
 }
 
-async function checkWDResponse(response: AxiosResponse) {
+async function checkAxiosResponse(response: AxiosResponse) {
   if (response.status !== 200) {
-    console.error("Error in Wikidata response:");
+    console.error("Error in response:");
     console.error(response.data);
     throw new Error(response.statusText);
   }
@@ -289,7 +288,7 @@ async function getElementsFromWikidataEntries(
     "json"
   );
   const wdEntities = await checkWDEntityData(
-    await checkWDResponse(await axios.get(url))
+    await checkAxiosResponse(await axios.get(url))
   );
 
   // Convert the results to our format
@@ -339,18 +338,22 @@ async function getWikidataGraph(entryPoint: string, depth: number) {
   return { dsEntities, dsEdges };
 }
 
-async function findFamiliarEntities(dsEntities: Entity[]) {
-  return (await api.post("/dataimport/similar/entities", dsEntities, {
-    params: {
-      datasetid: DatasetId.Wikidata,
-      unchangeable: ["type"]
-    },
-    // `paramsSerializer` is an optional function in charge of serializing `params`
-    // This is the format that the ArangoDB Foxx/joi backend supports
-    paramsSerializer: function(params) {
-      return qs.stringify(params, { arrayFormat: "repeat" });
-    }
-  })).data as SimilarEntities;
+async function findFamiliarEntities(
+  dsEntities: Entity[]
+): Promise<SimilarEntities> {
+  return await checkAxiosResponse(
+    await api.post("/dataimport/similar/entities", dsEntities, {
+      params: {
+        datasetid: DatasetId.Wikidata,
+        unchangeable: ["type"]
+      },
+      // `paramsSerializer` is an optional function in charge of serializing `params`
+      // This is the format that the ArangoDB Foxx/joi backend supports
+      paramsSerializer: function(params) {
+        return qs.stringify(params, { arrayFormat: "repeat" });
+      }
+    })
+  );
 }
 
 /**
@@ -391,13 +394,42 @@ export const fetchWikidataGraphAndFamiliarEntities = (
     */
   } catch (err) {
     console.error(err);
-    dispatch(
-      actions.dataimportError(entryId, {
-        eData: err,
-        eMessage: err && err.message ? err.message : "Unknown error!",
-        eStatus: err.code
-      })
-    );
+    dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
+  }
+};
+
+/**
+ * Merge selected entities from the dataset with the database.
+ */
+export const patchSimilarEntities = (entryId: string) => async (
+  dispatch: Dispatch,
+  store: RootStore
+): Promise<void> => {
+  console.log("patchSimilarEntities");
+  const state: DataImportState = store.dataimport[entryId];
+
+  const entitiesToPatch: Entity[] = [];
+  for (let dsid in state.similarEntities) {
+    const selection = state.similarEntitiesSelection[dsid];
+    if (typeof selection === "number" && selection >= 0)
+      entitiesToPatch.push(state.similarEntities[dsid][selection]);
+  }
+
+  try {
+    if (entitiesToPatch.length > 0) {
+      dispatch(
+        actions.wentToStage(entryId, ImportStage.PostingSimilarEntities)
+      );
+      const patchedEntities: Array<Entity> = await checkAxiosResponse(
+        await api.patch("/entities", entitiesToPatch)
+      );
+      // No need to remember those patchedEntities, as we will refetch them
+      // when diffing the dataset and the database.
+      dispatch(actions.wentToStage(entryId, ImportStage.PostedSimilarEntities));
+    }
+  } catch (err) {
+    console.error(err);
+    dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
   }
 };
 

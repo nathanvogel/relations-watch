@@ -4,7 +4,8 @@ import {
   Entity,
   Dictionary,
   SimilarEntities,
-  ErrorPayload
+  ErrorPayload,
+  ImportStage
 } from "../utils/types";
 
 // ===== Dataset Fetching
@@ -40,7 +41,8 @@ export function fetchedDataset(
   };
 }
 
-// ===== Find Similar Entities
+// ===== Generic Data Import actions
+
 interface DI_Error_Action {
   type: ACTIONS.DI_Error;
   namespace: string;
@@ -56,6 +58,24 @@ export function dataimportError(
     error
   };
 }
+
+interface DI_WentToStage_Action {
+  type: ACTIONS.DI_WentToStage;
+  namespace: string;
+  stage: ImportStage;
+}
+export function wentToStage(
+  namespace: string,
+  stage: ImportStage
+): DI_WentToStage_Action {
+  return {
+    type: ACTIONS.DI_WentToStage,
+    namespace,
+    stage
+  };
+}
+
+// ===== Find Similar Entities
 
 interface DI_SimilarEntitiesRequested_Action {
   type: ACTIONS.DI_SimilarEntitiesRequested;
@@ -111,4 +131,5 @@ export type DI_Action =
   | DI_SimilarEntitiesRequested_Action
   | DI_SimilarEntitiesFetched_Action
   | DI_SimilarEntitySelected_Action
-  | DI_Error_Action;
+  | DI_Error_Action
+  | DI_WentToStage_Action;

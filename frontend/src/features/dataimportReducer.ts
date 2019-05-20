@@ -66,6 +66,8 @@ const stageReducer = (
   action: DI_Action
 ) => {
   switch (action.type) {
+    case ACTIONS.DI_WentToStage:
+      return action.stage;
     case ACTIONS.DI_DatasetRequested:
       return ImportStage.FetchingDataset;
     case ACTIONS.DI_DatasetFetched:

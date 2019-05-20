@@ -71,6 +71,8 @@ export type DeselectEntities = typeof DeselectEntities;
 // ===== Dataset Import
 export const DI_Error = "DI_Error";
 export type DI_Error = typeof DI_Error;
+export const DI_WentToStage = "DI_WentToStage";
+export type DI_WentToStage = typeof DI_WentToStage;
 export const DI_DatasetRequested = "DI_DatasetRequested";
 export type DI_DatasetRequested = typeof DI_DatasetRequested;
 export const DI_DatasetFetched = "DI_DatasetFetched";
