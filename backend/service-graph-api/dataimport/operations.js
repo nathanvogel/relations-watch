@@ -58,19 +58,19 @@ function getElementUpdates(
     // so just use .name.
     if (element._from === undefined) logIdentifier = element.name;
     // There should be maximum 1 such element.
-    // // TODO DONT USE COUNT (or call it?)
-    if (cursor.count > 1) {
+    if (cursor.count() > 1) {
       console.log("Found multiple elements with the same ID:");
       while (cursor.hasNext()) console.log("Key:", cursor.next()._key);
       throw new Error("Duplicate elements corresponding to " + elDatasetId);
     }
     // If the element already exists
-    else if (cursor.count == 1) {
+    else if (cursor.count() == 1) {
       console.log("Found a correspondance for:", logIdentifier);
       const dbElement = cursor.next();
       // If we detect a fundamental consistency problem with an
       // existing element, we just abort for now.
       // If the name is different, update the name? Only for some datasets?
+      // TODO: Handle differently
       if (!consistency.areConsistent(dbElement, element, UNCHANGEABLE_PROPS))
         throw new Error(
           `Inconsistent elements: ${elDatasetId} (${logIdentifier})`

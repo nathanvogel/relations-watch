@@ -4,6 +4,7 @@ const createRouter = require("@arangodb/foxx/router");
 
 const operations = require("./operations");
 const entSchema = require("../utils/schemas").entSchema;
+const relSchema = require("../utils/schemas").relSchema;
 const entityArraySchema = joi.array().items(entSchema.optional());
 const CONST = require("../utils/const.js");
 
@@ -79,8 +80,8 @@ router
       req.body,
       datasetid,
       collection,
-      unchangeable,
-      overriding
+      overriding,
+      unchangeable
     );
 
     res.send(updates);
@@ -112,11 +113,16 @@ router
   .body(
     joi
       .array()
-      .items(entSchema)
+      .items(
+        joi
+          .alternatives()
+          .try(entSchema)
+          .try(relSchema)
+      )
       .allow([])
       .optional(),
     undefined,
-    "Array of entities from the dataset."
+    "Array of elements from the dataset."
   )
   .response(
     joi.object().keys({
@@ -124,7 +130,7 @@ router
       existingElements: entityArraySchema,
       elementsToPatch: entityArraySchema
     }),
-    "List of array of matched entities"
+    "List of array of matched elements"
   )
   .summary("For a given dataset, returns the necessary updates")
   .description(`Returns:
