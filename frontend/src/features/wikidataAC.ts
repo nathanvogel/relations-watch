@@ -19,7 +19,8 @@ import {
   SourceLinkType,
   isClaimSnakEntityValue,
   SimilarEntities,
-  ImportStage
+  ImportStage,
+  DatasetDiffResponseData
 } from "../utils/types";
 import CONSTS from "../utils/consts";
 import { RootStore, DataImportState } from "../Store";
@@ -92,6 +93,20 @@ const WD_ENTITY_TYPE_MAPS: { [key: number]: Array<string> } = {
     "Q18669875"
   ]
 };
+
+const ENT_OVERRIDING_PROPS: Array<keyof Entity> = ["name", "text"];
+const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = ["type"];
+const REL_OVERRIDING_PROPS: Array<keyof Edge> = [
+  "type",
+  "fType",
+  "text",
+  "owned",
+  "amount",
+  "exactAmount",
+  "_from",
+  "_to"
+];
+const REL_UNCHANGEABLE_PROPS: Array<keyof Edge> = [];
 
 type WDResponseData = {
   success?: number;
@@ -403,10 +418,10 @@ export const fetchWikidataGraphAndFamiliarEntities = (
  */
 export const patchSimilarEntities = (entryId: string) => async (
   dispatch: Dispatch,
-  store: RootStore
+  getState: () => RootStore
 ): Promise<void> => {
   console.log("patchSimilarEntities");
-  const state: DataImportState = store.dataimport[entryId];
+  const state: DataImportState = getState().dataimport[entryId];
 
   const entitiesToPatch: Entity[] = [];
   for (let dsid in state.similarEntities) {
@@ -431,17 +446,65 @@ export const patchSimilarEntities = (entryId: string) => async (
     console.error(err);
     dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
   }
+
+  diffDataset(entryId)(dispatch, getState);
 };
 
-export const getEntitiesUpdate = (requestId: string) => async (
-  dispatch: Dispatch
+export const diffDataset = (entryId: string) => async (
+  dispatch: Dispatch,
+  getState: () => RootStore
 ): Promise<void> => {
-  // dispatch(actionRequest(requestId));
+  console.log("diffDataset");
+  const state: DataImportState = getState().dataimport[entryId];
+
+  const entities = Object.keys(state.dsEntities).map(
+    key => state.dsEntities[key]
+  );
+  const edges = Object.keys(state.dsEdges).map(key => state.dsEdges[key]);
 
   try {
+    if (entities.length > 0) {
+      dispatch(actions.wentToStage(entryId, ImportStage.FetchingEntityDiff));
+      const entUpdates: DatasetDiffResponseData<
+        Entity
+      > = await checkAxiosResponse(
+        await api.post("/dataimport/diff", entities, {
+          params: {
+            datasetid: DatasetId.Wikidata,
+            collection: "entities",
+            unchangeable: ENT_UNCHANGEABLE_PROPS,
+            overriding: ENT_OVERRIDING_PROPS
+          },
+          paramsSerializer: function(params) {
+            return qs.stringify(params, { arrayFormat: "repeat" });
+          }
+        })
+      );
+      console.log("ENTITIES:", entUpdates);
+      dispatch(actions.wentToStage(entryId, ImportStage.FetchedEntityDiff));
+
+      dispatch(actions.wentToStage(entryId, ImportStage.FetchingEdgeDiff));
+      const relUpdates: DatasetDiffResponseData<
+        Edge
+      > = await checkAxiosResponse(
+        await api.post("/dataimport/diff", edges, {
+          params: {
+            datasetid: DatasetId.Wikidata,
+            collection: "relations",
+            unchangeable: REL_UNCHANGEABLE_PROPS,
+            overriding: REL_OVERRIDING_PROPS
+          },
+          paramsSerializer: function(params) {
+            return qs.stringify(params, { arrayFormat: "repeat" });
+          }
+        })
+      );
+      console.log("EDGES:", relUpdates);
+      dispatch(actions.wentToStage(entryId, ImportStage.FetchedEdgeDiff));
+    }
   } catch (err) {
     console.error(err);
-    // Dispatch err
+    dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
   }
 };
 

@@ -11,6 +11,8 @@ import { RootStore } from "../Store";
 import * as actions from "../features/wikidataAC";
 import * as instantActions from "../features/wikidataActions";
 import SimilarEntitiesSelector from "../components/dataimport/SimilarEntitiesSelector";
+import IconButton from "../components/buttons/IconButton";
+import ButtonBar from "../components/buttons/ButtonBar";
 
 const Content = styled.div`
   ${PageWidthSizer}
@@ -44,7 +46,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       startImport: actions.fetchWikidataGraphAndFamiliarEntities,
-      selectSimilarEntity: instantActions.selectSimilarEntity
+      selectSimilarEntity: instantActions.selectSimilarEntity,
+      patchSimilarEntities: actions.patchSimilarEntities
     },
     dispatch
   );
@@ -88,15 +91,29 @@ const ImportScreen: FunctionComponent<Props> = props => {
     case ImportStage.FetchingSimilarEntities:
       return <Loading>Fetching similar entities</Loading>;
     case ImportStage.FetchedSimilarEntities:
+      const buttons = (
+        <ButtonBar buttonsAlign="right">
+          <IconButton
+            withText
+            onClick={() => props.patchSimilarEntities(namespace)}
+          >
+            Merge selected entities
+          </IconButton>
+        </ButtonBar>
+      );
       return (
-        <SimilarEntitiesSelector
-          dsEntities={props.data.dsEntities}
-          similarEntities={props.data.similarEntities}
-          similarEntitiesSelection={props.data.similarEntitiesSelection}
-          selectEntity={(entityKey: string, selection: number) =>
-            props.selectSimilarEntity(namespace, entityKey, selection)
-          }
-        />
+        <React.Fragment>
+          {buttons}
+          <SimilarEntitiesSelector
+            dsEntities={props.data.dsEntities}
+            similarEntities={props.data.similarEntities}
+            similarEntitiesSelection={props.data.similarEntitiesSelection}
+            selectEntity={(entityKey: string, selection: number) =>
+              props.selectSimilarEntity(namespace, entityKey, selection)
+            }
+          />
+          {buttons}
+        </React.Fragment>
       );
   }
 

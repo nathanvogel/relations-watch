@@ -25,12 +25,7 @@ db.useDatabase("_system");
 db.useBasicAuth("root", "");
 const ENT_OVERRIDING_PROPS: Array<keyof Entity> = [];
 const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = ["type"];
-const REL_OVERRIDING_PROPS: Array<keyof Edge> = [
-  "type",
-  "text",
-  "owned",
-  "sources"
-];
+const REL_OVERRIDING_PROPS: Array<keyof Edge> = ["type", "text", "owned"];
 const REL_UNCHANGEABLE_PROPS: Array<keyof Edge> = [];
 const LOGDIR = C.DEV ? "logs/dev/" : "logs/prod/";
 const ts = () => Date.now();

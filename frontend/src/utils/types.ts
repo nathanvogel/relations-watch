@@ -360,3 +360,9 @@ export enum ImportStage {
 
 export type SimilarEntities = { [entryDatasetId: string]: Entity[] };
 export type SimilarEntitiesSelection = { [entryDatasetId: string]: number };
+
+export type DatasetDiffResponseData<T> = {
+  existingElements: T[];
+  elementsToPatch: T[];
+  elementsToPost: T[];
+};
