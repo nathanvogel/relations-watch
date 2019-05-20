@@ -10,7 +10,11 @@ import {
   EdgePreview,
   Edge,
   EntityPreview,
-  Source
+  Source,
+  Dictionary,
+  ImportStage,
+  SimilarEntities,
+  SimilarEntitiesSelection
 } from "./utils/types";
 
 // import { createLogger } from "redux-logger";
@@ -73,4 +77,23 @@ export interface RootStore {
   };
   sourceForms: { [key: string]: Source };
   entitySelection: string[];
+  dataimport: {
+    [entryPoint: string]: DataImportState;
+  };
+}
+
+export interface DataImportState {
+  dsEdges: Dictionary<Edge>;
+  dsEntities: Dictionary<Entity>;
+  similarEntities: SimilarEntities;
+  similarEntitiesSelection: SimilarEntitiesSelection;
+  existingEntities: Entity[];
+  entitiesToPatch: Entity[];
+  entitiesToPost: Entity[];
+  existingEdges: Edge[];
+  edgesToPatch: Edge[];
+  edgesToPost: Edge[];
+  importStage: ImportStage;
+  error?: ErrorPayload;
+  depth?: number;
 }

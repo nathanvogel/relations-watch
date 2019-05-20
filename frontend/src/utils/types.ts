@@ -336,3 +336,27 @@ export function isClaimSnakValue(
     typeof (datavalue as any).type === "string"
   );
 }
+
+export enum ImportStage {
+  Clear,
+  FetchingDataset,
+  FetchedDataset,
+  FetchingSimilarEntities,
+  FetchedSimilarEntities,
+  // Here we're waiting for the user to select which entities are similar
+  PostingSimilarEntities,
+  PostedSimilarEntities,
+  FetchingEntityDiff,
+  FetchedEntityDiff,
+  // Here we're waiting for the user to select which entities should be uploaded.
+  PostingEntityDiff,
+  PostedEntityDiff,
+  FetchingEdgeDiff,
+  FetchedEdgeDiff,
+  // Here we're waiting for the user to select which edge should be uploaded.
+  PostingEdgeDiff,
+  PostedEdgeDiff
+}
+
+export type SimilarEntities = { [entryDatasetId: string]: Entity[] };
+export type SimilarEntitiesSelection = { [entryDatasetId: string]: number };

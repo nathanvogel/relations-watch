@@ -16,6 +16,7 @@ const theme: DefaultTheme = {
   appBG: "#FFFFFF",
   lightBG: "#EFEFF2",
   inputBG: "#EFEFF2",
+  errorBG: "#E37777",
   border: "#ededed",
   borderHover: "#8A879B",
   surfaceHover: "#B8B7BC",

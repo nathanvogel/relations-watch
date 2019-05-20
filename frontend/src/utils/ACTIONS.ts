@@ -67,3 +67,17 @@ export const SelectEntities = "SelectEntities";
 export type SelectEntities = typeof SelectEntities;
 export const DeselectEntities = "DeselectEntities";
 export type DeselectEntities = typeof DeselectEntities;
+
+// ===== Dataset Import
+export const DI_DatasetRequested = "DI_DatasetRequested";
+export type DI_DatasetRequested = typeof DI_DatasetRequested;
+export const DI_DatasetFetched = "DI_DatasetFetched";
+export type DI_DatasetFetched = typeof DI_DatasetFetched;
+export const DI_SimilarEntitiesRequested = "DI_SimilarEntitiesRequested";
+export type DI_SimilarEntitiesRequested = typeof DI_SimilarEntitiesRequested;
+export const DI_SimilarEntitiesFetched = "DI_SimilarEntitiesFetched";
+export type DI_SimilarEntitiesFetched = typeof DI_SimilarEntitiesFetched;
+export const DI_SimilarEntitiesPostSent = "DI_SimilarEntitiesPostSent";
+export type DI_SimilarEntitiesPostSent = typeof DI_SimilarEntitiesPostSent;
+export const DI_SimilarEntitiesPosted = "DI_SimilarEntitiesPosted";
+export type DI_SimilarEntitiesPosted = typeof DI_SimilarEntitiesPosted;

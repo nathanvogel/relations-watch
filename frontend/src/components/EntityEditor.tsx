@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import cuid from "cuid";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
@@ -13,13 +13,12 @@ import {
   patchEntity
 } from "../features/entitiesSaveAC";
 import { loadEntity } from "../features/entitiesLoadAC";
-import { Status, Entity, EntityType } from "../utils/types";
+import { Status, Entity, EntityType, DatasetId } from "../utils/types";
 import EntityForm from "./entityEditor/EntityForm";
 import Meta from "./meta/Meta";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { shouldLoad } from "../utils/utils";
 import IconButton from "./buttons/IconButton";
-import { importWikidataGraph } from "../features/wikidataAC";
 import Input from "./inputs/Input";
 
 const Content = styled.div`
@@ -34,7 +33,8 @@ type OwnProps = {
 };
 
 type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
+  ReturnType<typeof mapDispatchToProps> &
+  RouteComponentProps;
 
 // It's hard to control when they're re-created through the React lifecycle
 // so the user just manually clears it when it's okay.
@@ -78,8 +78,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       loadEntity,
       postEntity,
       patchEntity,
-      clearPostRequest,
-      importWikidataGraph
+      clearPostRequest
     },
     dispatch
   );
@@ -114,9 +113,8 @@ class EntityEditor extends React.Component<Props> {
 
   onImportWikidata = (e: React.FormEvent) => {
     e.preventDefault();
-    this.props.importWikidataGraph(
-      this.state.wikidataField,
-      "wd_" + this.props.editorId
+    this.props.history.push(
+      `/${ROUTES.import}/${DatasetId.Wikidata}/${this.state.wikidataField}`
     );
   };
 
@@ -175,7 +173,9 @@ class EntityEditor extends React.Component<Props> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EntityEditor);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EntityEditor)
+);

@@ -8,6 +8,7 @@ import RelationsScreen from "./RelationsScreen";
 import RT from "../utils/ROUTES";
 import { CreateEntityScreen } from "./CreateEntityScreen";
 import { getRelationId } from "../utils/utils";
+import ImportScreen from "./ImportScreen";
 
 class App extends Component {
   render() {
@@ -19,6 +20,10 @@ class App extends Component {
           <Route
             path={`/${RT.add}/${RT.entity}`}
             component={CreateEntityScreen}
+          />
+          <Route
+            path={`/${RT.import}/:datasetId/:entityDatasetId`}
+            component={ImportScreen}
           />
           <Route
             path={`/${RT.edit}/${RT.entity}/:entityKey?`}

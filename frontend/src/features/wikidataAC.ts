@@ -18,7 +18,8 @@ import {
   RelationType as RT,
   FamilialLink as FL,
   SourceLinkType,
-  isClaimSnakEntityValue
+  isClaimSnakEntityValue,
+  SimilarEntities
 } from "../utils/types";
 import CONSTS from "../utils/consts";
 import { RootStore } from "../Store";
@@ -26,6 +27,7 @@ import { arrayWithoutDuplicates } from "../utils/utils";
 import { loadEntities } from "./entitiesLoadAC";
 import wd, { Property, Entity as WDEntity } from "wikidata-sdk";
 import { Dictionary as WDDictionary } from "wikidata-sdk/types/helper";
+import * as actions from "./wikidataActions";
 
 // const wikidata = axios.create({
 //   baseURL: "https://www.wikidata.org/w/api.php",
@@ -336,7 +338,7 @@ async function getWikidataGraph(entryPoint: string, depth: number) {
 }
 
 async function findFamiliarEntities(dsEntities: Entity[]) {
-  return api.post("/dataimport/similar/entities", dsEntities, {
+  return (await api.post("/dataimport/similar/entities", dsEntities, {
     params: {
       datasetid: DatasetId.Wikidata,
       unchangeable: ["type"]
@@ -346,34 +348,36 @@ async function findFamiliarEntities(dsEntities: Entity[]) {
     paramsSerializer: function(params) {
       return qs.stringify(params, { arrayFormat: "repeat" });
     }
-  });
+  })).data as SimilarEntities;
 }
 
 /**
  * Upload new entities to the database.
  */
-export const importWikidataGraph = (
-  entryPointId: string,
-  requestId: string
+export const fetchWikidataGraphAndFamiliarEntities = (
+  entryId: string
 ) => async (dispatch: Dispatch): Promise<void> => {
-  // dispatch(actionRequest(requestId));
+  console.log("fetchWikidataGraphAndFamiliarEntities");
+  dispatch(actions.requestedDataset(entryId));
 
   try {
-    const { dsEdges, dsEntities } = await getWikidataGraph(entryPointId, 1);
-    // They're just dataset edges for now, without _key and with local _from/to
-    // We don't want to show the edges and entities before having checked
-    // if they already exists in the DB, so don't dispatch them yet.
+    const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 1);
 
-    const familiarEntities = await findFamiliarEntities(
+    dispatch(actions.fetchedDataset(entryId, dsEdges, dsEntities));
+    // They're just dataset edges for now, without _key and with local _from/to
+
+    dispatch(actions.requestedSimilarEntities(entryId));
+    const similarEntities = await findFamiliarEntities(
       Object.keys(dsEntities).map(key => dsEntities[key])
     );
-    console.log("Familiar?", familiarEntities);
+    dispatch(actions.fetchedSimilarEntities(entryId, similarEntities));
+    console.log("Familiar?", similarEntities);
 
     /*
     // distpach() dsEdges and entities to the requestId
-    if (familiarEntities.length > 0) {
-      // dispatch() familiarEntities + dsEdges + dsEntities
-      // As long as there're familiarEntities in the Redux Store,
+    if (similarEntities.length > 0) {
+      // dispatch() similarEntities + dsEdges + dsEntities
+      // As long as there're similarEntities in the Redux Store,
       // the importer UI should show the merge selection screen.
     } else {
       // dispatch() dsEdges + dsEntities
