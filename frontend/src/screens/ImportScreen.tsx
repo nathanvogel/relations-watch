@@ -73,6 +73,8 @@ const ImportScreen: FunctionComponent<Props> = props => {
   if (!props.entityDatasetId)
     return <ErrorBox>Missing ID of the entry point.</ErrorBox>;
   if (!props.data) return <div>Data not loaded</div>;
+  if (props.data && props.data.error)
+    return <ErrorBox>{props.data.error.eMessage}</ErrorBox>;
 
   const namespace = props.entityDatasetId;
 

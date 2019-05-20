@@ -94,6 +94,6 @@ export interface DataImportState {
   edgesToPatch: Edge[];
   edgesToPost: Edge[];
   importStage: ImportStage;
-  error?: ErrorPayload;
-  depth?: number;
+  error: ErrorPayload | null;
+  depth: number | null;
 }

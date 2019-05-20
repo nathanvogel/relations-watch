@@ -9,6 +9,7 @@ type Props = {
 };
 
 const Box = styled.div`
+  padding: ${props => props.theme.blockPadding};
   background-color: ${props => props.theme.errorBG};
   border-radius: ${props => props.theme.radius};
 `;

@@ -246,7 +246,7 @@ function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
   return edges;
 }
 
-function checkWDResponse(response: AxiosResponse) {
+async function checkWDResponse(response: AxiosResponse) {
   if (response.status !== 200) {
     console.error("Error in Wikidata response:");
     console.error(response.data);
@@ -255,7 +255,7 @@ function checkWDResponse(response: AxiosResponse) {
   return response.data;
 }
 
-function checkWDEntityData(data: WDResponseData) {
+async function checkWDEntityData(data: WDResponseData) {
   if (data.success !== 1) {
     console.error("Wikidata response success check failed: " + data.success);
     console.log(data);
@@ -288,7 +288,9 @@ async function getElementsFromWikidataEntries(
     WD_PARAMS.props,
     "json"
   );
-  const wdEntities = checkWDEntityData(checkWDResponse(await axios.get(url)));
+  const wdEntities = await checkWDEntityData(
+    await checkWDResponse(await axios.get(url))
+  );
 
   // Convert the results to our format
   if (wdEntities) {
@@ -389,7 +391,13 @@ export const fetchWikidataGraphAndFamiliarEntities = (
     */
   } catch (err) {
     console.error(err);
-    // Dispatch err
+    dispatch(
+      actions.dataimportError(entryId, {
+        eData: err,
+        eMessage: err && err.message ? err.message : "Unknown error!",
+        eStatus: err.code
+      })
+    );
   }
 };
 

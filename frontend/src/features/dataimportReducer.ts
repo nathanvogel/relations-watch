@@ -8,7 +8,8 @@ import {
   SimilarEntities,
   Entity,
   ImportStage,
-  SimilarEntitiesSelection
+  SimilarEntitiesSelection,
+  ErrorPayload
 } from "../utils/types";
 import { combineReducers } from "redux";
 import { DataImportState } from "../Store";
@@ -78,6 +79,15 @@ const stageReducer = (
   }
 };
 
+const errorReducer = (state: ErrorPayload | null = null, action: DI_Action) => {
+  switch (action.type) {
+    case ACTIONS.DI_Error:
+      return action.error;
+    default:
+      return state;
+  }
+};
+
 const defaultReducer = (state: any = {}, action: DI_Action) => state;
 
 export default combineReducers<DataImportState, DI_Action>({
@@ -92,6 +102,6 @@ export default combineReducers<DataImportState, DI_Action>({
   edgesToPatch: defaultReducer,
   edgesToPost: defaultReducer,
   importStage: stageReducer,
-  error: defaultReducer,
+  error: errorReducer,
   depth: defaultReducer
 });

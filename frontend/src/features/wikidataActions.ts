@@ -1,5 +1,11 @@
 import * as ACTIONS from "../utils/ACTIONS";
-import { Edge, Entity, Dictionary, SimilarEntities } from "../utils/types";
+import {
+  Edge,
+  Entity,
+  Dictionary,
+  SimilarEntities,
+  ErrorPayload
+} from "../utils/types";
 
 // ===== Dataset Fetching
 interface DI_DatasetRequested_Action {
@@ -35,6 +41,22 @@ export function fetchedDataset(
 }
 
 // ===== Find Similar Entities
+interface DI_Error_Action {
+  type: ACTIONS.DI_Error;
+  namespace: string;
+  error: ErrorPayload;
+}
+export function dataimportError(
+  namespace: string,
+  error: ErrorPayload
+): DI_Error_Action {
+  return {
+    type: ACTIONS.DI_Error,
+    namespace,
+    error
+  };
+}
+
 interface DI_SimilarEntitiesRequested_Action {
   type: ACTIONS.DI_SimilarEntitiesRequested;
   namespace: string;
@@ -88,4 +110,5 @@ export type DI_Action =
   | DI_DatasetFetched_Action
   | DI_SimilarEntitiesRequested_Action
   | DI_SimilarEntitiesFetched_Action
-  | DI_SimilarEntitySelected_Action;
+  | DI_SimilarEntitySelected_Action
+  | DI_Error_Action;
