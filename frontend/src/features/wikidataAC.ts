@@ -199,7 +199,7 @@ function familyEdges(
   for (let propertyId in propertiesToEdgeType) {
     // Check if we have a property of this type
     if (!claims.hasOwnProperty(propertyId)) {
-      console.log("No " + propertyId + " claims");
+      // console.log("No " + propertyId + " claims");
       continue;
     }
     // We do! So we can select the appropriate mapping
@@ -371,7 +371,6 @@ export const fetchWikidataGraphAndFamiliarEntities = (
       Object.keys(dsEntities).map(key => dsEntities[key])
     );
     dispatch(actions.fetchedSimilarEntities(entryId, similarEntities));
-    console.log("Familiar?", similarEntities);
 
     /*
     // distpach() dsEdges and entities to the requestId

@@ -81,3 +81,5 @@ export const DI_SimilarEntitiesPostSent = "DI_SimilarEntitiesPostSent";
 export type DI_SimilarEntitiesPostSent = typeof DI_SimilarEntitiesPostSent;
 export const DI_SimilarEntitiesPosted = "DI_SimilarEntitiesPosted";
 export type DI_SimilarEntitiesPosted = typeof DI_SimilarEntitiesPosted;
+export const DI_SimilarEntitySelected = "DI_SimilarEntitySelected";
+export type DI_SimilarEntitySelected = typeof DI_SimilarEntitySelected;

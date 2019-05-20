@@ -3,15 +3,13 @@ import { DI_Action } from "./wikidataActions";
 import update from "immutability-helper";
 
 import {
-  Source,
-  SourceType,
   Dictionary,
   Edge,
   SimilarEntities,
   Entity,
-  ImportStage
+  ImportStage,
+  SimilarEntitiesSelection
 } from "../utils/types";
-import { getArray } from "../utils/utils";
 import { combineReducers } from "redux";
 import { DataImportState } from "../Store";
 
@@ -50,6 +48,18 @@ const similarEntitiesReducer = (
   }
 };
 
+const similarEntitiesSelectionReducer = (
+  state: SimilarEntitiesSelection = {},
+  action: DI_Action
+) => {
+  switch (action.type) {
+    case ACTIONS.DI_SimilarEntitySelected:
+      return update(state, { [action.entityKey]: { $set: action.selection } });
+    default:
+      return state;
+  }
+};
+
 const stageReducer = (
   state: ImportStage = ImportStage.Clear,
   action: DI_Action
@@ -74,7 +84,7 @@ export default combineReducers<DataImportState, DI_Action>({
   dsEdges: dsEdgesReducer,
   dsEntities: dsEntitiesReducer,
   similarEntities: similarEntitiesReducer,
-  similarEntitiesSelection: defaultReducer,
+  similarEntitiesSelection: similarEntitiesSelectionReducer,
   existingEntities: defaultReducer,
   entitiesToPatch: defaultReducer,
   entitiesToPost: defaultReducer,

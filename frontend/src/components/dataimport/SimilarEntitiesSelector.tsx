@@ -6,15 +6,8 @@ import {
   Dictionary
 } from "../../utils/types";
 import styled from "styled-components";
-import ImportEntityPreview from "./ImportEntityPreview";
 import { media } from "../../styles/media-styles";
 import BaseImportEntity from "./BaseImportEntity";
-
-type Props = {
-  dsEntities: Dictionary<Entity>;
-  similarEntities: SimilarEntities;
-  similarEntitiesSelection: SimilarEntitiesSelection;
-};
 
 const Row = styled.div`
   width: 100%;
@@ -62,10 +55,17 @@ const Label = styled.label`
   }
 `;
 
+type Props = {
+  dsEntities: Dictionary<Entity>;
+  similarEntities: SimilarEntities;
+  similarEntitiesSelection: SimilarEntitiesSelection;
+  selectEntity: (entityKey: string, selection: number) => void;
+};
+
 const SimilarEntitiesSelector: FunctionComponent<Props> = props => {
   const onSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected = parseInt(event.target.value);
-    console.log("Selected " + selected + " of " + event.target.name);
+    props.selectEntity(event.target.name, selected);
   };
 
   return (
@@ -95,7 +95,10 @@ const SimilarEntitiesSelector: FunctionComponent<Props> = props => {
                 name={key}
                 value={-1}
                 onChange={onSelect}
-                checked={(props.similarEntitiesSelection[key] || -1) === -1}
+                checked={
+                  !props.similarEntitiesSelection.hasOwnProperty(key) ||
+                  props.similarEntitiesSelection[key] === -1
+                }
               />
               Create new
             </Label>

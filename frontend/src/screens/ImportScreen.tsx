@@ -9,6 +9,7 @@ import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import { Dispatch, AnyAction, bindActionCreators } from "redux";
 import { RootStore } from "../Store";
 import * as actions from "../features/wikidataAC";
+import * as instantActions from "../features/wikidataActions";
 import SimilarEntitiesSelector from "../components/dataimport/SimilarEntitiesSelector";
 
 const Content = styled.div`
@@ -42,7 +43,8 @@ const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
-      startImport: actions.fetchWikidataGraphAndFamiliarEntities
+      startImport: actions.fetchWikidataGraphAndFamiliarEntities,
+      selectSimilarEntity: instantActions.selectSimilarEntity
     },
     dispatch
   );
@@ -72,6 +74,8 @@ const ImportScreen: FunctionComponent<Props> = props => {
     return <ErrorBox>Missing ID of the entry point.</ErrorBox>;
   if (!props.data) return <div>Data not loaded</div>;
 
+  const namespace = props.entityDatasetId;
+
   switch (props.data.importStage) {
     case ImportStage.FetchingDataset:
       return <Loading>Loading from Wikidata</Loading>;
@@ -87,6 +91,9 @@ const ImportScreen: FunctionComponent<Props> = props => {
           dsEntities={props.data.dsEntities}
           similarEntities={props.data.similarEntities}
           similarEntitiesSelection={props.data.similarEntitiesSelection}
+          selectEntity={(entityKey: string, selection: number) =>
+            props.selectSimilarEntity(namespace, entityKey, selection)
+          }
         />
       );
   }

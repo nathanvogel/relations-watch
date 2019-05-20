@@ -64,8 +64,28 @@ export function fetchedSimilarEntities(
   };
 }
 
+interface DI_SimilarEntitySelected_Action {
+  type: ACTIONS.DI_SimilarEntitySelected;
+  namespace: string;
+  selection: number;
+  entityKey: string;
+}
+export function selectSimilarEntity(
+  namespace: string,
+  entityKey: string,
+  selection: number
+): DI_SimilarEntitySelected_Action {
+  return {
+    type: ACTIONS.DI_SimilarEntitySelected,
+    namespace,
+    selection,
+    entityKey
+  };
+}
+
 export type DI_Action =
   | DI_DatasetRequested_Action
   | DI_DatasetFetched_Action
   | DI_SimilarEntitiesRequested_Action
-  | DI_SimilarEntitiesFetched_Action;
+  | DI_SimilarEntitiesFetched_Action
+  | DI_SimilarEntitySelected_Action;
