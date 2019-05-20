@@ -30,7 +30,8 @@ import { RootStore, DataImportState } from "../Store";
 import {
   arrayWithoutDuplicates,
   errToErrorPayload,
-  getDsKeyObject
+  getDsKeyObject,
+  getKeyObject
 } from "../utils/utils";
 import * as actions from "./wikidataActions";
 
@@ -463,11 +464,14 @@ export const diffDataset = (entryId: string) => async (
   const edges = Object.keys(state.dsEdges).map(key => state.dsEdges[key]);
 
   try {
+    var entUpdates: DatasetDiffResponseData<Entity> = {
+      existingElements: [],
+      elementsToPost: [],
+      elementsToPatch: []
+    };
     if (entities.length > 0) {
       dispatch(actions.wentToStage(entryId, ImportStage.FetchingEntityDiff));
-      const entUpdates: DatasetDiffResponseData<
-        Entity
-      > = await checkAxiosResponse(
+      entUpdates = await checkAxiosResponse(
         await api.post("/dataimport/diff", entities, {
           params: {
             datasetid: DatasetId.Wikidata,
@@ -484,12 +488,34 @@ export const diffDataset = (entryId: string) => async (
       dispatch(actions.fetchedEntitiesDiff(entryId, entUpdates));
     }
 
-    if (edges.length > 0) {
+    // Compute which edges can already have their _from and _to keys set
+    // so that the diff doesn't unecessary include them in the update.
+    // If the entity already exists, there's a chance that the edge too.
+    // This is all necessary in case the _from or _to props change,
+    // we would then need to update it.
+    const dbEntitiesByDskey = Object.assign(
+      {},
+      getDsKeyObject(entUpdates.existingElements, DatasetId.Wikidata),
+      getDsKeyObject(entUpdates.elementsToPatch, DatasetId.Wikidata)
+    );
+    // Needed to revert the effects later.
+    const dbEntitiesByDbkey = Object.assign(
+      {},
+      getKeyObject(entUpdates.existingElements, "_key"),
+      getKeyObject(entUpdates.elementsToPatch, "_key")
+    );
+    const dbEdges = dsEdgesToDbEdges(edges, dbEntitiesByDskey, "entities/");
+
+    // Diff the edges
+    var relUpdates: DatasetDiffResponseData<Edge> = {
+      existingElements: [],
+      elementsToPost: [],
+      elementsToPatch: []
+    };
+    if (dbEdges.length > 0) {
       dispatch(actions.wentToStage(entryId, ImportStage.FetchingEdgeDiff));
-      const relUpdates: DatasetDiffResponseData<
-        Edge
-      > = await checkAxiosResponse(
-        await api.post("/dataimport/diff", edges, {
+      relUpdates = await checkAxiosResponse(
+        await api.post("/dataimport/diff", dbEdges, {
           params: {
             datasetid: DatasetId.Wikidata,
             collection: "relations",
@@ -501,8 +527,26 @@ export const diffDataset = (entryId: string) => async (
           }
         })
       );
-      console.log("EDGES:", relUpdates);
-      dispatch(actions.fetchedEdgesDiff(entryId, relUpdates));
+      const dsRelUpdate = {
+        existingElements: dbEdgesToDsEdges(
+          relUpdates.existingElements,
+          dbEntitiesByDbkey,
+          "entities/"
+        ),
+        elementsToPost: dbEdgesToDsEdges(
+          relUpdates.elementsToPost,
+          dbEntitiesByDbkey,
+          "entities/"
+        ),
+        elementsToPatch: dbEdgesToDsEdges(
+          relUpdates.elementsToPatch,
+          dbEntitiesByDbkey,
+          "entities/"
+        )
+      };
+      console.log("EDGES (db):", relUpdates);
+      console.log("EDGES (ds):", dsRelUpdate);
+      dispatch(actions.fetchedEdgesDiff(entryId, dsRelUpdate));
     }
     // Now we can ask the user to confirm the dataset import!
     dispatch(
@@ -587,14 +631,39 @@ export const confirmImport = (entryId: string) => async (
 
 function dsEdgesToDbEdges(
   dsEdges: Edge[],
-  dbEntitiesByDsid: Dictionary<Entity>
+  dbEntitiesByDsid: Dictionary<Entity>,
+  prefix: string = ""
 ) {
   return dsEdges.map(edge =>
-    update(edge, {
-      _from: { $set: dbEntitiesByDsid[edge._from]._key as string },
-      _to: { $set: dbEntitiesByDsid[edge._to]._key as string }
-    })
+    dbEntitiesByDsid[edge._from] && dbEntitiesByDsid[edge._to]
+      ? update(edge, {
+          _from: {
+            $set: (prefix + dbEntitiesByDsid[edge._from]._key) as string
+          },
+          _to: { $set: (prefix + dbEntitiesByDsid[edge._to]._key) as string }
+        })
+      : edge
   );
+}
+
+function dbEdgesToDsEdges(
+  dbEdges: Edge[],
+  dbEntitiesByDbid: Dictionary<Entity>,
+  prefix: string = ""
+) {
+  return dbEdges.map(edge => {
+    const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
+    const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
+    if (from && from.ds)
+      edge = update(edge, {
+        _from: { $set: from.ds[DatasetId.Wikidata] as string }
+      });
+    if (to && to.ds)
+      edge = update(edge, {
+        _to: { $set: to.ds[DatasetId.Wikidata] as string }
+      });
+    return edge;
+  });
 }
 
 export const clearPostRequest = (requestId: string) => (
