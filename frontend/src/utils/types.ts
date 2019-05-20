@@ -355,7 +355,8 @@ export enum ImportStage {
   PostingEntityDiff,
   PostedEntityDiff,
   PostingEdgeDiff,
-  PostedEdgeDiff
+  PostedEdgeDiff,
+  ImportSuccessful
 }
 
 export type SimilarEntities = { [entryDatasetId: string]: Entity[] };

@@ -1,6 +1,9 @@
 import { Dispatch } from "redux";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import qs from "qs";
+import update from "immutability-helper";
+import wd, { Property, Entity as WDEntity } from "wikidata-sdk";
+import { Dictionary as WDDictionary } from "wikidata-sdk/types/helper";
 
 import api, { checkError, checkResponse } from "../utils/api";
 import ACTIONS from "../utils/ACTIONS";
@@ -24,9 +27,11 @@ import {
 } from "../utils/types";
 import CONSTS from "../utils/consts";
 import { RootStore, DataImportState } from "../Store";
-import { arrayWithoutDuplicates, errToErrorPayload } from "../utils/utils";
-import wd, { Property, Entity as WDEntity } from "wikidata-sdk";
-import { Dictionary as WDDictionary } from "wikidata-sdk/types/helper";
+import {
+  arrayWithoutDuplicates,
+  errToErrorPayload,
+  getDsKeyObject
+} from "../utils/utils";
 import * as actions from "./wikidataActions";
 
 // const wikidata = axios.create({
@@ -402,22 +407,6 @@ export const fetchWikidataGraphAndFamiliarEntities = (
       Object.keys(dsEntities).map(key => dsEntities[key])
     );
     dispatch(actions.fetchedSimilarEntities(entryId, similarEntities));
-
-    /*
-    // distpach() dsEdges and entities to the requestId
-    if (similarEntities.length > 0) {
-      // dispatch() similarEntities + dsEdges + dsEntities
-      // As long as there're similarEntities in the Redux Store,
-      // the importer UI should show the merge selection screen.
-    } else {
-      // dispatch() dsEdges + dsEntities
-      // When there're only edges and entities, the UI first shows the new entities
-      // and asks which to import.
-      // (and maybe display the edge texts in grey)
-      await getEntitiesUpdate(requestId)(dispatch);
-      // It also display which entities should be patched and which already exists.
-    }
-    */
   } catch (err) {
     console.error(err);
     dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
@@ -524,6 +513,89 @@ export const diffDataset = (entryId: string) => async (
     dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
   }
 };
+
+export const confirmImport = (entryId: string) => async (
+  dispatch: Dispatch,
+  getState: () => RootStore
+): Promise<void> => {
+  console.log("confirmImport");
+  const state: DataImportState = getState().dataimport[entryId];
+
+  var patchedEntities: Entity[] = [];
+  var postedEntities: Entity[] = [];
+
+  try {
+    console.log("==== Entities to POST: ====");
+    console.log(state.entitiesToPost);
+    dispatch(actions.wentToStage(entryId, ImportStage.PostingEntityDiff));
+    if (state.entitiesToPost.length > 0) {
+      console.log("==== POSTing entities ====");
+      postedEntities = await checkAxiosResponse(
+        await api.post(`/entities`, state.entitiesToPost)
+      );
+    }
+    console.log("==== Entities to PATCH: ====");
+    console.log(state.entitiesToPatch);
+    if (state.entitiesToPatch.length > 0) {
+      console.log("==== PATCHing entities ====");
+      patchedEntities = await checkAxiosResponse(
+        await api.patch(`/entities`, state.entitiesToPatch)
+      );
+    }
+    dispatch(actions.wentToStage(entryId, ImportStage.PostedEntityDiff));
+
+    // The manually merged entities were already fetched back into
+    // existing entities, so no need to put them in allEntities
+    const allEntities = Object.assign(
+      {},
+      getDsKeyObject(state.existingEntities, DatasetId.Wikidata),
+      getDsKeyObject(postedEntities, DatasetId.Wikidata),
+      getDsKeyObject(patchedEntities, DatasetId.Wikidata)
+    );
+    const entitiesCount = Object.keys(allEntities).length;
+    console.log(`===== Done importing ${entitiesCount} entities =====`);
+
+    const dbEdgesToPost = dsEdgesToDbEdges(state.edgesToPost, allEntities);
+    const dbEdgesToPatch = dsEdgesToDbEdges(state.edgesToPatch, allEntities);
+    var patchedEdges: Entity[] = [];
+    var postedEdges: Entity[] = [];
+
+    dispatch(actions.wentToStage(entryId, ImportStage.PostingEdgeDiff));
+    console.log("==== Edges to POST: ====");
+    console.log(dbEdgesToPost);
+    if (dbEdgesToPost.length > 0) {
+      console.log("==== POSTing edges ====");
+      postedEdges = await checkAxiosResponse(
+        await api.post(`/relations`, dbEdgesToPost)
+      );
+    }
+    console.log("==== Edges to PATCH: ====");
+    console.log(dbEdgesToPatch);
+    if (dbEdgesToPatch.length > 0) {
+      console.log("==== PATCHing edges ====");
+      patchedEdges = await checkAxiosResponse(
+        await api.patch(`/relations`, dbEdgesToPatch)
+      );
+    }
+    dispatch(actions.wentToStage(entryId, ImportStage.PostedEdgeDiff));
+    dispatch(actions.wentToStage(entryId, ImportStage.ImportSuccessful));
+  } catch (err) {
+    console.error(err);
+    dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
+  }
+};
+
+function dsEdgesToDbEdges(
+  dsEdges: Edge[],
+  dbEntitiesByDsid: Dictionary<Entity>
+) {
+  return dsEdges.map(edge =>
+    update(edge, {
+      _from: { $set: dbEntitiesByDsid[edge._from]._key as string },
+      _to: { $set: dbEntitiesByDsid[edge._to]._key as string }
+    })
+  );
+}
 
 export const clearPostRequest = (requestId: string) => (
   dispatch: Dispatch

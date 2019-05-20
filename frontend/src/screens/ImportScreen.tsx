@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import EntityEditor from "../components/EntityEditor";
 import { connect } from "react-redux";
 import { DatasetId, ImportStage } from "../utils/types";
 import ErrorBox from "../components/meta/ErrorBox";
@@ -23,6 +22,9 @@ const Loading = styled.div`
   background: ${props => props.theme.inputBG};
   padding: 8px;
   border-radius: ${props => props.theme.radius};
+`;
+const Success = styled(Loading)`
+  background: ${props => props.theme.successBG};
 `;
 
 interface DataimportMatch {
@@ -48,7 +50,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
     {
       startImport: actions.fetchWikidataGraphAndFamiliarEntities,
       selectSimilarEntity: instantActions.selectSimilarEntity,
-      patchSimilarEntities: actions.patchSimilarEntities
+      patchSimilarEntities: actions.patchSimilarEntities,
+      confirmImport: actions.confirmImport
     },
     dispatch
   );
@@ -117,7 +120,6 @@ const ImportScreen: FunctionComponent<Props> = props => {
           {buttons}
         </React.Fragment>
       );
-
     case ImportStage.PostingSimilarEntities:
       return <Loading>Saving the selected entities...</Loading>;
     case ImportStage.PostedSimilarEntities:
@@ -131,27 +133,48 @@ const ImportScreen: FunctionComponent<Props> = props => {
     case ImportStage.FetchedEdgeDiff:
       return <Loading>Relations received!</Loading>;
     case ImportStage.WaitingForDiffConfirmation:
-      return (
-        <UpdateList
-          dsEntities={props.data.dsEntities}
-          existingEdges={props.data.existingEdges}
-          edgesToPost={props.data.edgesToPost}
-          edgesToPatch={props.data.edgesToPatch}
-          existingEntities={props.data.existingEntities}
-          entitiesToPost={props.data.entitiesToPost}
-          entitiesToPatch={props.data.entitiesToPatch}
-        />
+      const buttons2 = (
+        <ButtonBar buttonsAlign="right">
+          <IconButton withText onClick={() => props.confirmImport(namespace)}>
+            Import all
+          </IconButton>
+        </ButtonBar>
       );
-
-    // TODO:
-    /*
-       PostingEntityDiff,
-       PostedEntityDiff,
-       PostingEdgeDiff,
-       PostedEdgeDiff */
+      return (
+        <React.Fragment>
+          {buttons2}
+          <UpdateList
+            dsEntities={props.data.dsEntities}
+            existingEdges={props.data.existingEdges}
+            edgesToPost={props.data.edgesToPost}
+            edgesToPatch={props.data.edgesToPatch}
+            existingEntities={props.data.existingEntities}
+            entitiesToPost={props.data.entitiesToPost}
+            entitiesToPatch={props.data.entitiesToPatch}
+          />
+          {buttons2}
+        </React.Fragment>
+      );
+    case ImportStage.PostingEntityDiff:
+      return <Loading>Saving entities...</Loading>;
+    case ImportStage.PostedEntityDiff:
+      return <Loading>Saved entities!</Loading>;
+    case ImportStage.PostingEdgeDiff:
+      return <Loading>Saving edges...</Loading>;
+    case ImportStage.PostedEdgeDiff:
+      return <Loading>Saved edges!</Loading>;
+    case ImportStage.ImportSuccessful:
+      return (
+        <Success>Successfully imported all entities and relations!</Success>
+      );
   }
 
-  return <div />;
+  return (
+    <div>
+      Unkown state, you should not be able to see this, please report to the
+      developer.
+    </div>
+  );
 };
 
 const ImportScreenWrapper: FunctionComponent<Props> = props => (

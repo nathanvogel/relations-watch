@@ -7,7 +7,8 @@ import {
   Status,
   Entity,
   EntityPreview,
-  ErrorPayload
+  ErrorPayload,
+  DatasetId
 } from "./types";
 import CONSTS from "./consts";
 
@@ -119,6 +120,24 @@ export function getKeyObject<T, P extends Extract<keyof T, string>>(
   const list: { [key: string]: T } = {};
   for (let element of array) {
     const key = (element[keyPropName] as unknown) as string;
+    if (key) list[key] = element;
+  }
+  return list;
+}
+
+interface DatasetObject {
+  ds?: { [key in DatasetId]?: string };
+}
+
+export function getDsKeyObject<T extends DatasetObject>(
+  array: T[],
+  keyPropName: DatasetId
+): { [key: string]: T } {
+  const list: { [key: string]: T } = {};
+  for (let element of array) {
+    if (!element.ds)
+      throw new Error("Missing .ds prop in element " + JSON.stringify(element));
+    const key = (element.ds[keyPropName] as unknown) as string;
     if (key) list[key] = element;
   }
   return list;

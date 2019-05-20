@@ -19,6 +19,7 @@ declare module "styled-components" {
     lightBG: "#EFEFF2";
     inputBG: "#EFEFF2";
     errorBG: "#E37777";
+    successBG: "#B4DE7E";
     border: "#ededed";
     borderHover: "#8A879B";
     surfaceHover: "#B8B7BC";
