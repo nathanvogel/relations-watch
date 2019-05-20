@@ -5,7 +5,8 @@ import {
   Dictionary,
   SimilarEntities,
   ErrorPayload,
-  ImportStage
+  ImportStage,
+  DatasetDiffResponseData
 } from "../utils/types";
 
 // ===== Dataset Fetching
@@ -125,6 +126,38 @@ export function selectSimilarEntity(
   };
 }
 
+interface DI_EntitiesDiffFetched_Action {
+  type: ACTIONS.DI_EntitiesDiffFetched;
+  namespace: string;
+  updates: DatasetDiffResponseData<Entity>;
+}
+export function fetchedEntitiesDiff(
+  namespace: string,
+  updates: DatasetDiffResponseData<Entity>
+): DI_EntitiesDiffFetched_Action {
+  return {
+    type: ACTIONS.DI_EntitiesDiffFetched,
+    namespace,
+    updates
+  };
+}
+
+interface DI_EdgesDiffFetched_Action {
+  type: ACTIONS.DI_EdgesDiffFetched;
+  namespace: string;
+  updates: DatasetDiffResponseData<Edge>;
+}
+export function fetchedEdgesDiff(
+  namespace: string,
+  updates: DatasetDiffResponseData<Edge>
+): DI_EdgesDiffFetched_Action {
+  return {
+    type: ACTIONS.DI_EdgesDiffFetched,
+    namespace,
+    updates
+  };
+}
+
 export type DI_Action =
   | DI_DatasetRequested_Action
   | DI_DatasetFetched_Action
@@ -132,4 +165,6 @@ export type DI_Action =
   | DI_SimilarEntitiesFetched_Action
   | DI_SimilarEntitySelected_Action
   | DI_Error_Action
-  | DI_WentToStage_Action;
+  | DI_WentToStage_Action
+  | DI_EntitiesDiffFetched_Action
+  | DI_EdgesDiffFetched_Action;

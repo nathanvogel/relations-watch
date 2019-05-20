@@ -87,3 +87,7 @@ export const DI_SimilarEntitiesPosted = "DI_SimilarEntitiesPosted";
 export type DI_SimilarEntitiesPosted = typeof DI_SimilarEntitiesPosted;
 export const DI_SimilarEntitySelected = "DI_SimilarEntitySelected";
 export type DI_SimilarEntitySelected = typeof DI_SimilarEntitySelected;
+export const DI_EntitiesDiffFetched = "DI_EntitiesDiffFetched";
+export type DI_EntitiesDiffFetched = typeof DI_EntitiesDiffFetched;
+export const DI_EdgesDiffFetched = "DI_EdgesDiffFetched";
+export type DI_EdgesDiffFetched = typeof DI_EdgesDiffFetched;

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import styled from "styled-components";
 
 type Props = {
   // status?: Status | null;
   // error?: ErrorPayload | null;
   className?: string; // For styled-components
-  children: string;
+  children: ReactNode;
 };
 
 const Box = styled.div`

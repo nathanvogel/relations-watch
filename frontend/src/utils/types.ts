@@ -348,12 +348,12 @@ export enum ImportStage {
   PostedSimilarEntities,
   FetchingEntityDiff,
   FetchedEntityDiff,
-  // Here we're waiting for the user to select which entities should be uploaded.
-  PostingEntityDiff,
-  PostedEntityDiff,
   FetchingEdgeDiff,
   FetchedEdgeDiff,
-  // Here we're waiting for the user to select which edge should be uploaded.
+  WaitingForDiffConfirmation,
+  // Here we're waiting for the user to select which elements should be uploaded.
+  PostingEntityDiff,
+  PostedEntityDiff,
   PostingEdgeDiff,
   PostedEdgeDiff
 }

@@ -328,24 +328,35 @@ async function getWikidataGraph(entryPoint: string, depth: number) {
   const dsEntities: Dictionary<Entity> = {};
   const dsEdges: Dictionary<Edge> = {};
   var entriesToQuery: string[] = [entryPoint];
-  for (let i = 0; i < depth && entriesToQuery.length > 0; i += 1) {
-    await getElementsFromWikidataEntries(entriesToQuery, dsEntities, dsEdges);
+  for (let i = 0; i <= depth && entriesToQuery.length > 0; i += 1) {
+    const lastDsEdges: Dictionary<Edge> = {};
+    // Only get the edges if we'll query those entries
+    await getElementsFromWikidataEntries(
+      entriesToQuery,
+      dsEntities,
+      lastDsEdges
+    );
     // Select the next entities that will need to be queried.
     entriesToQuery = [];
-    for (let edgeId in dsEdges) {
-      let potentialId1 = dsEdges[edgeId]._to;
-      let potentialId2 = dsEdges[edgeId]._from;
+    for (let edgeId in lastDsEdges) {
+      let potentialId1 = lastDsEdges[edgeId]._to;
+      let potentialId2 = lastDsEdges[edgeId]._from;
       if (!dsEntities.hasOwnProperty(potentialId1))
         entriesToQuery.push(potentialId1);
       if (!dsEntities.hasOwnProperty(potentialId2))
         entriesToQuery.push(potentialId2);
       entriesToQuery = arrayWithoutDuplicates(entriesToQuery);
     }
+    console.log(
+      "Degree " + (i + 1) + " -> " + entriesToQuery.length + " new entities."
+    );
+    if (i === depth)
+      console.log(
+        "Arrived at maximum depth. Will not query those elements any further: ",
+        entriesToQuery
+      );
+    else Object.assign(dsEdges, lastDsEdges);
   }
-  console.log(
-    "Arrived at maximum depth. Will not query those elements any further: ",
-    entriesToQuery
-  );
 
   // Send it back
   console.log("Found entities: ", dsEntities);
@@ -381,7 +392,7 @@ export const fetchWikidataGraphAndFamiliarEntities = (
   dispatch(actions.requestedDataset(entryId));
 
   try {
-    const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 2);
+    const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 3);
 
     dispatch(actions.fetchedDataset(entryId, dsEdges, dsEntities));
     // They're just dataset edges for now, without _key and with local _from/to
@@ -481,8 +492,10 @@ export const diffDataset = (entryId: string) => async (
         })
       );
       console.log("ENTITIES:", entUpdates);
-      dispatch(actions.wentToStage(entryId, ImportStage.FetchedEntityDiff));
+      dispatch(actions.fetchedEntitiesDiff(entryId, entUpdates));
+    }
 
+    if (edges.length > 0) {
       dispatch(actions.wentToStage(entryId, ImportStage.FetchingEdgeDiff));
       const relUpdates: DatasetDiffResponseData<
         Edge
@@ -500,8 +513,12 @@ export const diffDataset = (entryId: string) => async (
         })
       );
       console.log("EDGES:", relUpdates);
-      dispatch(actions.wentToStage(entryId, ImportStage.FetchedEdgeDiff));
+      dispatch(actions.fetchedEdgesDiff(entryId, relUpdates));
     }
+    // Now we can ask the user to confirm the dataset import!
+    dispatch(
+      actions.wentToStage(entryId, ImportStage.WaitingForDiffConfirmation)
+    );
   } catch (err) {
     console.error(err);
     dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));

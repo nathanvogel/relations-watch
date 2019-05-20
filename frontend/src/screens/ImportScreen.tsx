@@ -13,6 +13,7 @@ import * as instantActions from "../features/wikidataActions";
 import SimilarEntitiesSelector from "../components/dataimport/SimilarEntitiesSelector";
 import IconButton from "../components/buttons/IconButton";
 import ButtonBar from "../components/buttons/ButtonBar";
+import UpdateList from "../components/dataimport/ UpdateList";
 
 const Content = styled.div`
   ${PageWidthSizer}
@@ -82,14 +83,15 @@ const ImportScreen: FunctionComponent<Props> = props => {
   const namespace = props.entityDatasetId;
 
   switch (props.data.importStage) {
+    case ImportStage.Clear:
+      return <Loading>We're clear.</Loading>;
+
     case ImportStage.FetchingDataset:
-      return <Loading>Loading from Wikidata</Loading>;
-    case ImportStage.FetchingEntityDiff:
-      return <Loading>Fetching entities</Loading>;
-    case ImportStage.FetchingEdgeDiff:
-      return <Loading>Fetching relations</Loading>;
+      return <Loading>Loading from Wikidata...</Loading>;
+    case ImportStage.FetchedDataset:
+      return <Loading>Data from Wikidata loaded!</Loading>;
     case ImportStage.FetchingSimilarEntities:
-      return <Loading>Fetching similar entities</Loading>;
+      return <Loading>Checking if there're similar entities...</Loading>;
     case ImportStage.FetchedSimilarEntities:
       const buttons = (
         <ButtonBar buttonsAlign="right">
@@ -115,6 +117,38 @@ const ImportScreen: FunctionComponent<Props> = props => {
           {buttons}
         </React.Fragment>
       );
+
+    case ImportStage.PostingSimilarEntities:
+      return <Loading>Saving the selected entities...</Loading>;
+    case ImportStage.PostedSimilarEntities:
+      return <Loading>Successfully saved!</Loading>;
+    case ImportStage.FetchingEntityDiff:
+      return <Loading>Loading entities...</Loading>;
+    case ImportStage.FetchedEntityDiff:
+      return <Loading>Entities received!</Loading>;
+    case ImportStage.FetchingEdgeDiff:
+      return <Loading>Loading relations...</Loading>;
+    case ImportStage.FetchedEdgeDiff:
+      return <Loading>Relations received!</Loading>;
+    case ImportStage.WaitingForDiffConfirmation:
+      return (
+        <UpdateList
+          dsEntities={props.data.dsEntities}
+          existingEdges={props.data.existingEdges}
+          edgesToPost={props.data.edgesToPost}
+          edgesToPatch={props.data.edgesToPatch}
+          existingEntities={props.data.existingEntities}
+          entitiesToPost={props.data.entitiesToPost}
+          entitiesToPatch={props.data.entitiesToPatch}
+        />
+      );
+
+    // TODO:
+    /*
+       PostingEntityDiff,
+       PostedEntityDiff,
+       PostingEdgeDiff,
+       PostedEdgeDiff */
   }
 
   return <div />;
