@@ -112,6 +112,11 @@ function typeFromInstanceOf(instanceOf: unknown): EntityType | null {
   return null;
 }
 
+function isIgnoredInstanceOf(instanceOf: unknown): boolean {
+  if (typeof instanceOf !== "string") return false;
+  return CONFIG.typesToIgnore.indexOf(instanceOf) >= 0;
+}
+
 function typeFromEntry(entry: WDEntity): EntityType | null {
   if (!entry.claims) return null;
   const claims_instanceOf = wd.simplify.propertyClaims(entry.claims["P31"]);
@@ -119,6 +124,9 @@ function typeFromEntry(entry: WDEntity): EntityType | null {
   for (let claim of claims_instanceOf) {
     const detectedType = typeFromInstanceOf(claim);
     if (detectedType) return detectedType;
+    // Not awesome for performance, but it'll run only if the first
+    // claim isn't recognized. It's just to silence my warnings.
+    if (isIgnoredInstanceOf(claim)) return null;
   }
   console.warn(
     `Couldn't detect type of entry: ${entry.id} - ${nameFromEntry(entry)}
@@ -136,6 +144,7 @@ function descriptionFromEntry(entry: WDEntity): string | null {
 }
 
 function entityFromEntry(entry: WDEntity): Entity | null {
+  if (CONFIG.entriesToIgnore.indexOf(entry.id) >= 0) return null;
   const name = nameFromEntry(entry);
   if (!name) {
     console.log("Couldn't detect name of ", entry.id);
@@ -143,7 +152,7 @@ function entityFromEntry(entry: WDEntity): Entity | null {
   }
   const type = typeFromEntry(entry);
   if (!type) {
-    console.log("Couldn't detect type of ", entry.id);
+    // console.log("Couldn't detect type of ", entry.id);
     return null;
   }
   const text = descriptionFromEntry(entry);
@@ -182,6 +191,7 @@ function familyEdges(
           text: mapping.text || "",
           _from: mapping.invert ? entryId2 : entryId,
           _to: mapping.invert ? entryId : entryId2,
+          owned: mapping.owned,
           ds: {
             [DatasetId.Wikidata]: edgeId
           },
