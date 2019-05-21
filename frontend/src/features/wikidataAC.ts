@@ -31,7 +31,8 @@ import {
   arrayWithoutDuplicates,
   errToErrorPayload,
   getDsKeyObject,
-  getKeyObject
+  getKeyObject,
+  isEmptyObject
 } from "../utils/utils";
 import * as actions from "./wikidataActions";
 
@@ -403,7 +404,7 @@ async function findFamiliarEntities(
  */
 export const fetchWikidataGraphAndFamiliarEntities = (
   entryId: string
-) => async (dispatch: Dispatch): Promise<void> => {
+) => async (dispatch: Dispatch, getState: () => RootStore): Promise<void> => {
   console.log("fetchWikidataGraphAndFamiliarEntities");
   dispatch(actions.requestedDataset(entryId));
 
@@ -417,6 +418,11 @@ export const fetchWikidataGraphAndFamiliarEntities = (
       Object.keys(dsEntities).map(key => dsEntities[key])
     );
     dispatch(actions.fetchedSimilarEntities(entryId, similarEntities));
+
+    if (isEmptyObject(similarEntities)) {
+      // CHAIN: we can skip the user confirmation of the merge;
+      diffDataset(entryId)(dispatch, getState);
+    }
   } catch (err) {
     console.error(err);
     dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));

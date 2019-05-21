@@ -171,3 +171,17 @@ export const errToErrorPayload: (err: any) => ErrorPayload = (err: any) => ({
   eMessage: err && err.message ? err.message : "Unknown error!",
   eStatus: err ? err.code : "UNKOWN"
 });
+
+/**
+ * Check if obj contains at least one enumerable property.
+ * @param  obj the object to check
+ * @return     true if there're no properties, false otherwise.
+ */
+export function isEmptyObject(obj: Object): boolean {
+  for (var prop in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+      return false;
+    }
+  }
+  return true;
+}
