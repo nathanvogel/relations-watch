@@ -75,7 +75,7 @@ export const saveEdge = (
     if (!sourceLink) {
       dispatch(
         actionSaveError(requestId, {
-          eMessage: "A source must be linked to post a new relation!",
+          eMessage: "A new relation must be referenced with a link!",
           eData: null,
           eStatus: ERROR_CODES.MISSING_SOURCE_LINK
         })
@@ -142,7 +142,6 @@ export const saveEdge = (
       } else {
         dispatch(actionEdgeSaveSuccess(requestId, res.data));
       }
-      // dispatch(actionClearSaveRequest(requestId));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);

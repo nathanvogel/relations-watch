@@ -129,14 +129,14 @@ const findSimilarEntities = (
       `;
 
     while (cursor.hasNext()) {
-      if (!similarEntities[entityDatasetId])
-        similarEntities[entityDatasetId] = [];
       const dbEntity = cursor.next();
       // Check that we aren't merging incompatible stuff.
       if (!consistency.areConsistent(dbEntity, entity, UNCHANGEABLE_PROPS)) {
         console.log(`Inconsistent entities: ${entity.name}`);
         continue;
       }
+      if (!similarEntities[entityDatasetId])
+        similarEntities[entityDatasetId] = [];
       // Link the database entity (by merging, because we might be using
       // multiple datasetIds in one operation)
       // If there're different props, they'll be merged later when this
