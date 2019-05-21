@@ -53,7 +53,7 @@ export const POSSIBLE_LINKS = {
   ],
   [RelationType.GroupMember]: [
     [E.MoralPerson, E.Human, E.Human, E.State],
-    [E.Group]
+    [E.Group, E.MoralPerson]
   ],
   [RelationType.Other]: [
     [E.MoralPerson, E.Group, E.Human, E.Event, E.Human, E.State],
@@ -65,7 +65,8 @@ export const DirectedLinks = [
   RelationType.IsOwned,
   RelationType.IsControlled,
   RelationType.JobDependsOn,
-  RelationType.IsInfluenced
+  RelationType.IsInfluenced,
+  RelationType.GroupMember
 ];
 
 type Requirements = {

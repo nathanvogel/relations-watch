@@ -17,8 +17,6 @@ import {
   DatasetId,
   EntityTypeValues,
   Edge,
-  RelationType as RT,
-  FamilialLink as FL,
   SourceLinkType,
   isClaimSnakEntityValue,
   SimilarEntities,
@@ -35,6 +33,7 @@ import {
   isEmptyObject
 } from "../utils/utils";
 import * as actions from "./wikidataActions";
+import * as CONFIG from "../utils/wikidata-config";
 
 // const wikidata = axios.create({
 //   baseURL: "https://www.wikidata.org/w/api.php",
@@ -60,46 +59,6 @@ const WD_PARAMS = {
   sitefilter: ["enwiki", "frwiki", "dewiki", "eswiki"],
   languages: ["en", "de", "fr", "es"]
 };
-const preferredLangs = [
-  "en",
-  "en-GB",
-  "en-CA",
-  "de-ch",
-  "fr",
-  "de",
-  "de-formal",
-  "de-at",
-  "es"
-];
-
-const WD_ENTITY_TYPE_MAPS: { [key: number]: Array<string> } = {
-  [EntityType.Human]: ["Q5"],
-  [EntityType.State]: [
-    "Q6256",
-    "Q3624078",
-    "Q7275",
-    "Q1763527",
-    "Q107390",
-    "Q1048835",
-    "Q15642541",
-    "Q43702",
-    "Q5255892",
-    "Q183039",
-    "Q1307214",
-    "Q1520223",
-    "Q7270"
-  ],
-  [EntityType.MoralPerson]: ["Q4830453", "Q783794", "Q6881511"],
-  [EntityType.Group]: ["Q7278"],
-  [EntityType.Media]: ["Q1110794", "Q11032", "Q1002697", "Q11033"],
-  [EntityType.Event]: [
-    "Q1190554",
-    "Q26907166",
-    "Q58415929",
-    "Q1656682",
-    "Q18669875"
-  ]
-};
 
 const ENT_OVERRIDING_PROPS: Array<keyof Entity> = ["name", "text"];
 const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = ["type"];
@@ -122,7 +81,7 @@ type WDResponseData = {
 };
 
 function selectLang(list: WDDictionary<wd.LanguageEntry>) {
-  for (let lang of preferredLangs) {
+  for (let lang of CONFIG.preferredLangs) {
     if (list[lang]) return list[lang];
   }
   for (let lng in list) {
@@ -147,7 +106,7 @@ function nameFromEntry(entry: WDEntity): string | null {
 function typeFromInstanceOf(instanceOf: unknown): EntityType | null {
   if (typeof instanceOf !== "string") return null;
   for (let entityType of EntityTypeValues) {
-    if (WD_ENTITY_TYPE_MAPS[entityType].indexOf(instanceOf) >= 0)
+    if (CONFIG.entityTypeMap[entityType].indexOf(instanceOf) >= 0)
       return entityType;
   }
   return null;
@@ -162,9 +121,10 @@ function typeFromEntry(entry: WDEntity): EntityType | null {
     if (detectedType) return detectedType;
   }
   console.warn(
-    `Couldn't detect type of entry: ${entry.id} - ${nameFromEntry(entry)}`
+    `Couldn't detect type of entry: ${entry.id} - ${nameFromEntry(entry)}
+    Wikidata says it's an instance of: `,
+    claims_instanceOf
   );
-  console.log("Wikidata classes: ", claims_instanceOf);
   return null;
 }
 
@@ -197,34 +157,19 @@ function entityFromEntry(entry: WDEntity): Entity | null {
   };
 }
 
-type PropertyMapping = {
-  invert?: boolean;
-  type: RT;
-  fType?: FL;
-};
-const invert = true;
-const propertiesToEdgeType: Dictionary<PropertyMapping> = {
-  P22: { type: RT.Family, fType: FL.childOf }, // Father
-  P25: { type: RT.Family, fType: FL.childOf }, // Mother
-  P40: { type: RT.Family, fType: FL.childOf, invert }, // Child
-  P26: { type: RT.Family, fType: FL.spouseOf }, // Spouse
-  P3373: { type: RT.Family, fType: FL.siblingOf }, // Sibling
-  P1038: { type: RT.Family, fType: FL.other } // Relative
-};
-
 function familyEdges(
   entryId: string,
   claims: WDDictionary<wd.Claim[]>
 ): Dictionary<Edge> {
   const edges: Dictionary<Edge> = {};
-  for (let propertyId in propertiesToEdgeType) {
+  for (let propertyId in CONFIG.propertiesMap) {
     // Check if we have a property of this type
     if (!claims.hasOwnProperty(propertyId)) {
       // console.log("No " + propertyId + " claims");
       continue;
     }
     // We do! So we can select the appropriate mapping
-    const mapping = propertiesToEdgeType[propertyId];
+    const mapping = CONFIG.propertiesMap[propertyId];
     // There might be multiple claims, pointing to different entities (or not)
     // -> Convert them all!
     for (let claim of claims[propertyId]) {
@@ -234,9 +179,9 @@ function familyEdges(
         edges[edgeId] = {
           type: mapping.type,
           fType: mapping.fType,
-          text: "",
-          _from: invert ? entryId2 : entryId,
-          _to: invert ? entryId : entryId2,
+          text: mapping.text || "",
+          _from: mapping.invert ? entryId2 : entryId,
+          _to: mapping.invert ? entryId : entryId2,
           ds: {
             [DatasetId.Wikidata]: edgeId
           },
@@ -373,6 +318,14 @@ async function getWikidataGraph(entryPoint: string, depth: number) {
       );
       delete dsEdges[id];
     }
+  }
+
+  // Filter edges that link toward entities we couldn't add:
+  for (let id in dsEdges) {
+    if (dsEdges[id].text)
+      dsEdges[id].text = dsEdges[id].text
+        .replace("$from", dsEntities[dsEdges[id]._from].name)
+        .replace("$to", dsEntities[dsEdges[id]._to].name);
   }
 
   // Send it back
@@ -663,35 +616,37 @@ function dbEdgesToDsEdges(
   dbEntitiesByDbid: Dictionary<Entity>,
   prefix: string = ""
 ) {
-  return dbEdges
-    .filter(edge => {
-      const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
-      const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
-      // Ignore edges for which we don't have both entities in the database.
-      const keep = Boolean(from) && Boolean(to);
-      if (!keep)
-        console.warn(
-          "Ignoring edge " +
-            (edge.ds ? edge.ds[DatasetId.Wikidata] : "MISSING_ID") +
-            " because " +
-            (from ? (to ? "none" : edge._to) : edge._from) +
-            " is missing"
-        );
-      return keep;
-    })
-    .map(edge => {
-      const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
-      const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
-      if (from && from.ds)
-        edge = update(edge, {
-          _from: { $set: from.ds[DatasetId.Wikidata] as string }
-        });
-      if (to && to.ds)
-        edge = update(edge, {
-          _to: { $set: to.ds[DatasetId.Wikidata] as string }
-        });
-      return edge;
-    });
+  return (
+    dbEdges
+      // .filter(edge => {
+      //   const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
+      //   const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
+      //   // Ignore edges for which we don't have both entities in the database.
+      //   const keep = Boolean(from) && Boolean(to);
+      //   if (!keep)
+      //     console.warn(
+      //       "Ignoring edge " +
+      //         (edge.ds ? edge.ds[DatasetId.Wikidata] : "MISSING_ID") +
+      //         " because " +
+      //         (from ? (to ? "none" : edge._to) : edge._from) +
+      //         " is missing"
+      //     );
+      //   return keep;
+      // })
+      .map(edge => {
+        const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
+        const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
+        if (from && from.ds)
+          edge = update(edge, {
+            _from: { $set: from.ds[DatasetId.Wikidata] as string }
+          });
+        if (to && to.ds)
+          edge = update(edge, {
+            _to: { $set: to.ds[DatasetId.Wikidata] as string }
+          });
+        return edge;
+      })
+  );
 }
 
 export const clearPostRequest = (requestId: string) => (
