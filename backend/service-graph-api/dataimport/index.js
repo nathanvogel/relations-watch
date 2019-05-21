@@ -75,7 +75,6 @@ router
     // Cast overriding properties array
     tmp = req.queryParams.overriding;
     const overriding = !tmp ? [] : Array.isArray(tmp) ? tmp : [tmp];
-    console.log("overriding", overriding);
 
     var updates = operations.getElementUpdates(
       req.body,

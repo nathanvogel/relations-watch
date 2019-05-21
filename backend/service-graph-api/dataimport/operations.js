@@ -59,13 +59,13 @@ function getElementUpdates(
     if (element._from === undefined) logIdentifier = element.name;
     // There should be maximum 1 such element.
     if (cursor.count() > 1) {
-      console.log("Found multiple elements with the same ID:");
+      console.warn("Found multiple elements with the same ID:");
       while (cursor.hasNext()) console.log("Key:", cursor.next()._key);
       throw new Error("Duplicate elements corresponding to " + elDatasetId);
     }
     // If the element already exists
     else if (cursor.count() == 1) {
-      console.log("Found a correspondance for:", logIdentifier);
+      // console.log("Found a correspondance for:", logIdentifier);
       const dbElement = cursor.next();
       // If we detect a fundamental consistency problem with an
       // existing element, we just abort for now.
