@@ -302,15 +302,19 @@ async function getElementsFromWikidataEntries(
   dsEntities: Dictionary<Entity>,
   dsEdges: Dictionary<Edge>
 ) {
-  const url = wd.getEntities(
+  const urls = wd.getManyEntities(
     entryIds,
     WD_PARAMS.languages,
     WD_PARAMS.props,
     "json"
   );
-  const wdEntities = await checkWDEntityData(
-    await checkAxiosResponse(await axios.get(url))
-  );
+  const wdEntities: WDDictionary<wd.Entity> = {};
+  for (let url of urls) {
+    const list = await checkWDEntityData(
+      await checkAxiosResponse(await axios.get(url))
+    );
+    Object.assign(wdEntities, list);
+  }
 
   // Convert the results to our format
   if (wdEntities) {
