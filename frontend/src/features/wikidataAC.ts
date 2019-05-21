@@ -297,17 +297,15 @@ async function checkWDEntityData(data: WDResponseData) {
  * @param  dsEdges    [description]
  * @return            [description]
  */
-async function getElementsFromWikidataEntries(
-  entryIds: string[],
-  dsEntities: Dictionary<Entity>,
-  dsEdges: Dictionary<Edge>
-) {
+async function getElementsFromWikidataEntries(entryIds: string[]) {
   const urls = wd.getManyEntities(
     entryIds,
     WD_PARAMS.languages,
     WD_PARAMS.props,
     "json"
   );
+  const dsEntities: Dictionary<Entity> = {};
+  const dsEdges: Dictionary<Edge> = {};
   const wdEntities: WDDictionary<wd.Entity> = {};
   for (let url of urls) {
     const list = await checkWDEntityData(
@@ -326,6 +324,7 @@ async function getElementsFromWikidataEntries(
       } else console.log("Failed to convert Entry " + wdId);
     }
   }
+  return { dsEntities, dsEdges };
 }
 
 /**
@@ -339,33 +338,40 @@ async function getWikidataGraph(entryPoint: string, depth: number) {
   const dsEdges: Dictionary<Edge> = {};
   var entriesToQuery: string[] = [entryPoint];
   for (let i = 0; i <= depth && entriesToQuery.length > 0; i += 1) {
-    const lastDsEdges: Dictionary<Edge> = {};
     // Only get the edges if we'll query those entries
-    await getElementsFromWikidataEntries(
-      entriesToQuery,
-      dsEntities,
-      lastDsEdges
-    );
+    const depthResults = await getElementsFromWikidataEntries(entriesToQuery);
+    // Merge in the valid entities
+    Object.assign(dsEntities, depthResults.dsEntities);
     // Select the next entities that will need to be queried.
     entriesToQuery = [];
-    for (let edgeId in lastDsEdges) {
-      let potentialId1 = lastDsEdges[edgeId]._to;
-      let potentialId2 = lastDsEdges[edgeId]._from;
-      if (!dsEntities.hasOwnProperty(potentialId1))
-        entriesToQuery.push(potentialId1);
-      if (!dsEntities.hasOwnProperty(potentialId2))
-        entriesToQuery.push(potentialId2);
-      entriesToQuery = arrayWithoutDuplicates(entriesToQuery);
+    for (let id in depthResults.dsEdges) {
+      let to = depthResults.dsEdges[id]._to;
+      let from = depthResults.dsEdges[id]._from;
+      // Query entities that we don't know yet.
+      // Note: with this, we might re-query entities that are incompatible
+      if (!dsEntities.hasOwnProperty(to)) entriesToQuery.push(to);
+      if (!dsEntities.hasOwnProperty(from)) entriesToQuery.push(from);
     }
-    console.log(
-      "Degree " + (i + 1) + " -> " + entriesToQuery.length + " new entities."
-    );
+    entriesToQuery = arrayWithoutDuplicates(entriesToQuery);
+    console.log(`Degree ${i + 1} -> ${entriesToQuery.length} new entities.`);
+    // Keep going deeper in the graph?
     if (i === depth)
       console.log(
         "Arrived at maximum depth. Will not query those elements any further: ",
         entriesToQuery
       );
-    else Object.assign(dsEdges, lastDsEdges);
+    else Object.assign(dsEdges, depthResults.dsEdges);
+  }
+
+  // Filter edges that link toward entities we couldn't add:
+  for (let id in dsEdges) {
+    if (!dsEntities[dsEdges[id]._to] || !dsEntities[dsEdges[id]._from]) {
+      console.log(
+        "Ignoring edge " + id + " because it point to a missing entity",
+        dsEdges[id]
+      );
+      delete dsEdges[id];
+    }
   }
 
   // Send it back
@@ -403,7 +409,6 @@ export const fetchWikidataGraphAndFamiliarEntities = (
 
   try {
     const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 3);
-
     dispatch(actions.fetchedDataset(entryId, dsEdges, dsEntities));
     // They're just dataset edges for now, without _key and with local _from/to
 
@@ -452,6 +457,7 @@ export const patchSimilarEntities = (entryId: string) => async (
     dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));
   }
 
+  // CHAIN: we can directly check what needs to be updated
   diffDataset(entryId)(dispatch, getState);
 };
 
@@ -573,22 +579,20 @@ export const confirmImport = (entryId: string) => async (
   var postedEntities: Entity[] = [];
 
   try {
-    console.log("==== Entities to POST: ====");
-    console.log(state.entitiesToPost);
     dispatch(actions.wentToStage(entryId, ImportStage.PostingEntityDiff));
     if (state.entitiesToPost.length > 0) {
       console.log("==== POSTing entities ====");
       postedEntities = await checkAxiosResponse(
         await api.post(`/entities`, state.entitiesToPost)
       );
+      console.log("POSTed entities:", postedEntities);
     }
-    console.log("==== Entities to PATCH: ====");
-    console.log(state.entitiesToPatch);
     if (state.entitiesToPatch.length > 0) {
       console.log("==== PATCHing entities ====");
       patchedEntities = await checkAxiosResponse(
         await api.patch(`/entities`, state.entitiesToPatch)
       );
+      console.log("PATCHed entities:", patchedEntities);
     }
     dispatch(actions.wentToStage(entryId, ImportStage.PostedEntityDiff));
 
@@ -609,21 +613,19 @@ export const confirmImport = (entryId: string) => async (
     var postedEdges: Entity[] = [];
 
     dispatch(actions.wentToStage(entryId, ImportStage.PostingEdgeDiff));
-    console.log("==== Edges to POST: ====");
-    console.log(dbEdgesToPost);
     if (dbEdgesToPost.length > 0) {
       console.log("==== POSTing edges ====");
       postedEdges = await checkAxiosResponse(
         await api.post(`/relations`, dbEdgesToPost)
       );
+      console.log("POSTed edges:", postedEdges);
     }
-    console.log("==== Edges to PATCH: ====");
-    console.log(dbEdgesToPatch);
     if (dbEdgesToPatch.length > 0) {
       console.log("==== PATCHing edges ====");
       patchedEdges = await checkAxiosResponse(
         await api.patch(`/relations`, dbEdgesToPatch)
       );
+      console.log("PATCHed edges:", patchedEdges);
     }
     dispatch(actions.wentToStage(entryId, ImportStage.PostedEdgeDiff));
     dispatch(actions.wentToStage(entryId, ImportStage.ImportSuccessful));
@@ -655,19 +657,35 @@ function dbEdgesToDsEdges(
   dbEntitiesByDbid: Dictionary<Entity>,
   prefix: string = ""
 ) {
-  return dbEdges.map(edge => {
-    const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
-    const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
-    if (from && from.ds)
-      edge = update(edge, {
-        _from: { $set: from.ds[DatasetId.Wikidata] as string }
-      });
-    if (to && to.ds)
-      edge = update(edge, {
-        _to: { $set: to.ds[DatasetId.Wikidata] as string }
-      });
-    return edge;
-  });
+  return dbEdges
+    .filter(edge => {
+      const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
+      const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
+      // Ignore edges for which we don't have both entities in the database.
+      const keep = Boolean(from) && Boolean(to);
+      if (!keep)
+        console.warn(
+          "Ignoring edge " +
+            (edge.ds ? edge.ds[DatasetId.Wikidata] : "MISSING_ID") +
+            " because " +
+            (from ? (to ? "none" : edge._to) : edge._from) +
+            " is missing"
+        );
+      return keep;
+    })
+    .map(edge => {
+      const from = dbEntitiesByDbid[edge._from.replace(prefix, "")];
+      const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
+      if (from && from.ds)
+        edge = update(edge, {
+          _from: { $set: from.ds[DatasetId.Wikidata] as string }
+        });
+      if (to && to.ds)
+        edge = update(edge, {
+          _to: { $set: to.ds[DatasetId.Wikidata] as string }
+        });
+      return edge;
+    });
 }
 
 export const clearPostRequest = (requestId: string) => (
