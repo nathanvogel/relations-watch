@@ -1,10 +1,8 @@
 import React, { FunctionComponent, useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
 import { connect } from "react-redux";
-import { DatasetId, ImportStage } from "../utils/types";
+import { DatasetId, ImportStage, Entity } from "../utils/types";
 import ErrorBox from "../components/meta/ErrorBox";
 import styled from "styled-components";
-import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import { Dispatch, AnyAction, bindActionCreators } from "redux";
 import { RootStore } from "../Store";
 import * as actions from "../features/wikidataAC";
@@ -14,10 +12,6 @@ import IconButton from "../components/buttons/IconButton";
 import ButtonBar from "../components/buttons/ButtonBar";
 import UpdateList from "../components/dataimport/UpdateList";
 
-const Content = styled.div`
-  ${PageWidthSizer}
-  ${PagePadder}
-`;
 const Loading = styled.div`
   background: ${props => props.theme.inputBG};
   padding: 8px;
@@ -27,13 +21,15 @@ const Success = styled(Loading)`
   background: ${props => props.theme.successBG};
 `;
 
-interface DataimportMatch {
+interface OwnProps {
   datasetId?: DatasetId;
   entityDatasetId?: string;
+  onDone?: (newEntity?: Entity) => void;
+  autoCreate?: boolean;
 }
 
-const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
-  const { datasetId, entityDatasetId } = props.match.params as DataimportMatch;
+const mapStateToProps = (state: RootStore, props: OwnProps) => {
+  const { datasetId, entityDatasetId, onDone, autoCreate } = props;
   const data =
     entityDatasetId && state.dataimport[entityDatasetId]
       ? state.dataimport[entityDatasetId]
@@ -41,7 +37,9 @@ const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
   return {
     datasetId,
     entityDatasetId,
-    data
+    data,
+    onDone,
+    autoCreate,
   };
 };
 
@@ -51,7 +49,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       startImport: actions.fetchWikidataGraphAndFamiliarEntities,
       selectSimilarEntity: instantActions.selectSimilarEntity,
       patchSimilarEntities: actions.patchSimilarEntities,
-      confirmImport: actions.confirmImport
+      confirmImport: actions.confirmImport,
     },
     dispatch
   );
@@ -59,15 +57,25 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
-const ImportScreen: FunctionComponent<Props> = props => {
+const Importer: FunctionComponent<Props> = props => {
   useEffect(() => {
     if (!props.data && props.entityDatasetId)
-      props.startImport(props.entityDatasetId);
-    // if (props.data) {
-    //   switch(props.data.importStage) {
-    //     case
-    //   }
-    // }
+      props.startImport(props.entityDatasetId, props.autoCreate ? 0 : 3);
+
+    if (props.data) {
+      switch (props.data.importStage) {
+        case ImportStage.ImportSuccessful:
+          console.log(
+            "Import successful: ",
+            props.autoCreate,
+            props.data.entryEntity,
+            props.onDone
+          );
+          if (props.autoCreate && props.data.entryEntity && props.onDone)
+            props.onDone(props.data.entryEntity);
+          break;
+      }
+    }
   });
 
   if (props.datasetId !== DatasetId.Wikidata)
@@ -88,7 +96,6 @@ const ImportScreen: FunctionComponent<Props> = props => {
   switch (props.data.importStage) {
     case ImportStage.Clear:
       return <Loading>We're clear.</Loading>;
-
     case ImportStage.FetchingDataset:
       return <Loading>Loading from Wikidata...</Loading>;
     case ImportStage.FetchedDataset:
@@ -165,7 +172,27 @@ const ImportScreen: FunctionComponent<Props> = props => {
       return <Loading>Saved edges!</Loading>;
     case ImportStage.ImportSuccessful:
       return (
-        <Success>Successfully imported all entities and relations!</Success>
+        <Success>
+          Successfully imported all entities and relations!
+          <ButtonBar buttonsAlign="right">
+            {props.onDone && (
+              <IconButton
+                withText
+                onClick={() =>
+                  props.onDone
+                    ? props.onDone(
+                        props.data && props.data.entryEntity
+                          ? props.data.entryEntity
+                          : undefined
+                      )
+                    : console.log("nope")
+                }
+              >
+                Done
+              </IconButton>
+            )}
+          </ButtonBar>
+        </Success>
       );
   }
 
@@ -177,13 +204,7 @@ const ImportScreen: FunctionComponent<Props> = props => {
   );
 };
 
-const ImportScreenWrapper: FunctionComponent<Props> = props => (
-  <Content>
-    <ImportScreen {...props} />
-  </Content>
-);
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ImportScreenWrapper);
+)(Importer);

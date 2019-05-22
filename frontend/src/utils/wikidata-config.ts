@@ -60,6 +60,12 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q5",
     "Q190", // god
     "Q20643955", // human biblical figure
+    "Q15632617", // fictional human
+    "Q95074", // fictionnal character
+    "Q215627", // person
+    "Q795052", // individual
+    "Q20086263", // game of thrones character
+    "Q15773317", // television character
   ],
   [EntityType.State]: [
     "Q6256",
@@ -127,6 +133,14 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q658255", // subsidiary company
     "Q17149090", // armed organization
     "Q17127659", // terrorist organization
+    "Q1058914", // software company
+    "Q1934969", // defense contractor
+    "Q1589009", // privately held company
+    "Q1666019", // pressure group
+    "Q484652", // international organization
+    "Q1127126", // military alliance
+    "Q245065", // intergovernemental organization
+    "Q15925165", // specialized agency of the United Nations
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -157,6 +171,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q721790", // extended family
     "Q2992826", // athletic conference
     "Q16887380", // group
+    "Q18811582", // fraternity
   ],
   [EntityType.Media]: [
     "Q1110794",
@@ -243,5 +258,6 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   /*
   P39 position held
   P127 owned by
+  P1830 owner of 
    */
 };

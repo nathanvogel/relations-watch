@@ -9,7 +9,7 @@ import {
   Entity,
   ImportStage,
   SimilarEntitiesSelection,
-  ErrorPayload
+  ErrorPayload,
 } from "../utils/types";
 import { combineReducers } from "redux";
 import { DataImportState } from "../Store";
@@ -112,6 +112,8 @@ const stageReducer = (
       return ImportStage.FetchedEntityDiff;
     case ACTIONS.DI_EdgesDiffFetched:
       return ImportStage.FetchedEdgeDiff;
+    case ACTIONS.DI_ImportSuccess:
+      return ImportStage.ImportSuccessful;
     default:
       return state;
   }
@@ -121,6 +123,15 @@ const errorReducer = (state: ErrorPayload | null = null, action: DI_Action) => {
   switch (action.type) {
     case ACTIONS.DI_Error:
       return action.error;
+    default:
+      return state;
+  }
+};
+
+const entryEntityReducer = (state: Entity | null = null, action: DI_Action) => {
+  switch (action.type) {
+    case ACTIONS.DI_ImportSuccess:
+      return action.entryEntity || null;
     default:
       return state;
   }
@@ -141,5 +152,6 @@ export default combineReducers<DataImportState, DI_Action>({
   edgesToPost: edgesToPostReducer,
   importStage: stageReducer,
   error: errorReducer,
-  depth: defaultReducer
+  depth: defaultReducer,
+  entryEntity: entryEntityReducer,
 });

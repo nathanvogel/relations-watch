@@ -5,12 +5,8 @@ import update from "immutability-helper";
 import wd, { Property, Entity as WDEntity } from "wikidata-sdk";
 import { Dictionary as WDDictionary } from "wikidata-sdk/types/helper";
 
-import api, { checkError, checkResponse } from "../utils/api";
-import ACTIONS from "../utils/ACTIONS";
+import api from "../utils/api";
 import {
-  Action,
-  ErrorPayload,
-  Status,
   Dictionary,
   Entity,
   EntityType,
@@ -34,18 +30,7 @@ import {
 } from "../utils/utils";
 import * as actions from "./wikidataActions";
 import * as CONFIG from "../utils/wikidata-config";
-
-// const wikidata = axios.create({
-//   baseURL: "https://www.wikidata.org/w/api.php",
-//   headers: {},
-//   params: {
-//     action:"wbgetentities",
-//     props:"claims|datatype|descriptions|sitelinks/urls|info",
-//     sitefilter:"enwiki|frwiki|dewiki|eswiki",
-//     languages:"en|es|de|fr",
-//   }
-// });
-//
+import { checkWDData, checkAxiosResponse } from "../utils/api-wd";
 
 const WD_PARAMS = {
   props: [
@@ -73,12 +58,6 @@ const REL_OVERRIDING_PROPS: Array<keyof Edge> = [
   "_to",
 ];
 const REL_UNCHANGEABLE_PROPS: Array<keyof Edge> = [];
-
-type WDResponseData = {
-  success?: number;
-  entities?: WDDictionary<WDEntity>;
-  warnings?: any;
-};
 
 function selectLang(list: WDDictionary<wd.LanguageEntry>) {
   for (let lang of CONFIG.preferredLangs) {
@@ -227,28 +206,6 @@ function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
   return edges;
 }
 
-async function checkAxiosResponse(response: AxiosResponse) {
-  if (response.status !== 200) {
-    console.error("Error in response:");
-    console.error(response.data);
-    throw new Error(response.statusText);
-  }
-  return response.data;
-}
-
-async function checkWDEntityData(data: WDResponseData) {
-  if (data.success !== 1) {
-    console.error("Wikidata response success check failed: " + data.success);
-    console.log(data);
-    throw new Error("Wikidata didn't indicate a sucessful response.");
-  }
-  if (data.warnings) {
-    console.warn("Wikidata returned warnings!");
-    console.warn(data.warnings);
-  }
-  return data.entities;
-}
-
 /**
  * Fetch a list of entries and put the entities and edges that could be
  * converted from it in the given object under their respective ID.
@@ -269,9 +226,9 @@ async function getElementsFromWikidataEntries(entryIds: string[]) {
   const dsEdges: Dictionary<Edge> = {};
   const wdEntities: WDDictionary<wd.Entity> = {};
   for (let url of urls) {
-    const list = await checkWDEntityData(
+    const list = (await checkWDData(
       await checkAxiosResponse(await axios.get(url))
-    );
+    )).entities;
     Object.assign(wdEntities, list);
   }
 
@@ -371,13 +328,14 @@ async function findFamiliarEntities(
  * Upload new entities to the database.
  */
 export const fetchWikidataGraphAndFamiliarEntities = (
-  entryId: string
+  entryId: string,
+  depth: number
 ) => async (dispatch: Dispatch, getState: () => RootStore): Promise<void> => {
   console.log("fetchWikidataGraphAndFamiliarEntities");
   dispatch(actions.requestedDataset(entryId));
 
   try {
-    const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 3);
+    const { dsEdges, dsEntities } = await getWikidataGraph(entryId, depth);
     if (isEmptyObject(dsEntities)) {
       dispatch(
         actions.dataimportError(entryId, {
@@ -612,7 +570,8 @@ export const confirmImport = (entryId: string) => async (
       console.log("PATCHed edges:", patchedEdges);
     }
     dispatch(actions.wentToStage(entryId, ImportStage.PostedEdgeDiff));
-    dispatch(actions.wentToStage(entryId, ImportStage.ImportSuccessful));
+    console.log("FINISHED with Entity:", allEntities[entryId]);
+    dispatch(actions.importSuccess(entryId, allEntities[entryId]));
   } catch (err) {
     console.error(err);
     dispatch(actions.dataimportError(entryId, errToErrorPayload(err)));

@@ -6,7 +6,7 @@ import {
   SimilarEntities,
   ErrorPayload,
   ImportStage,
-  DatasetDiffResponseData
+  DatasetDiffResponseData,
 } from "../utils/types";
 
 // ===== Dataset Fetching
@@ -19,7 +19,7 @@ export function requestedDataset(
 ): DI_DatasetRequested_Action {
   return {
     type: ACTIONS.DI_DatasetRequested,
-    namespace
+    namespace,
   };
 }
 
@@ -38,7 +38,7 @@ export function fetchedDataset(
     type: ACTIONS.DI_DatasetFetched,
     namespace,
     dsEdges,
-    dsEntities
+    dsEntities,
   };
 }
 
@@ -56,7 +56,7 @@ export function dataimportError(
   return {
     type: ACTIONS.DI_Error,
     namespace,
-    error
+    error,
   };
 }
 
@@ -72,7 +72,7 @@ export function wentToStage(
   return {
     type: ACTIONS.DI_WentToStage,
     namespace,
-    stage
+    stage,
   };
 }
 
@@ -87,7 +87,7 @@ export function requestedSimilarEntities(
 ): DI_SimilarEntitiesRequested_Action {
   return {
     type: ACTIONS.DI_SimilarEntitiesRequested,
-    namespace
+    namespace,
   };
 }
 
@@ -103,7 +103,7 @@ export function fetchedSimilarEntities(
   return {
     type: ACTIONS.DI_SimilarEntitiesFetched,
     namespace,
-    similarEntities
+    similarEntities,
   };
 }
 
@@ -122,7 +122,7 @@ export function selectSimilarEntity(
     type: ACTIONS.DI_SimilarEntitySelected,
     namespace,
     selection,
-    entityKey
+    entityKey,
   };
 }
 
@@ -138,7 +138,7 @@ export function fetchedEntitiesDiff(
   return {
     type: ACTIONS.DI_EntitiesDiffFetched,
     namespace,
-    updates
+    updates,
   };
 }
 
@@ -154,7 +154,23 @@ export function fetchedEdgesDiff(
   return {
     type: ACTIONS.DI_EdgesDiffFetched,
     namespace,
-    updates
+    updates,
+  };
+}
+
+interface DI_ImportSuccess_Action {
+  type: ACTIONS.DI_ImportSuccess;
+  namespace: string;
+  entryEntity?: Entity;
+}
+export function importSuccess(
+  namespace: string,
+  entryEntity?: Entity
+): DI_ImportSuccess_Action {
+  return {
+    type: ACTIONS.DI_ImportSuccess,
+    namespace,
+    entryEntity,
   };
 }
 
@@ -167,4 +183,5 @@ export type DI_Action =
   | DI_Error_Action
   | DI_WentToStage_Action
   | DI_EntitiesDiffFetched_Action
-  | DI_EdgesDiffFetched_Action;
+  | DI_EdgesDiffFetched_Action
+  | DI_ImportSuccess_Action;

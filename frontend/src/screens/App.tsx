@@ -8,7 +8,15 @@ import RelationsScreen from "./RelationsScreen";
 import RT from "../utils/ROUTES";
 import { CreateEntityScreen } from "./CreateEntityScreen";
 import { getRelationId } from "../utils/utils";
-import ImportScreen from "./ImportScreen";
+import Importer from "../components/Importer";
+import { Entity } from "../utils/types";
+import styled from "styled-components";
+import { PageWidthSizer, PagePadder } from "../styles/sizers";
+
+const PageContent = styled.div`
+  ${PageWidthSizer}
+  ${PagePadder}
+`;
 
 class App extends Component {
   render() {
@@ -23,7 +31,22 @@ class App extends Component {
           />
           <Route
             path={`/${RT.import}/:datasetId/:entityDatasetId`}
-            component={ImportScreen}
+            render={props => {
+              const { datasetId, entityDatasetId } = props.match.params;
+              return (
+                <PageContent>
+                  <Importer
+                    key={datasetId + ":" + entityDatasetId}
+                    datasetId={datasetId}
+                    entityDatasetId={entityDatasetId}
+                    onDone={(newEntity: Entity | undefined) => {
+                      if (newEntity)
+                        props.history.push(`/${RT.entity}/${newEntity._key}`);
+                    }}
+                  />
+                </PageContent>
+              );
+            }}
           />
           <Route
             path={`/${RT.edit}/${RT.entity}/:entityKey?`}

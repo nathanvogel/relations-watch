@@ -14,7 +14,7 @@ import {
   Dictionary,
   ImportStage,
   SimilarEntities,
-  SimilarEntitiesSelection
+  SimilarEntitiesSelection,
 } from "./utils/types";
 
 // import { createLogger } from "redux-logger";
@@ -94,6 +94,7 @@ export interface DataImportState {
   edgesToPatch: Edge[];
   edgesToPost: Edge[];
   importStage: ImportStage;
+  entryEntity: Entity | null;
   error: ErrorPayload | null;
   depth: number | null;
 }

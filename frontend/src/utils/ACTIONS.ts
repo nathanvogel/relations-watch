@@ -39,8 +39,8 @@ const ACTIONS = {
   status: {
     ok: "ok",
     error: "error",
-    requested: "requested"
-  }
+    requested: "requested",
+  },
 };
 
 export default ACTIONS;
@@ -91,3 +91,5 @@ export const DI_EntitiesDiffFetched = "DI_EntitiesDiffFetched";
 export type DI_EntitiesDiffFetched = typeof DI_EntitiesDiffFetched;
 export const DI_EdgesDiffFetched = "DI_EdgesDiffFetched";
 export type DI_EdgesDiffFetched = typeof DI_EdgesDiffFetched;
+export const DI_ImportSuccess = "DI_ImportSuccess";
+export type DI_ImportSuccess = typeof DI_ImportSuccess;
