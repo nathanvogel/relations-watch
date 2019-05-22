@@ -205,13 +205,15 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q41298", // magazine
     "Q5398426", // television series
     "Q15416", // television program
+    "Q1555508", // radio program
     "Q1616075", // television station
     "Q14350", // radio station
     "Q7094076", // online database
     "Q593744", // knowledge base
     "Q1153191", // online newspaper
     "Q17232649", // news website
-    "Q5276122", // digita newpaper
+    "Q5276122", // digital newpaper
+    "Q1358344", // newscast
   ],
   [EntityType.Event]: [
     "Q1190554",
