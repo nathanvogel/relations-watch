@@ -21,7 +21,7 @@ import {
   isClaimSnakEntityValue,
   SimilarEntities,
   ImportStage,
-  DatasetDiffResponseData
+  DatasetDiffResponseData,
 } from "../utils/types";
 import CONSTS from "../utils/consts";
 import { RootStore, DataImportState } from "../Store";
@@ -30,7 +30,7 @@ import {
   errToErrorPayload,
   getDsKeyObject,
   getKeyObject,
-  isEmptyObject
+  isEmptyObject,
 } from "../utils/utils";
 import * as actions from "./wikidataActions";
 import * as CONFIG from "../utils/wikidata-config";
@@ -54,10 +54,10 @@ const WD_PARAMS = {
     "descriptions",
     // "sitelinks/urls",
     "info",
-    "labels"
+    "labels",
   ] as Property[],
   sitefilter: ["enwiki", "frwiki", "dewiki", "eswiki"],
-  languages: ["en", "de", "fr", "es"]
+  languages: ["en", "de", "fr", "es"],
 };
 
 const ENT_OVERRIDING_PROPS: Array<keyof Entity> = ["name", "text"];
@@ -70,7 +70,7 @@ const REL_OVERRIDING_PROPS: Array<keyof Edge> = [
   "amount",
   "exactAmount",
   "_from",
-  "_to"
+  "_to",
 ];
 const REL_UNCHANGEABLE_PROPS: Array<keyof Edge> = [];
 
@@ -120,7 +120,7 @@ function isIgnoredInstanceOf(instanceOf: unknown): boolean {
 function typeFromEntry(entry: WDEntity): EntityType | null {
   if (!entry.claims) return null;
   const claims_instanceOf = wd.simplify.propertyClaims(entry.claims["P31"], {
-    keepNonTruthy: true
+    keepNonTruthy: true,
   } as any);
   if (!claims_instanceOf) return null;
   for (let claim of claims_instanceOf) {
@@ -163,12 +163,12 @@ function entityFromEntry(entry: WDEntity): Entity | null {
     type,
     text: text || undefined,
     ds: {
-      [DatasetId.Wikidata]: entry.id
-    }
+      [DatasetId.Wikidata]: entry.id,
+    },
   };
 }
 
-function familyEdges(
+function getEdges(
   entryId: string,
   claims: WDDictionary<wd.Claim[]>
 ): Dictionary<Edge> {
@@ -195,16 +195,16 @@ function familyEdges(
           _to: mapping.invert ? entryId : entryId2,
           owned: mapping.owned,
           ds: {
-            [DatasetId.Wikidata]: edgeId
+            [DatasetId.Wikidata]: edgeId,
           },
           sources: [
             {
               fullUrl: wd.getSitelinkUrl("wikidata", entryId),
               sourceKey: CONSTS.WIKIDATA_SOURCE_KEY,
               comments: [],
-              type: SourceLinkType.Confirms
-            }
-          ]
+              type: SourceLinkType.Confirms,
+            },
+          ],
         };
       } else {
         console.log("Missing claim value", claim);
@@ -220,7 +220,7 @@ function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
     console.log("No claims to search edges in ", entry.id);
     return edges;
   }
-  Object.assign(edges, familyEdges(entry.id, entry.claims));
+  Object.assign(edges, getEdges(entry.id, entry.claims));
   return edges;
 }
 
@@ -353,13 +353,13 @@ async function findFamiliarEntities(
     await api.post("/dataimport/similar/entities", dsEntities, {
       params: {
         datasetid: DatasetId.Wikidata,
-        unchangeable: ["type"]
+        unchangeable: ["type"],
       },
       // `paramsSerializer` is an optional function in charge of serializing `params`
       // This is the format that the ArangoDB Foxx/joi backend supports
       paramsSerializer: function(params) {
         return qs.stringify(params, { arrayFormat: "repeat" });
-      }
+      },
     })
   );
 }
@@ -380,7 +380,7 @@ export const fetchWikidataGraphAndFamiliarEntities = (
         actions.dataimportError(entryId, {
           eStatus: "EMPTY_DATASET",
           eMessage: "Couldn't interpret any data from this entity.",
-          eData: {}
+          eData: {},
         })
       );
       return;
@@ -458,7 +458,7 @@ export const diffDataset = (entryId: string) => async (
     var entUpdates: DatasetDiffResponseData<Entity> = {
       existingElements: [],
       elementsToPost: [],
-      elementsToPatch: []
+      elementsToPatch: [],
     };
     if (entities.length > 0) {
       dispatch(actions.wentToStage(entryId, ImportStage.FetchingEntityDiff));
@@ -468,11 +468,11 @@ export const diffDataset = (entryId: string) => async (
             datasetid: DatasetId.Wikidata,
             collection: "entities",
             unchangeable: ENT_UNCHANGEABLE_PROPS,
-            overriding: ENT_OVERRIDING_PROPS
+            overriding: ENT_OVERRIDING_PROPS,
           },
           paramsSerializer: function(params) {
             return qs.stringify(params, { arrayFormat: "repeat" });
-          }
+          },
         })
       );
       console.log("ENTITIES:", entUpdates);
@@ -501,7 +501,7 @@ export const diffDataset = (entryId: string) => async (
     var relUpdates: DatasetDiffResponseData<Edge> = {
       existingElements: [],
       elementsToPost: [],
-      elementsToPatch: []
+      elementsToPatch: [],
     };
     if (dbEdges.length > 0) {
       dispatch(actions.wentToStage(entryId, ImportStage.FetchingEdgeDiff));
@@ -511,11 +511,11 @@ export const diffDataset = (entryId: string) => async (
             datasetid: DatasetId.Wikidata,
             collection: "relations",
             unchangeable: REL_UNCHANGEABLE_PROPS,
-            overriding: REL_OVERRIDING_PROPS
+            overriding: REL_OVERRIDING_PROPS,
           },
           paramsSerializer: function(params) {
             return qs.stringify(params, { arrayFormat: "repeat" });
-          }
+          },
         })
       );
       const dsRelUpdate = {
@@ -533,7 +533,7 @@ export const diffDataset = (entryId: string) => async (
           relUpdates.elementsToPatch,
           dbEntitiesByDbkey,
           "entities/"
-        )
+        ),
       };
       console.log("EDGES (db):", relUpdates);
       console.log("EDGES (ds):", dsRelUpdate);
@@ -625,9 +625,9 @@ function dsEdgesToDbEdges(
     dbEntitiesByDsid[edge._from] && dbEntitiesByDsid[edge._to]
       ? update(edge, {
           _from: {
-            $set: (prefix + dbEntitiesByDsid[edge._from]._key) as string
+            $set: (prefix + dbEntitiesByDsid[edge._from]._key) as string,
           },
-          _to: { $set: (prefix + dbEntitiesByDsid[edge._to]._key) as string }
+          _to: { $set: (prefix + dbEntitiesByDsid[edge._to]._key) as string },
         })
       : edge
   );
@@ -660,11 +660,11 @@ function dbEdgesToDsEdges(
         const to = dbEntitiesByDbid[edge._to.replace(prefix, "")];
         if (from && from.ds)
           edge = update(edge, {
-            _from: { $set: from.ds[DatasetId.Wikidata] as string }
+            _from: { $set: from.ds[DatasetId.Wikidata] as string },
           });
         if (to && to.ds)
           edge = update(edge, {
-            _to: { $set: to.ds[DatasetId.Wikidata] as string }
+            _to: { $set: to.ds[DatasetId.Wikidata] as string },
           });
         return edge;
       })

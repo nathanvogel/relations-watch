@@ -2,7 +2,7 @@ import {
   EntityType,
   RelationType as RT,
   FamilialLink as FL,
-  Dictionary
+  Dictionary,
 } from "../utils/types";
 
 export const preferredLangs = [
@@ -14,7 +14,7 @@ export const preferredLangs = [
   "de",
   "de-formal",
   "de-at",
-  "es"
+  "es",
 ];
 
 export const entriesToIgnore: Array<string> = ["Q327591"];
@@ -41,11 +41,16 @@ export const typesToIgnore: Array<string> = [
   "Q19844914", // university building
   "Q55488", // railway station
   "Q15238777", // legislative term
-  "Q1254933" // astronomical observatory
+  "Q117850", // doctrine
+  "Q1254933", // astronomical observatory
 ];
 
 export const entityTypeMap: { [key: number]: Array<string> } = {
-  [EntityType.Human]: ["Q5"],
+  [EntityType.Human]: [
+    "Q5",
+    "Q190", // god
+    "Q20643955", // human biblical figure
+  ],
   [EntityType.State]: [
     "Q6256",
     "Q3624078",
@@ -59,7 +64,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q183039",
     "Q1307214",
     "Q1520223",
-    "Q7270"
+    "Q7270",
   ],
   [EntityType.MoralPerson]: [
     "Q4830453",
@@ -103,7 +108,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q9078534", // honor society
     "Q1320047", // book publisher
     "Q2085381", // publisher
-    "Q7075" // library
+    "Q7075", // library
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -132,7 +137,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q751892", // caucus
     "Q623109", // sports league
     "Q721790", // extended family
-    "Q2992826" // athletic conference
+    "Q2992826", // athletic conference
   ],
   [EntityType.Media]: [
     "Q1110794",
@@ -143,7 +148,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q41298", // magazine
     "Q5398426", // television series
     "Q15416", // television program
-    "Q14350" // radio station
+    "Q14350", // radio station
   ],
   [EntityType.Event]: [
     "Q1190554",
@@ -162,11 +167,12 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q28456918", // foreign electoral intervention
     "Q1168287", // intervention
     "Q1227249", // international incident
+    "Q22704077", // biblical episode
     "Q667276", // art exhibition
     "Q159821", // Summer Olympic Games
     "Q82414", // Winter Olympic Games
-    "Q5389" // Olympic Games
-  ]
+    "Q5389", // Olympic Games
+  ],
 };
 
 type PropertyMapping = {
@@ -194,5 +200,5 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   P108: { type: RT.JobDependsOn }, // employer
   P1830: { type: RT.IsOwned, invert, owned: 100 }, // owner
   P737: { type: RT.IsInfluenced }, // influenced by
-  P361: { type: RT.Other, text: "$from is part of $to." } // part of
+  P361: { type: RT.Other, text: "$from is part of $to." }, // part of
 };
