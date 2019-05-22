@@ -57,6 +57,7 @@ const UpdateList: FunctionComponent<Props> = props => {
         edge={edge}
         entityFrom={props.dsEntities[edge._from]}
         entityTo={props.dsEntities[edge._to]}
+        alsoOther
       />
     ) : (
       <ErrorBox key={index}>

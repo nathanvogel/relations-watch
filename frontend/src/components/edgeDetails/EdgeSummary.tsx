@@ -42,13 +42,16 @@ type Props = {
   edge: Edge;
   entityFrom: Entity;
   entityTo: Entity;
+  alsoOther?: boolean;
 };
 
 const EdgeSummary: React.FunctionComponent<Props> = (props: Props) => {
-  if (props.edge.type === RelationType.Other) return null;
+  if (props.edge.type === RelationType.Other && !props.alsoOther) return null;
   return (
     <Span color={RELATION_COLORS[props.edge.type]}>
-      {getEdgeSummary(props.edge, props.entityFrom, props.entityTo)}
+      {props.edge.type === RelationType.Other && props.alsoOther
+        ? props.edge.text
+        : getEdgeSummary(props.edge, props.entityFrom, props.entityTo)}
     </Span>
   );
 };

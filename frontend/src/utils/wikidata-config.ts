@@ -35,6 +35,9 @@ export const typesToIgnore: Array<string> = [
   "Q1076486", // sport venue
   "Q811430", // construction
   "Q811979", // architectural structure
+  "Q11303", // skyscraper
+  "Q41176", // building
+  "Q22811662", // image database
   "Q19844914", // university building
   "Q55488", // railway station
   "Q15238777", // legislative term
@@ -123,10 +126,12 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q177634", // community
     "Q848197", // parliamentary group
     "Q25796237", // political group of the European Parliament
+    "Q233591", // communist party
+    "Q1394441", // steering committee
     "Q2943071", // congressional caucus
     "Q751892", // caucus
     "Q623109", // sports league
-
+    "Q721790", // extended family
     "Q2992826" // athletic conference
   ],
   [EntityType.Media]: [
@@ -135,6 +140,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1002697",
     "Q11033", // mass media
     "Q15265344", // broadcaster
+    "Q41298", // magazine
+    "Q5398426", // television series
+    "Q15416", // television program
     "Q14350" // radio station
   ],
   [EntityType.Event]: [
@@ -150,6 +158,10 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q18608583",
     "Q13406554",
     "Q15275719",
+    "Q1072326", // summit
+    "Q28456918", // foreign electoral intervention
+    "Q1168287", // intervention
+    "Q1227249", // international incident
     "Q667276", // art exhibition
     "Q159821", // Summer Olympic Games
     "Q82414", // Winter Olympic Games
@@ -182,5 +194,5 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   P108: { type: RT.JobDependsOn }, // employer
   P1830: { type: RT.IsOwned, invert, owned: 100 }, // owner
   P737: { type: RT.IsInfluenced }, // influenced by
-  P361: { type: RT.IsOwned } // part of
+  P361: { type: RT.Other, text: "$from is part of $to." } // part of
 };
