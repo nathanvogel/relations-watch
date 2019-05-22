@@ -5,7 +5,7 @@
   "relationType_traded": "Ils ont marchandé ensemble.",
   "relationType_traded_A": "Ils ont marchandé ensemble pour ~{{amount}}+ US$.",
   "relationType_traded_eA": "Ils ont marchandé ensemble pour {{amount}} US$.",
-  "relationType_owned_p": "{{nameFrom}} appartient à {{percent}} % par {{nameTo}}.",
+  "relationType_owned_p": "{{nameFrom}} appartient à {{percent}} % à {{nameTo}}.",
   "relationType_controlled": "{{nameFrom}} est controllé par {{nameTo}}.",
   "relationType_member": "{{nameFrom}} est membre de {{nameTo}}.",
   "relationType_attended": "{{nameFrom}} a participé à {{nameTo}}.",

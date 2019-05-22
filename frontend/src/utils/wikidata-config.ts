@@ -38,11 +38,21 @@ export const typesToIgnore: Array<string> = [
   "Q11303", // skyscraper
   "Q41176", // building
   "Q22811662", // image database
+  "Q7315155", // research center
   "Q19844914", // university building
   "Q55488", // railway station
   "Q15238777", // legislative term
   "Q117850", // doctrine
   "Q1254933", // astronomical observatory
+  "GAFAM", // film
+  "Q431289", // brand
+  "Q1886349", // logo
+  "Q837816", // wordmark
+  "Q914359", // cloud storage
+  "Q4839801", // backup software
+  "Q35127", // website
+  "Q7397", // software
+  "Q570871", // email client
 ];
 
 export const entityTypeMap: { [key: number]: Array<string> } = {
@@ -109,6 +119,14 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1320047", // book publisher
     "Q2085381", // publisher
     "Q7075", // library
+    "Q936518", // aeorspace manufacturer
+    "Q1194970", // dot-com company
+    "Q6944143", // mutual-benefit nonprofit corporation
+    "Q155271", // think-thank
+    "Q210167", // video-game developer
+    "Q658255", // subsidiary company
+    "Q17149090", // armed organization
+    "Q17127659", // terrorist organization
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -138,6 +156,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q623109", // sports league
     "Q721790", // extended family
     "Q2992826", // athletic conference
+    "Q16887380", // group
   ],
   [EntityType.Media]: [
     "Q1110794",
@@ -148,6 +167,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q41298", // magazine
     "Q5398426", // television series
     "Q15416", // television program
+    "Q1616075", // television station
     "Q14350", // radio station
   ],
   [EntityType.Event]: [
@@ -192,13 +212,36 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   P26: { type: RT.Family, fType: FL.spouseOf }, // Spouse
   P3373: { type: RT.Family, fType: FL.siblingOf }, // Sibling
   P1038: { type: RT.Family, fType: FL.other }, // Relative
+  P451: { type: RT.Love }, // partner
   P112: { type: RT.IsControlled, text: "$from was founded by $to." }, // founded by
+  P169: {
+    type: RT.IsControlled,
+    text: "$to is chief executive officer of $from.",
+  }, // chief executive officer
+  P488: { type: RT.IsControlled, text: "$to is chairman of $from." }, // chairman
   P463: { type: RT.GroupMember }, // member of
   P53: { type: RT.GroupMember }, // family
   P102: { type: RT.GroupMember }, // member of political party
   P1344: { type: RT.Attendance }, // participant of
   P108: { type: RT.JobDependsOn }, // employer
   P1830: { type: RT.IsOwned, invert, owned: 100 }, // owner
+  P199: {
+    type: RT.IsOwned,
+    invert,
+    owned: 100,
+    text: "$from is a business division of $to.",
+  }, // business division
+  P355: {
+    type: RT.IsOwned,
+    invert,
+    owned: 100,
+    text: "$from is a subsidiary of $to.",
+  }, // subsidiary
   P737: { type: RT.IsInfluenced }, // influenced by
   P361: { type: RT.Other, text: "$from is part of $to." }, // part of
+  P156: { type: RT.Other, text: "$to replaced $from." }, // part of
+  /*
+  P39 position held
+  P127 owned by
+   */
 };

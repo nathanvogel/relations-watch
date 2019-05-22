@@ -61,7 +61,7 @@ const WD_PARAMS = {
 };
 
 const ENT_OVERRIDING_PROPS: Array<keyof Entity> = ["name", "text"];
-const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = ["type"];
+const ENT_UNCHANGEABLE_PROPS: Array<keyof Entity> = []; // we can't resolve conflicts at this stage
 const REL_OVERRIDING_PROPS: Array<keyof Edge> = [
   "type",
   "fType",
@@ -123,6 +123,8 @@ function typeFromEntry(entry: WDEntity): EntityType | null {
     keepNonTruthy: true,
   } as any);
   if (!claims_instanceOf) return null;
+  // TODO: have a deterministic way to compute the type.
+  // More specific/interesting terms should prevail. (Media>MoralPerson)
   for (let claim of claims_instanceOf) {
     const detectedType = typeFromInstanceOf(claim);
     if (detectedType) return detectedType;
@@ -199,7 +201,8 @@ function getEdges(
           },
           sources: [
             {
-              fullUrl: wd.getSitelinkUrl("wikidata", entryId),
+              fullUrl:
+                wd.getSitelinkUrl("wikidata", entryId) + "#" + propertyId,
               sourceKey: CONSTS.WIKIDATA_SOURCE_KEY,
               comments: [],
               type: SourceLinkType.Confirms,
@@ -332,7 +335,7 @@ async function getWikidataGraph(entryPoint: string, depth: number) {
     }
   }
 
-  // Filter edges that link toward entities we couldn't add:
+  // Replace names in generated text.
   for (let id in dsEdges) {
     if (dsEdges[id].text)
       dsEdges[id].text = dsEdges[id].text
