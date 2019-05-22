@@ -198,7 +198,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
   ],
   [EntityType.Media]: [
     "Q1110794",
-    "Q11032",
+    "Q11032", // newspaper
     "Q1002697",
     "Q11033", // mass media
     "Q15265344", // broadcaster
@@ -209,6 +209,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q14350", // radio station
     "Q7094076", // online database
     "Q593744", // knowledge base
+    "Q1153191", // online newspaper
+    "Q17232649", // news website
+    "Q5276122", // digita newpaper
   ],
   [EntityType.Event]: [
     "Q1190554",
