@@ -373,6 +373,16 @@ export const fetchWikidataGraphAndFamiliarEntities = (
 
   try {
     const { dsEdges, dsEntities } = await getWikidataGraph(entryId, 3);
+    if (isEmptyObject(dsEntities)) {
+      dispatch(
+        actions.dataimportError(entryId, {
+          eStatus: "EMPTY_DATASET",
+          eMessage: "Couldn't interpret any data from this entity.",
+          eData: {}
+        })
+      );
+      return;
+    }
     dispatch(actions.fetchedDataset(entryId, dsEdges, dsEntities));
     // They're just dataset edges for now, without _key and with local _from/to
 
