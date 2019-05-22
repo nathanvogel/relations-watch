@@ -13,7 +13,7 @@ export enum EntityType {
   Event = 10,
   Group = 100,
   Media = 200,
-  State = 300
+  State = 300,
 }
 export const EntityTypeValues: EntityType[] = Object.values(EntityType).filter(
   x => typeof x === "number"
@@ -35,7 +35,7 @@ export enum RelationType {
   IsInfluenced = 500,
   Attendance = 1000,
   GroupMember = 2000,
-  Other = 3000
+  Other = 3000,
 }
 export const RelationTypeValues: RelationType[] = Object.values(
   RelationType
@@ -66,7 +66,7 @@ export enum FamilialLink {
   // grandchildOf = 14,
   cousinOf = 15,
   // niblingOf = 16,
-  other = 100 // son-in-law, etc.
+  other = 100, // son-in-law, etc.
 }
 export const FamilialLinkValues: FamilialLink[] = Object.values(
   FamilialLink
@@ -99,13 +99,13 @@ export enum Status {
   Requested,
   Ok,
   Clear,
-  Error
+  Error,
 }
 
 export enum DatasetId {
   MediasFrancais = "mfid",
   MediasFrancaisByName = "mfn",
-  Wikidata = "wd"
+  Wikidata = "wd",
 }
 
 export type Entity = {
@@ -191,7 +191,7 @@ export type RelationRenderData = {
 export enum NodeRenderType {
   Primary,
   Secondary,
-  Tertiary
+  Tertiary,
 }
 
 export type NodeRenderData = {
@@ -231,7 +231,7 @@ export type Source = {
 
 export enum SourceType {
   Link = 1,
-  TextRef = 2
+  TextRef = 2,
 }
 
 export function getRefType(fullRef: string) {
@@ -244,7 +244,7 @@ export function getRefType(fullRef: string) {
     allow_underscores: false,
     allow_trailing_dot: false,
     allow_protocol_relative_urls: false,
-    disallow_auth: false
+    disallow_auth: false,
   });
   return isURL ? SourceType.Link : SourceType.TextRef;
 }
@@ -264,7 +264,7 @@ export type Comment = {
 export enum SourceLinkType {
   Neutral,
   Confirms,
-  Refutes
+  Refutes,
 }
 
 export type ReactSelectOption = {
@@ -312,7 +312,7 @@ export function isEntity(element: Edge | Entity): element is Entity {
 export enum SourceSelectorMode {
   SourceSelected,
   EditingRef,
-  EditingNewSource
+  EditingNewSource,
 }
 
 /**
@@ -356,7 +356,7 @@ export enum ImportStage {
   PostedEntityDiff,
   PostingEdgeDiff,
   PostedEdgeDiff,
-  ImportSuccessful
+  ImportSuccessful,
 }
 
 export type SimilarEntities = { [entryDatasetId: string]: Entity[] };
@@ -367,3 +367,5 @@ export type DatasetDiffResponseData<T> = {
   elementsToPatch: T[];
   elementsToPost: T[];
 };
+
+export type Modifier = (v: any) => any;

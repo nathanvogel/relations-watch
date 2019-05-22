@@ -3,6 +3,7 @@ import {
   RelationType as RT,
   FamilialLink as FL,
   Dictionary,
+  Modifier,
 } from "../utils/types";
 
 export const preferredLangs = [
@@ -68,6 +69,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q15773317", // television character
     "Q19324463", // fictional child
     "Q20086260", // A Song of Ice and Fire character
+    "Q4271324", // mythical character
+    "Q21070598", // character that may be fictional
   ],
   [EntityType.State]: [
     "Q6256",
@@ -169,6 +172,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q848197", // parliamentary group
     "Q25796237", // political group of the European Parliament
     "Q233591", // communist party
+    "Q190652", // central committee
     "Q1394441", // steering committee
     "Q2943071", // congressional caucus
     "Q751892", // caucus
@@ -178,6 +182,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q2992826", // athletic conference
     "Q16887380", // group
     "Q18811582", // fraternity
+    "Q8059357", // youth league
   ],
   [EntityType.Media]: [
     "Q1110794",
@@ -225,6 +230,9 @@ type PropertyMapping = {
   fType?: FL;
   text?: string;
   owned?: number;
+  destInQualifiers?: Array<string>;
+  ownedInQualifiers?: Array<string>;
+  ownedModifier?: Dictionary<Modifier>;
 };
 
 const invert = true;
@@ -264,6 +272,19 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   P737: { type: RT.IsInfluenced }, // influenced by
   P361: { type: RT.Other, text: "$from is part of $to." }, // part of
   P156: { type: RT.Other, text: "$to replaced $from." }, // part of
+  P39: {
+    type: RT.JobDependsOn,
+    text: "$from works for $to.",
+    destInQualifiers: ["P108", "P642"],
+  }, // position held
+  P127: {
+    type: RT.IsOwned,
+    ownedInQualifiers: ["P1107"],
+    ownedModifier: {
+      P1107: value =>
+        typeof value === "number" ? Math.round(value * 1000) / 10 : 100, // proportion
+    },
+  }, // owned by
   /*
   P39 position held
   P127 owned by

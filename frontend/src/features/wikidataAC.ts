@@ -18,6 +18,7 @@ import {
   SimilarEntities,
   ImportStage,
   DatasetDiffResponseData,
+  Modifier,
 } from "../utils/types";
 import CONSTS from "../utils/consts";
 import { RootStore, DataImportState } from "../Store";
@@ -149,6 +150,30 @@ function entityFromEntry(entry: WDEntity): Entity | null {
   };
 }
 
+function getQualifierValue(
+  claim: wd.Claim,
+  possibleProperties: Array<string>,
+  modifiers?: Dictionary<Modifier>
+): any | null {
+  if (!claim.qualifiers) return null;
+  const qualifiers = wd.simplify.qualifiers(claim.qualifiers);
+  if (qualifiers) {
+    for (let prop of possibleProperties) {
+      if (
+        qualifiers[prop] &&
+        qualifiers[prop].length > 0
+        // && typeof qualifiers[prop][0] === "string"
+      ) {
+        console.log(prop + " = ", qualifiers[prop]);
+        return modifiers && modifiers[prop]
+          ? modifiers[prop](qualifiers[prop][0])
+          : (qualifiers[prop][0] as string);
+      }
+    }
+  }
+  return null;
+}
+
 function getEdges(
   entryId: string,
   claims: WDDictionary<wd.Claim[]>
@@ -165,32 +190,48 @@ function getEdges(
     // There might be multiple claims, pointing to different entities (or not)
     // -> Convert them all!
     for (let claim of claims[propertyId]) {
-      if (isClaimSnakEntityValue(claim.mainsnak.datavalue)) {
-        const edgeId = claim.id;
-        const entryId2 = claim.mainsnak.datavalue.value.id;
-        edges[edgeId] = {
-          type: mapping.type,
-          fType: mapping.fType,
-          text: mapping.text || "",
-          _from: mapping.invert ? entryId2 : entryId,
-          _to: mapping.invert ? entryId : entryId2,
-          owned: mapping.owned,
-          ds: {
-            [DatasetId.Wikidata]: edgeId,
-          },
-          sources: [
-            {
-              fullUrl:
-                wd.getSitelinkUrl("wikidata", entryId) + "#" + propertyId,
-              sourceKey: CONSTS.WIKIDATA_SOURCE_KEY,
-              comments: [],
-              type: SourceLinkType.Confirms,
-            },
-          ],
-        };
-      } else {
-        console.log("Missing claim value", claim);
+      if (!isClaimSnakEntityValue(claim.mainsnak.datavalue)) {
+        console.warn("Missing claim value", claim);
+        continue;
       }
+
+      const edgeId = claim.id;
+      var entryId2: string | null = claim.mainsnak.datavalue.value.id;
+      var owned = mapping.owned;
+
+      if (mapping.destInQualifiers) {
+        entryId2 = getQualifierValue(claim, mapping.destInQualifiers);
+      }
+      if (!entryId2) continue;
+
+      if (mapping.ownedInQualifiers) {
+        owned = getQualifierValue(
+          claim,
+          mapping.ownedInQualifiers,
+          mapping.ownedModifier
+        );
+        if (owned !== 0 && !owned) owned = 100;
+      }
+
+      edges[edgeId] = {
+        type: mapping.type,
+        fType: mapping.fType,
+        text: mapping.text || "",
+        _from: mapping.invert ? entryId2 : entryId,
+        _to: mapping.invert ? entryId : entryId2,
+        owned,
+        ds: {
+          [DatasetId.Wikidata]: edgeId,
+        },
+        sources: [
+          {
+            fullUrl: wd.getSitelinkUrl("wikidata", entryId) + "#" + propertyId,
+            sourceKey: CONSTS.WIKIDATA_SOURCE_KEY,
+            comments: [],
+            type: SourceLinkType.Confirms,
+          },
+        ],
+      };
     }
   }
   return edges;
@@ -202,6 +243,8 @@ function edgesFromEntry(entry: WDEntity): Dictionary<Edge> {
     console.log("No claims to search edges in ", entry.id);
     return edges;
   }
+  if (entry.labels)
+    console.log("========= Scanning:", wd.simplify.labels(entry.labels)["en"]);
   Object.assign(edges, getEdges(entry.id, entry.claims));
   return edges;
 }
