@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { Edge, Status } from "../utils/types";
@@ -33,9 +33,16 @@ const Content = styled.section`
 `;
 
 const EdgeMainText = styled.p`
-  font-size: 24px;
+  font-size: ${props => props.theme.fontSizeL};
   margin-top: 24px;
   margin-bottom: 20px;
+`;
+
+const DatasetInfoText = styled.p`
+  font-size: ${props => props.theme.fontSizeS};
+  color: ${props => props.theme.secondaryTextColor};
+  margin-top: ${props => props.theme.inputTBSpacing};
+  margin-bottom: ${props => props.theme.inputTBSpacing};
 `;
 
 const AddSourceButton = styled(IconButton)`
@@ -79,65 +86,58 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     edge,
     entityFrom,
     entityTo,
-    hasLoadedEntities
+    hasLoadedEntities,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators({}, dispatch);
 
-class EdgeDetails extends React.Component<Props> {
-  readonly state: State = {
-    editing: false
-  };
+const EdgeDetails: React.FunctionComponent<Props> = props => {
+  const [editing, setEditing] = useState(false);
 
-  onEditClick = () => {
-    this.setState({ editing: true });
-  };
+  const { edge, entityFrom, entityTo } = props;
+  if (!edge._key) return <Content>Error: missing _key attribute.</Content>;
 
-  onDoneEditing = () => {
-    this.setState({ editing: false });
-  };
-
-  render() {
-    const { edge, entityFrom, entityTo } = this.props;
-    if (!edge._key) return <Content>Error: missing _key attribute.</Content>;
-
-    if (this.state.editing)
-      return (
-        <div>
-          <EdgeEditor
-            key={edge._key}
-            edgeKey={edge._key}
-            entity1Key={edge._from}
-            entity2Key={edge._to}
-            dismiss={this.onDoneEditing}
-            editorId={edge._key}
-          />
-        </div>
-      );
-
+  if (editing)
     return (
-      <Content color={RELATION_COLORS[edge.type]}>
-        {this.props.hasLoadedEntities && (
-          <EdgeSummary
-            edge={edge}
-            entityFrom={entityFrom}
-            entityTo={entityTo}
-          />
-        )}
-        <EdgeMainText>{edge.text}</EdgeMainText>
-        {edge.sourceText && (!edge.sources || edge.sources.length === 0) && (
-          <div>Previous source: {edge.sourceText}</div>
-        )}
-        <SourceList sources={edge.sources} />
-        <AddSourceButton onClick={this.onEditClick}>
+      <div>
+        <EdgeEditor
+          key={edge._key}
+          edgeKey={edge._key}
+          entity1Key={edge._from}
+          entity2Key={edge._to}
+          dismiss={() => setEditing(false)}
+          editorId={edge._key}
+        />
+      </div>
+    );
+
+  return (
+    <Content color={RELATION_COLORS[edge.type]}>
+      {props.hasLoadedEntities && (
+        <EdgeSummary edge={edge} entityFrom={entityFrom} entityTo={entityTo} />
+      )}
+      <EdgeMainText>{edge.text}</EdgeMainText>
+      {edge.sourceText && (!edge.sources || edge.sources.length === 0) && (
+        <div>Previous source: {edge.sourceText}</div>
+      )}
+      <SourceList sources={edge.sources} />
+      {edge.ds ? (
+        <DatasetInfoText>
+          <i>
+            Imported from another database: To modify, edit the original source
+            and re-import the entity.
+          </i>
+        </DatasetInfoText>
+      ) : (
+        <AddSourceButton onClick={() => setEditing(true)}>
           <EditIcon />
         </AddSourceButton>
-      </Content>
-    );
-  }
-}
+      )}
+    </Content>
+  );
+};
 
 export default connect(
   mapStateToProps,

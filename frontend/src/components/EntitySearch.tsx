@@ -132,6 +132,7 @@ const EntitySearch: FunctionComponent<Props> = (
 
   const onInputChange = (text: any, a: any) => {
     const action: string = a.action;
+    // TODO: blur suggestion to add X
     if (
       action === "menu-close" ||
       action === "input-blur" ||
