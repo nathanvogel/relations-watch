@@ -119,7 +119,9 @@ function isIgnoredInstanceOf(instanceOf: unknown): boolean {
 
 function typeFromEntry(entry: WDEntity): EntityType | null {
   if (!entry.claims) return null;
-  const claims_instanceOf = wd.simplify.propertyClaims(entry.claims["P31"]);
+  const claims_instanceOf = wd.simplify.propertyClaims(entry.claims["P31"], {
+    keepNonTruthy: true
+  } as any);
   if (!claims_instanceOf) return null;
   for (let claim of claims_instanceOf) {
     const detectedType = typeFromInstanceOf(claim);
