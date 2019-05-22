@@ -54,16 +54,6 @@ const promiseAutocomplete = async (inputValue: string) => {
   }
 };
 
-// const response = await axios.get("https://www.wikidata.org/w/api.php?action=wbsearchentities", {
-// params:{
-//   search: inputValue,
-//   format: "json",
-//   language: "en",
-//   uselang:"en",
-//   type:"item"
-// }
-// });
-
 const promiseWikidataAutocomplete = async (inputValue: string) => {
   // No need to query the server too fast
   if (!inputValue || inputValue.length <= 1) return []; //[{ value: "1", label: "oawjeoifja awoiefj ", type: 1 }];
@@ -126,17 +116,22 @@ const EntitySearch: FunctionComponent<Props> = (
 
   const onChange = (object: any) => {
     if (mode === "searchWd") {
-      setSelectedWdEntity(object.value);
+      setSelectedWdEntity(
+        props.isMulti ? object[object.length - 1].value : object.value
+      );
       setMode("importWd");
       return;
     }
+
     // Default props action
     if (props.onChange) props.onChange(object);
+    // We need to recreate that event, since we filter it because the text
+    // shouldn't be cleared when going from searchDb -> searchWd
+    onInputChange("", {});
   };
 
   const onInputChange = (text: any, a: any) => {
     const action: string = a.action;
-    console.log(text, action);
     if (
       action === "menu-close" ||
       action === "input-blur" ||
@@ -155,12 +150,9 @@ const EntitySearch: FunctionComponent<Props> = (
     setMode("searchDb");
     onInputChange("", {});
 
-    console.log("Done creating");
-
     // TODO : change value
     if (newEntity && newEntity._key) {
       const newValue = { value: newEntity._key, label: newEntity.name };
-      console.log("Selecting ", newValue);
       onChange(
         props.isMulti
           ? update(props.selection || [], { $push: [newValue] })

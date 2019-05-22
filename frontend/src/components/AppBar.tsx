@@ -76,7 +76,7 @@ type State = {
 
 class AppBar extends React.Component<RouteComponentProps> {
   readonly state: State = {
-    searchValue: ""
+    searchValue: "",
   };
 
   onInputChange = (value: string) => {
@@ -107,9 +107,9 @@ class AppBar extends React.Component<RouteComponentProps> {
             inputValue={this.state.searchValue}
             selection={null}
           />
-          <AppBarButton onClick={this.onAddEntity}>
+          {/* <AppBarButton onClick={this.onAddEntity}>
             <AddIcon />
-          </AppBarButton>
+          </AppBarButton> */}
         </BarContent>
       </Bar>
     );

@@ -66,6 +66,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q795052", // individual
     "Q20086263", // game of thrones character
     "Q15773317", // television character
+    "Q19324463", // fictional child
+    "Q20086260", // A Song of Ice and Fire character
   ],
   [EntityType.State]: [
     "Q6256",
@@ -141,6 +143,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1127126", // military alliance
     "Q245065", // intergovernemental organization
     "Q15925165", // specialized agency of the United Nations
+    "Q18011131", // Fictional military unit
+    "Q176799", // military unit
+    "Q14623646", // fictional organization
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -169,6 +174,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q751892", // caucus
     "Q623109", // sports league
     "Q721790", // extended family
+    "Q19791817", // fictional noble family
     "Q2992826", // athletic conference
     "Q16887380", // group
     "Q18811582", // fraternity
@@ -184,6 +190,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q15416", // television program
     "Q1616075", // television station
     "Q14350", // radio station
+    "Q7094076", // online database
+    "Q593744", // knowledge base
   ],
   [EntityType.Event]: [
     "Q1190554",
@@ -207,6 +215,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q159821", // Summer Olympic Games
     "Q82414", // Winter Olympic Games
     "Q5389", // Olympic Games
+    "Q15707521", // fictional battle
   ],
 };
 

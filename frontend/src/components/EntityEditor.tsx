@@ -10,16 +10,15 @@ import ROUTES from "../utils/ROUTES";
 import {
   postEntity,
   clearPostRequest,
-  patchEntity
+  patchEntity,
 } from "../features/entitiesSaveAC";
 import { loadEntity } from "../features/entitiesLoadAC";
-import { Status, Entity, EntityType, DatasetId } from "../utils/types";
+import { Status, Entity, EntityType } from "../utils/types";
 import EntityForm from "./entityEditor/EntityForm";
 import Meta from "./meta/Meta";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import { shouldLoad } from "../utils/utils";
 import IconButton from "./buttons/IconButton";
-import Input from "./inputs/Input";
 
 const Content = styled.div`
   display: block;
@@ -48,7 +47,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     : initialName
     ? {
         name: initialName,
-        type: EntityType.Human
+        type: EntityType.Human,
       }
     : undefined;
   const entityStatus = entityKey ? state.entities.status[entityKey] : undefined;
@@ -68,7 +67,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     entityStatus,
     entityError,
     initialName,
-    onDone
+    onDone,
   };
 };
 
@@ -78,16 +77,12 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       loadEntity,
       postEntity,
       patchEntity,
-      clearPostRequest
+      clearPostRequest,
     },
     dispatch
   );
 
 class EntityEditor extends React.Component<Props> {
-  readonly state = {
-    wikidataField: "Q22686"
-  };
-
   componentDidMount() {
     // If we're in "add new entity" mode and the inital entity isn't loaded:
     if (this.props.entityKey && shouldLoad(this.props.entityStatus))
@@ -105,21 +100,6 @@ class EntityEditor extends React.Component<Props> {
   onClearClick = () => {
     this.props.clearPostRequest(this.props.editorId);
     if (this.props.onDone) this.props.onDone(this.props.data);
-  };
-
-  onCancelClick = () => {
-    if (this.props.onDone) this.props.onDone();
-  };
-
-  onImportWikidata = (e: React.FormEvent) => {
-    e.preventDefault();
-    this.props.history.push(
-      `/${ROUTES.import}/${DatasetId.Wikidata}/${this.state.wikidataField}`
-    );
-  };
-
-  onWikidataFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ wikidataField: event.target.value });
   };
 
   render() {
@@ -154,17 +134,11 @@ class EntityEditor extends React.Component<Props> {
 
     return (
       <Content>
-        <form onSubmit={this.onImportWikidata}>
-          <Input
-            onChange={this.onWikidataFieldChange}
-            value={this.state.wikidataField}
-          />
-        </form>
         <EntityForm
           key={this.props.entityKey}
           initialEntity={this.props.entity}
           onFormSubmit={this.onFormSubmit}
-          onFormCancel={this.onCancelClick}
+          onFormCancel={this.props.onDone}
           disabled={postStatus === Status.Requested}
         />
         <MetaPostStatus status={postStatus} error={postError} />

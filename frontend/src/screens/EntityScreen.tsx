@@ -8,7 +8,7 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
-import { Status } from "../utils/types";
+import { Status, DatasetId } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import EntityGraph from "../components/EntityGraph";
 import * as entitySelectionActions from "../features/entitySelectionActions";
@@ -55,7 +55,7 @@ const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
     error,
     linkedEntities,
     linksStatus,
-    linksError
+    linksError,
   };
 };
 
@@ -64,7 +64,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
     {
       loadEntity,
       loadEntityGraph,
-      selectEntities: entitySelectionActions.selectEntities
+      selectEntities: entitySelectionActions.selectEntities,
     },
     dispatch
   );
@@ -76,6 +76,12 @@ type State = {
 class EntityScreen extends Component<Props> {
   readonly state: State = { prevEntityKey: null };
 
+  get isWikidataEntity() {
+    return Boolean(
+      this.props.entity && this.props.entity.ds && this.props.entity.ds.wd
+    );
+  }
+
   componentDidMount() {
     this.fetchData();
   }
@@ -85,7 +91,7 @@ class EntityScreen extends Component<Props> {
   static getDerivedStateFromProps(props: Props, state: State) {
     if (props.status === Status.Ok && props.entityKey !== state.prevEntityKey)
       return {
-        prevEntityKey: props.entityKey
+        prevEntityKey: props.entityKey,
       };
     return null;
   }
@@ -118,6 +124,14 @@ class EntityScreen extends Component<Props> {
     this.props.history.push(url);
   };
 
+  importWikidata = () => {
+    if (this.props.entity && this.props.entity.ds && this.props.entity.ds.wd)
+      this.props.history.push(
+        `/${ROUTES.import}/${DatasetId.Wikidata}/${this.props.entity.ds.wd}`
+      );
+    else console.error("No wikidata field!");
+  };
+
   render() {
     const { entity, status, error, entityKey } = this.props;
 
@@ -135,6 +149,11 @@ class EntityScreen extends Component<Props> {
             <AddIcon />
             New relation
           </IconButton>
+          {this.isWikidataEntity && (
+            <IconButton withText onClick={this.importWikidata}>
+              Import relations from Wikidata
+            </IconButton>
+          )}
         </ButtonBar>
         {status === Status.Ok ? (
           <EntityGraph entityKey={entityKey} />
