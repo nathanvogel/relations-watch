@@ -164,7 +164,6 @@ function getQualifierValue(
         qualifiers[prop].length > 0
         // && typeof qualifiers[prop][0] === "string"
       ) {
-        console.log(prop + " = ", qualifiers[prop]);
         return modifiers && modifiers[prop]
           ? modifiers[prop](qualifiers[prop][0])
           : (qualifiers[prop][0] as string);

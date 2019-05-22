@@ -60,7 +60,7 @@ type Props = ReturnType<typeof mapStateToProps> &
 const Importer: FunctionComponent<Props> = props => {
   useEffect(() => {
     if (!props.data && props.entityDatasetId)
-      props.startImport(props.entityDatasetId, props.autoCreate ? 0 : 2);
+      props.startImport(props.entityDatasetId, props.autoCreate ? 0 : 3);
 
     if (props.data) {
       switch (props.data.importStage) {

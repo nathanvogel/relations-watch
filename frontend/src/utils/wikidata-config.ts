@@ -149,6 +149,11 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q18011131", // Fictional military unit
     "Q176799", // military unit
     "Q14623646", // fictional organization
+    "Q1061648", // sovereign wealth fund
+    "Q4201895", // investment fund
+    "Q15711797", // finance ministry
+    "Q192350", // ministry
+    "Q327333", // government agency
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -256,7 +261,13 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   P102: { type: RT.GroupMember }, // member of political party
   P1344: { type: RT.Attendance }, // participant of
   P108: { type: RT.JobDependsOn }, // employer
-  P1830: { type: RT.IsOwned, invert, owned: 100 }, // owner
+  P1830: {
+    type: RT.IsOwned,
+    invert,
+    owned: 100,
+    ownedInQualifiers: ["P1107"],
+    ownedModifier: { P1107: proportionToOwned },
+  }, // owner of
   P199: {
     type: RT.IsOwned,
     invert,
@@ -279,15 +290,12 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   }, // position held
   P127: {
     type: RT.IsOwned,
+    owned: 100,
     ownedInQualifiers: ["P1107"],
-    ownedModifier: {
-      P1107: value =>
-        typeof value === "number" ? Math.round(value * 1000) / 10 : 100, // proportion
-    },
+    ownedModifier: { P1107: proportionToOwned },
   }, // owned by
-  /*
-  P39 position held
-  P127 owned by
-  P1830 owner of 
-   */
 };
+
+function proportionToOwned(value: any) {
+  return typeof value === "number" ? Math.round(value * 1000) / 10 : 100;
+}
