@@ -161,6 +161,13 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1331793", // media company
     "Q27970162", // hardware store chain
     "Q507619", // retail chain
+    "Q2872764", // French independent administrative authority
+    "Q157031", // foundation
+    "Q3238445", // security agency
+    "Q47913", // intelligence agency
+    "Q14037025", // ministry of France
+    "Q6589202", // interior ministry
+    "Q204310", // gendarmery
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -212,7 +219,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q593744", // knowledge base
     "Q1153191", // online newspaper
     "Q17232649", // news website
-    "Q5276122", // digital newpaper
+    "Q5276122", // digital newspaper
     "Q1358344", // newscast
   ],
   [EntityType.Event]: [
@@ -238,6 +245,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q82414", // Winter Olympic Games
     "Q5389", // Olympic Games
     "Q15707521", // fictional battle
+    "Q198", // war
+    "Q180684", // conflict
   ],
 };
 
@@ -268,6 +277,7 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
     text: "$to is chief executive officer of $from.",
   }, // chief executive officer
   P488: { type: RT.IsControlled, text: "$to is chairman of $from." }, // chairman
+  P1037: { type: RT.IsControlled, text: "$to is director/manager of $from." }, // chairman
   P463: { type: RT.GroupMember }, // member of
   P53: { type: RT.GroupMember }, // family
   P102: { type: RT.GroupMember }, // member of political party

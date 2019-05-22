@@ -12,6 +12,7 @@ function getSimplifiedLink(fullUrl, parsedUrl, rootDomain) {
   var url = getUniformYoutubeLink(fullUrl, parsedUrl, rootDomain);
   // Uniform links with #anchors
   url = removeHash(url, parsedUrl);
+  // TODO: remove query params: fbclid, utm, etc.
   // Remove protocol last, otherwise it's potentially hard to parse the url.
   var ref = url.replace(/^https?:\/\//, "");
   return ref;
