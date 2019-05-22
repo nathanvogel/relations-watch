@@ -86,6 +86,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1307214",
     "Q1520223",
     "Q7270",
+    "Q35657", // state of the United States
+    "Q15063611", // city (N.Y)
   ],
   [EntityType.MoralPerson]: [
     "Q4830453",
@@ -154,6 +156,11 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q15711797", // finance ministry
     "Q192350", // ministry
     "Q327333", // government agency
+    "Q13442814", // news agency
+    "Q192283", // news agency
+    "Q1331793", // media company
+    "Q27970162", // hardware store chain
+    "Q507619", // retail chain
   ],
   [EntityType.Group]: [
     "Q7278",
