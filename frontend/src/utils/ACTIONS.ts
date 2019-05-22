@@ -93,3 +93,5 @@ export const DI_EdgesDiffFetched = "DI_EdgesDiffFetched";
 export type DI_EdgesDiffFetched = typeof DI_EdgesDiffFetched;
 export const DI_ImportSuccess = "DI_ImportSuccess";
 export type DI_ImportSuccess = typeof DI_ImportSuccess;
+export const DI_Clear = "DI_Clear";
+export type DI_Clear = typeof DI_Clear;

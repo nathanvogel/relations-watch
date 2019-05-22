@@ -50,6 +50,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       selectSimilarEntity: instantActions.selectSimilarEntity,
       patchSimilarEntities: actions.patchSimilarEntities,
       confirmImport: actions.confirmImport,
+      clearImport: instantActions.clearImport,
     },
     dispatch
   );
@@ -59,7 +60,10 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const Importer: FunctionComponent<Props> = props => {
   useEffect(() => {
-    if (!props.data && props.entityDatasetId)
+    if (
+      (!props.data || props.data.importStage === ImportStage.Clear) &&
+      props.entityDatasetId
+    )
       props.startImport(props.entityDatasetId, props.autoCreate ? 0 : 3);
 
     if (props.data) {
@@ -71,8 +75,10 @@ const Importer: FunctionComponent<Props> = props => {
             props.data.entryEntity,
             props.onDone
           );
-          if (props.autoCreate && props.data.entryEntity && props.onDone)
+          if (props.autoCreate && props.data.entryEntity && props.onDone) {
             props.onDone(props.data.entryEntity);
+            if (props.entityDatasetId) props.clearImport(props.entityDatasetId);
+          }
           break;
       }
     }

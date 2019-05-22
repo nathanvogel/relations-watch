@@ -174,6 +174,17 @@ export function importSuccess(
   };
 }
 
+interface DI_Clear_Action {
+  type: ACTIONS.DI_Clear;
+  namespace: string;
+}
+export function clearImport(namespace: string): DI_Clear_Action {
+  return {
+    type: ACTIONS.DI_Clear,
+    namespace,
+  };
+}
+
 export type DI_Action =
   | DI_DatasetRequested_Action
   | DI_DatasetFetched_Action
@@ -184,4 +195,5 @@ export type DI_Action =
   | DI_WentToStage_Action
   | DI_EntitiesDiffFetched_Action
   | DI_EdgesDiffFetched_Action
-  | DI_ImportSuccess_Action;
+  | DI_ImportSuccess_Action
+  | DI_Clear_Action;

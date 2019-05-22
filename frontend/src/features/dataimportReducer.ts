@@ -18,41 +18,73 @@ const dsEdgesReducer = (state: Dictionary<Edge> = {}, action: DI_Action) => {
   switch (action.type) {
     case ACTIONS.DI_DatasetFetched:
       return action.dsEdges;
+    case ACTIONS.DI_Clear:
+      return {};
     default:
       return state;
   }
 };
 
 const entitiesToPatchReducer = (state: Entity[] = [], action: DI_Action) => {
-  if (action.type === ACTIONS.DI_EntitiesDiffFetched)
-    return action.updates.elementsToPatch;
-  return state;
+  switch (action.type) {
+    case ACTIONS.DI_EntitiesDiffFetched:
+      return action.updates.elementsToPatch;
+    case ACTIONS.DI_Clear:
+      return [];
+    default:
+      return state;
+  }
 };
 const entitiesToPostReducer = (state: Entity[] = [], action: DI_Action) => {
-  if (action.type === ACTIONS.DI_EntitiesDiffFetched)
-    return action.updates.elementsToPost;
-  return state;
+  switch (action.type) {
+    case ACTIONS.DI_EntitiesDiffFetched:
+      return action.updates.elementsToPost;
+    case ACTIONS.DI_Clear:
+      return [];
+    default:
+      return state;
+  }
 };
 const existingEntitiesReducer = (state: Entity[] = [], action: DI_Action) => {
-  if (action.type === ACTIONS.DI_EntitiesDiffFetched)
-    return action.updates.existingElements;
-  return state;
+  switch (action.type) {
+    case ACTIONS.DI_EntitiesDiffFetched:
+      return action.updates.existingElements;
+    case ACTIONS.DI_Clear:
+      return [];
+    default:
+      return state;
+  }
 };
 
 const edgesToPatchReducer = (state: Edge[] = [], action: DI_Action) => {
-  if (action.type === ACTIONS.DI_EdgesDiffFetched)
-    return action.updates.elementsToPatch;
-  return state;
+  switch (action.type) {
+    case ACTIONS.DI_EdgesDiffFetched:
+      return action.updates.elementsToPatch;
+    case ACTIONS.DI_Clear:
+      return [];
+    default:
+      return state;
+  }
 };
 const edgesToPostReducer = (state: Edge[] = [], action: DI_Action) => {
-  if (action.type === ACTIONS.DI_EdgesDiffFetched)
-    return action.updates.elementsToPost;
-  return state;
+  switch (action.type) {
+    case ACTIONS.DI_EdgesDiffFetched:
+      return action.updates.elementsToPost;
+    case ACTIONS.DI_Clear:
+      return [];
+    default:
+      return state;
+  }
 };
 const existingEdgesReducer = (state: Edge[] = [], action: DI_Action) => {
-  if (action.type === ACTIONS.DI_EdgesDiffFetched)
-    return action.updates.existingElements;
-  return state;
+  switch (action.type) {
+    case ACTIONS.DI_EdgesDiffFetched:
+      return action.updates.existingElements;
+    case ACTIONS.DI_Clear:
+      return [];
+    default:
+      return state;
+  }
 };
 
 const dsEntitiesReducer = (
@@ -62,6 +94,8 @@ const dsEntitiesReducer = (
   switch (action.type) {
     case ACTIONS.DI_DatasetFetched:
       return action.dsEntities;
+    case ACTIONS.DI_Clear:
+      return {};
     default:
       return state;
   }
@@ -76,6 +110,8 @@ const similarEntitiesReducer = (
       return {};
     case ACTIONS.DI_SimilarEntitiesFetched:
       return action.similarEntities;
+    case ACTIONS.DI_Clear:
+      return {};
     default:
       return state;
   }
@@ -88,6 +124,8 @@ const similarEntitiesSelectionReducer = (
   switch (action.type) {
     case ACTIONS.DI_SimilarEntitySelected:
       return update(state, { [action.entityKey]: { $set: action.selection } });
+    case ACTIONS.DI_Clear:
+      return {};
     default:
       return state;
   }
@@ -114,6 +152,8 @@ const stageReducer = (
       return ImportStage.FetchedEdgeDiff;
     case ACTIONS.DI_ImportSuccess:
       return ImportStage.ImportSuccessful;
+    case ACTIONS.DI_Clear:
+      return ImportStage.Clear;
     default:
       return state;
   }
@@ -123,6 +163,8 @@ const errorReducer = (state: ErrorPayload | null = null, action: DI_Action) => {
   switch (action.type) {
     case ACTIONS.DI_Error:
       return action.error;
+    case ACTIONS.DI_Clear:
+      return null;
     default:
       return state;
   }
@@ -132,6 +174,8 @@ const entryEntityReducer = (state: Entity | null = null, action: DI_Action) => {
   switch (action.type) {
     case ACTIONS.DI_ImportSuccess:
       return action.entryEntity || null;
+    case ACTIONS.DI_Clear:
+      return null;
     default:
       return state;
   }
