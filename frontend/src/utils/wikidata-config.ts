@@ -168,6 +168,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q14037025", // ministry of France
     "Q6589202", // interior ministry
     "Q204310", // gendarmery
+    "Q392918", // agency of the ue
   ],
   [EntityType.Group]: [
     "Q7278",

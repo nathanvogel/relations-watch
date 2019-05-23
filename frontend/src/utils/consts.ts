@@ -7,13 +7,13 @@ import {
   RelationTypeRequirements,
   AmountSelectOption,
   EntityTypeOption,
-  EntityTypeValues
+  EntityTypeValues,
 } from "./types";
 import { EntityType as E } from "./types";
 import {
   RELATION_TYPES_STR,
   FAMILIAL_LINK_STR,
-  ENTITY_TYPES
+  ENTITY_TYPES,
 } from "../strings/strings";
 
 // Should have been maintained in sync with the backend here ?
@@ -22,43 +22,43 @@ import {
 export const POSSIBLE_LINKS = {
   [RelationType.IsOwned]: [
     [E.MoralPerson, E.Event, E.Media],
-    [E.MoralPerson, E.Group, E.Human, E.State]
+    [E.MoralPerson, E.Group, E.Human, E.State],
   ],
   [RelationType.JobDependsOn]: [
     [E.Human, E.MoralPerson, E.Media, E.State],
-    [E.Human, E.MoralPerson, E.Group, E.Media, E.State]
+    [E.Human, E.MoralPerson, E.Group, E.Media, E.State],
   ],
   [RelationType.IsControlled]: [
     [E.Group, E.MoralPerson, E.Media, E.State],
-    [E.Human, E.MoralPerson, E.Group, E.State]
+    [E.Human, E.MoralPerson, E.Group, E.State],
   ],
   [RelationType.ValueExchange]: [
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
-    [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
   ],
   [RelationType.Family]: [[E.Human], [E.Human]],
   [RelationType.Friendship]: [[E.Human], [E.Human]],
   [RelationType.Love]: [[E.Human], [E.Human]],
   [RelationType.Opposition]: [
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
-    [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
   ],
   [RelationType.IsInfluenced]: [
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
-    [E.MoralPerson, E.Group, E.Human, E.Media, E.State]
+    [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
   ],
   [RelationType.Attendance]: [
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
-    [E.Event]
+    [E.Event],
   ],
   [RelationType.GroupMember]: [
     [E.MoralPerson, E.Human, E.Human, E.State],
-    [E.Group, E.MoralPerson]
+    [E.Group, E.MoralPerson],
   ],
   [RelationType.Other]: [
-    [E.MoralPerson, E.Group, E.Human, E.Event, E.Human, E.State],
-    [E.MoralPerson, E.Group, E.Human, E.Event, E.Human, E.State]
-  ]
+    [E.MoralPerson, E.Group, E.Human, E.Event, E.Media, E.State],
+    [E.MoralPerson, E.Group, E.Human, E.Event, E.Media, E.State],
+  ],
 };
 
 export const DirectedLinks = [
@@ -66,7 +66,7 @@ export const DirectedLinks = [
   RelationType.IsControlled,
   RelationType.JobDependsOn,
   RelationType.IsInfluenced,
-  RelationType.GroupMember
+  RelationType.GroupMember,
 ];
 
 type Requirements = {
@@ -84,27 +84,27 @@ export const RELATION_REQUIREMENTS: Requirements = {
   [RelationType.IsInfluenced]: { descriptionRequired: true },
   [RelationType.Attendance]: {},
   [RelationType.GroupMember]: {},
-  [RelationType.Other]: { descriptionRequired: true }
+  [RelationType.Other]: { descriptionRequired: true },
 };
 
 export const RelationTypeOptions: RelationTypeOption[] = RelationTypeValues.map(
   value => ({
     value: value,
-    label: RELATION_TYPES_STR[value]
+    label: RELATION_TYPES_STR[value],
   })
 );
 
 export const FamilialLinkOptions: FamilialLinkOption[] = FamilialLinkValues.map(
   value => ({
     value: value,
-    label: FAMILIAL_LINK_STR[value]
+    label: FAMILIAL_LINK_STR[value],
   })
 );
 
 export const EntityTypeOptions: EntityTypeOption[] = EntityTypeValues.map(
   value => ({
     value: value,
-    label: ENTITY_TYPES[value]
+    label: ENTITY_TYPES[value],
   })
 );
 
@@ -132,14 +132,14 @@ export const AmountOptions: AmountSelectOption[] = [
   // { label: "100'000'000 - 1'000'000'000 US$", value: 100000000 },
   // { label: "1'000'000'000 - 10'000'000'000 US$", value: 1000000000 },
   // { label: "10'000'000'000+ US$", value: 10000000000 },
-  { label: "Enter the exact amount", value: AMOUNT_DO_ENTER }
+  { label: "Enter the exact amount", value: AMOUNT_DO_ENTER },
 ];
 export const unkownAmountOption = AmountOptions[0];
 
 export const ERROR_CODES = {
   MISSING_SOURCE_FORM: "MISSING_SOURCE_FORM",
   MISSING_SOURCE_LINK: "MISSING_SOURCE_LINK",
-  NOT_A_LINK: "NOT_A_LINK"
+  NOT_A_LINK: "NOT_A_LINK",
 };
 
 const CONSTS = {
@@ -149,7 +149,7 @@ const CONSTS = {
   WIKIDATA_SOURCE_KEY: "1379121",
   AMOUNT_UNKNOWN,
   AMOUNT_DO_ENTER,
-  ERROR_CODES
+  ERROR_CODES,
 };
 
 export default CONSTS;
