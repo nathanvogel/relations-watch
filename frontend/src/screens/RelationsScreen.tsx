@@ -21,22 +21,31 @@ import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
 import { EditorContainerCSS } from "../components/EditorContainer";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
+import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
 
 const Content = styled.div`
   ${PageWidthSizer}
   ${PagePadder}
+`;
 
+const Header = styled.div`
   display: flex;
   ${media.mobile`display: block;`}
 `;
 
 const EntityColumn = styled.div`
   flex: 1;
+  width: 100%;
+  max-width: 220px;
 `;
+const LinksColumn = styled.div`
+  flex-grow: 1;
+`;
+
 const RelationsColumn = styled.div`
-  flex: 4;
-  padding-left: 32px;
-  padding-right: 32px;
+  width: auto;
+  max-width 680px;
+  margin: 0 auto;
 `;
 
 const AddButton = styled(IconButton)`
@@ -57,8 +66,8 @@ const AddButton = styled(IconButton)`
 `;
 
 const ClearButton = styled(IconButton)`
-  display: block;
-  margin: 0 auto;
+  display: inline-block;
+  margin: ${props => props.theme.inputMarginTB} 0;
 `;
 
 type OwnProps = {
@@ -92,7 +101,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     relations,
     relationsStatus,
     relationsError,
-    hasBothSelection
+    hasBothSelection,
   };
 };
 
@@ -109,7 +118,7 @@ type State = {
 
 class RelationsScreen extends React.Component<Props> {
   readonly state: State = {
-    adding: false
+    adding: false,
   };
 
   addEdgeEditorId = cuid.slug();
@@ -163,25 +172,44 @@ class RelationsScreen extends React.Component<Props> {
 
     return (
       <Content>
-        <EntityColumn>
-          {realKey1 ? (
-            <div>
-              <EntityDetails key={realKey1} entityKey={realKey1} />
-              <ClearButton small onClick={this.onEntity1Cleared}>
-                Search another entity
-              </ClearButton>
-            </div>
-          ) : (
-            <EntitySearch onChange={this.onEntity1Selected} />
-          )}
-        </EntityColumn>
+        <Header>
+          <EntityColumn>
+            {realKey1 ? (
+              <div>
+                <EntityDetails key={realKey1} entityKey={realKey1} />
+                <ClearButton withText small onClick={this.onEntity1Cleared}>
+                  <CloseIcon />
+                  Clear
+                </ClearButton>
+              </div>
+            ) : (
+              <EntitySearch onChange={this.onEntity1Selected} autoFocus />
+            )}
+          </EntityColumn>
+          <LinksColumn>
+            {/* PART links preview */}
+            <BigLinksPreview relations={relations} />
+          </LinksColumn>
+          <EntityColumn>
+            {realKey2 ? (
+              <div style={{ textAlign: "right" }}>
+                <EntityDetails key={realKey2} entityKey={realKey2} />
+                <ClearButton withText small onClick={this.onEntity2Cleared}>
+                  <CloseIcon />
+                  Clear
+                </ClearButton>
+              </div>
+            ) : (
+              <EntitySearch onChange={this.onEntity2Selected} autoFocus />
+            )}
+          </EntityColumn>
+        </Header>
+
         <RelationsColumn>
           {!hasBothSelection ? (
             <p>Select another entity to show their relationships</p>
           ) : (
             <React.Fragment>
-              {/* PART links preview */}
-              <BigLinksPreview relations={relations} />
               {/* PART adding */}
               {this.state.adding ? (
                 <EdgeEditor
@@ -202,18 +230,6 @@ class RelationsScreen extends React.Component<Props> {
             </React.Fragment>
           )}
         </RelationsColumn>
-        <EntityColumn>
-          {realKey2 ? (
-            <div>
-              <EntityDetails key={realKey2} entityKey={realKey2} />
-              <ClearButton small onClick={this.onEntity2Cleared}>
-                Search another entity
-              </ClearButton>
-            </div>
-          ) : (
-            <EntitySearch onChange={this.onEntity2Selected} />
-          )}
-        </EntityColumn>
       </Content>
     );
   }

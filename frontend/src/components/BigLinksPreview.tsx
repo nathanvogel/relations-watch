@@ -6,22 +6,22 @@ import { RELATION_TYPES_STR } from "../strings/strings";
 import { RELATION_COLORS } from "../styles/theme";
 
 const Header = styled.header`
-  min-height: 200px;
-  padding-top: 60px;
+  // min-height: 200px;
+  padding-top: 6px;
 `;
 
 const EdgesWrapper = styled.div`
-  width: 120%;
+  width: 110%;
   position: relative;
-  left: -10%;
+  left: -5%;
   z-index: -10;
 `;
 
 const VisualEdge = styled.div`
-  height: 5px;
+  height: 0.3em;
   // border-radius: 2.5px;
   background-color: ${props => props.color}
-  margin-bottom: 5px;
+  margin-bottom: 0.3em;
 `;
 
 const EdgeTypeExplainer = styled.span`
@@ -36,8 +36,8 @@ const EdgeTypeExplainer = styled.span`
   background-color: ${props => props.color};
 `;
 
-const VerticalMarginWrapper = styled.div`
-  margin-top: 12px;
+const ExplainersWrapper = styled.div`
+  margin: 0px 12px;
 `;
 
 type OwnProps = {
@@ -68,13 +68,13 @@ class BigLinksPreview extends React.Component<OwnProps> {
             <VisualEdge key={type} color={RELATION_COLORS[type]} />
           ))}
         </EdgesWrapper>
-        <VerticalMarginWrapper>
+        <ExplainersWrapper>
           {types.map((type, index) => (
             <EdgeTypeExplainer key={type} color={RELATION_COLORS[type]}>
               {RELATION_TYPES_STR[type]}
             </EdgeTypeExplainer>
           ))}
-        </VerticalMarginWrapper>
+        </ExplainersWrapper>
       </Header>
     );
   }

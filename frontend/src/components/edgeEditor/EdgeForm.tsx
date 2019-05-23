@@ -135,6 +135,13 @@ class EdgeForm extends React.Component<Props> {
     invertDirection: this.props.entity1Key === this.props.initialEdge._to,
   };
 
+  private ref_saveButton: React.RefObject<HTMLButtonElement>;
+
+  constructor(props: Readonly<Props>) {
+    super(props);
+    this.ref_saveButton = React.createRef();
+  }
+
   // get hasSource() {
   //   return this.state.sourceKey || this.props.sourceFormData;
   // }
@@ -220,6 +227,11 @@ class EdgeForm extends React.Component<Props> {
     });
     // One day, loadSources will handle not re-requesting sources.
     if (sourceKey) this.props.loadSources([sourceKey], true);
+    if (this.ref_saveButton.current) {
+      console.log("focus");
+      this.ref_saveButton.current.disabled = false;
+      this.ref_saveButton.current.focus();
+    }
   };
 
   onSourceDeselected = () => {
@@ -469,7 +481,7 @@ class EdgeForm extends React.Component<Props> {
             mode={this.state.sourceSelectorMode}
             changeMode={this.onSourceSelectorModeChange}
           />
-          {hasSource && (
+          {/* {hasSource && (
             <React.Fragment>
               <Label htmlFor="sourceComment">
                 Comment what this source says (optional)
@@ -480,14 +492,18 @@ class EdgeForm extends React.Component<Props> {
                 value={this.state.comment}
               />
             </React.Fragment>
-          )}
+          )} */}
           <ButtonBar buttonsAlign="right">
             {!this.isNew && (
               <ButtonWithConfirmation onAction={this.props.onDelete}>
                 Delete this relation element
               </ButtonWithConfirmation>
             )}
-            <IconButton disabled={this.isNew && !hasSource} type="submit">
+            <IconButton
+              disabled={this.isNew && !hasSource}
+              type="submit"
+              ref={this.ref_saveButton}
+            >
               Save
             </IconButton>
             {hasSource && (

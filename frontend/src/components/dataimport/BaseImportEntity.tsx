@@ -40,6 +40,11 @@ const PersonDescription = styled.div`
   // white-space: nowrap;
   // text-overflow: ellipsis;
   // overflow: hidden;
+  color: ${props => props.theme.mainTextColor};
+  text-decoration: none;
+  // Small trick to make sure text-decoration: none is applied on hover too
+  // https://stackoverflow.com/questions/25762427/remove-underline-only-from-anchor-element-child
+  display: inline-block;
 `;
 
 const Image = styled.img`
@@ -59,7 +64,7 @@ const BaseImportEntity: FunctionComponent<Props> = props => {
       <Image src={getEntityLAsset(entity.type)} />
       <TextColumn>
         <PersonName>{entity.name}</PersonName>
-        <PersonDescription>{entity.text}</PersonDescription>
+        {entity.text && <PersonDescription>{entity.text}</PersonDescription>}
       </TextColumn>
     </Container>
   );
