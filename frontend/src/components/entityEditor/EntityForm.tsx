@@ -12,11 +12,11 @@ import EditorContainer from "../EditorContainer";
 import Input from "../inputs/Input";
 
 const RestyledSelect = styled(StyledSelect)`
-  width: 300px;
+  width: 600px;
   max-width: 100%;
 `;
 const RestyledInput = styled(Input)`
-  width: 300px;
+  width: 600px;
   max-width: 100%;
 `;
 
@@ -29,6 +29,7 @@ type Props = {
 
 type State = {
   name: string;
+  text: string | undefined;
   type: EntityType | undefined;
   linkWikipedia?: string;
   linkCrunchbase?: string;
@@ -43,26 +44,28 @@ class EntityForm extends React.Component<Props> {
   static defaultProps = {
     initialEntity: {
       name: "",
+      text: "",
       type: EntityType.Human,
       linkWikipedia: "",
       linkCrunchbase: "",
       linkTwitter: "",
       linkFacebook: "",
       linkYoutube: "",
-      linkWebsite: ""
-    }
+      linkWebsite: "",
+    },
   };
 
   readonly state: State = {
     name: this.props.initialEntity.name,
     type: this.props.initialEntity.type,
+    text: this.props.initialEntity.text || "",
     linkWikipedia: this.props.initialEntity.linkWikipedia,
     linkCrunchbase: this.props.initialEntity.linkCrunchbase,
     linkTwitter: this.props.initialEntity.linkTwitter,
     linkFacebook: this.props.initialEntity.linkFacebook,
     linkYoutube: this.props.initialEntity.linkYoutube,
     linkWebsite: this.props.initialEntity.linkWebsite,
-    formId: "entity-" + cuid.slug()
+    formId: "entity-" + cuid.slug(),
   };
 
   componentDidMount() {
@@ -71,6 +74,10 @@ class EntityForm extends React.Component<Props> {
 
   onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ name: event.target.value });
+  };
+
+  onTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ text: event.target.value });
   };
 
   onTypeChange = (option: EntityTypeOption) => {
@@ -84,7 +91,8 @@ class EntityForm extends React.Component<Props> {
     const entity: Entity = {
       _key: this.props.initialEntity._key,
       name: this.state.name,
-      type: this.state.type
+      text: this.state.text,
+      type: this.state.type,
     };
     this.props.onFormSubmit(entity);
   };
@@ -105,9 +113,19 @@ class EntityForm extends React.Component<Props> {
           autoFocus
           type="text"
           name="entityName"
-          maxLength={200}
+          maxLength={150}
           value={this.state.name}
           onChange={this.onNameChange}
+          form={this.state.formId}
+        />
+        <Label htmlFor="entityText">Description</Label>
+        <RestyledInput
+          autoFocus
+          type="text"
+          name="entityText"
+          maxLength={200}
+          value={this.state.text}
+          onChange={this.onTextChange}
           form={this.state.formId}
         />
         <Label htmlFor="entityType">Type</Label>
