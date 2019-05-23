@@ -64,7 +64,7 @@ const Importer: FunctionComponent<Props> = props => {
       (!props.data || props.data.importStage === ImportStage.Clear) &&
       props.entityDatasetId
     )
-      props.startImport(props.entityDatasetId, props.autoCreate ? 0 : 3);
+      props.startImport(props.entityDatasetId, props.autoCreate ? 3 : 3);
 
     if (props.data) {
       switch (props.data.importStage) {

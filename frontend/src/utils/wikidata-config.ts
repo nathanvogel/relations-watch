@@ -175,6 +175,15 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q939616", // secret service
     "Q772547", // armed forces
     "Q1378781", // obédience maçonnique
+    "Q219577", // holding
+    "Q9209474", // auction house
+    "Q46970", // airline
+    "Q1875615", // air carrier
+    "Q18558685", // autorité publique indépendante
+    "Q730038", // credit institution
+    "Q161726", // multinational
+    "Q23670565", // professional services firm
+    "Q20031260", // IT consulting company
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -239,6 +248,10 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q24634210", // podcast
     "Q11578774", // broadcasting program
     "Q35127", // website
+    "Q752106", // legislature broadcaster
+    "Q561068", // specialty channel
+    "Q2001305", // television channel
+    "Q267628", // rubrique
   ],
   [EntityType.Event]: [
     "Q1190554",
@@ -355,6 +368,7 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
     ownedInQualifiers: ["P1107"],
     ownedModifier: { P1107: proportionToOwned },
   }, // owned by
+  // P527 ? = has part
 };
 
 function proportionToOwned(value: any) {
