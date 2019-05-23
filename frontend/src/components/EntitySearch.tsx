@@ -63,10 +63,10 @@ const promiseWikidataAutocomplete = async (inputValue: string) => {
   try {
     const url = wd.searchEntities(
       inputValue,
-      i18n.language,
+      i18n.language.indexOf("fr") === 0 ? "fr" : "en",
       30,
       "json",
-      i18n.language
+      i18n.language.indexOf("fr") === 0 ? "fr" : "en"
     );
     const data = (await checkWDData(
       await checkAxiosResponse(await axios.get(url))
