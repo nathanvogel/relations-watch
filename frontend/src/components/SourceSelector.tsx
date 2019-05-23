@@ -8,14 +8,16 @@ import MetaPostStatus from "./meta/MetaPostStatus";
 import { RootStore } from "../Store";
 import {
   getSourceFromRef,
-  clearGetSourceFromRefRequest
+  clearGetSourceFromRefRequest,
 } from "../features/sourcesAC";
 import {
   Status,
   SourceLinkType,
   SourceSelectorMode,
   Source,
-  SourceSelectOption
+  SourceSelectOption,
+  getRefType,
+  SourceType,
 } from "../utils/types";
 import SourceRefSearch from "./sourceEditor/SourceRefSearch";
 import SourceDetails from "./SourceDetails";
@@ -52,7 +54,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     postError,
     refGetData,
     refGetStatus,
-    refGetError
+    refGetError,
   };
 };
 
@@ -60,7 +62,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
       getSourceFromRef,
-      clearGetSourceFromRefRequest
+      clearGetSourceFromRefRequest,
     },
     dispatch
   );
@@ -93,13 +95,12 @@ class SourceSelector extends React.Component<Props> {
     const { mode, refGetData } = this.props;
     if (mode === SourceSelectorMode.EditingRef && refGetData) {
       if (refGetData._key) {
-        this.props.changeMode(SourceSelectorMode.SourceSelected);
         this.props.onSourceSelected({
           value: refGetData._key,
           label: refGetData.pTitle || refGetData.description || refGetData.ref,
           ref: refGetData.ref,
           pTitle: refGetData.pTitle || "",
-          fullUrl: refGetData.fullUrl
+          fullUrl: refGetData.fullUrl,
         });
       } else {
         this.props.changeMode(SourceSelectorMode.EditingNewSource);
@@ -168,7 +169,7 @@ class SourceSelector extends React.Component<Props> {
                 sourceLink={{
                   comments: [],
                   fullUrl: this.props.refInputValue,
-                  type: SourceLinkType.Neutral
+                  type: SourceLinkType.Neutral,
                 }}
               />
             ) : (

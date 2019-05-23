@@ -2,11 +2,17 @@
 const joi = require("joi");
 // store schema in variable to make it re-usable, see .body()
 
+const nullOrEmptyString = joi
+  .string()
+  .allow(null)
+  .allow("");
+
 const entSchema = joi
   .object()
   .required()
   .keys({
     name: joi.string().required(),
+    text: nullOrEmptyString,
     imageId: joi.string(),
     type: joi.number().required(),
     linkWikipedia: joi.string(),
@@ -35,7 +41,7 @@ const sourceLinkSchema = joi
       .number()
       .integer()
       .required(),
-    fullUrl: joi.string(),
+    fullUrl: nullOrEmptyString,
     sourceKey: joi.string(),
     comments: joi.array().items(commentSchema.optional())
   });
@@ -65,11 +71,6 @@ const relSchema = joi
       .optional()
   })
   .unknown(); // allow additional attributes
-
-const nullOrEmptyString = joi
-  .string()
-  .allow(null)
-  .allow("");
 
 const souSchema = joi
   .object()

@@ -51,7 +51,6 @@ export const typesToIgnore: Array<string> = [
   "Q837816", // wordmark
   "Q914359", // cloud storage
   "Q4839801", // backup software
-  "Q35127", // website
   "Q7397", // software
   "Q570871", // email client
 ];
@@ -202,6 +201,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q16887380", // group
     "Q18811582", // fraternity
     "Q8059357", // youth league
+    "Q21685563", // facebook group
+    "Q6576792", // online community
+    "Q210980", // virtual community
   ],
   [EntityType.Media]: [
     "Q1110794",
@@ -221,6 +223,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q17232649", // news website
     "Q5276122", // digital newspaper
     "Q1358344", // newscast
+    "Q24634210", // podcast
+    "Q11578774", // broadcasting program
+    "Q35127", // website
   ],
   [EntityType.Event]: [
     "Q1190554",
@@ -247,6 +252,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q15707521", // fictional battle
     "Q198", // war
     "Q180684", // conflict
+    "Q41397", // genocide
   ],
 };
 
