@@ -32,6 +32,7 @@ import {
 import * as actions from "./wikidataActions";
 import * as CONFIG from "../utils/wikidata-config";
 import { checkWDData, checkAxiosResponse } from "../utils/api-wd";
+import i18n from "../i18n/i18n";
 
 const WD_PARAMS = {
   props: [
@@ -61,6 +62,7 @@ const REL_OVERRIDING_PROPS: Array<keyof Edge> = [
 const REL_UNCHANGEABLE_PROPS: Array<keyof Edge> = [];
 
 function selectLang(list: WDDictionary<wd.LanguageEntry>) {
+  if (list[i18n.language]) return list[i18n.language];
   for (let lang of CONFIG.preferredLangs) {
     if (list[lang]) return list[lang];
   }

@@ -12,6 +12,7 @@ import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import SourceListItemContainerCSS from "./sourceDetails/SourceListItemContainer";
 import IconButton from "./buttons/IconButton";
 import SourceList from "./edgeDetails/SourceList";
+import ButtonBar from "./buttons/ButtonBar";
 
 const Content = styled.section`
   box-sizing: border-box;
@@ -47,7 +48,7 @@ const DatasetInfoText = styled.p`
 
 const AddSourceButton = styled(IconButton)`
   ${SourceListItemContainerCSS}
-  width: 100%;
+  // width: 100%;
   display: block;
   padding-top: ${props => props.theme.inputPaddingTB};
   padding-bottom: ${props => props.theme.inputPaddingTB};
@@ -131,9 +132,11 @@ const EdgeDetails: React.FunctionComponent<Props> = props => {
           </i>
         </DatasetInfoText>
       ) : (
-        <AddSourceButton onClick={() => setEditing(true)}>
-          <EditIcon />
-        </AddSourceButton>
+        <ButtonBar buttonsAlign="right">
+          <AddSourceButton onClick={() => setEditing(true)}>
+            <EditIcon />
+          </AddSourceButton>
+        </ButtonBar>
       )}
     </Content>
   );

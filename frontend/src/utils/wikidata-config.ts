@@ -51,7 +51,6 @@ export const typesToIgnore: Array<string> = [
   "Q837816", // wordmark
   "Q914359", // cloud storage
   "Q4839801", // backup software
-  "Q35127", // website
   "Q7397", // software
   "Q570871", // email client
 ];
@@ -169,6 +168,13 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q6589202", // interior ministry
     "Q204310", // gendarmery
     "Q392918", // agency of the ue
+    "Q896375", // federal ministry in germany
+    "Q637846", // upper house
+    "Q781132", // military branch
+    "Q4508", // navy
+    "Q939616", // secret service
+    "Q772547", // armed forces
+    "Q1378781", // obédience maçonnique
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -203,6 +209,14 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q16887380", // group
     "Q18811582", // fraternity
     "Q8059357", // youth league
+    "Q21685563", // facebook group
+    "Q6576792", // online community
+    "Q210980", // virtual community
+    "Q24649", // european political party
+    "Q766570", // political party in russia
+    "Q4370110", // political party in the russian empire
+    "Q388602", // electoral alliance
+    "Q996839", // fraternité
   ],
   [EntityType.Media]: [
     "Q1110794",
@@ -222,6 +236,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q17232649", // news website
     "Q5276122", // digital newspaper
     "Q1358344", // newscast
+    "Q24634210", // podcast
+    "Q11578774", // broadcasting program
+    "Q35127", // website
   ],
   [EntityType.Event]: [
     "Q1190554",
@@ -248,6 +265,14 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q15707521", // fictional battle
     "Q198", // war
     "Q180684", // conflict
+    "Q41397", // genocide
+    "Q934744", // political scandal
+    "Q2334719", // legal case
+    "Q60589804", // presidential campaign
+    "Q11642595", // election campaign
+    "Q847301", // political campaign
+    "Q11514315", // historical period
+    "Q10931", // revolution
   ],
 };
 
@@ -277,8 +302,21 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
     type: RT.IsControlled,
     text: "$to is chief executive officer of $from.",
   }, // chief executive officer
+  P35: {
+    type: RT.IsControlled,
+    text: "$to is the head of the state $from.",
+  }, // head of state
+  P6: {
+    type: RT.IsControlled,
+    text: "$to is the head of the governement $from.",
+  }, // head of state
   P488: { type: RT.IsControlled, text: "$to is chairman of $from." }, // chairman
   P1037: { type: RT.IsControlled, text: "$to is director/manager of $from." }, // chairman
+  P598: { type: RT.IsControlled, text: "$from is commander of $to.", invert }, // commander of
+  P241: {
+    type: RT.JobDependsOn,
+    text: "$from is in the military branch of $to.",
+  }, // military branch
   P463: { type: RT.GroupMember }, // member of
   P53: { type: RT.GroupMember }, // family
   P102: { type: RT.GroupMember }, // member of political party

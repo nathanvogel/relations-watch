@@ -10,6 +10,7 @@ import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
 import { getEntityLAsset } from "../assets/EntityIcons";
 import MainPersonImage from "./entityDetails/MainPersonImage";
+import BaseImportEntity from "./dataimport/BaseImportEntity";
 
 const Content = styled.div`
   width: 100%;
@@ -39,14 +40,14 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     entityKey,
     entity,
     status,
-    error
+    error,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
-      loadEntity: loadEntity
+      loadEntity: loadEntity,
     },
     dispatch
   );
@@ -67,8 +68,7 @@ class EntityDetails extends Component<Props> {
     return (
       <Content>
         <Link to={`/e/${this.props.entityKey}`}>
-          <MainPersonImage src={getEntityLAsset(entity.type)} />
-          <PersonName>{entity.name}</PersonName>
+          <BaseImportEntity entity={entity} />
         </Link>
       </Content>
     );

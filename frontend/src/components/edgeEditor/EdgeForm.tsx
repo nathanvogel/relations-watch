@@ -15,7 +15,9 @@ import {
   FamilialLinkOption,
   AmountSelectOption,
   SourceSelectOption,
-  SourceSelectorMode
+  SourceSelectorMode,
+  SourceType,
+  getRefType,
 } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
@@ -33,7 +35,7 @@ import CONSTS, {
   RELATION_REQUIREMENTS,
   FamilialLinkOptions,
   AmountOptions,
-  unkownAmountOption
+  unkownAmountOption,
 } from "../../utils/consts";
 import VerticalInputBar from "../buttons/VerticalInputBar";
 import TopRightButton from "../buttons/TopRightButton";
@@ -115,8 +117,8 @@ class EdgeForm extends React.Component<Props> {
       familialLink: undefined,
       owned: 100,
       sourceText: "",
-      sources: []
-    }
+      sources: [],
+    },
   };
 
   readonly state: State = {
@@ -130,8 +132,15 @@ class EdgeForm extends React.Component<Props> {
     sourceKey: undefined,
     refUserInput: "",
     sourceSelectorMode: SourceSelectorMode.EditingRef,
-    invertDirection: this.props.entity1Key === this.props.initialEdge._to
+    invertDirection: this.props.entity1Key === this.props.initialEdge._to,
   };
+
+  private ref_saveButton: React.RefObject<HTMLButtonElement>;
+
+  constructor(props: Readonly<Props>) {
+    super(props);
+    this.ref_saveButton = React.createRef();
+  }
 
   // get hasSource() {
   //   return this.state.sourceKey || this.props.sourceFormData;
@@ -158,11 +167,11 @@ class EdgeForm extends React.Component<Props> {
       this.setState({
         exactAmount: true,
         amount:
-          this.state.amount && this.state.amount > 0 ? this.state.amount : 0
+          this.state.amount && this.state.amount > 0 ? this.state.amount : 0,
       });
     } else {
       this.setState({
-        amount: option ? option.value : CONSTS.AMOUNT_UNKNOWN
+        amount: option ? option.value : CONSTS.AMOUNT_UNKNOWN,
       });
     }
   };
@@ -214,17 +223,21 @@ class EdgeForm extends React.Component<Props> {
     const sourceKey = option.value;
     this.setState({
       sourceKey,
-      refUserInput: option.fullUrl,
-      sourceSelectorMode: SourceSelectorMode.SourceSelected
+      sourceSelectorMode: SourceSelectorMode.SourceSelected,
     });
     // One day, loadSources will handle not re-requesting sources.
     if (sourceKey) this.props.loadSources([sourceKey], true);
+    if (this.ref_saveButton.current) {
+      console.log("focus");
+      this.ref_saveButton.current.disabled = false;
+      this.ref_saveButton.current.focus();
+    }
   };
 
   onSourceDeselected = () => {
     this.setState({
       sourceKey: undefined,
-      sourceSelectorMode: SourceSelectorMode.EditingRef
+      sourceSelectorMode: SourceSelectorMode.EditingRef,
     });
   };
 
@@ -259,7 +272,7 @@ class EdgeForm extends React.Component<Props> {
       exactAmount: this.state.exactAmount,
       fType: this.state.familialLink,
       owned: this.state.ownedPercent,
-      sourceText: this.props.initialEdge.sourceText
+      sourceText: this.props.initialEdge.sourceText,
     });
 
     // If we are updating an existing edge without adding a source,
@@ -279,11 +292,14 @@ class EdgeForm extends React.Component<Props> {
         "Missing refUserInput! Couldn't get a full URL for the SourceLink"
       );
     }
+
+    const potentialUrl = (refUserInput || "").trim();
+    const isLink = getRefType(potentialUrl) === SourceType.Link;
     const sourceLink: SourceLink = {
-      fullUrl: refUserInput ? refUserInput.trim() : "", // TODO: handle that better
+      fullUrl: isLink ? potentialUrl : "",
       comments: comment ? [{ t: comment }] : [],
       type: confirms ? SourceLinkType.Confirms : SourceLinkType.Refutes,
-      sourceKey: sourceKey // Optional
+      sourceKey: sourceKey, // Optional
     };
     this.props.onFormSubmit(edge, sourceLink);
   };
@@ -465,7 +481,7 @@ class EdgeForm extends React.Component<Props> {
             mode={this.state.sourceSelectorMode}
             changeMode={this.onSourceSelectorModeChange}
           />
-          {hasSource && (
+          {/* {hasSource && (
             <React.Fragment>
               <Label htmlFor="sourceComment">
                 Comment what this source says (optional)
@@ -476,14 +492,18 @@ class EdgeForm extends React.Component<Props> {
                 value={this.state.comment}
               />
             </React.Fragment>
-          )}
+          )} */}
           <ButtonBar buttonsAlign="right">
             {!this.isNew && (
               <ButtonWithConfirmation onAction={this.props.onDelete}>
                 Delete this relation element
               </ButtonWithConfirmation>
             )}
-            <IconButton disabled={this.isNew && !hasSource} type="submit">
+            <IconButton
+              disabled={this.isNew && !hasSource}
+              type="submit"
+              ref={this.ref_saveButton}
+            >
               Save
             </IconButton>
             {hasSource && (

@@ -20,6 +20,7 @@ import R from "../strings/R";
 import Importer from "./Importer";
 import { checkAxiosResponse, checkWDData } from "../utils/api-wd";
 import Modal from "./layout/Modal";
+import i18n from "../i18n/i18n";
 
 interface Suggestion {
   _key: string;
@@ -60,7 +61,13 @@ const promiseWikidataAutocomplete = async (inputValue: string) => {
   // Query our beautiful API
   // https://www.wikidata.org/w/api.php?action=wbsearchentities&search=ok&format=json&language=en&uselang=en&type=item
   try {
-    const url = wd.searchEntities(inputValue, "en", 20, "json", "en");
+    const url = wd.searchEntities(
+      inputValue,
+      i18n.language,
+      30,
+      "json",
+      i18n.language
+    );
     const data = (await checkWDData(
       await checkAxiosResponse(await axios.get(url))
     )).search;

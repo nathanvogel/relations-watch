@@ -56,14 +56,14 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     status,
     error,
     postStatus,
-    postError
+    postError,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
-      patchSource
+      patchSource,
     },
     dispatch
   );
@@ -73,7 +73,7 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 class SourceDetails extends React.Component<Props> {
   readonly state = {
-    editingSource: false
+    editingSource: false,
   };
 
   toggleClick = () => {
@@ -128,7 +128,9 @@ class SourceDetails extends React.Component<Props> {
             <IconButton onClick={this.toggleClick}>Edit</IconButton>
           )}
         </Actions>
-        <div>{source.pTitle || source.description}</div>
+        {source._key !== "1379121" && (
+          <div>{source.pTitle || source.description}</div>
+        )}
         {isLink ? (
           <StyledSourceA href={this.props.sourceLink.fullUrl || source.fullUrl}>
             {source.ref}
