@@ -8,6 +8,9 @@ import ROUTES from "../utils/ROUTES";
 import { ReactSelectOption } from "../utils/types";
 import R from "../strings/R";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
+import BaseImportEntity from "../components/dataimport/BaseImportEntity";
+import EntityDetails from "../components/EntityDetails";
+import { media } from "../styles/media-styles";
 
 const Content = styled.main`
   ${PageWidthSizer}
@@ -19,7 +22,7 @@ const Content = styled.main`
 `;
 
 const Header = styled.header`
-  margin-top: 16vh;
+  margin-top: 12vh;
 `;
 
 const Article = styled.article`
@@ -37,7 +40,7 @@ const CentralSearch = styled(EntitySearch)`
   width: 330px;
   max-width: 100%;
   margin: 0 auto;
-  margin-bottom: 12vh;
+  margin-bottom: 9vh;
 
   .rs__control {
     padding: 4px ${props => props.theme.inputPaddingLR};
@@ -47,6 +50,35 @@ const CentralSearch = styled(EntitySearch)`
 const CentralTitle = styled.h2`
   text-align: center;
   font-size: 24px;
+`;
+
+const ItemList = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  // overflow: auto;
+  // white-space: nowrap;
+  // margin-top: -18px;
+
+  & > * {
+    display: inline-block;
+    min-width: 15em;
+    margin-right: ${props => props.theme.marginLR};
+    margin-top: ${props => props.theme.marginTB};
+    margin-bottom: ${props => props.theme.marginTB};
+    ${media.mobile`width: 100%;`}
+
+    > div {
+      height: 100%;
+    }
+  }
+`;
+
+const Trending = styled.p`
+  color: ${props => props.theme.secondaryTextColor};
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  font-size: ${props => props.theme.fontSizeS};
 `;
 
 const HomeScreen: FunctionComponent<RouterProps> = props => {
@@ -61,11 +93,19 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
   return (
     <Content>
       <Header>
-        <CentralTitle>Explore the relation graph</CentralTitle>
-        <CentralSearch onChange={onSearch} />
+        {/* <CentralTitle>Explore the relation graph</CentralTitle> */}
+        <CentralSearch autoFocus onChange={onSearch} />
       </Header>
       <Article>
-        <h2>{t(R.slogan)}</h2>
+        <Trending>{t(R.home_trending)}</Trending>
+        <ItemList>
+          <EntityDetails entityKey={"1539778"} />
+          <EntityDetails entityKey={"1589920"} />
+          <EntityDetails entityKey={"222110"} />
+          {/* <EntityDetails entityKey={"1701669"} /> */}
+        </ItemList>
+        <br />
+        {/* <h2>{t(R.slogan)}</h2> */}
         <h3>{t(R.faq_about_q)}</h3>
         <p>{t(R.faq_about_a)}</p>
         <h3>{t(R.faq_data_q)}</h3>
