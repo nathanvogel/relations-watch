@@ -3,12 +3,12 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import * as d3 from "d3";
 import "d3-force";
-import { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
+// import { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
 import forceBoundary from "../utils/d3/d3-force-boundary";
 
 import {
-  RelationRenderData,
-  NodeRenderData,
+  V4LinkDatum,
+  V4NodeDatum,
   NodeRenderType,
   RelationType,
 } from "../utils/types";
@@ -23,34 +23,28 @@ const GraphSVG = styled.svg`
 `;
 
 type Props = {
-  rRelations: RelationRenderData[];
-  rEntities: NodeRenderData[];
-  rRelationsByKey: { [key: string]: RelationRenderData };
-  rEntitiesByKey: { [key: string]: NodeRenderData };
+  rRelations: V4LinkDatum[];
+  rEntities: V4NodeDatum[];
+  rRelationsByKey: { [key: string]: V4LinkDatum };
+  rEntitiesByKey: { [key: string]: V4NodeDatum };
   width: number;
   height: number;
 } & RouteComponentProps;
 
-const colours = ["#f92035", "#0423e8", "#0480e8"];
-const coloursVisited = ["#a92035", "#0423a8", "#0480a8"];
-// const sizes = [38, 28, 18];
-
-const COLL_RADIUS = 2;
-
-function size(d: NodeRenderData): number {
+function size(d: V4NodeDatum): number {
   return sizeT(d.type);
 }
 function sizeT(type: NodeRenderType): number {
   switch (type) {
     case NodeRenderType.Primary:
-      return 45;
+      return 55;
     case NodeRenderType.Secondary:
       return 35;
     case NodeRenderType.Tertiary:
       return 25;
   }
 }
-function collisionSize(d: NodeRenderData): number {
+function collisionSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
       return 80;
@@ -65,13 +59,13 @@ function isDirectedType(t: RelationType) {
   return DirectedLinks.indexOf(t) >= 0;
 }
 
-function nodeTranslate(d: NodeRenderData): string {
+function nodeTranslate(d: V4NodeDatum): string {
   return `translate(
     ${(d.x as number) - size(d) / 2},
     ${(d.y as number) - size(d) / 2 - 5})`;
 }
 
-function fontWeight(d: NodeRenderData): string {
+function fontWeight(d: V4NodeDatum): string {
   switch (d.type) {
     case NodeRenderType.Primary:
       return "bold";
@@ -82,7 +76,7 @@ function fontWeight(d: NodeRenderData): string {
   }
 }
 
-function fontSize(d: NodeRenderData): number {
+function fontSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
       return 14;
@@ -93,19 +87,19 @@ function fontSize(d: NodeRenderData): number {
   }
 }
 
-function href(d: NodeRenderData): string {
+function href(d: V4NodeDatum): string {
   return getEntitySAsset(d.entity.type);
 }
 
-function relationColor(d: RelationRenderData) {
-  return RELATION_COLORS[d.types[0]];
+function relationColor(d: V4LinkDatum) {
+  return RELATION_COLORS[d.sortedTypes[0]];
 }
 
-function strokeColor(d: RelationRenderData) {
+function strokeColor(d: V4LinkDatum) {
   return d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd";
 }
 
-function linkOpacity(d: RelationRenderData) {
+function linkOpacity(d: V4LinkDatum) {
   return d.withType === NodeRenderType.Primary ? 1 : 0.5;
 }
 
@@ -117,9 +111,9 @@ function goToParent(this: Element | null) {
 function between(a1: number, a2: number, percent: number) {
   return a1 + (a2 - a1) * percent;
 }
-function betweenOffD(d: RelationRenderData, offset: number) {
-  const source = d.source as SimulationNodeDatum;
-  const target = d.target as SimulationNodeDatum;
+function betweenOffD(d: V4LinkDatum, offset: number) {
+  const source = d.source as V4NodeDatum;
+  const target = d.target as V4NodeDatum;
 
   return betweenOff(
     source.x as number,
@@ -147,12 +141,9 @@ class GraphD3Simple extends React.Component<Props> {
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
   private gNodes: React.RefObject<SVGGElement>;
-  private simulation: d3.Simulation<
-    NodeRenderData,
-    SimulationLinkDatum<NodeRenderData>
-  >;
-  private nodesData: { [key: string]: NodeRenderData } = {};
-  private linksData: { [key: string]: RelationRenderData } = {};
+  private simulation: d3.Simulation<V4NodeDatum, V4LinkDatum>;
+  private nodesData: { [key: string]: V4NodeDatum } = {};
+  private linksData: { [key: string]: V4LinkDatum } = {};
 
   constructor(props: Readonly<Props>) {
     super(props);
@@ -161,7 +152,7 @@ class GraphD3Simple extends React.Component<Props> {
     this.gNodes = React.createRef();
 
     this.simulation = d3.forceSimulation();
-    // .force("link", d3.forceLink().id(d => (d as NodeRenderData).entityKey))
+    // .force("link", d3.forceLink().id(d => (d as V4NodeDatum).entityKey))
     // .force("charge", d3.forceManyBody())
     // .force("collide", d3.forceCollide().radius(collisionSize as any))
     // .force("center", d3.forceCenter(width / 2, height / 2))
@@ -183,53 +174,46 @@ class GraphD3Simple extends React.Component<Props> {
     // We do this to preserve the positions and velocities from one
     // screen to the next.
     const { rEntitiesByKey, rRelationsByKey } = this.props;
-    var rRelations: RelationRenderData[] = [];
+    var rRelations: V4LinkDatum[] = [];
     for (let key in rRelationsByKey) {
       this.linksData[key] = this.linksData[key]
         ? Object.assign({}, this.linksData[key], rRelationsByKey[key])
         : Object.assign({}, rRelationsByKey[key]);
       rRelations.push(this.linksData[key]);
     }
-    var rEntities: NodeRenderData[] = [];
+    var rEntities: V4NodeDatum[] = [];
     for (let key in rEntitiesByKey) {
       this.nodesData[key] = this.nodesData[key]
         ? Object.assign({}, this.nodesData[key], rEntitiesByKey[key])
         : Object.assign({}, rEntitiesByKey[key]);
-      // this.nodesData[key].x = this.nodesData[key].x || width / 2 - 200;
-      // this.nodesData[key].y = this.nodesData[key].y || height;
-      // this.nodesData[key].fx = this.nodesData[key].type === NodeRenderType.Primary ? width / 2 : undefined;
-      // this.nodesData[key].fy = this.nodesData[key].type === NodeRenderType.Primary ? height / 2 : undefined;
       rEntities.push(this.nodesData[key]);
     }
 
     // D3 FORCES SETUP
 
-    const maxTypes = d3.max(rRelations, d => d.types.length) || 1;
+    const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
     const distScale = d3
       .scaleLinear()
-      .domain([1, Math.max(maxTypes, 3)])
-      .range([250, 100]);
+      .domain([1, Math.max(maxProximity, 3)])
+      .range([300, 80]);
     // We need to recreate the simulation for some reason... ?
     const { width, height } = this.props;
+    // type LLD = SimulationLinkDatum<LD>;
     this.simulation = d3
-      .forceSimulation()
+      .forceSimulation<V4NodeDatum, V4LinkDatum>()
       .velocityDecay(0.82) // Akin to atmosphere friction (velocity multiplier)
       .alphaTarget(-0.1) // Stop mini-pixel-step-motion early
       // The most important force, attraction derived from our relations.
       .force(
         "link",
         d3
-          .forceLink()
+          .forceLink<V4NodeDatum, V4LinkDatum>()
           .id(d => {
-            // console.log(d);
-            return (d as NodeRenderData).entityKey;
+            return d.entityKey;
           })
           .strength(1) // Warning: crashes if higher than 2, better stay within [0,1]
           // Make some links closer than others.
-          .distance((d: any) => {
-            // console.log(d);
-            return distScale(d.types.length);
-          })
+          .distance(d => distScale(d.proximity))
           // Emphasize this force and arrive faster at a stable result
           .iterations(8)
       )
@@ -243,33 +227,31 @@ class GraphD3Simple extends React.Component<Props> {
       .force(
         "x",
         d3
-          .forceX(width / 2)
-          .strength((d: any) =>
-            (d as NodeRenderData).type === NodeRenderType.Primary ? 1 : 0
-          )
+          .forceX<V4NodeDatum>(width / 2)
+          .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
       )
       .force(
         "y",
         d3
-          .forceY(height / 2)
-          .strength((d: any) =>
-            (d as NodeRenderData).type === NodeRenderType.Primary ? 1 : 0
-          )
+          .forceY<V4NodeDatum>(height / 2)
+          .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
       )
       // Pushes Tertiary entities towards an outer circle
       .force(
         "radial",
         d3
-          .forceRadial(Math.min(width, height) * 0.4, width / 2, height / 2)
-          .strength((d: any) =>
-            (d as NodeRenderData).type === NodeRenderType.Tertiary ? 1 : 0
+          .forceRadial<V4NodeDatum>(
+            Math.min(width, height) * 0.4,
+            width / 2,
+            height / 2
           )
+          .strength(d => (d.type === NodeRenderType.Tertiary ? 1 : 0))
       )
       // Alternative or helper to forceManyBody()
       .force(
         "collide",
         d3
-          .forceCollide()
+          .forceCollide<V4NodeDatum>()
           .radius(collisionSize as any)
           .strength(0.2)
       )
@@ -288,7 +270,7 @@ class GraphD3Simple extends React.Component<Props> {
     var links = linkGroup.selectAll("g").data(
       () => rRelations,
       // Key function to preserve the relation between DOM and rRelations
-      (d: RelationRenderData | {}) => (d as RelationRenderData).relationId
+      (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
     var links2 = links
       .enter()
@@ -304,7 +286,7 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("fill", relationColor)
       .attr("stroke-width", 0)
       .attr("stroke", "#aaaaaa")
-      .attr("opacity", d => (isDirectedType(d.types[0]) ? 1 : 0))
+      .attr("opacity", d => (isDirectedType(d.sortedTypes[0]) ? 1 : 0))
       .select(goToParent)
       .append("line")
       .classed("interaction", true)
@@ -336,7 +318,7 @@ class GraphD3Simple extends React.Component<Props> {
     var nodes = nodeGroup.selectAll("g.node").data(
       () => rEntities,
       // Key function to preserve the relation between DOM and rEntities
-      (d: NodeRenderData | {}) => (d as NodeRenderData).entityKey
+      (d: V4NodeDatum | {}) => (d as V4NodeDatum).entityKey
     );
     // Add nodes for the first time and define one-time attribute.
     var nodes2 = nodes
@@ -405,19 +387,31 @@ class GraphD3Simple extends React.Component<Props> {
     // Update the positions from the simulation
     this.simulation.on("tick", () => {
       linksVisual
-        .attr("x1", d => (d.source as SimulationNodeDatum).x as number)
-        .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
-        .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
-        .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
+        .attr("x1", d => (d.source as V4NodeDatum).x as number)
+        .attr("y1", d => (d.source as V4NodeDatum).y as number)
+        .attr("x2", d => (d.target as V4NodeDatum).x as number)
+        .attr("y2", d => (d.target as V4NodeDatum).y as number);
       linksInteraction
-        .attr("x1", d => (d.source as SimulationNodeDatum).x as number)
-        .attr("y1", d => (d.source as SimulationNodeDatum).y as number)
-        .attr("x2", d => (d.target as SimulationNodeDatum).x as number)
-        .attr("y2", d => (d.target as SimulationNodeDatum).y as number);
+        .attr("x1", d => (d.source as V4NodeDatum).x as number)
+        .attr("y1", d => (d.source as V4NodeDatum).y as number)
+        .attr("x2", d => (d.target as V4NodeDatum).x as number)
+        .attr("y2", d => (d.target as V4NodeDatum).y as number);
 
       linksC
-        .attr("cx", (d: any) => between(d.source.x, d.target.x, 0.15))
-        .attr("cy", (d: any) => between(d.source.y, d.target.y, 0.15));
+        .attr("cx", (d: any) =>
+          between(
+            (d.source as V4NodeDatum).x,
+            (d.target as V4NodeDatum).x,
+            0.15
+          )
+        )
+        .attr("cy", (d: any) =>
+          between(
+            (d.source as V4NodeDatum).y,
+            (d.target as V4NodeDatum).y,
+            0.15
+          )
+        );
       // linksC
       //   .attr("cx", d => betweenOffD(d, 20).x)
       //   .attr("cy", d => betweenOffD(d, 15).y);
@@ -430,20 +424,22 @@ class GraphD3Simple extends React.Component<Props> {
     // Update the data in the simulation.
     this.simulation.nodes(rEntities);
     const linkForce = this.simulation.force("link") as d3.ForceLink<
-      {},
-      d3.SimulationLinkDatum<{}>
+      V4NodeDatum,
+      V4LinkDatum
     >;
     linkForce.links(rRelations);
 
     // this.simulation.restart();
   }
 
-  onNodeClick = (d: NodeRenderData, _index: number) => {
+  onNodeClick = (d: V4NodeDatum, _index: number) => {
     this.props.history.push(`/${ROUTES.entity}/${d.entityKey}`);
   };
 
-  onRelationClick = (d: RelationRenderData, _index: number) => {
-    this.props.history.push(`/${ROUTES.relation}/${d.from}/${d.to}`);
+  onRelationClick = (d: V4LinkDatum, _index: number) => {
+    this.props.history.push(
+      `/${ROUTES.relation}/${d.sourceKey}/${d.targetKey}`
+    );
   };
 
   render() {

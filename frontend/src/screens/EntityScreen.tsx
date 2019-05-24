@@ -10,7 +10,7 @@ import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
 import { Status, DatasetId } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
-import EntityGraph from "../components/EntityGraph";
+import EntityGraphV4 from "../components/EntityGraphV4";
 import * as entitySelectionActions from "../features/entitySelectionActions";
 import ButtonBar from "../components/buttons/ButtonBar";
 import IconButton from "../components/buttons/IconButton";
@@ -156,9 +156,9 @@ class EntityScreen extends Component<Props> {
           )}
         </ButtonBar>
         {status === Status.Ok ? (
-          <EntityGraph entityKey={entityKey} />
+          <EntityGraphV4 entityKey={entityKey} />
         ) : this.state.prevEntityKey ? (
-          <EntityGraph entityKey={this.state.prevEntityKey} />
+          <EntityGraphV4 entityKey={this.state.prevEntityKey} />
         ) : null}
       </Content>
     );

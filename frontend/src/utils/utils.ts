@@ -8,7 +8,7 @@ import {
   Entity,
   EntityPreview,
   ErrorPayload,
-  DatasetId
+  DatasetId,
 } from "./types";
 import CONSTS from "./consts";
 
@@ -51,8 +51,8 @@ export function getSimplifiedEdge<E extends CommonEdge>(edge: E): E {
   const newEdge = update<CommonEdge>(edge, {
     $merge: {
       _from: edge._from.replace("entities/", ""),
-      _to: edge._to.replace("entities/", "")
-    }
+      _to: edge._to.replace("entities/", ""),
+    },
   });
   return newEdge as E;
 }
@@ -77,7 +77,8 @@ export function getEdgePreview(edge: Edge): EdgePreview {
     _key: edge._key,
     _from: edge._from,
     _to: edge._to,
-    type: edge.type
+    type: edge.type,
+    fType: edge.fType,
   };
 }
 
@@ -159,7 +160,7 @@ export function getEntityPreview(entity: Entity): EntityPreview {
     _key: entity._key as string,
     name: entity.name,
     type: entity.type,
-    imageId: entity.imageId
+    imageId: entity.imageId,
   };
 }
 
@@ -169,7 +170,7 @@ export function getEntityPreview(entity: Entity): EntityPreview {
 export const errToErrorPayload: (err: any) => ErrorPayload = (err: any) => ({
   eData: err,
   eMessage: err && err.message ? err.message : "Unknown error!",
-  eStatus: err ? err.code : "UNKOWN"
+  eStatus: err ? err.code : "UNKOWN",
 });
 
 /**

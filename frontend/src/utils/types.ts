@@ -150,6 +150,7 @@ export type EdgePreview = {
   _from: string;
   _to: string;
   type: RelationType;
+  fType?: FamilialLink;
 };
 
 export type CommonEdge = Edge | EdgePreview;
@@ -213,6 +214,190 @@ export type NodeRenderData = {
   // Text sizing
   bb?: DOMRect;
 };
+
+// Zones
+export enum RelZone {
+  Default,
+  IsControlled,
+  DoesControl,
+  IsDescendant,
+  IsRelated,
+  IsChild,
+  Ideology,
+  WorksFor,
+  GivesWork,
+  Other,
+  Opposition,
+  Participates,
+}
+export const RelZoneValues: RelZone[] = Object.values(RelZone).filter(
+  x => typeof x === "number"
+);
+
+export const TypeWeights: {
+  [rType: number]: {
+    nor: [RelZone, number];
+    inv: [RelZone, number];
+  };
+} = {
+  [RelationType.JobDependsOn]: {
+    nor: [RelZone.WorksFor, 1],
+    inv: [RelZone.GivesWork, 1],
+  },
+  [RelationType.IsOwned]: {
+    nor: [RelZone.IsControlled, 3],
+    inv: [RelZone.DoesControl, 3],
+  },
+  [RelationType.IsControlled]: {
+    nor: [RelZone.IsControlled, 1.5],
+    inv: [RelZone.DoesControl, 1.5],
+  },
+  [RelationType.ValueExchange]: {
+    nor: [RelZone.Other, 1],
+    inv: [RelZone.Other, 1],
+  },
+  [RelationType.Friendship]: {
+    nor: [RelZone.Other, 1],
+    inv: [RelZone.Other, 1],
+  },
+  [RelationType.Love]: {
+    nor: [RelZone.IsRelated, 1],
+    inv: [RelZone.IsRelated, 1],
+  },
+  [RelationType.Opposition]: {
+    nor: [RelZone.Opposition, 1],
+    inv: [RelZone.Opposition, 1],
+  },
+  [RelationType.IsInfluenced]: {
+    nor: [RelZone.Ideology, 1],
+    inv: [RelZone.Other, 1],
+  },
+  [RelationType.Attendance]: {
+    nor: [RelZone.Participates, 1],
+    inv: [RelZone.Other, 1],
+  },
+  [RelationType.GroupMember]: {
+    nor: [RelZone.Participates, 1],
+    inv: [RelZone.Other, 1],
+  },
+  [RelationType.Other]: {
+    nor: [RelZone.Other, 1],
+    inv: [RelZone.Other, 1],
+  },
+};
+
+export const ProximityWeights = {
+  [RelationType.JobDependsOn]: 1,
+  [RelationType.IsOwned]: 4,
+  [RelationType.IsControlled]: 2,
+  [RelationType.ValueExchange]: 1,
+  [RelationType.Friendship]: 0.5,
+  [RelationType.Love]: 3,
+  [RelationType.Opposition]: -2,
+  [RelationType.IsInfluenced]: 1,
+  [RelationType.Attendance]: 1,
+  [RelationType.GroupMember]: 1.5,
+  [RelationType.Other]: 0.5,
+};
+
+export const FProximityWeights = {
+  [FamilialLink.childOf]: 1,
+  [FamilialLink.siblingOf]: 1,
+  [FamilialLink.spouseOf]: 3,
+  [FamilialLink.cousinOf]: 0.3,
+  [FamilialLink.other]: 0.3,
+};
+
+export const DefaultZones = {
+  [RelZone.Default]: 0,
+  [RelZone.IsControlled]: 0,
+  [RelZone.DoesControl]: 0,
+  [RelZone.IsDescendant]: 0,
+  [RelZone.IsRelated]: 0,
+  [RelZone.IsChild]: 0,
+  [RelZone.Ideology]: 0,
+  [RelZone.WorksFor]: 0,
+  [RelZone.GivesWork]: 0,
+  [RelZone.Other]: 0,
+  [RelZone.Opposition]: 0,
+  [RelZone.Participates]: 0,
+};
+
+export type RelZones = typeof DefaultZones;
+
+export enum LinkDir {
+  None,
+  Normal,
+  Invert,
+  Both,
+}
+
+export const DefaultTypeDirs = {
+  [RelationType.IsOwned]: LinkDir.None,
+  [RelationType.JobDependsOn]: LinkDir.None,
+  [RelationType.IsControlled]: LinkDir.None,
+  [RelationType.ValueExchange]: LinkDir.None,
+  [RelationType.Family]: LinkDir.None,
+  [RelationType.Friendship]: LinkDir.None,
+  [RelationType.Love]: LinkDir.None,
+  [RelationType.Opposition]: LinkDir.None,
+  [RelationType.IsInfluenced]: LinkDir.None,
+  [RelationType.Attendance]: LinkDir.None,
+  [RelationType.GroupMember]: LinkDir.None,
+  [RelationType.Other]: LinkDir.None,
+};
+
+export const DefaultTypeWeights = {
+  [RelationType.IsOwned]: 0,
+  [RelationType.JobDependsOn]: 0,
+  [RelationType.IsControlled]: 0,
+  [RelationType.ValueExchange]: 0,
+  [RelationType.Family]: 0,
+  [RelationType.Friendship]: 0,
+  [RelationType.Love]: 0,
+  [RelationType.Opposition]: 0,
+  [RelationType.IsInfluenced]: 0,
+  [RelationType.Attendance]: 0,
+  [RelationType.GroupMember]: 0,
+  [RelationType.Other]: 0,
+};
+
+// Must be iteratively calculable
+export type V4GenericLinkDatum<T> = {
+  // Data
+  sourceKey: string;
+  targetKey: string;
+  source: string | T;
+  target: string | T;
+  relationId: string;
+  visited: boolean;
+  withType: NodeRenderType;
+  // Position computation data
+  proximity: number;
+  tDirections: { [key: number]: LinkDir }; // indexed on RelationType
+  tWeights: { [key: number]: number }; // indexed on RelationType
+  sortedTypes: RelationType[]; // indexed on RelationType
+};
+
+// Must be iteratively calculable
+export type V4NodeDatum = {
+  x: number;
+  y: number;
+  entityKey: string;
+  entity: EntityPreview;
+  visited: boolean;
+  type: NodeRenderType;
+  // Position computation data
+  zones: RelZones; // indexed on RelZone
+  zoneTotal: number;
+  // From d3-force:
+  // Each node must be an object. The following properties are assigned by the simulation:
+  index?: number; // the node’s zero-based index into nodes
+  // Text sizing
+  bb?: DOMRect;
+};
+
+export type V4LinkDatum = V4GenericLinkDatum<V4NodeDatum>;
 
 export type Source = {
   _key?: string;

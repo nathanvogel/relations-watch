@@ -149,7 +149,7 @@ router
                  ANY CONCAT(${entColl.name()}, '/', ${req.pathParams.key})
                  ${relColl}
                  OPTIONS { uniqueEdges: "path", bfs: true }
-                 RETURN DISTINCT KEEP(e, "_key", "_from", "_to", "type")
+                 RETURN DISTINCT KEEP(e, "_key", "_from", "_to", "type", "fType")
           )
           LET vResults = (
             FOR v,e
@@ -157,7 +157,7 @@ router
               ANY CONCAT(${entColl.name()}, '/', ${req.pathParams.key})
               ${relColl}
               OPTIONS { uniqueEdges: "path", bfs: true }
-              RETURN DISTINCT KEEP(v, "_key", "name", "type")
+              RETURN DISTINCT KEEP(v, "_key", "name", "type", "text")
            )
            RETURN { edges: eResults, vertices: vResults}
         `);
