@@ -26,6 +26,31 @@ const StyledMeta = styled(Meta)`
   transform: translateX(-50%) translateY(20vh);
 `;
 
+const MyButtonBar = styled.div`
+  margin: ${props => props.theme.inputTBSpacing} -${props => props.theme.inputLRSpacing};
+  position: absolute;
+  top: 80px;
+  left: 12px;
+
+  & > * {
+    display: block;
+    // width: 100%;
+    margin: ${props => props.theme.inputTBSpacing}
+      ${props => props.theme.inputLRSpacing};
+  }
+`;
+
+const Name = styled.div`
+  text-align: center;
+  max-width: ${props => props.theme.appMaxWidth};
+  margin: ${props => props.theme.marginTB} auto;
+  // margin-top: -42px;
+
+  *:first-child {
+    font-weight: bold;
+  }
+`;
+
 interface EntityMatch {
   entityKey: string;
 }
@@ -140,14 +165,20 @@ class EntityScreen extends Component<Props> {
     return (
       <Content>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
-        <ButtonBar>
+        {status === Status.Ok && (
+          <Name>
+            <div>{entity.name}</div>
+            <div>{entity.text}</div>
+          </Name>
+        )}
+        <ButtonBar buttonsAlign="right">
           <IconButton withText onClick={this.onEditEntity}>
             <EditIcon />
-            Edit {status === Status.Ok && entity.name}
+            Edit
           </IconButton>
           <IconButton withText onClick={this.onAddRelation}>
             <AddIcon />
-            New relation
+            Relation
           </IconButton>
           {this.isWikidataEntity && (
             <IconButton withText onClick={this.importWikidata}>

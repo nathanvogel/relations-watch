@@ -140,6 +140,10 @@ function betweenOff(
   };
 }
 
+function getShortString(str: string) {
+  return str.length < 24 ? str : str.substr(0, 20) + "...";
+}
+
 const clusters: Clusters = {
   [RelZone.Default]: null,
   [RelZone.Main]: null,
@@ -321,7 +325,7 @@ class GraphD3Simple extends React.Component<Props> {
       // Key function to preserve the relation between DOM and rRelations
       (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
-    const lineStrokeWidth = 32;
+    const lineStrokeWidth = 1;
     var links2 = links
       .enter()
       .append("g")
@@ -334,20 +338,20 @@ class GraphD3Simple extends React.Component<Props> {
       .append("circle")
       .attr("r", 4)
       .attr("fill", relationColor)
-      .attr("stroke-width", 0)
-      .attr("stroke", "#aaaaaa")
+      // .attr("stroke-width", 0)
+      // .attr("stroke", "#aaaaaa")
       .attr("opacity", d => (isDirectedType(d.sortedTypes[0]) ? 1 : 0))
       .select(goToParent)
       .append("line")
       .classed("interaction", true)
-      .attr("stroke-width", Math.max(11, lineStrokeWidth))
+      .attr("stroke-width", 11)
       .attr("opacity", 0)
       .on("click", this.onRelationClick)
       .on("mouseover", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
-          .attr("stroke-width", lineStrokeWidth)
-          .attr("stroke", "#000000");
+          .attr("stroke-width", Math.max(20, lineStrokeWidth));
+        // .attr("stroke", "#000000");
       })
       .on("mouseout", function(d) {
         d3.select(this.parentNode as any)
@@ -379,13 +383,26 @@ class GraphD3Simple extends React.Component<Props> {
       .classed("interaction", true)
       // .attr("transform", "scale(0.2, 0.2)")
       .on("click", this.onNodeClick)
+      .on("mouseover", function(d) {
+        d3.select(this)
+          .select("text")
+          .text(d.entity.name)
+          .attr("font-weight", "bold");
+      })
+      .on("mouseout", function(d) {
+        // this.textContent = d.entity.name;
+        d3.select(this)
+          .select("text")
+          .text(getShortString(d.entity.name))
+          .attr("font-weight", fontWeight as any);
+      })
       // Add the text background
       .append("rect")
       .attr("opacity", 0.76)
       .select(goToParent)
       // Add the text child
       .append("text")
-      .text(d => d.entity.name)
+      .text(d => getShortString(d.entity.name))
       .attr("text-anchor", "middle")
       .attr("dy", "14px")
       .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor))

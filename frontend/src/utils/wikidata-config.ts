@@ -287,6 +287,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q847301", // political campaign
     "Q11514315", // historical period
     "Q10931", // revolution
+    "Q192909", // scandal
+    "Q2826027", // politic-finance scandal
   ],
 };
 
