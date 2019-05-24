@@ -8,7 +8,7 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
-import { Status, DatasetId } from "../utils/types";
+import { Status, DatasetId, RelationTypeValues } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import EntityGraphV4 from "../components/EntityGraphV4";
 import * as entitySelectionActions from "../features/entitySelectionActions";
@@ -17,6 +17,8 @@ import IconButton from "../components/buttons/IconButton";
 import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import CONSTS from "../utils/consts";
+import { RELATION_COLORS } from "../styles/theme";
+import { RELATION_TYPES_STR } from "../strings/strings";
 
 const Content = styled.div``;
 
@@ -49,6 +51,25 @@ const Name = styled.div`
   *:first-child {
     font-weight: bold;
   }
+`;
+
+const EdgeTypeExplainer = styled.span`
+  max-width: 250px;
+  padding: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+  margin: 3px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background-color: ${props => props.color};
+`;
+
+const ExplainersWrapper = styled.div`
+  postion: relative;
+  right: 0px;
+  margin: 0px 12px;
 `;
 
 interface EntityMatch {
@@ -186,6 +207,14 @@ class EntityScreen extends Component<Props> {
             </IconButton>
           )}
         </ButtonBar>
+
+        {/* <ExplainersWrapper>
+          {RelationTypeValues.map((type, index) => (
+            <EdgeTypeExplainer key={type} color={RELATION_COLORS[type]}>
+              {RELATION_TYPES_STR[type]}
+            </EdgeTypeExplainer>
+          ))}
+        </ExplainersWrapper> */}
         {status === Status.Ok ? (
           <EntityGraphV4 entityKey={entityKey} />
         ) : this.state.prevEntityKey ? (
