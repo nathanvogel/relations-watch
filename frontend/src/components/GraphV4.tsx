@@ -321,13 +321,14 @@ class GraphD3Simple extends React.Component<Props> {
       // Key function to preserve the relation between DOM and rRelations
       (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
+    const lineStrokeWidth = 32;
     var links2 = links
       .enter()
       .append("g")
       .attr("class", "relation")
       .append("line")
       .classed("visual", true)
-      .attr("stroke-width", 1)
+      .attr("stroke-width", lineStrokeWidth)
       .attr("stroke", relationColor)
       .select(goToParent)
       .append("circle")
@@ -339,19 +340,20 @@ class GraphD3Simple extends React.Component<Props> {
       .select(goToParent)
       .append("line")
       .classed("interaction", true)
-      .attr("stroke-width", 11)
+      .attr("stroke-width", Math.max(11, lineStrokeWidth))
       .attr("opacity", 0)
       .on("click", this.onRelationClick)
       .on("mouseover", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
-          .attr("stroke-width", 8);
+          .attr("stroke-width", lineStrokeWidth)
+          .attr("stroke", "#000000");
       })
       .on("mouseout", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
           .attr("stroke", relationColor as any)
-          .attr("stroke-width", 1);
+          .attr("stroke-width", lineStrokeWidth);
       })
       .select(goToParent)
       .merge(links as any);
@@ -411,7 +413,7 @@ class GraphD3Simple extends React.Component<Props> {
       d.bb = (this as SVGTextElement).getBBox();
     });
     var paddingLR = 4; // adjust the padding values depending on font and font size
-    var paddingTB = 2;
+    var paddingTB = 1;
     nodes2
       .select("rect")
       .attr("x", (d: any) => -d.bb.width / 2 - paddingLR / 2 + size(d) / 2)
