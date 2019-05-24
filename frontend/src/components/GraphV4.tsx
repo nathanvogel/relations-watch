@@ -5,7 +5,6 @@ import * as d3 from "d3";
 import "d3-force";
 //@ts-ignore
 import { forceCluster } from "d3-force-cluster";
-// import { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
 import forceBoundary from "../utils/d3/d3-force-boundary";
 
 import {
@@ -14,10 +13,11 @@ import {
   NodeRenderType,
   RelationType,
   RelZone,
+  Clusters,
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
-import { RELATION_COLORS } from "../styles/theme";
+import theme, { RELATION_COLORS } from "../styles/theme";
 import { DirectedLinks } from "../utils/consts";
 
 const GraphSVG = styled.svg`
@@ -40,7 +40,7 @@ function size(d: V4NodeDatum): number {
 function sizeT(type: NodeRenderType): number {
   switch (type) {
     case NodeRenderType.Primary:
-      return 55;
+      return 35;
     case NodeRenderType.Secondary:
       return 35;
     case NodeRenderType.Tertiary:
@@ -50,9 +50,9 @@ function sizeT(type: NodeRenderType): number {
 function collisionSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
-      return 80;
+      return 42;
     case NodeRenderType.Secondary:
-      return 66;
+      return 42;
     case NodeRenderType.Tertiary:
       return 42;
   }
@@ -64,8 +64,8 @@ function isDirectedType(t: RelationType) {
 
 function nodeTranslate(d: V4NodeDatum): string {
   return `translate(
-    ${(d.x as number) - size(d) / 2},
-    ${(d.y as number) - size(d) / 2 - 5})`;
+    ${d.x - size(d) / 2},
+    ${d.y - size(d) / 2 - 5})`;
 }
 
 function fontWeight(d: V4NodeDatum): string {
@@ -82,9 +82,9 @@ function fontWeight(d: V4NodeDatum): string {
 function fontSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
-      return 14;
+      return 13;
     case NodeRenderType.Secondary:
-      return 14;
+      return 13;
     case NodeRenderType.Tertiary:
       return 12;
   }
@@ -140,19 +140,35 @@ function betweenOff(
   };
 }
 
-const clusters = {
-  [RelZone.Default]: [0, 200],
-  [RelZone.IsControlled]: [0, 200],
-  [RelZone.DoesControl]: [0, 200],
-  [RelZone.IsDescendant]: [0, 200],
-  [RelZone.IsRelated]: [1000, 200],
-  [RelZone.IsChild]: [0, 200],
-  [RelZone.Ideology]: [0, 200],
-  [RelZone.WorksFor]: [0, 200],
-  [RelZone.GivesWork]: [0, 200],
-  [RelZone.Other]: [0, 200],
-  [RelZone.Opposition]: [0, 200],
-  [RelZone.Participates]: [0, 200],
+const clusters: Clusters = {
+  [RelZone.Default]: null,
+  [RelZone.Main]: null,
+  [RelZone.IsControlled]: null,
+  [RelZone.DoesControl]: null,
+  [RelZone.IsDescendant]: null,
+  [RelZone.IsRelated]: null,
+  [RelZone.IsChild]: null,
+  [RelZone.Ideology]: null,
+  [RelZone.WorksFor]: null,
+  [RelZone.GivesWork]: null,
+  [RelZone.Other]: null,
+  [RelZone.Opposition]: null,
+  [RelZone.Participates]: null,
+};
+const clusterOrigins = {
+  [RelZone.Default]: { x: 0, y: 0.5 },
+  [RelZone.Main]: { x: 0.5, y: 0.5 },
+  [RelZone.IsControlled]: { x: 0.5, y: 0 },
+  [RelZone.DoesControl]: { x: 0.5, y: 1 },
+  [RelZone.IsDescendant]: { x: 0, y: 0 },
+  [RelZone.IsRelated]: { x: 1, y: 0.5 },
+  [RelZone.IsChild]: { x: 0, y: 0 },
+  [RelZone.Ideology]: { x: 0.2, y: 0.2 },
+  [RelZone.WorksFor]: { x: 0.4, y: 1 },
+  [RelZone.GivesWork]: { x: 0.4, y: 0 },
+  [RelZone.Other]: { x: 0, y: 0.6 },
+  [RelZone.Opposition]: { x: 0, y: 0.4 },
+  [RelZone.Participates]: { x: 0.8, y: 0.25 },
 };
 
 class GraphD3Simple extends React.Component<Props> {
@@ -187,6 +203,7 @@ class GraphD3Simple extends React.Component<Props> {
 
   updateGraph() {
     // PREPARE DATA
+    const { width, height } = this.props;
 
     // Create a deep copy of the props and merges it to our existing data
     // We do this to preserve the positions and velocities from one
@@ -204,7 +221,14 @@ class GraphD3Simple extends React.Component<Props> {
       this.nodesData[key] = this.nodesData[key]
         ? Object.assign({}, this.nodesData[key], rEntitiesByKey[key])
         : Object.assign({}, rEntitiesByKey[key]);
-      rEntities.push(this.nodesData[key]);
+      const node = this.nodesData[key];
+      const zone = node.sortedZones[0];
+      if (typeof node.x !== "number")
+        node.x = clusterOrigins[zone].x * height + Math.random() * 100 - 50;
+      if (typeof node.y !== "number")
+        node.y = clusterOrigins[zone].y * height + Math.random() * 100 - 50;
+      if (!clusters[zone]) clusters[zone] = node;
+      rEntities.push(node);
     }
 
     // D3 FORCES SETUP
@@ -215,12 +239,10 @@ class GraphD3Simple extends React.Component<Props> {
       .domain([1, Math.max(maxProximity, 3)])
       .range([300, 80]);
     // We need to recreate the simulation for some reason... ?
-    const { width, height } = this.props;
-    // type LLD = SimulationLinkDatum<LD>;
     this.simulation = d3
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
       .velocityDecay(0.82) // Akin to atmosphere friction (velocity multiplier)
-      .alphaTarget(-0.1) // Stop mini-pixel-step-motion early
+      .alphaTarget(-0.01) // Stop mini-pixel-step-motion early
       // The most important force, attraction derived from our relations.
       .force(
         "link",
@@ -229,11 +251,11 @@ class GraphD3Simple extends React.Component<Props> {
           .id(d => {
             return d.entityKey;
           })
-          .strength(1) // Warning: crashes if higher than 2, better stay within [0,1]
+          .strength(0.1) // Warning: crashes if higher than 2, better stay within [0,1]
           // Make some links closer than others.
           .distance(d => distScale(d.proximity))
           // Emphasize this force and arrive faster at a stable result
-          .iterations(8)
+          .iterations(4)
       )
       // Makes nodes repulse each other
       .force("charge", d3.forceManyBody().strength(-800))
@@ -255,30 +277,34 @@ class GraphD3Simple extends React.Component<Props> {
           .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
       )
       // Pushes Tertiary entities towards an outer circle
-      .force(
-        "radial",
-        d3
-          .forceRadial<V4NodeDatum>(
-            Math.min(width, height) * 0.4,
-            width / 2,
-            height / 2
-          )
-          .strength(d => (d.type === NodeRenderType.Tertiary ? 1 : 0))
-      )
+      // .force(
+      //   "radial",
+      //   d3
+      //     .forceRadial<V4NodeDatum>(
+      //       Math.min(width, height) * 0.4,
+      //       width / 2,
+      //       height / 2
+      //     )
+      //     .strength(d => (d.type === NodeRenderType.Tertiary ? 1 : 0))
+      // )
       // Alternative or helper to forceManyBody()
       .force(
         "collide",
         d3
           .forceCollide<V4NodeDatum>()
-          .radius(collisionSize as any)
+          .radius(collisionSize)
           .strength(0.2)
       )
       .force(
         "cluster",
         forceCluster() // see 'Accessing the module' above for the correct syntax
-          .centers((d: V4NodeDatum) => clusters[d.sortedZones[0]])
-          .strength(0.2)
-          .centerInertia(0.01)
+          .centers((d: V4NodeDatum) => {
+            const ok = clusters[d.sortedZones[0]];
+            if (ok) console.log(ok.x);
+            return clusters[d.sortedZones[0]];
+          })
+          .strength(0.5)
+          .centerInertia(0.1)
       )
       // Keep all nodes within our canvas
       .force("boundary", forceBoundary(0, 0, width, height)) as any;
@@ -334,7 +360,7 @@ class GraphD3Simple extends React.Component<Props> {
     var linksVisual = links2.select("line.visual").attr("opacity", linkOpacity);
     var linksInteraction = links2
       .select("line.interaction")
-      .attr("stroke", d => (d.visited ? "#E6E2FF" : "transparent"));
+      .attr("stroke", "transparent");
     var linksC = links2.select("circle"); //.attr("opacity", linkOpacity);
     links.exit().remove();
 
@@ -361,8 +387,8 @@ class GraphD3Simple extends React.Component<Props> {
       .append("text")
       .text(d => d.entity.name)
       .attr("text-anchor", "middle")
-      .attr("dy", "18px")
-      .attr("fill", "#000000")
+      .attr("dy", "14px")
+      .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor))
       .select(goToParent)
       // Add the image child
       .append("image")
@@ -394,7 +420,7 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("y", (d: any) => size(d) + 2 + paddingTB / 2)
       .attr("width", (d: any) => d.bb.width + paddingLR)
       .attr("height", (d: any) => d.bb.height + paddingTB)
-      .attr("fill", d => (d.visited ? "#E6E2FF" : "#ffffff"));
+      .attr("fill", "#ffffff");
     // Transition IN
     // nodes2
     //   .select("image")

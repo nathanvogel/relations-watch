@@ -31,11 +31,6 @@ import GraphV4 from "./GraphV4";
 
 const Content = styled.div``;
 
-const GraphSVG = styled.svg`
-  display: block;
-  margin: 0 auto;
-`;
-
 type OwnProps = {
   entityKey: string;
 };
@@ -151,6 +146,7 @@ class EntityGraphV4 extends Component<Props> {
     const rRelationsByKey: { [key: string]: V4LinkDatum } = {};
 
     const addEntity = (e: V4NodeDatum) => {
+      // Hack to avoid re-initing position
       delete e.x;
       delete e.y;
       rEntities.push(e);
@@ -167,13 +163,14 @@ class EntityGraphV4 extends Component<Props> {
     const primaryEntity: V4NodeDatum = {
       x: Math.random() * 500,
       y: Math.random() * 500,
+      radius: 40,
       entity: getEntityPreview(entity),
       entityKey: baseEntityKey,
       visited: true,
       type: RenderType.Primary,
       zones: Object.assign({}, DefaultZones),
       zoneTotal: 0,
-      sortedZones: [],
+      sortedZones: [RelZone.Main],
     };
     addEntity(primaryEntity);
 
@@ -182,6 +179,7 @@ class EntityGraphV4 extends Component<Props> {
       const rNode: V4NodeDatum = {
         x: Math.random() * 500,
         y: Math.random() * 500,
+        radius: 40,
         entityKey: destEntityKey,
         visited: this.props.entitySelection.indexOf(destEntityKey) >= 0,
         type: RenderType.Secondary,
@@ -210,8 +208,6 @@ class EntityGraphV4 extends Component<Props> {
       const e1IsRoot = e1.type < e2.type;
       const sourceKey = (e1IsRoot ? e1 : e2).entityKey;
       const targetKey = (e1IsRoot ? e2 : e1).entityKey;
-      const source = rEntitiesByKey[sourceKey];
-      const target = rEntitiesByKey[targetKey];
 
       // Filter out secondary relationships of secondary entities
       if (

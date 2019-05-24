@@ -218,6 +218,7 @@ export type NodeRenderData = {
 // Zones
 export enum RelZone {
   Default,
+  Main,
   IsControlled,
   DoesControl,
   IsDescendant,
@@ -310,6 +311,7 @@ export const FProximityWeights = {
 
 export const DefaultZones = {
   [RelZone.Default]: 0,
+  [RelZone.Main]: 0,
   [RelZone.IsControlled]: 0,
   [RelZone.DoesControl]: 0,
   [RelZone.IsDescendant]: 0,
@@ -321,6 +323,22 @@ export const DefaultZones = {
   [RelZone.Other]: 0,
   [RelZone.Opposition]: 0,
   [RelZone.Participates]: 0,
+};
+
+export type Clusters = {
+  [RelZone.Default]: null | V4NodeDatum;
+  [RelZone.Main]: null | V4NodeDatum;
+  [RelZone.IsControlled]: null | V4NodeDatum;
+  [RelZone.DoesControl]: null | V4NodeDatum;
+  [RelZone.IsDescendant]: null | V4NodeDatum;
+  [RelZone.IsRelated]: null | V4NodeDatum;
+  [RelZone.IsChild]: null | V4NodeDatum;
+  [RelZone.Ideology]: null | V4NodeDatum;
+  [RelZone.WorksFor]: null | V4NodeDatum;
+  [RelZone.GivesWork]: null | V4NodeDatum;
+  [RelZone.Other]: null | V4NodeDatum;
+  [RelZone.Opposition]: null | V4NodeDatum;
+  [RelZone.Participates]: null | V4NodeDatum;
 };
 
 export type RelZones = typeof DefaultZones;
@@ -383,6 +401,7 @@ export type V4GenericLinkDatum<T> = {
 export type V4NodeDatum = {
   x: number;
   y: number;
+  radius: number;
   entityKey: string;
   entity: EntityPreview;
   visited: boolean;
