@@ -299,8 +299,6 @@ class GraphD3Simple extends React.Component<Props> {
         "cluster",
         forceCluster() // see 'Accessing the module' above for the correct syntax
           .centers((d: V4NodeDatum) => {
-            const ok = clusters[d.sortedZones[0]];
-            if (ok) console.log(ok.x);
             return clusters[d.sortedZones[0]];
           })
           .strength(0.5)
