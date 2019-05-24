@@ -389,6 +389,7 @@ export type V4NodeDatum = {
   type: NodeRenderType;
   // Position computation data
   zones: RelZones; // indexed on RelZone
+  sortedZones: RelZone[]; // indexed on RelZone
   zoneTotal: number;
   // From d3-force:
   // Each node must be an object. The following properties are assigned by the simulation:

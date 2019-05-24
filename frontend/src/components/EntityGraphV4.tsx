@@ -173,6 +173,7 @@ class EntityGraphV4 extends Component<Props> {
       type: RenderType.Primary,
       zones: Object.assign({}, DefaultZones),
       zoneTotal: 0,
+      sortedZones: [],
     };
     addEntity(primaryEntity);
 
@@ -187,6 +188,7 @@ class EntityGraphV4 extends Component<Props> {
         entity: this.props.entityPreviews[destEntityKey],
         zones: Object.assign({}, DefaultZones),
         zoneTotal: 0,
+        sortedZones: [],
       };
       addEntity(rNode);
     }
@@ -267,6 +269,9 @@ class EntityGraphV4 extends Component<Props> {
       for (let zoneKey of RelZoneValues) {
         rEntity.zones[zoneKey] /= rEntity.zoneTotal;
       }
+      rEntity.sortedZones = RelZoneValues.map(relZone => relZone).sort(
+        (a, b) => rEntity.zones[b] - rEntity.zones[a]
+      );
     }
 
     // Compute sorted types

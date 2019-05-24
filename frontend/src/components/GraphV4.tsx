@@ -3,6 +3,8 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import * as d3 from "d3";
 import "d3-force";
+//@ts-ignore
+import { forceCluster } from "d3-force-cluster";
 // import { SimulationNodeDatum, SimulationLinkDatum } from "d3-force";
 import forceBoundary from "../utils/d3/d3-force-boundary";
 
@@ -11,6 +13,7 @@ import {
   V4NodeDatum,
   NodeRenderType,
   RelationType,
+  RelZone,
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
@@ -137,6 +140,21 @@ function betweenOff(
   };
 }
 
+const clusters = {
+  [RelZone.Default]: [0, 200],
+  [RelZone.IsControlled]: [0, 200],
+  [RelZone.DoesControl]: [0, 200],
+  [RelZone.IsDescendant]: [0, 200],
+  [RelZone.IsRelated]: [1000, 200],
+  [RelZone.IsChild]: [0, 200],
+  [RelZone.Ideology]: [0, 200],
+  [RelZone.WorksFor]: [0, 200],
+  [RelZone.GivesWork]: [0, 200],
+  [RelZone.Other]: [0, 200],
+  [RelZone.Opposition]: [0, 200],
+  [RelZone.Participates]: [0, 200],
+};
+
 class GraphD3Simple extends React.Component<Props> {
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
@@ -254,6 +272,13 @@ class GraphD3Simple extends React.Component<Props> {
           .forceCollide<V4NodeDatum>()
           .radius(collisionSize as any)
           .strength(0.2)
+      )
+      .force(
+        "cluster",
+        forceCluster() // see 'Accessing the module' above for the correct syntax
+          .centers((d: V4NodeDatum) => clusters[d.sortedZones[0]])
+          .strength(0.2)
+          .centerInertia(0.01)
       )
       // Keep all nodes within our canvas
       .force("boundary", forceBoundary(0, 0, width, height)) as any;
