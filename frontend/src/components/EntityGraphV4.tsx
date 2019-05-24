@@ -26,13 +26,7 @@ import {
   RelationTypeValues,
 } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
-import GraphEntityNode from "./entityGraph/GraphEntityNode";
-import CONSTS from "../utils/consts";
-import GraphLink from "./entityGraph/GraphLink";
 import { getEntityPreview, getRelationId } from "../utils/utils";
-import GraphD3 from "./GraphD3";
-import GraphD3Simple from "./GraphD3Simple";
-import GraphD3Force from "./GraphD3Force";
 import GraphV4 from "./GraphV4";
 
 const Content = styled.div``;
@@ -253,6 +247,7 @@ class EntityGraphV4 extends Component<Props> {
 
         const proximityWeight = link.fType ? FProximityWeights[link.fType] : 1;
         rRelation.proximity += proximityWeight;
+        rRelation.tWeights[link.type] += proximityWeight;
       } else {
         const [zone, weight] = TypeWeights[link.type][
           link._from === rRelation.source ? "nor" : "inv"
