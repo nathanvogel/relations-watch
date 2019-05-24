@@ -21,12 +21,13 @@
   "relationType_love": "Ils sont liés par l'amour.",
   "relationType_opposition": "Ils sont en opposition.",
   "faq_data_q": "D'où viennent les données ?",
-  "faq_data_a": "Sur ce prototype, n'importe qui peut ajouter et éditer les données du site. Certaines bases de données pourront venir en renfort (Wikidata, LittleSis, etc.), mais pour l'instant seul <0>la petite base de données</0> du Monde diplomatique sur les Médias Français a été importée.",
+  "faq_data_a": "Sur ce prototype, n'importe qui peut ajouter et éditer les données du site. Lorsque quelqu'un souhaite créer une entité, une recherche sur Wikidata est d'abord automatiquement proposée et l'entité recherchée pourra probablement être importée depuis Wikidata, ainsi que certaines de ses relations jusqu'au 3ème degrée. La <0>petite banque de données</0> du Monde diplomatique sur les médias français a été importée.",
   "faq_about_q": "À propos de ce projet",
   "faq_about_a": "En réponse à l'urgence environnementale et l'érosion des démocraties, ce projet offre un droit de regard sur les conflits d'intérêts. C'est un outil pour permettre à chacun de mieux comprendre une personne ou une entreprise en ayant un aperçu rapide de ses dépendances financières, idéologiques, hiérarchiques, etc.",
   "slogan": "La démocratie vit d'information.",
+  "placeholder_search": "Recherche...",
+  "placeholder_add_reference": "http://... (Collez un lien ou recherchez une de vos sources)",
   "label_select_add": "Ajouter {{userInput}}",
   "label_no_element_found": "Aucun élément trouvé",
-  "placeholder_search": "Recherche...",
-  "placeholder_add_reference": "http://... (Collez un lien ou recherchez une de vos sources)"
+  "home_trending": "D'actualité:"
 }

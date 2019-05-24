@@ -8,21 +8,7 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
-import { getEntityLAsset } from "../assets/EntityIcons";
-import MainPersonImage from "./entityDetails/MainPersonImage";
 import BaseImportEntity from "./dataimport/BaseImportEntity";
-
-const Content = styled.div`
-  width: 100%;
-`;
-
-const PersonName = styled.div`
-  text-align: center;
-  font-size: ${props => props.theme.fontSizeM};
-  margin: ${props => props.theme.marginTB};
-  // text-decoration: none;
-  // color: #001144;
-`;
 
 type OwnProps = { entityKey: string };
 
@@ -63,14 +49,12 @@ class EntityDetails extends Component<Props> {
 
     // Render loading status and error.
     const meta = <Meta status={status} error={error} />;
-    if (status !== Status.Ok) return <Content>{meta}</Content>;
+    if (status !== Status.Ok) return meta;
 
     return (
-      <Content>
-        <Link to={`/e/${this.props.entityKey}`}>
-          <BaseImportEntity entity={entity} />
-        </Link>
-      </Content>
+      <Link to={`/e/${this.props.entityKey}`}>
+        <BaseImportEntity entity={entity} />
+      </Link>
     );
   }
 }
