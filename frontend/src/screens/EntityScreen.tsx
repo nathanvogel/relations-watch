@@ -110,7 +110,7 @@ const LeftColumn = styled.div`
   position: absolute;
   left: 0px;
   top: 0px;
-  height: 100%;
+  max-height: 100%;
   min-width: ${props => props.theme.appSidebarWidth};
   width: ${props => props.theme.appSidebarWidth};
   padding: ${props => props.theme.blockPadding};

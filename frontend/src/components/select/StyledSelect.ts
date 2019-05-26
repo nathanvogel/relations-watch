@@ -54,6 +54,7 @@ export const styledSelectCSS = css`
     border-top-right-radius: 0px;
     border-bottom-left-radius: ${props => props.theme.radius};
     border-bottom-right-radius: ${props => props.theme.radius};
+    z-index: 200;
 
     .rs__menu-list {
       padding-top: 0px;
@@ -85,7 +86,7 @@ export const styledSelectCSS = css`
 `;
 
 const StyledSelect = styled(Select).attrs({
-  classNamePrefix: "rs"
+  classNamePrefix: "rs",
 })`
   ${styledSelectCSS}
 `;

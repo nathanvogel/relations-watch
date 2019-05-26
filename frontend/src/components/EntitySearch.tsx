@@ -119,6 +119,7 @@ const EntitySearch: FunctionComponent<Props> = (
   const [newEntityName, setNewEntityName] = useState("");
   const [selectedWdEntity, setSelectedWdEntity] = useState(undefined);
   const [ownInputValue, setOwnInputValue] = useState("");
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
   const { t } = useTranslation();
 
   const onChange = (object: any) => {
@@ -139,15 +140,27 @@ const EntitySearch: FunctionComponent<Props> = (
 
   const onInputChange = (text: any, a: any) => {
     const action: string = a.action;
+    // Possible values: "set-value", "input-change", "input-blur", "menu-close"
     // TODO: blur suggestion to add X
+    setMenuIsOpen(
+      !(
+        action === "menu-close" ||
+        action === "set-value" ||
+        action === "input-blur"
+      )
+    );
     if (
-      action === "menu-close" ||
-      action === "input-blur" ||
-      action === "set-value"
-    )
-      return;
-    if (props.onInputChange) props.onInputChange(text);
-    else setOwnInputValue(text);
+      action !== "menu-close" &&
+      action !== "input-blur" &&
+      action !== "set-value"
+    ) {
+      if (props.onInputChange) props.onInputChange(text);
+      else setOwnInputValue(text);
+    }
+  };
+
+  const onFocus = () => {
+    setMenuIsOpen(true);
   };
 
   const isValidNewOption = (inputValue: string) => {
@@ -223,12 +236,13 @@ const EntitySearch: FunctionComponent<Props> = (
       }
       isValidNewOption={isValidNewOption}
       allowCreateWhileLoading={false}
-      menuIsOpen={true}
       formatCreateLabel={(inputValue: string) =>
         mode === "searchDb"
           ? "Search " + inputValue + " on Wikidata"
           : t(R.label_select_add, { userInput: inputValue })
       }
+      menuIsOpen={menuIsOpen}
+      onFocus={onFocus}
     />
   );
 };
