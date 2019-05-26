@@ -309,7 +309,10 @@ class GraphD3Simple extends React.Component<Props> {
           .centerInertia(0.1)
       )
       // Keep all nodes within our canvas
-      .force("boundary", forceBoundary(0, 0, width, height)) as any;
+      .force(
+        "boundary",
+        forceBoundary(0, 0, width, height).strength(0.4)
+      ) as any;
 
     // Alternative to forceBoundary() taken from
     // https://observablehq.com/@d3/disjoint-force-directed-graph
