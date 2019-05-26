@@ -6,7 +6,6 @@ import "d3-force";
 //@ts-ignore
 import { forceCluster } from "d3-force-cluster";
 import forceBoundary from "../utils/d3/d3-force-boundary";
-
 import {
   V4LinkDatum,
   V4NodeDatum,
@@ -19,6 +18,7 @@ import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import theme, { RELATION_COLORS } from "../styles/theme";
 import { DirectedLinks } from "../utils/consts";
+import "./GraphV4.css";
 
 const GraphSVG = styled.svg`
   display: block;
@@ -325,7 +325,7 @@ class GraphD3Simple extends React.Component<Props> {
       // Key function to preserve the relation between DOM and rRelations
       (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
-    const lineStrokeWidth = 1;
+    const lineStrokeWidth = 3;
     var links2 = links
       .enter()
       .append("g")
@@ -350,7 +350,7 @@ class GraphD3Simple extends React.Component<Props> {
       .on("mouseover", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
-          .attr("stroke-width", Math.max(20, lineStrokeWidth));
+          .attr("stroke-width", Math.max(11, lineStrokeWidth));
         // .attr("stroke", "#000000");
       })
       .on("mouseout", function(d) {
@@ -386,20 +386,18 @@ class GraphD3Simple extends React.Component<Props> {
       .on("mouseover", function(d) {
         d3.select(this)
           .select("text")
-          .text(d.entity.name)
-          .attr("font-weight", "bold");
+          .text(d.entity.name);
       })
       .on("mouseout", function(d) {
         // this.textContent = d.entity.name;
         d3.select(this)
           .select("text")
-          .text(getShortString(d.entity.name))
-          .attr("font-weight", fontWeight as any);
+          .text(getShortString(d.entity.name));
       })
       // Add the text background
-      .append("rect")
-      .attr("opacity", 0.76)
-      .select(goToParent)
+      // .append("rect")
+      // .attr("opacity", 0.1)
+      // .select(goToParent)
       // Add the text child
       .append("text")
       .text(d => getShortString(d.entity.name))
@@ -423,6 +421,8 @@ class GraphD3Simple extends React.Component<Props> {
       .select("image")
       .attr("width", size)
       .attr("height", size);
+
+    /*
     // Get the text size and resize the background
     // Code from: http://bl.ocks.org/andreaskoller/7674031
     nodes2.select("text").each(function(d, _index) {
@@ -438,6 +438,8 @@ class GraphD3Simple extends React.Component<Props> {
       .attr("width", (d: any) => d.bb.width + paddingLR)
       .attr("height", (d: any) => d.bb.height + paddingTB)
       .attr("fill", "#ffffff");
+    */
+
     // Transition IN
     // nodes2
     //   .select("image")

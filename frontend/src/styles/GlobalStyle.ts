@@ -18,14 +18,6 @@ const GlobalStyleCSS = css`
       monospace;
   }
 
-  svg .interaction {
-    cursor: pointer;
-  }
-
-  svg .nodes g:hover text {
-    text-decoration: underline;
-  }
-
   p {
     margin-top: 0.25em;
     margin-bottom: 0.5em;
