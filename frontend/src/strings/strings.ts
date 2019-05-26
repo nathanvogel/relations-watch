@@ -1,39 +1,53 @@
 import { EntityType, RelationType, FamilialLink } from "../utils/types";
 import R from "./R";
 
-type StringTypeRes = {
+type StringMapping = {
   [key: number]: string;
 };
 
-export const RELATION_TYPES_STR: StringTypeRes = {
-  [RelationType.IsOwned]: R.legend_relationType_owned,
-  [RelationType.JobDependsOn]: R.legend_relationType_jobDep,
-  [RelationType.IsControlled]: R.legend_relationType_controlled,
-  [RelationType.ValueExchange]: R.legend_relationType_traded,
-  [RelationType.Family]: R.legend_relationType_family,
-  [RelationType.Love]: R.legend_relationType_love,
-  [RelationType.Opposition]: R.legend_relationType_opposition,
-  [RelationType.IsInfluenced]: R.legend_relationType_ideas,
-  [RelationType.Attendance]: R.legend_relationType_attended,
-  [RelationType.GroupMember]: R.legend_relationType_member,
-  [RelationType.Other]: R.legend_relationType_other,
+export const RelationTypeMapping: StringMapping = {
+  [RelationType.IsOwned]: R.relation_type_owned,
+  [RelationType.JobDependsOn]: R.relation_type_job,
+  [RelationType.IsControlled]: R.relation_type_controlled,
+  [RelationType.ValueExchange]: R.relation_type_traded,
+  [RelationType.Family]: R.relation_type_family,
+  [RelationType.Love]: R.relation_type_love,
+  [RelationType.Opposition]: R.relation_type_opposition,
+  [RelationType.IsInfluenced]: R.relation_type_ideas,
+  [RelationType.Attendance]: R.relation_type_attended,
+  [RelationType.GroupMember]: R.relation_type_member,
+  [RelationType.Other]: R.relation_type_other,
 };
 
-export const ENTITY_TYPES: StringTypeRes = {
-  [EntityType.Human]: "Person",
-  [EntityType.MoralPerson]: "Moral person",
-  [EntityType.Event]: "Event",
-  [EntityType.Group]: "Group",
-  [EntityType.State]: "State",
-  [EntityType.Media]: "Media",
+export const LegendRelationTypeMapping: StringMapping = {
+  [RelationType.IsOwned]: R.legend_relation_type_owned,
+  [RelationType.JobDependsOn]: R.legend_relation_type_job,
+  [RelationType.IsControlled]: R.legend_relation_type_controlled,
+  [RelationType.ValueExchange]: R.legend_relation_type_traded,
+  [RelationType.Family]: R.legend_relation_type_family,
+  [RelationType.Love]: R.legend_relation_type_love,
+  [RelationType.Opposition]: R.legend_relation_type_opposition,
+  [RelationType.IsInfluenced]: R.legend_relation_type_ideas,
+  [RelationType.Attendance]: R.legend_relation_type_attended,
+  [RelationType.GroupMember]: R.legend_relation_type_member,
+  [RelationType.Other]: R.legend_relation_type_other,
 };
 
-export const FAMILIAL_LINK_STR: StringTypeRes = {
-  [FamilialLink.childOf]: "is a child of",
-  [FamilialLink.siblingOf]: "is a sibling of",
-  [FamilialLink.spouseOf]: "is married with",
+export const FamilialLinkMapping: StringMapping = {
+  [FamilialLink.childOf]: R.familial_link_type_child,
+  [FamilialLink.siblingOf]: R.familial_link_type_sibling,
+  [FamilialLink.spouseOf]: R.familial_link_type_spouse,
   // [FamilialLink.grandchildOf]: "is a grandchild of",
-  [FamilialLink.cousinOf]: "is a cousin of",
+  // [FamilialLink.cousinOf]: "is a cousin of",
   // [FamilialLink.niblingOf]: "is a nibling of",
-  [FamilialLink.other]: "Other",
+  [FamilialLink.other]: R.familial_link_type_other,
+};
+
+export const EntityTypeMapping: StringMapping = {
+  [EntityType.Human]: R.entity_type_human,
+  [EntityType.MoralPerson]: R.entity_type_moral_person,
+  [EntityType.State]: R.entity_type_state,
+  [EntityType.Media]: R.entity_type_media,
+  [EntityType.Group]: R.entity_type_group,
+  [EntityType.Event]: R.entity_type_event,
 };

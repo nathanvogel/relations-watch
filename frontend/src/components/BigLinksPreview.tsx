@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-
+import { useTranslation } from "react-i18next";
 import { Edge } from "../utils/types";
-import { RELATION_TYPES_STR } from "../strings/strings";
+import { LegendRelationTypeMapping } from "../strings/strings";
 import { RELATION_COLORS } from "../styles/theme";
 
 const Header = styled.header`
@@ -30,14 +30,16 @@ const EdgeTypeExplainer = styled.span`
   padding-right: 4px;
   margin: 3px;
   border-radius: 2px;
-  font-size: 12px;
+  font-size: ${props => props.theme.fontSizeS};
   font-weight: bold;
   color: white;
   background-color: ${props => props.color};
 `;
 
 const ExplainersWrapper = styled.div`
-  margin: 0px 12px;
+  margin: 0px ${props => props.theme.marginLR};
+  text-align: center;
+  font-size: ${props => props.theme.fontSizeS};
 `;
 
 type OwnProps = {
@@ -49,35 +51,34 @@ type OwnProps = {
  * To keep height consistent and show the loading state below.
  * @extends React
  */
-class BigLinksPreview extends React.Component<OwnProps> {
-  render() {
-    const { relations } = this.props;
+const BigLinksPreview: React.FunctionComponent<OwnProps> = props => {
+  const { relations } = props;
+  const { t } = useTranslation();
 
-    // Find unique types
-    const types = [];
-    for (let i = 0; i < relations.length; i++) {
-      const link = relations[i];
-      if (types.indexOf(link.type) < 0) types.push(link.type);
-    }
-    types.sort((a, b) => a - b);
-
-    return (
-      <Header>
-        <EdgesWrapper>
-          {types.map((type, index) => (
-            <VisualEdge key={type} color={RELATION_COLORS[type]} />
-          ))}
-        </EdgesWrapper>
-        <ExplainersWrapper>
-          {types.map((type, index) => (
-            <EdgeTypeExplainer key={type} color={RELATION_COLORS[type]}>
-              {RELATION_TYPES_STR[type]}
-            </EdgeTypeExplainer>
-          ))}
-        </ExplainersWrapper>
-      </Header>
-    );
+  // Find unique types
+  const types = [];
+  for (let i = 0; i < relations.length; i++) {
+    const link = relations[i];
+    if (types.indexOf(link.type) < 0) types.push(link.type);
   }
-}
+  types.sort((a, b) => a - b);
+
+  return (
+    <Header>
+      <EdgesWrapper>
+        {types.map((type, index) => (
+          <VisualEdge key={type} color={RELATION_COLORS[type]} />
+        ))}
+      </EdgesWrapper>
+      <ExplainersWrapper>
+        {types.map((type, index) => (
+          <EdgeTypeExplainer key={type} color={RELATION_COLORS[type]}>
+            {t(LegendRelationTypeMapping[type])}
+          </EdgeTypeExplainer>
+        ))}
+      </ExplainersWrapper>
+    </Header>
+  );
+};
 
 export default BigLinksPreview;

@@ -28,14 +28,14 @@ export enum RelationType {
   JobDependsOn = 30,
   IsControlled = 50,
   ValueExchange = 100,
-  Family = 300,
-  Friendship = 310,
-  Love = 320,
-  Opposition = 330,
   IsInfluenced = 500,
   Attendance = 1000,
   GroupMember = 2000,
+  Family = 300,
+  Love = 320,
+  Opposition = 330,
   Other = 3000,
+  // Friendship = 310,
 }
 export const RelationTypeValues: RelationType[] = Object.values(
   RelationType
@@ -64,7 +64,7 @@ export enum FamilialLink {
   siblingOf = 2,
   spouseOf = 3,
   // grandchildOf = 14,
-  cousinOf = 15,
+  // cousinOf = 15,
   // niblingOf = 16,
   other = 100, // son-in-law, etc.
 }
@@ -257,10 +257,6 @@ export const TypeWeights: {
     nor: [RelZone.Other, 1],
     inv: [RelZone.Other, 1],
   },
-  [RelationType.Friendship]: {
-    nor: [RelZone.Other, 1],
-    inv: [RelZone.Other, 1],
-  },
   [RelationType.Love]: {
     nor: [RelZone.IsRelated, 1],
     inv: [RelZone.IsRelated, 1],
@@ -292,7 +288,6 @@ export const ProximityWeights = {
   [RelationType.IsOwned]: 4,
   [RelationType.IsControlled]: 2,
   [RelationType.ValueExchange]: 1,
-  [RelationType.Friendship]: 0.5,
   [RelationType.Love]: 3,
   [RelationType.Opposition]: -2,
   [RelationType.IsInfluenced]: 1,
@@ -305,7 +300,6 @@ export const FProximityWeights = {
   [FamilialLink.childOf]: 1,
   [FamilialLink.siblingOf]: 1,
   [FamilialLink.spouseOf]: 3,
-  [FamilialLink.cousinOf]: 0.3,
   [FamilialLink.other]: 0.3,
 };
 
@@ -356,7 +350,6 @@ export const DefaultTypeDirs = {
   [RelationType.IsControlled]: LinkDir.None,
   [RelationType.ValueExchange]: LinkDir.None,
   [RelationType.Family]: LinkDir.None,
-  [RelationType.Friendship]: LinkDir.None,
   [RelationType.Love]: LinkDir.None,
   [RelationType.Opposition]: LinkDir.None,
   [RelationType.IsInfluenced]: LinkDir.None,
@@ -371,7 +364,6 @@ export const DefaultTypeWeights = {
   [RelationType.IsControlled]: 0,
   [RelationType.ValueExchange]: 0,
   [RelationType.Family]: 0,
-  [RelationType.Friendship]: 0,
   [RelationType.Love]: 0,
   [RelationType.Opposition]: 0,
   [RelationType.IsInfluenced]: 0,

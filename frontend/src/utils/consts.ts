@@ -10,11 +10,6 @@ import {
   EntityTypeValues,
 } from "./types";
 import { EntityType as E } from "./types";
-import {
-  RELATION_TYPES_STR,
-  FAMILIAL_LINK_STR,
-  ENTITY_TYPES,
-} from "../strings/strings";
 
 // Should have been maintained in sync with the backend here ?
 // /backend/service-graph-api/scripts/consts.js
@@ -37,7 +32,7 @@ export const POSSIBLE_LINKS = {
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
   ],
   [RelationType.Family]: [[E.Human], [E.Human]],
-  [RelationType.Friendship]: [[E.Human], [E.Human]],
+  // [RelationType.Friendship]: [[E.Human], [E.Human]],
   [RelationType.Love]: [[E.Human], [E.Human]],
   [RelationType.Opposition]: [
     [E.MoralPerson, E.Group, E.Human, E.Media, E.State],
@@ -78,7 +73,7 @@ export const RELATION_REQUIREMENTS: Requirements = {
   [RelationType.IsControlled]: { descriptionRequired: true },
   [RelationType.ValueExchange]: { amount: true, descriptionRequired: true },
   [RelationType.Family]: { familialLinkType: true },
-  [RelationType.Friendship]: { descriptionRequired: true },
+  // [RelationType.Friendship]: { descriptionRequired: true },
   [RelationType.Love]: {},
   [RelationType.Opposition]: { descriptionRequired: true },
   [RelationType.IsInfluenced]: { descriptionRequired: true },
@@ -86,27 +81,6 @@ export const RELATION_REQUIREMENTS: Requirements = {
   [RelationType.GroupMember]: {},
   [RelationType.Other]: { descriptionRequired: true },
 };
-
-export const RelationTypeOptions: RelationTypeOption[] = RelationTypeValues.map(
-  value => ({
-    value: value,
-    label: RELATION_TYPES_STR[value],
-  })
-);
-
-export const FamilialLinkOptions: FamilialLinkOption[] = FamilialLinkValues.map(
-  value => ({
-    value: value,
-    label: FAMILIAL_LINK_STR[value],
-  })
-);
-
-export const EntityTypeOptions: EntityTypeOption[] = EntityTypeValues.map(
-  value => ({
-    value: value,
-    label: ENTITY_TYPES[value],
-  })
-);
 
 const AMOUNT_UNKNOWN = -1;
 const AMOUNT_DO_ENTER = -2;

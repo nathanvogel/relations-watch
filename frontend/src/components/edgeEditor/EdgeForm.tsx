@@ -18,6 +18,8 @@ import {
   SourceSelectorMode,
   SourceType,
   getRefType,
+  RelationTypeValues,
+  FamilialLinkValues,
 } from "../../utils/types";
 import ButtonWithConfirmation from "../buttons/ButtonWithConfirmation";
 import SourceSelector from "../SourceSelector";
@@ -31,9 +33,7 @@ import IconButton from "../buttons/IconButton";
 import ButtonBar from "../buttons/ButtonBar";
 import CONSTS, {
   POSSIBLE_LINKS,
-  RelationTypeOptions,
   RELATION_REQUIREMENTS,
-  FamilialLinkOptions,
   AmountOptions,
   unkownAmountOption,
 } from "../../utils/consts";
@@ -42,6 +42,11 @@ import TopRightButton from "../buttons/TopRightButton";
 import NumericInput from "../inputs/NumericInput";
 import { predefinedOptions } from "react-numeric";
 import EditorContainer from "../EditorContainer";
+import {
+  RelationTypeMapping,
+  FamilialLinkMapping,
+} from "../../strings/strings";
+import i18n from "../../i18n/i18n";
 
 const TypeContainer = styled.div`
   display: grid;
@@ -77,6 +82,20 @@ const TypeContainer = styled.div`
 const Form = styled.form`
   margin-bottom: ${props => props.theme.marginTB};
 `;
+
+const RelationTypeOptions: RelationTypeOption[] = RelationTypeValues.map(
+  value => ({
+    value: value,
+    label: i18n.t(RelationTypeMapping[value]),
+  })
+);
+
+const FamilialLinkOptions: FamilialLinkOption[] = FamilialLinkValues.map(
+  value => ({
+    value: value,
+    label: i18n.t(FamilialLinkMapping[value]),
+  })
+);
 
 type Props = {
   entity1Key: string;

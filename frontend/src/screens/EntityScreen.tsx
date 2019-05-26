@@ -23,7 +23,7 @@ import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import CONSTS from "../utils/consts";
 import { RELATION_COLORS } from "../styles/theme";
-import { RELATION_TYPES_STR } from "../strings/strings";
+import { LegendRelationTypeMapping } from "../strings/strings";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import R from "../strings/R";
@@ -304,7 +304,7 @@ class EntityScreen extends Component<Props> {
         <RightColumn hideColumn={!this.state.showLegend}>
           {RelationTypeValues.map((type, index) => (
             <EdgeLegend key={type} color={RELATION_COLORS[type]}>
-              {t(RELATION_TYPES_STR[type])}
+              {t(LegendRelationTypeMapping[type])}
             </EdgeLegend>
           ))}
           <SidebarSpacing />

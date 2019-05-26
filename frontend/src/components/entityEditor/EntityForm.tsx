@@ -1,15 +1,21 @@
 import React from "react";
 import styled from "styled-components";
-
-import { Entity, EntityType, EntityTypeOption } from "../../utils/types";
-import IconButton from "../buttons/IconButton";
 import cuid from "cuid";
+
+import {
+  Entity,
+  EntityType,
+  EntityTypeOption,
+  EntityTypeValues,
+} from "../../utils/types";
+import IconButton from "../buttons/IconButton";
 import ButtonBar from "../buttons/ButtonBar";
-import { EntityTypeOptions } from "../../utils/consts";
 import StyledSelect from "../select/StyledSelect";
 import Label from "../inputs/Label";
 import EditorContainer from "../EditorContainer";
 import Input from "../inputs/Input";
+import { EntityTypeMapping } from "../../strings/strings";
+import i18n from "../../i18n/i18n";
 
 const RestyledSelect = styled(StyledSelect)`
   width: 600px;
@@ -19,6 +25,11 @@ const RestyledInput = styled(Input)`
   width: 600px;
   max-width: 100%;
 `;
+
+const EntityTypeOptions: EntityTypeOption[] = EntityTypeValues.map(value => ({
+  value: value,
+  label: i18n.t(EntityTypeMapping[value]),
+}));
 
 type Props = {
   onFormSubmit: (entity: Entity) => void;

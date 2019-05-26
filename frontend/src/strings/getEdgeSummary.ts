@@ -4,22 +4,22 @@ import R from "./R";
 
 const regularMapping: { [key: number]: string } = {
   [RT.Attendance]: R.relationType_attended,
-  [RT.Friendship]: R.relationType_friends,
   [RT.GroupMember]: R.relationType_member,
   [RT.IsInfluenced]: R.relationType_ideas,
   [RT.IsControlled]: R.relationType_controlled,
   [RT.Love]: R.relationType_love,
-  [RT.Opposition]: R.relationType_opposition
+  [RT.Opposition]: R.relationType_opposition,
+  // [RT.Friendship]: R.relationType_friends,
 };
 
 const familyMapping: { [key: number]: string } = {
   [FamilialLink.childOf]: R.relationType_f_child,
-  // [FamilialLink.grandchildOf]: R.relationType_f_grandchild,
   [FamilialLink.spouseOf]: R.relationType_f_married,
-  [FamilialLink.cousinOf]: R.relationType_f_cousin,
-  // [FamilialLink.niblingOf]: R.relationType_f_nibling,
   [FamilialLink.siblingOf]: R.relationType_f_sibling,
-  [FamilialLink.other]: R.relationType_f_other
+  [FamilialLink.other]: R.relationType_f_other,
+  // [FamilialLink.grandchildOf]: R.relationType_f_grandchild,
+  // [FamilialLink.cousinOf]: R.relationType_f_cousin,
+  // [FamilialLink.niblingOf]: R.relationType_f_nibling,
 };
 
 export const getEdgeSummary = (
@@ -29,7 +29,7 @@ export const getEdgeSummary = (
 ) => {
   const names = {
     nameFrom: entityFrom.name,
-    nameTo: entityTo.name
+    nameTo: entityTo.name,
   };
   const amount = edge.amount;
   const percent = edge.owned;

@@ -51,11 +51,10 @@ export const RELATION_COLORS = {
   [RelationType.IsControlled]: "#a63e14",
   [RelationType.ValueExchange]: "#ffeb00",
   [RelationType.Family]: "#007500",
-  [RelationType.Friendship]: "#00b8b8",
   [RelationType.Love]: "#de3d83",
   [RelationType.Opposition]: "#db2f27",
   [RelationType.IsInfluenced]: "#f45844",
-  [RelationType.Attendance]: "#00b8b8",
+  [RelationType.Attendance]: "#0095a3",
   [RelationType.GroupMember]: "#0095a3",
   [RelationType.Other]: "#444444",
 };
