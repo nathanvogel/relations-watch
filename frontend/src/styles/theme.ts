@@ -14,6 +14,7 @@ const theme: DefaultTheme = {
   secondaryTextColor: "#72727c",
   focusColor: "#5B44E8",
   appBG: "#FFFFFF",
+  sidebarBG: "rgba(255, 255, 255, 0.78)",
   lightBG: "#EFEFF2",
   inputBG: "#EFEFF2",
   errorBG: "#E37777",
@@ -36,10 +37,12 @@ const theme: DefaultTheme = {
   blockSpacingTB: "20px",
   navBarHeight: "54px",
   appMaxWidth: "1024px",
+  appSidebarWidth: "200px",
+  appMiniSidebarWidth: "120px",
   appPaddingLR: "24px",
   appPaddingTB: "12px",
   longFieldHeight: "3em",
-  radius: "4px"
+  radius: "4px",
 };
 
 export const RELATION_COLORS = {
@@ -54,7 +57,7 @@ export const RELATION_COLORS = {
   [RelationType.IsInfluenced]: "#f45844",
   [RelationType.Attendance]: "#00b8b8",
   [RelationType.GroupMember]: "#0095a3",
-  [RelationType.Other]: "#444444"
+  [RelationType.Other]: "#444444",
 };
 
 export default theme;

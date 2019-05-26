@@ -16,6 +16,7 @@ declare module "styled-components" {
     secondaryTextColor: "#72727c";
     focusColor: "#5B44E8";
     appBG: "#FFFFFF";
+    sidebarBG: "rgba(255, 255, 255, 0.78)";
     lightBG: "#EFEFF2";
     inputBG: "#EFEFF2";
     errorBG: "#E37777";
@@ -38,6 +39,8 @@ declare module "styled-components" {
     blockSpacingTB: "20px";
     navBarHeight: "54px";
     appMaxWidth: "1024px";
+    appSidebarWidth: "200px";
+    appMiniSidebarWidth: "120px";
     appPaddingLR: "24px";
     appPaddingTB: "12px";
     longFieldHeight: "3em";

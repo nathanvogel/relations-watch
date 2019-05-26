@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, FunctionComponent } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
@@ -8,7 +8,12 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
-import { Status, DatasetId, RelationTypeValues } from "../utils/types";
+import {
+  Status,
+  DatasetId,
+  RelationTypeValues,
+  EntityType,
+} from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import EntityGraphV4 from "../components/EntityGraphV4";
 import * as entitySelectionActions from "../features/entitySelectionActions";
@@ -19,8 +24,15 @@ import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import CONSTS from "../utils/consts";
 import { RELATION_COLORS } from "../styles/theme";
 import { RELATION_TYPES_STR } from "../strings/strings";
+import { withTranslation, WithTranslation } from "react-i18next";
+import { getEntitySAsset } from "../assets/EntityIcons";
+import R from "../strings/R";
+import { media } from "../styles/media-styles";
 
-const Content = styled.div``;
+const Content = styled.div`
+  position: relative;
+  overflow: hidden;
+`;
 
 const StyledMeta = styled(Meta)`
   position: absolute;
@@ -28,56 +40,130 @@ const StyledMeta = styled(Meta)`
   transform: translateX(-50%) translateY(20vh);
 `;
 
-const MyButtonBar = styled.div`
-  margin: ${props => props.theme.inputTBSpacing} -${props => props.theme.inputLRSpacing};
-  position: absolute;
-  top: 80px;
-  left: 12px;
-
-  & > * {
-    display: block;
-    // width: 100%;
-    margin: ${props => props.theme.inputTBSpacing}
-      ${props => props.theme.inputLRSpacing};
-  }
-`;
-
 const Name = styled.div`
-  text-align: center;
-  max-width: ${props => props.theme.appMaxWidth};
-  margin: ${props => props.theme.marginTB} auto;
-  // margin-top: -42px;
+  text-align: left;
+  font-weight: bold;
+  font-size: ${props => props.theme.fontSizeM};
+`;
 
-  *:first-child {
-    font-weight: bold;
+const Description = styled.div`
+  text-align: left;
+  font-size: ${props => props.theme.fontSizeS};
+  margin-bottom: ${props => props.theme.marginTB};
+`;
+
+const EntityButton = styled(IconButton)`
+  display: block;
+  margin: ${props => props.theme.inputTBSpacing} 0px;
+`;
+
+const EdgeLegend = styled.div`
+  & {
+    font-weight: normal;
+    font-size: ${props => props.theme.fontSizeS};
+    width: fit-content;
+    position: relative;
+    z-index: 1;
+    transition: all 0.1s ease-in-out;
+    margin-bottom: 4px;
+    line-height: 1.6;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: calc(100% - 5px);
+    bottom: 2px;
+    left: -0em;
+    right: -0em;
+    background-color: ${props => props.color};
+    transform-origin: bottom center;
+    // transform: scaleY(0.3);
+    transition: all 0.1s ease-in-out;
+    opacity: 1;
+  }
+
+  &:hover::before {
+    // transform: scaleY(1);
+  }
+
+  &:hover {
+    // color: white;
   }
 `;
 
-const EdgeTypeExplainer = styled.span`
-  max-width: 250px;
-  padding: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
-  margin: 3px;
-  border-radius: 2px;
-  font-size: 12px;
-  font-weight: bold;
-  color: white;
-  background-color: ${props => props.color};
+const EntityTypeLegendContainer = styled.div`
+  font-weight: normal;
+  font-size: ${props => props.theme.fontSizeS};
+  margin-bottom: 4px;
+
+  & > img {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    translate: 0 2px;
+  }
 `;
 
-const ExplainersWrapper = styled.div`
-  postion: relative;
-  right: 0px;
-  margin: 0px 12px;
+const LeftColumn = styled.div`
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  min-width: ${props => props.theme.appSidebarWidth};
+  width: ${props => props.theme.appSidebarWidth};
+  padding: ${props => props.theme.blockPadding};
+  padding-top: 16px;
+  box-sizing: border-box;
+  background-color: ${props => props.theme.sidebarBG};
+  box-shadow: 15px 0px 15px 0px ${props => props.theme.sidebarBG};
 `;
+
+interface ColumnProps {
+  hideColumn?: boolean;
+}
+
+const HideColumnCSS = css`
+  transform: translateY(calc(-100% + 56px));
+`;
+
+const RightColumn = styled(LeftColumn)<ColumnProps>`
+  right: 0px;
+  left: unset;
+  height: auto;
+  min-width: ${props => props.theme.appMiniSidebarWidth};
+  width: ${props => props.theme.appMiniSidebarWidth};
+  box-shadow: -15px 0px 15px 0px ${props => props.theme.sidebarBG};
+
+  transition: transform 0.18s ease-out;
+  ${props => props.hideColumn && HideColumnCSS}
+`;
+
+const SidebarSpacing = styled.div`
+  height: 20px;
+  width: 0px;
+`;
+
+type EntityTypeProps = {
+  string: string;
+  type: EntityType;
+};
+
+const EntityTypeLegend: FunctionComponent<EntityTypeProps> = props => (
+  <EntityTypeLegendContainer>
+    <img src={getEntitySAsset(props.type)} />
+    {props.string}
+  </EntityTypeLegendContainer>
+);
 
 interface EntityMatch {
   entityKey: string;
 }
 
 type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
+  ReturnType<typeof mapDispatchToProps> &
+  WithTranslation;
 
 const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
   // Get the entityKey from the Router props
@@ -117,10 +203,14 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 
 type State = {
   prevEntityKey: null | string;
+  showLegend: boolean;
 };
 
 class EntityScreen extends Component<Props> {
-  readonly state: State = { prevEntityKey: null };
+  readonly state: State = {
+    prevEntityKey: null,
+    showLegend: true,
+  };
 
   get isWikidataEntity() {
     return Boolean(
@@ -178,43 +268,80 @@ class EntityScreen extends Component<Props> {
     else console.error("No wikidata field!");
   };
 
-  render() {
-    const { entity, status, error, entityKey } = this.props;
+  toggleLegend = () => {
+    this.setState({
+      showLegend: !this.state.showLegend,
+    });
+  };
 
-    // Render loading status and error.
+  render() {
+    const { entity, status, error, entityKey, t } = this.props;
 
     return (
       <Content>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
-        {status === Status.Ok && (
-          <Name>
-            <div>{entity.name}</div>
-            <div>{entity.text}</div>
-          </Name>
-        )}
-        <ButtonBar buttonsAlign="right">
-          <IconButton withText onClick={this.onEditEntity}>
+        <LeftColumn>
+          {status === Status.Ok && (
+            <React.Fragment>
+              <Name>{entity.name} </Name>
+              <Description>{entity.text}</Description>
+            </React.Fragment>
+          )}
+          <EntityButton small withText onClick={this.onEditEntity}>
             <EditIcon />
             Edit
-          </IconButton>
-          <IconButton withText onClick={this.onAddRelation}>
+          </EntityButton>
+          <EntityButton small withText onClick={this.onAddRelation}>
             <AddIcon />
             Relation
-          </IconButton>
+          </EntityButton>
           {this.isWikidataEntity && (
-            <IconButton withText onClick={this.importWikidata}>
-              Import relations from Wikidata
-            </IconButton>
+            <EntityButton small withText onClick={this.importWikidata}>
+              Update from Wikidata
+            </EntityButton>
           )}
-        </ButtonBar>
-
-        {/* <ExplainersWrapper>
+        </LeftColumn>
+        <RightColumn hideColumn={!this.state.showLegend}>
           {RelationTypeValues.map((type, index) => (
-            <EdgeTypeExplainer key={type} color={RELATION_COLORS[type]}>
-              {RELATION_TYPES_STR[type]}
-            </EdgeTypeExplainer>
+            <EdgeLegend key={type} color={RELATION_COLORS[type]}>
+              {t(RELATION_TYPES_STR[type])}
+            </EdgeLegend>
           ))}
-        </ExplainersWrapper> */}
+          <SidebarSpacing />
+          <EntityTypeLegend
+            string={t(R.legend_human)}
+            type={EntityType.Human}
+          />
+          <EntityTypeLegend
+            string={t(R.legend_moral_person)}
+            type={EntityType.MoralPerson}
+          />
+          <EntityTypeLegend
+            string={t(R.legend_state)}
+            type={EntityType.State}
+          />
+          <EntityTypeLegend
+            string={t(R.legend_media)}
+            type={EntityType.Media}
+          />
+          <EntityTypeLegend
+            string={t(R.legend_group)}
+            type={EntityType.Group}
+          />
+          <EntityTypeLegend
+            string={t(R.legend_event)}
+            type={EntityType.Event}
+          />
+          <SidebarSpacing />
+          <IconButton small withText onClick={this.toggleLegend}>
+            {t(
+              this.state.showLegend
+                ? R.button_hide_legend
+                : R.button_show_legend
+            )}
+          </IconButton>
+        </RightColumn>
+
         {status === Status.Ok ? (
           <EntityGraphV4 entityKey={entityKey} />
         ) : this.state.prevEntityKey ? (
@@ -225,9 +352,11 @@ class EntityScreen extends Component<Props> {
   }
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(EntityScreen)
+export default withTranslation()(
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(EntityScreen)
+  )
 );

@@ -11,6 +11,14 @@ const withTextCSS = css`
   }
 `;
 
+const smallIconCSS = css`
+  & > svg {
+    margin-right: 6px;
+    width: 12px;
+    height: 12px;
+  }
+`;
+
 const IconButton = styled.button<IconButtonProps>`
   height: auto;
   min-height: ${props => (props.small ? "16px" : "28px")};
@@ -32,6 +40,7 @@ const IconButton = styled.button<IconButtonProps>`
     border-color: ${props => props.theme.surfaceHover};
   }
 
+  &:not([disabled]):hover:focus,
   &:focus {
     border-color: ${props => props.theme.focusColor};
     outline: none;
@@ -43,6 +52,7 @@ const IconButton = styled.button<IconButtonProps>`
   }
 
   ${props => props.withText && withTextCSS}
+  ${props => props.small && smallIconCSS}
 `;
 
 export default IconButton;
