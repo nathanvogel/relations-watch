@@ -21,7 +21,7 @@ import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
 import { EditorContainerCSS } from "../components/EditorContainer";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
-import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
+import { ReactComponent as SearchIcon } from "../assets/ic_search.svg";
 
 const Content = styled.div`
   ${PageWidthSizer}
@@ -178,8 +178,8 @@ class RelationsScreen extends React.Component<Props> {
               <div>
                 <EntityDetails key={realKey1} entityKey={realKey1} />
                 <ClearButton withText small onClick={this.onEntity1Cleared}>
-                  <CloseIcon />
-                  Clear
+                  <SearchIcon />
+                  Search
                 </ClearButton>
               </div>
             ) : (
@@ -195,8 +195,8 @@ class RelationsScreen extends React.Component<Props> {
               <div style={{ textAlign: "right" }}>
                 <EntityDetails key={realKey2} entityKey={realKey2} />
                 <ClearButton withText small onClick={this.onEntity2Cleared}>
-                  <CloseIcon />
-                  Clear
+                  <SearchIcon />
+                  Search
                 </ClearButton>
               </div>
             ) : (
