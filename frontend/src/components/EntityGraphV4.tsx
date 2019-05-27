@@ -24,9 +24,15 @@ import {
   RelZoneValues,
   DefaultTypeWeights,
   RelationTypeValues,
+  LinkDir,
 } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
-import { getEntityPreview, getRelationId } from "../utils/utils";
+import {
+  getEntityPreview,
+  getRelationId,
+  getNewDirection,
+  isDirectedType,
+} from "../utils/utils";
 import GraphV4 from "./GraphV4";
 import Measure, { ContentRect } from "react-measure";
 
@@ -130,8 +136,6 @@ class EntityGraphV4 extends Component<Props> {
     // if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
     //   this.props.loadEntityGraph(this.props.baseEntityKey);
   }
-
-  onResize(contentRect: ContentRect): void {}
 
   render() {
     const { entity, status, error, baseEntityKey } = this.props;
@@ -249,21 +253,32 @@ class EntityGraphV4 extends Component<Props> {
       if (!rRelation) continue;
       if (link.type === RelationType.Family) {
         // special family case
+        // Compute the "zone correspondance" score for the entity.
         rEntitiesByKey[rRelation.targetKey].zones[RelZone.IsRelated] += 1;
         rEntitiesByKey[rRelation.targetKey].zoneTotal += 1;
-
+        // Compute the proximity score for the relation
         const proximityWeight = link.fType ? FProximityWeights[link.fType] : 1;
         rRelation.proximity += proximityWeight;
         rRelation.tWeights[link.type] += proximityWeight;
       } else {
+        const invertDirection = link._from === rRelation.source;
+        // Compute the "zone correspondance" score for the entity.
         const [zone, weight] = TypeWeights[link.type][
-          link._from === rRelation.source ? "nor" : "inv"
+          invertDirection ? "nor" : "inv"
         ];
         rEntitiesByKey[rRelation.targetKey].zones[zone] += weight;
         rEntitiesByKey[rRelation.targetKey].zoneTotal += weight;
+        // Compute the proximity score for the relation
         const proximityWeight = ProximityWeights[link.type];
         rRelation.proximity += proximityWeight;
         rRelation.tWeights[link.type] += proximityWeight;
+        // Compute the new direction(s)
+        if (isDirectedType(link.type)) {
+          rRelation.tDirections[link.type] = getNewDirection(
+            rRelation.tDirections[link.type],
+            invertDirection ? LinkDir.Invert : LinkDir.Normal
+          );
+        }
       }
     }
 
@@ -290,7 +305,7 @@ class EntityGraphV4 extends Component<Props> {
     }
 
     return (
-      <Measure client={true} offset={false} onResize={this.onResize}>
+      <Measure client={true} offset={false}>
         {({ measureRef, contentRect }) => (
           <Content ref={measureRef}>
             <GraphV4

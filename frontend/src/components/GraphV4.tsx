@@ -13,12 +13,15 @@ import {
   RelationType,
   RelZone,
   Clusters,
+  LinkDir,
+  V4IndicatorDatum,
+  RelationTypeValues,
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import theme, { RELATION_COLORS } from "../styles/theme";
-import { DirectedLinks } from "../utils/consts";
 import "./GraphV4.css";
+import { createIndicatorDatum } from "../utils/utils";
 
 const GraphSVG = styled.svg`
   display: block;
@@ -60,10 +63,6 @@ function collisionSize(d: V4NodeDatum): number {
   }
 }
 
-function isDirectedType(t: RelationType) {
-  return DirectedLinks.indexOf(t) >= 0;
-}
-
 function nodeTranslate(d: V4NodeDatum): string {
   return `translate(
     ${d.x - size(d) / 2},
@@ -100,6 +99,10 @@ function relationColor(d: V4LinkDatum) {
   return RELATION_COLORS[d.sortedTypes[0]];
 }
 
+function colorFromRelationType(d: V4LinkDatum) {
+  return RELATION_COLORS[d.sortedTypes[0]];
+}
+
 function strokeColor(d: V4LinkDatum) {
   return d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd";
 }
@@ -114,7 +117,7 @@ function goToParent(this: Element | null) {
 }
 
 function between(a1: number, a2: number, percent: number) {
-  return a1 + (a2 - a1) * percent;
+  return a2 + (a1 - a2) * percent;
 }
 function betweenOffD(d: V4LinkDatum, offset: number) {
   const source = d.source as V4NodeDatum;
@@ -170,26 +173,29 @@ const clusterOrigins = {
   [RelZone.IsRelated]: { x: 1, y: 0.5 },
   [RelZone.IsChild]: { x: 0, y: 0 },
   [RelZone.Ideology]: { x: 0.2, y: 0.2 },
-  [RelZone.WorksFor]: { x: 0.4, y: 1 },
-  [RelZone.GivesWork]: { x: 0.4, y: 0 },
+  [RelZone.WorksFor]: { x: 0.4, y: 0 },
+  [RelZone.GivesWork]: { x: 0.4, y: 1 },
   [RelZone.Other]: { x: 0, y: 0.6 },
   [RelZone.Opposition]: { x: 0, y: 0.4 },
-  [RelZone.Participates]: { x: 0.8, y: 0.25 },
+  [RelZone.Participates]: { x: 0.9, y: 0.2 },
 };
 
 class GraphV4 extends React.Component<Props> {
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
   private gNodes: React.RefObject<SVGGElement>;
+  private gIndicators: React.RefObject<SVGGElement>;
   private simulation: d3.Simulation<V4NodeDatum, V4LinkDatum>;
   private nodesData: { [key: string]: V4NodeDatum } = {};
   private linksData: { [key: string]: V4LinkDatum } = {};
+  // private dotsData: { [key: string]: V4IndicatorDatum } = {};
 
   constructor(props: Readonly<Props>) {
     super(props);
     this.svgEl = React.createRef();
     this.gLinks = React.createRef();
     this.gNodes = React.createRef();
+    this.gIndicators = React.createRef();
 
     this.simulation = d3.forceSimulation();
     // .force("link", d3.forceLink().id(d => (d as V4NodeDatum).entityKey))
@@ -208,12 +214,9 @@ class GraphV4 extends React.Component<Props> {
   }
 
   updateGraph() {
-    // PREPARE DATA
     const { width, height } = this.props;
 
-    // Create a deep copy of the props and merges it to our existing data
-    // We do this to preserve the positions and velocities from one
-    // screen to the next.
+    // D3 RELATIONS DATA
     const { rEntitiesByKey, rRelationsByKey } = this.props;
     var rRelations: V4LinkDatum[] = [];
     for (let key in rRelationsByKey) {
@@ -222,6 +225,44 @@ class GraphV4 extends React.Component<Props> {
         : Object.assign({}, rRelationsByKey[key]);
       rRelations.push(this.linksData[key]);
     }
+
+    // D3 INDICATORS DATA
+    var rIndicators: V4IndicatorDatum[] = [];
+    for (let key in rRelationsByKey) {
+      const rRelation = rRelationsByKey[key];
+      let normalCount = 0;
+      let invertCount = 0;
+      for (let relationType of RelationTypeValues) {
+        const dir = rRelation.tDirections[relationType];
+        if (dir === LinkDir.Normal || dir === LinkDir.Both) {
+          rIndicators.push(
+            createIndicatorDatum(
+              rRelation,
+              relationType,
+              LinkDir.Normal,
+              normalCount
+            )
+          );
+          normalCount += 1;
+        }
+        if (dir === LinkDir.Invert || dir === LinkDir.Both) {
+          rIndicators.push(
+            createIndicatorDatum(
+              rRelation,
+              relationType,
+              LinkDir.Invert,
+              invertCount
+            )
+          );
+          invertCount += 1;
+        }
+      }
+    }
+
+    // D3 NODES DATA
+    // Create a deep copy of the props and merges it to our existing data
+    // We do this to preserve the positions and velocities from one
+    // screen to the next.
     var rEntities: V4NodeDatum[] = [];
     for (let key in rEntitiesByKey) {
       this.nodesData[key] = this.nodesData[key]
@@ -238,7 +279,6 @@ class GraphV4 extends React.Component<Props> {
     }
 
     // D3 FORCES SETUP
-
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
     const distScale = d3
       .scaleLinear()
@@ -321,17 +361,12 @@ class GraphV4 extends React.Component<Props> {
         ).strength(0.4)
       ) as any;
 
-    // Alternative to forceBoundary() taken from
-    // https://observablehq.com/@d3/disjoint-force-directed-graph
-    // .force("x", d3.forceX())
-    // .force("y", d3.forceY())
-
     // D3 RENDERING starts here
 
     // LINKS rendering
     var linkGroup = d3.select(this.gLinks.current);
     var links = linkGroup.selectAll("g").data(
-      () => rRelations,
+      rRelations,
       // Key function to preserve the relation between DOM and rRelations
       (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
@@ -345,13 +380,13 @@ class GraphV4 extends React.Component<Props> {
       .attr("stroke-width", lineStrokeWidth)
       .attr("stroke", relationColor)
       .select(goToParent)
-      .append("circle")
-      .attr("r", 4)
-      .attr("fill", relationColor)
-      // .attr("stroke-width", 0)
-      // .attr("stroke", "#aaaaaa")
-      .attr("opacity", d => (isDirectedType(d.sortedTypes[0]) ? 1 : 0))
-      .select(goToParent)
+      // .append("circle")
+      // .attr("r", 4)
+      // .attr("fill", relationColor)
+      // // .attr("stroke-width", 0)
+      // // .attr("stroke", "#aaaaaa")
+      // .attr("opacity", d => (isDirectedType(d.sortedTypes[0]) ? 1 : 0))
+      // .select(goToParent)
       .append("line")
       .classed("interaction", true)
       .attr("stroke-width", 11)
@@ -375,13 +410,31 @@ class GraphV4 extends React.Component<Props> {
     var linksInteraction = links2
       .select("line.interaction")
       .attr("stroke", "transparent");
-    var linksC = links2.select("circle"); //.attr("opacity", linkOpacity);
+
+    // var linksC = links2.select("circle"); //.attr("opacity", linkOpacity);
     links.exit().remove();
+
+    // INDICATORS rendering
+    var indicatorGroup = d3.select(this.gIndicators.current);
+    var indicators = indicatorGroup
+      .selectAll("circle.indicator")
+      .data(
+        rIndicators,
+        (d: V4IndicatorDatum | {}) => (d as V4IndicatorDatum).indicatorId
+      );
+    const allIndicators = indicators
+      .enter()
+      .append("circle")
+      .classed("indicator", true)
+      .attr("r", 5)
+      .attr("fill", d => RELATION_COLORS[d.type])
+      .merge(indicators as any);
+    indicators.exit().remove();
 
     // NODES rendering
     var nodeGroup = d3.select(this.gNodes.current);
     var nodes = nodeGroup.selectAll("g.node").data(
-      () => rEntities,
+      rEntities,
       // Key function to preserve the relation between DOM and rEntities
       (d: V4NodeDatum | {}) => (d as V4NodeDatum).entityKey
     );
@@ -477,20 +530,12 @@ class GraphV4 extends React.Component<Props> {
         .attr("x2", d => (d.target as V4NodeDatum).x as number)
         .attr("y2", d => (d.target as V4NodeDatum).y as number);
 
-      linksC
-        .attr("cx", (d: any) =>
-          between(
-            (d.source as V4NodeDatum).x,
-            (d.target as V4NodeDatum).x,
-            0.15
-          )
+      allIndicators
+        .attr("cx", d =>
+          between(this.nodesData[d.fromKey].x, this.nodesData[d.toKey].x, 0.3)
         )
         .attr("cy", (d: any) =>
-          between(
-            (d.source as V4NodeDatum).y,
-            (d.target as V4NodeDatum).y,
-            0.15
-          )
+          between(this.nodesData[d.fromKey].y, this.nodesData[d.toKey].y, 0.3)
         );
       // linksC
       //   .attr("cx", d => betweenOffD(d, 20).x)
@@ -531,6 +576,7 @@ class GraphV4 extends React.Component<Props> {
         ref={this.svgEl}
       >
         <g className="links" ref={this.gLinks} />
+        <g className="indicators" ref={this.gIndicators} />
         <g className="nodes" ref={this.gNodes} />
       </GraphSVG>
     );

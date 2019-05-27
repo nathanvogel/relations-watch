@@ -372,7 +372,6 @@ export const DefaultTypeWeights = {
   [RelationType.Other]: 0,
 };
 
-// Must be iteratively calculable
 export type V4GenericLinkDatum<T> = {
   // Data
   sourceKey: string;
@@ -380,32 +379,105 @@ export type V4GenericLinkDatum<T> = {
   source: string | T;
   target: string | T;
   relationId: string;
+  /**
+   * Whether the user has visited both connected entities or the relation page.
+   */
   visited: boolean;
+  /**
+   * The "most primary" node type this edges connects to.
+   * This is to know whether it's a 1st/2nd/3d/etc. degree edge
+   */
   withType: NodeRenderType;
-  // Position computation data
+  /**
+   * A proximity score computed from all the edges between those entities.
+   */
   proximity: number;
-  tDirections: { [key: number]: LinkDir }; // indexed on RelationType
-  tWeights: { [key: number]: number }; // indexed on RelationType
-  sortedTypes: RelationType[]; // indexed on RelationType
+  /**
+   * For each RelationType, indicate whether this type of relation
+   * has a direction or not, and which direction(s).
+   */
+  tDirections: { [key: number]: LinkDir };
+  /**
+   * For each RelationType, a score of the importance of this edge is computed.
+   */
+  tWeights: { [key: number]: number };
+  /**
+   * Rank non-null RelationType scores, from highest to lowest.
+   */
+  sortedTypes: RelationType[];
+};
+
+export type V4IndicatorDatum = {
+  // Data
+  fromKey: string;
+  toKey: string;
+  relationId: string;
+  indicatorId: string;
+  /**
+   * The "most primary" node type this edges connects to.
+   * This is to know whether it's a 1st/2nd/3d/etc. degree edge
+   */
+  withType: NodeRenderType;
+  /**
+   * Type of the presented edge
+   */
+  type: RelationType;
+  /**
+   * Direction of the dot
+   */
+  direction: LinkDir;
+  /**
+   * In case the indicator must make room for other previous indicators
+   */
+  offsetIndex: number;
 };
 
 // Must be iteratively calculable
 export type V4NodeDatum = {
-  x: number;
-  y: number;
-  radius: number;
   entityKey: string;
   entity: EntityPreview;
+  /**
+   * The x position, except for initialization, this is controlled by
+   * the d3-force simulation
+   */
+  x: number;
+  /**
+   * The y position, except for initialization, this is controlled by
+   * the d3-force simulation
+   */
+  y: number;
+  /**
+   * Used by some d3-force plugin I think.
+   */
+  radius: number;
+  /**
+   * Whether the user has visited the entity or one of its relation pages.
+   */
   visited: boolean;
+  /**
+   * Whether this is the primary, secondary or tertiary focus of the graph.
+   */
   type: NodeRenderType;
-  // Position computation data
+  /**
+   * Score each zone on how much it corresponds to the relation.
+   */
   zones: RelZones; // indexed on RelZone
+  /**
+   * Sorted 'zones' with only truthy number scores
+   * Must always contain at least one element.
+   */
   sortedZones: RelZone[]; // indexed on RelZone
+  /**
+   * Total of the different 'zones' scores, for normalization.
+   */
   zoneTotal: number;
-  // From d3-force:
-  // Each node must be an object. The following properties are assigned by the simulation:
+  /**
+   * Property from d3-force, assigned by the simulation
+   */
   index?: number; // the node’s zero-based index into nodes
-  // Text sizing
+  /**
+   * Holder for the post-render computed text box size
+   */
   bb?: DOMRect;
 };
 

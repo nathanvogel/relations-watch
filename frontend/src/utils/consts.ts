@@ -8,6 +8,7 @@ import {
   AmountSelectOption,
   EntityTypeOption,
   EntityTypeValues,
+  FamilialLink,
 } from "./types";
 import { EntityType as E } from "./types";
 
@@ -63,6 +64,8 @@ export const DirectedLinks = [
   RelationType.IsInfluenced,
   RelationType.GroupMember,
 ];
+
+export const DirectedFamilialLinks = [FamilialLink.childOf];
 
 type Requirements = {
   [key: number]: RelationTypeRequirements;

@@ -9,8 +9,14 @@ import {
   EntityPreview,
   ErrorPayload,
   DatasetId,
+  LinkDir,
+  V4IndicatorDatum,
+  V4LinkDatum,
+  RelationType,
+  FamilialLink,
 } from "./types";
-import CONSTS from "./consts";
+import CONSTS, { DirectedFamilialLinks } from "./consts";
+import { DirectedLinks } from "./consts";
 
 // CONVENTION:
 // - relationId is the alphabetically sorted combination of both entities
@@ -185,4 +191,67 @@ export function isEmptyObject(obj: Object): boolean {
     }
   }
   return true;
+}
+
+/**
+ * Compute a new LinkDirection (like the logical AND, which would be faster,
+ * but we have enums here, so might as well stick to them.)
+ */
+export function getNewDirection(
+  currentDir: LinkDir,
+  newDir: LinkDir.Invert | LinkDir.Normal
+): LinkDir {
+  if (currentDir === LinkDir.Normal && newDir === LinkDir.Invert)
+    return LinkDir.Both;
+  if (currentDir === LinkDir.Invert && newDir === LinkDir.Normal)
+    return LinkDir.Both;
+  if (currentDir === LinkDir.Both) return LinkDir.Both;
+  return newDir;
+}
+
+/**
+ * Constructor for the IndicatorDatum
+ * @param  relation     base relation
+ * @param  relationType type of the relation
+ * @param  direction    direction of the edge
+ * @param  offsetIndex  the number of existing indicators on this side.
+ * @return              a new V4IndicatorDatum
+ */
+export function createIndicatorDatum(
+  relation: V4LinkDatum,
+  relationType: RelationType,
+  direction: LinkDir.Normal | LinkDir.Invert,
+  offsetIndex: number
+): V4IndicatorDatum {
+  return {
+    fromKey:
+      direction === LinkDir.Normal ? relation.sourceKey : relation.targetKey,
+    toKey:
+      direction === LinkDir.Normal ? relation.targetKey : relation.sourceKey,
+    relationId: relation.relationId,
+    indicatorId:
+      relation.relationId +
+      "_" +
+      relationType.toString() +
+      "_" +
+      direction.toString(),
+    withType: relation.withType,
+    type: relationType,
+    direction,
+    offsetIndex,
+  };
+}
+
+/**
+ * Returns true if the given type has a precise direction (sens).
+ */
+export function isDirectedType(t: RelationType) {
+  return DirectedLinks.indexOf(t) >= 0;
+}
+
+/**
+ * Returns true if the given familial link type has a precise direction (sens).
+ */
+export function isDirectedFamilialType(t: FamilialLink) {
+  return DirectedFamilialLinks.indexOf(t) >= 0;
 }
