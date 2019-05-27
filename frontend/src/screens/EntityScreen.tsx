@@ -118,7 +118,6 @@ const LeftColumn = styled.div<ColumnProps>`
   left: 0px;
   top: 0px;
   max-height: 100%;
-  overflow: scroll;
   min-width: ${props => props.theme.appSidebarWidth};
   width: ${props => props.theme.appSidebarWidth};
   padding: ${props => props.theme.blockPadding};
