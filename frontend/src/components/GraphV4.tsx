@@ -25,6 +25,8 @@ const GraphSVG = styled.svg`
   margin: 0 auto;
 `;
 
+const nodeSize = 40;
+
 type Props = {
   rRelations: V4LinkDatum[];
   rEntities: V4NodeDatum[];
@@ -175,7 +177,7 @@ const clusterOrigins = {
   [RelZone.Participates]: { x: 0.8, y: 0.25 },
 };
 
-class GraphD3Simple extends React.Component<Props> {
+class GraphV4 extends React.Component<Props> {
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
   private gNodes: React.RefObject<SVGGElement>;
@@ -311,7 +313,12 @@ class GraphD3Simple extends React.Component<Props> {
       // Keep all nodes within our canvas
       .force(
         "boundary",
-        forceBoundary(0, 0, width, height).strength(0.4)
+        forceBoundary(
+          nodeSize,
+          nodeSize,
+          width - nodeSize,
+          height - nodeSize
+        ).strength(0.4)
       ) as any;
 
     // Alternative to forceBoundary() taken from
@@ -518,8 +525,8 @@ class GraphD3Simple extends React.Component<Props> {
   render() {
     return (
       <GraphSVG
-        width={800}
-        height={800}
+        width={this.props.width}
+        height={this.props.height}
         xmlns="http://www.w3.org/2000/svg"
         ref={this.svgEl}
       >
@@ -530,4 +537,5 @@ class GraphD3Simple extends React.Component<Props> {
   }
 }
 
-export default withRouter(GraphD3Simple);
+// export default withRouter(withContentRect("bounds")<Props>(GraphV4));
+export default withRouter(GraphV4);

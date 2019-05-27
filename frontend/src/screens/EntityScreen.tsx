@@ -44,6 +44,7 @@ const Name = styled.div`
   text-align: left;
   font-weight: bold;
   font-size: ${props => props.theme.fontSizeM};
+  ${media.mobile`font-size: ${(props: any) => props.theme.fontSizeS};`}
 `;
 
 const Description = styled.div`
@@ -55,6 +56,7 @@ const Description = styled.div`
 const EntityButton = styled(IconButton)`
   display: block;
   margin: ${props => props.theme.inputTBSpacing} 0px;
+  ${media.mobile`display: none;`}
 `;
 
 const EdgeLegend = styled.div`
@@ -106,11 +108,17 @@ const EntityTypeLegendContainer = styled.div`
   }
 `;
 
-const LeftColumn = styled.div`
+interface ColumnProps {
+  hideColumn?: boolean;
+}
+
+const LeftColumn = styled.div<ColumnProps>`
+  display: ${props => (props.hideColumn ? "none" : "block")}
   position: absolute;
   left: 0px;
   top: 0px;
   max-height: 100%;
+  overflow: scroll;
   min-width: ${props => props.theme.appSidebarWidth};
   width: ${props => props.theme.appSidebarWidth};
   padding: ${props => props.theme.blockPadding};
@@ -120,14 +128,6 @@ const LeftColumn = styled.div`
   box-shadow: 15px 0px 15px 0px ${props => props.theme.sidebarBG};
 `;
 
-interface ColumnProps {
-  hideColumn?: boolean;
-}
-
-const HideColumnCSS = css`
-  transform: translateY(calc(-100% + 56px));
-`;
-
 const RightColumn = styled(LeftColumn)<ColumnProps>`
   right: 0px;
   left: unset;
@@ -135,9 +135,23 @@ const RightColumn = styled(LeftColumn)<ColumnProps>`
   min-width: ${props => props.theme.appMiniSidebarWidth};
   width: ${props => props.theme.appMiniSidebarWidth};
   box-shadow: -15px 0px 15px 0px ${props => props.theme.sidebarBG};
+  // Space for the toggle button
+  padding-top: 56px;
 
   transition: transform 0.18s ease-out;
-  ${props => props.hideColumn && HideColumnCSS}
+  transform: translateX(${props => (props.hideColumn ? "100" : "0")}%);
+`;
+
+const ToggleLegendButton = styled(IconButton)`
+  position: absolute;
+  top: ${props => props.theme.blockPadding};
+  right: ${props => props.theme.blockPadding};
+`;
+
+const ToggleTitleCardButton = styled(IconButton)`
+  position: absolute;
+  top: ${props => props.theme.blockPadding};
+  left: ${props => props.theme.blockPadding};
 `;
 
 const SidebarSpacing = styled.div`
@@ -204,12 +218,14 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 type State = {
   prevEntityKey: null | string;
   showLegend: boolean;
+  showTitleCard: boolean;
 };
 
 class EntityScreen extends Component<Props> {
   readonly state: State = {
     prevEntityKey: null,
-    showLegend: true,
+    showLegend: false,
+    showTitleCard: true,
   };
 
   get isWikidataEntity() {
@@ -274,33 +290,45 @@ class EntityScreen extends Component<Props> {
     });
   };
 
+  toggleTitleCard = () => {
+    this.setState({
+      showTitleCard: !this.state.showTitleCard,
+    });
+  };
+
   render() {
     const { entity, status, error, entityKey, t } = this.props;
 
     return (
       <Content>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
-        <LeftColumn>
-          {status === Status.Ok && (
-            <React.Fragment>
-              <Name>{entity.name} </Name>
-              <Description>{entity.text}</Description>
-            </React.Fragment>
-          )}
-          <EntityButton small withText onClick={this.onEditEntity}>
-            <EditIcon />
-            Edit
-          </EntityButton>
-          <EntityButton small withText onClick={this.onAddRelation}>
-            <AddIcon />
-            Relation
-          </EntityButton>
-          {this.isWikidataEntity && (
-            <EntityButton small withText onClick={this.importWikidata}>
-              Update from Wikidata
+        {this.state.showTitleCard ? (
+          <LeftColumn onClick={this.toggleTitleCard}>
+            {status === Status.Ok && (
+              <React.Fragment>
+                <Name>{entity.name} </Name>
+                <Description>{entity.text}</Description>
+              </React.Fragment>
+            )}
+            <EntityButton small withText onClick={this.onEditEntity}>
+              <EditIcon />
+              Edit
             </EntityButton>
-          )}
-        </LeftColumn>
+            <EntityButton small withText onClick={this.onAddRelation}>
+              <AddIcon />
+              Relation
+            </EntityButton>
+            {this.isWikidataEntity && (
+              <EntityButton small withText onClick={this.importWikidata}>
+                Update from Wikidata
+              </EntityButton>
+            )}
+          </LeftColumn>
+        ) : (
+          <ToggleTitleCardButton small withText onClick={this.toggleTitleCard}>
+            {t(R.button_show)}
+          </ToggleTitleCardButton>
+        )}
         <RightColumn hideColumn={!this.state.showLegend}>
           {RelationTypeValues.map((type, index) => (
             <EdgeLegend key={type} color={RELATION_COLORS[type]}>
@@ -332,15 +360,12 @@ class EntityScreen extends Component<Props> {
             string={t(R.legend_event)}
             type={EntityType.Event}
           />
-          <SidebarSpacing />
-          <IconButton small withText onClick={this.toggleLegend}>
-            {t(
-              this.state.showLegend
-                ? R.button_hide_legend
-                : R.button_show_legend
-            )}
-          </IconButton>
         </RightColumn>
+        <ToggleLegendButton small withText onClick={this.toggleLegend}>
+          {t(
+            this.state.showLegend ? R.button_hide_legend : R.button_show_legend
+          )}
+        </ToggleLegendButton>
 
         {status === Status.Ok ? (
           <EntityGraphV4 entityKey={entityKey} />

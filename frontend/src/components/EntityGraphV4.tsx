@@ -28,8 +28,15 @@ import {
 import { loadEntityGraph } from "../features/linksLoadAC";
 import { getEntityPreview, getRelationId } from "../utils/utils";
 import GraphV4 from "./GraphV4";
+import Measure, { ContentRect } from "react-measure";
 
-const Content = styled.div``;
+const Content = styled.div`
+  width: 100vw;
+  height: calc(100vh - ${props => props.theme.navBarHeight});
+  max-width: 100vw;
+  max-height: calc(100vh - ${props => props.theme.navBarHeight});
+  overflow: scroll;
+`;
 
 type OwnProps = {
   entityKey: string;
@@ -123,6 +130,8 @@ class EntityGraphV4 extends Component<Props> {
     // if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
     //   this.props.loadEntityGraph(this.props.baseEntityKey);
   }
+
+  onResize(contentRect: ContentRect): void {}
 
   render() {
     const { entity, status, error, baseEntityKey } = this.props;
@@ -281,16 +290,28 @@ class EntityGraphV4 extends Component<Props> {
     }
 
     return (
-      <Content>
-        <GraphV4
-          width={800}
-          height={800}
-          rRelations={rRelations}
-          rEntities={rEntities}
-          rRelationsByKey={rRelationsByKey}
-          rEntitiesByKey={rEntitiesByKey}
-        />
-      </Content>
+      <Measure client={true} offset={false} onResize={this.onResize}>
+        {({ measureRef, contentRect }) => (
+          <Content ref={measureRef}>
+            <GraphV4
+              width={
+                contentRect.client
+                  ? Math.max(contentRect.client.width || 500, 500)
+                  : 800
+              }
+              height={
+                contentRect.client
+                  ? Math.max(contentRect.client.height || 500, 500)
+                  : 800
+              }
+              rRelations={rRelations}
+              rEntities={rEntities}
+              rRelationsByKey={rRelationsByKey}
+              rEntitiesByKey={rEntitiesByKey}
+            />
+          </Content>
+        )}
+      </Measure>
     );
   }
 }

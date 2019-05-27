@@ -70,5 +70,6 @@
   "label_no_element_found": "Nothing found",
   "home_trending": "Trending:",
   "button_show_legend": "Show legend",
-  "button_hide_legend": "Hide"
+  "button_hide_legend": "Hide",
+  "button_show": "Show"
 }
