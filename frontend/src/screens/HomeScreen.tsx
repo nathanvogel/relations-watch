@@ -8,7 +8,6 @@ import ROUTES from "../utils/ROUTES";
 import { ReactSelectOption } from "../utils/types";
 import R from "../strings/R";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
-import BaseImportEntity from "../components/dataimport/BaseImportEntity";
 import EntityDetails from "../components/EntityDetails";
 import { media } from "../styles/media-styles";
 
@@ -69,7 +68,11 @@ const ItemList = styled.div`
     ${media.mobile`width: 100%;`}
 
     > div {
-      height: 100%;
+      height: calc(
+        100% -
+          ${props =>
+            props.theme.inputPaddingTB + " - " + props.theme.inputMarginTB};
+      );
     }
   }
 `;

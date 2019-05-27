@@ -470,6 +470,14 @@ export type ReactSelectOption = {
   [key: string]: any;
 };
 
+export type EntitySelectOption = {
+  value: string;
+  label: string;
+  text?: string;
+  type?: EntityType;
+  dataset?: DatasetId;
+};
+
 export type AmountSelectOption = {
   value: number;
   label: string;

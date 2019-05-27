@@ -3,17 +3,21 @@ import styled from "styled-components";
 
 const ModalContent = styled.div`
   position: fixed;
-  width: 100%;
+  box-sizing: border-box;
+  width: calc(100% - ${props => props.theme.marginLR} - ${props =>
+  props.theme.marginLR});
   max-width: 800px;
   min-height: 400px;
   max-height: calc(100vh - 110px);
-  overflow: scroll;
+  overflow-y: auto;
   top: 70px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% - ${props => props.theme.marginLR}));
   z-index: 1000;
   padding: ${props => props.theme.blockPadding};
   margin-bottom: ${props => props.theme.marginTB};
+  margin-left: ${props => props.theme.marginLR};
+  margin-right: ${props => props.theme.marginLR};
 
   background-color: ${props => props.theme.appBG};
   // box-shadow: 0px 0px 28px 0px rgba(0, 0, 0, 0.5);

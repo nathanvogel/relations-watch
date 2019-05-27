@@ -3,11 +3,11 @@ import {
   SimilarEntities,
   SimilarEntitiesSelection,
   Entity,
-  Dictionary
+  Dictionary,
 } from "../../utils/types";
 import styled from "styled-components";
 import { media } from "../../styles/media-styles";
-import BaseImportEntity from "./BaseImportEntity";
+import EntityPreview from "../entity/EntityPreview";
 
 const Row = styled.div`
   width: 100%;
@@ -86,7 +86,7 @@ const SimilarEntitiesSelector: FunctionComponent<Props> = props => {
       {Object.keys(props.similarEntities).map((key, index) => (
         <Row key={key}>
           <BaseColumn>
-            <BaseImportEntity entity={props.dsEntities[key]} />
+            <EntityPreview entity={props.dsEntities[key]} />
           </BaseColumn>
           <OptionsColumn>
             <Label>
@@ -112,7 +112,7 @@ const SimilarEntitiesSelector: FunctionComponent<Props> = props => {
                   onChange={onSelect}
                   checked={props.similarEntitiesSelection[key] === index}
                 />
-                <BaseImportEntity key={index} entity={entity} />
+                <EntityPreview key={index} entity={entity} />
               </Label>
             ))}
           </OptionsColumn>

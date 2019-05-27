@@ -8,7 +8,7 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/meta/Meta";
 import { Status } from "../utils/types";
-import BaseImportEntity from "./dataimport/BaseImportEntity";
+import EntityPreview from "./entity/EntityPreview";
 
 type OwnProps = { entityKey: string };
 
@@ -53,7 +53,7 @@ class EntityDetails extends Component<Props> {
 
     return (
       <Link to={`/e/${this.props.entityKey}`}>
-        <BaseImportEntity entity={entity} />
+        <EntityPreview entity={entity} />
       </Link>
     );
   }

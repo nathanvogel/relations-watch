@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from "react";
 import { Entity, Edge, Dictionary } from "../../utils/types";
 import styled from "styled-components";
-import BaseImportEntity from "./BaseImportEntity";
 import { media } from "../../styles/media-styles";
 import EdgeSummary from "../edgeDetails/EdgeSummary";
 import ErrorBox from "../meta/ErrorBox";
+import EntityPreview from "../entity/EntityPreview";
 
 const Row = styled.div`
   margin: ${props => props.theme.marginTB} 0;
@@ -66,7 +66,7 @@ const UpdateList: FunctionComponent<Props> = props => {
       </ErrorBox>
     );
   const renderEntity = (entity: Entity, index: number) => (
-    <BaseImportEntity key={index} entity={entity} />
+    <EntityPreview key={index} entity={entity} />
   );
 
   return (

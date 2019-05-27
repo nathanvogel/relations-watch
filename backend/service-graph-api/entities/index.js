@@ -120,7 +120,7 @@ router
     const entities = db._query(
       `
           FOR entity IN FULLTEXT(@@collection, "name", CONCAT("prefix:", @searchTerm),  30)
-            RETURN {"name": entity.name, "_key": entity._key, "type": entity.type }
+            RETURN KEEP(entity, "_key", "name", "type", "text")
         `,
       {
         "@collection": entColl.name(),

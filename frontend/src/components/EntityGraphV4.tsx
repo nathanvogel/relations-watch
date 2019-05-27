@@ -35,7 +35,7 @@ const Content = styled.div`
   height: calc(100vh - ${props => props.theme.navBarHeight});
   max-width: 100vw;
   max-height: calc(100vh - ${props => props.theme.navBarHeight});
-  overflow: scroll;
+  overflow: auto;
 `;
 
 type OwnProps = {

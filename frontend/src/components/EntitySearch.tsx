@@ -5,13 +5,13 @@ import update from "immutability-helper";
 import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import wd, { Property, Entity as WDEntity } from "wikidata-sdk";
+import wd from "wikidata-sdk";
 
 import api from "../utils/api";
 import EntityEditor from "./EntityEditor";
 import {
   Entity,
-  ReactSelectOption,
+  EntitySelectOption,
   EntityType,
   DatasetId,
 } from "../utils/types";
@@ -21,11 +21,15 @@ import Importer from "./Importer";
 import { checkAxiosResponse, checkWDData } from "../utils/api-wd";
 import Modal from "./layout/Modal";
 import i18n from "../i18n/i18n";
+import { components } from "react-select/lib/components";
+import { OptionProps } from "react-select/lib/components/Option";
+import SearchResultPreview from "./entity/SearchResultPreview";
 
 interface Suggestion {
   _key: string;
   name: string;
   type: EntityType;
+  text?: string;
 }
 interface ReactSelectInputValue {
   inputValue: string;
@@ -38,13 +42,14 @@ const promiseAutocomplete = async (inputValue: string) => {
   const response = await api.get("/entities/autocomplete/" + inputValue);
   if (response.status === 200) {
     // Convert the API data to react-select format.
-    const suggestions: Array<ReactSelectOption> = [];
+    const suggestions: Array<EntitySelectOption> = [];
     const data = response.data as Array<Suggestion>;
     for (var i = 0; i < data.length; i += 1) {
       suggestions.push({
         value: data[i]._key,
         label: data[i].name,
         type: data[i].type,
+        text: data[i].text,
       });
     }
     return suggestions;
@@ -64,7 +69,7 @@ const promiseWikidataAutocomplete = async (inputValue: string) => {
     const url = wd.searchEntities(
       inputValue,
       i18n.language.indexOf("fr") === 0 ? "fr" : "en",
-      30,
+      12,
       "json",
       i18n.language.indexOf("fr") === 0 ? "fr" : "en"
     );
@@ -73,12 +78,13 @@ const promiseWikidataAutocomplete = async (inputValue: string) => {
     )).search;
     if (!data) return [];
     // Convert the API data to react-select format.
-    const suggestions: Array<ReactSelectOption> = [];
+    const suggestions: Array<EntitySelectOption> = [];
     for (var i = 0; i < data.length; i += 1) {
       suggestions.push({
         value: data[i].id,
         label: data[i].label,
-        description: data[i].description,
+        text: data[i].description,
+        dataset: DatasetId.Wikidata,
       });
     }
     return suggestions;
@@ -87,9 +93,20 @@ const promiseWikidataAutocomplete = async (inputValue: string) => {
       {
         value: null,
         label: "An error occured",
+        text: err && err.message ? err.message : "unknown error",
+        dataset: DatasetId.Wikidata,
       },
     ];
   }
+};
+
+const Option = (props: OptionProps<Suggestion>) => {
+  if (props.data.__isNew__) return <components.Option {...props} />;
+  return (
+    <components.Option {...props}>
+      <SearchResultPreview entity={props.data} />
+    </components.Option>
+  );
 };
 
 const MySelect = styled(StyledAsyncCreatableSelect)`
@@ -99,7 +116,7 @@ const MySelect = styled(StyledAsyncCreatableSelect)`
 
 export interface Props {
   selection?: any;
-  onChange?: (value: ReactSelectOption) => void;
+  onChange?: (value: EntitySelectOption) => void;
   inputValue?: string;
   onInputChange?: (value: string) => void;
   className?: string;
@@ -243,6 +260,7 @@ const EntitySearch: FunctionComponent<Props> = (
       }
       menuIsOpen={menuIsOpen}
       onFocus={onFocus}
+      components={{ Option }}
     />
   );
 };

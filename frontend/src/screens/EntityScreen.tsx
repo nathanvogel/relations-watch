@@ -325,7 +325,7 @@ class EntityScreen extends Component<Props> {
           </LeftColumn>
         ) : (
           <ToggleTitleCardButton small withText onClick={this.toggleTitleCard}>
-            {t(R.button_show)}
+            {t(R.button_show_more)}
           </ToggleTitleCardButton>
         )}
         <RightColumn hideColumn={!this.state.showLegend}>
