@@ -185,6 +185,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q23670565", // professional services firm
     "Q20031260", // IT consulting company
     "Q15850083", // university of applied science
+    "Q1252971", // food manufacturer
+    "Q891723", // public company
+    "Q29643579", // multi-level marketing company
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -327,7 +330,13 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
     text: "$to is the head of the governement $from.",
   }, // head of state
   P488: { type: RT.IsControlled, text: "$to is chairman of $from." }, // chairman
+  P3320: { type: RT.IsControlled, text: "$to is a board member of $from." }, // board member
+  P5052: {
+    type: RT.IsControlled,
+    text: "$to is supervisory board member of $from.",
+  }, // supervisory oard member
   P1037: { type: RT.IsControlled, text: "$to is director/manager of $from." }, // chairman
+  P170: { type: RT.IsControlled, text: "$from was created by $to." }, // creator
   P598: { type: RT.IsControlled, text: "$from is commander of $to.", invert }, // commander of
   P241: {
     type: RT.JobDependsOn,
