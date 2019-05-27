@@ -12,7 +12,7 @@ import IconButton from "../buttons/IconButton";
 import ButtonBar from "../buttons/ButtonBar";
 import StyledSelect from "../select/StyledSelect";
 import Label from "../inputs/Label";
-import EditorContainer from "../EditorContainer";
+import EditorContainer from "../layout/EditorContainer";
 import Input from "../inputs/Input";
 import { EntityTypeMapping } from "../../strings/strings";
 import i18n from "../../i18n/i18n";

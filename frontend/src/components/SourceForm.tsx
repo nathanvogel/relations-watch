@@ -12,7 +12,7 @@ import Label from "./inputs/Label";
 import TextArea from "./inputs/TextArea";
 import IconButton from "./buttons/IconButton";
 import ButtonBar from "./buttons/ButtonBar";
-import EditorContainer from "./EditorContainer";
+import EditorContainer from "./layout/EditorContainer";
 import TopRightButton from "./buttons/TopRightButton";
 
 type OwnProps = {
@@ -35,14 +35,14 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
       const name = entities[entityKey] ? entities[entityKey].name : entityKey;
       selectedAuthors.push({
         label: name,
-        value: entityKey
+        value: entityKey,
       });
     }
   }
   return {
     formData,
     selectedAuthors,
-    ...props
+    ...props,
   };
 };
 
@@ -52,7 +52,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       onDescriptionChange: sourceFormActions.souDescriptionChange,
       onAuthorsChange: sourceFormActions.souAuthorsChange,
       feedInitialFormData: sourceFormActions.souInitialData,
-      clearFormData: sourceFormActions.souClearData
+      clearFormData: sourceFormActions.souClearData,
     },
     dispatch
   );

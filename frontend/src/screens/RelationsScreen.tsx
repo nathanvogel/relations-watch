@@ -19,7 +19,7 @@ import Meta from "../components/meta/Meta";
 import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
-import { EditorContainerCSS } from "../components/EditorContainer";
+import { EditorContainerCSS } from "../components/layout/EditorContainer";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import { ReactComponent as SearchIcon } from "../assets/ic_search.svg";
 

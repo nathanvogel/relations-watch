@@ -41,7 +41,7 @@ import VerticalInputBar from "../buttons/VerticalInputBar";
 import TopRightButton from "../buttons/TopRightButton";
 import NumericInput from "../inputs/NumericInput";
 import { predefinedOptions } from "react-numeric";
-import EditorContainer from "../EditorContainer";
+import EditorContainer from "../layout/EditorContainer";
 import {
   RelationTypeMapping,
   FamilialLinkMapping,
