@@ -55,18 +55,18 @@ function fontWeight(d: V4NodeDatum): string {
     case NodeRenderType.Primary:
       return "bold";
     case NodeRenderType.Secondary:
-      return "normal";
+      return "500";
     case NodeRenderType.Tertiary:
-      return "normal";
+      return "500";
   }
 }
 
 function fontSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
-      return 13;
+      return 14;
     case NodeRenderType.Secondary:
-      return 13;
+      return 14;
     case NodeRenderType.Tertiary:
       return 12;
   }
@@ -103,13 +103,13 @@ function linkColor(d: V4LinkDatum) {
 }
 
 function linkOpacity(d: V4LinkDatum) {
-  const o = (Math.min(d.proximity, 4) / 4) * 0.8 + 0.2;
+  const o = (Math.min(d.proximity, 3) / 3) * 0.4 + 0.6;
   return o;
   // return d.withType === NodeRenderType.Primary ? 1 : 0.5;
 }
 
 function linkStrokeWidth(d: V4LinkDatum) {
-  return Math.max(d.proximity, 1);
+  return Math.min(Math.max(d.proximity, 1), 4);
   // return 1;
 }
 
@@ -122,8 +122,8 @@ function linkStrokeWidth(d: V4LinkDatum) {
 function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   const e1 = rel.source as V4NodeDatum;
   const e2 = rel.target as V4NodeDatum;
-  const dist1 = size(e1) / 2;
-  const dist2 = size(e2) / 2;
+  const dist1 = size(e1) / 2 - 2;
+  const dist2 = size(e2) / 2 - 2;
   p.x1 = e1.x;
   p.y1 = e1.y - 5;
   p.x2 = e2.x;
@@ -135,12 +135,16 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   p.y2 -= Math.sin(p.angle) * dist2;
 }
 
+const indicatorDist = 18;
+const indicatorOffset = 5;
+
 /**
  * Compute the indicator x position
  */
 function getIndicatorX(d: V4IndicatorDatum, p: V4LinkPosDatum) {
   const invert = d.direction === LinkDir.Invert;
-  const xDiff = Math.cos(p.angle) * (10 + 5 * d.offsetIndex);
+  const xDiff =
+    Math.cos(p.angle) * (indicatorDist + indicatorOffset * d.offsetIndex);
   return invert ? p.x1 + xDiff : p.x2 - xDiff;
 }
 
@@ -149,7 +153,8 @@ function getIndicatorX(d: V4IndicatorDatum, p: V4LinkPosDatum) {
  */
 function getIndicatorY(d: V4IndicatorDatum, p: V4LinkPosDatum) {
   const invert = d.direction === LinkDir.Invert;
-  const yDiff = Math.sin(p.angle) * (10 + 5 * d.offsetIndex);
+  const yDiff =
+    Math.sin(p.angle) * (indicatorDist + indicatorOffset * d.offsetIndex);
   return invert ? p.y1 + yDiff : p.y2 - yDiff;
 }
 
