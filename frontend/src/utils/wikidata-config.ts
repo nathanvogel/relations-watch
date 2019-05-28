@@ -368,6 +368,11 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
     owned: 100,
     text: "$from is a subsidiary of $to.",
   }, // subsidiary
+  P749: {
+    type: RT.IsOwned,
+    owned: 100,
+    text: "$to is the parent organization of $from.",
+  }, // parent organization
   P737: { type: RT.IsInfluenced }, // influenced by
   P361: { type: RT.Other, text: "$from is part of $to." }, // part of
   P156: { type: RT.Other, text: "$to replaced $from." }, // part of

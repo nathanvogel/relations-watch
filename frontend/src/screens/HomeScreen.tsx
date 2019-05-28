@@ -36,7 +36,7 @@ const Footer = styled.footer`
 const CentralSearch = styled(EntitySearch)`
   font-size: 22px;
   display: block;
-  width: 330px;
+  width: 420px;
   max-width: 100%;
   margin: 0 auto;
   margin-bottom: 9vh;
@@ -61,7 +61,8 @@ const ItemList = styled.div`
 
   & > * {
     display: inline-block;
-    min-width: 15em;
+    min-width: 12em;
+    max-width: 19em;
     margin-right: ${props => props.theme.marginLR};
     margin-top: ${props => props.theme.marginTB};
     margin-bottom: ${props => props.theme.marginTB};
@@ -69,9 +70,8 @@ const ItemList = styled.div`
 
     > div {
       height: calc(
-        100% -
-          ${props =>
-            props.theme.inputPaddingTB + " - " + props.theme.inputMarginTB};
+        100% - ${props => props.theme.inputPaddingTB} -
+          ${props => props.theme.inputPaddingTB}
       );
     }
   }

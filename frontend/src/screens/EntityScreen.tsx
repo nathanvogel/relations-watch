@@ -75,8 +75,8 @@ const EdgeLegend = styled.div`
     content: "";
     position: absolute;
     z-index: -1;
-    top: calc(100% - 5px);
-    bottom: 2px;
+    top: calc(100% - 4px);
+    bottom: 1px;
     left: -0em;
     right: -0em;
     background-color: ${props => props.color};
@@ -223,7 +223,7 @@ type State = {
 class EntityScreen extends Component<Props> {
   readonly state: State = {
     prevEntityKey: null,
-    showLegend: false,
+    showLegend: window.innerWidth >= 800,
     showTitleCard: true,
   };
 

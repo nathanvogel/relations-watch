@@ -15,7 +15,7 @@ const Head = styled.h5<HeadProps>`
   margin-top: ${props => props.theme.marginTB};
   margin-bottom: -12px;
   text-transform: uppercase;
-  font-weight: bold;
+  font-weight: normal;
   font-size: ${props => props.theme.fontSizeS};
 `;
 
