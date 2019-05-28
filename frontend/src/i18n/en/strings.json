@@ -68,7 +68,7 @@
   "placeholder_add_reference": "http://...",
   "label_select_add": "Add {{userInput}}",
   "label_no_element_found": "Nothing found",
-  "home_trending": "Trending:",
+  "home_trending": "Recent:",
   "button_show_legend": "Show legend",
   "button_hide_legend": "Hide",
   "button_show_more": "More info"
