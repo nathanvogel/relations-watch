@@ -24,6 +24,10 @@ import theme, { RELATION_COLORS } from "../styles/theme";
 import "./GraphV4.css";
 import { createIndicatorDatum } from "../utils/utils";
 
+const SVG = styled.svg`
+  display: block;
+`;
+
 // ===== NODE APPEARANCE
 
 function size(d: V4NodeDatum): number {
@@ -586,7 +590,7 @@ class GraphV4 extends React.Component<Props> {
 
   render() {
     return (
-      <svg
+      <SVG
         width={this.props.width}
         height={this.props.height}
         xmlns="http://www.w3.org/2000/svg"
@@ -595,7 +599,7 @@ class GraphV4 extends React.Component<Props> {
         <g className="links" ref={this.gLinks} />
         <g className="indicators" ref={this.gIndicators} />
         <g className="nodes" ref={this.gNodes} />
-      </svg>
+      </SVG>
     );
   }
 }

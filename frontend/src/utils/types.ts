@@ -284,7 +284,7 @@ export const TypeWeights: {
 };
 
 export const ProximityWeights = {
-  [RelationType.JobDependsOn]: 1,
+  [RelationType.JobDependsOn]: 1.6,
   [RelationType.IsOwned]: 4,
   [RelationType.IsControlled]: 2,
   [RelationType.ValueExchange]: 1,
@@ -292,7 +292,7 @@ export const ProximityWeights = {
   [RelationType.Opposition]: 2,
   [RelationType.IsInfluenced]: 1,
   [RelationType.Attendance]: 1,
-  [RelationType.GroupMember]: 1.5,
+  [RelationType.GroupMember]: 1.3,
   [RelationType.Other]: 0.5,
 };
 
