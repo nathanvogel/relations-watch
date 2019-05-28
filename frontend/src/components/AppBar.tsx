@@ -101,12 +101,14 @@ class AppBar extends React.Component<RouteComponentProps> {
           <HomeLink to="/">
             <StyledAppIcon />
           </HomeLink>
-          <StyledSearch
-            onChange={this.onSearch}
-            onInputChange={this.onInputChange}
-            inputValue={this.state.searchValue}
-            selection={null}
-          />
+          {this.props.location.pathname !== "/" && (
+            <StyledSearch
+              onChange={this.onSearch}
+              onInputChange={this.onInputChange}
+              inputValue={this.state.searchValue}
+              selection={null}
+            />
+          )}
           {/* <AppBarButton onClick={this.onAddEntity}>
             <AddIcon />
           </AppBarButton> */}
