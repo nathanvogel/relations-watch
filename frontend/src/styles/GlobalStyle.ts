@@ -23,6 +23,11 @@ const GlobalStyleCSS = css`
     margin-bottom: 0.5em;
   }
 
+  h3 {
+    margin-top: 1.2em;
+    margin-bottom: 0.6em;
+  }
+
   a:link {
     color: ${props => props.theme.linkTextColor};
     text-decoration: none;
