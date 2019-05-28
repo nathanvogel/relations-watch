@@ -311,9 +311,9 @@ type PropertyMapping = {
 const invert = true;
 
 export const propertiesMap: Dictionary<PropertyMapping> = {
-  P22: { type: RT.Family, fType: FL.childOf, invert }, // Father
-  P25: { type: RT.Family, fType: FL.childOf, invert }, // Mother
-  P40: { type: RT.Family, fType: FL.childOf }, // Child
+  P22: { type: RT.Family, fType: FL.childOf }, // Father
+  P25: { type: RT.Family, fType: FL.childOf }, // Mother
+  P40: { type: RT.Family, fType: FL.childOf, invert }, // Child
   P26: { type: RT.Family, fType: FL.spouseOf }, // Spouse
   P3373: { type: RT.Family, fType: FL.siblingOf }, // Sibling
   P1038: { type: RT.Family, fType: FL.other }, // Relative
