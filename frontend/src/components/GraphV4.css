@@ -16,3 +16,7 @@ svg .nodes g:hover text {
   /* text-decoration: underline; */
   font-weight: bold;
 }
+
+/* svg .nodes image {
+  opacity: 0.4;
+} */

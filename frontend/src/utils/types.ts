@@ -425,7 +425,7 @@ export type V4IndicatorDatum = {
   /**
    * Direction of the dot
    */
-  direction: LinkDir;
+  direction: LinkDir.Normal | LinkDir.Invert;
   /**
    * In case the indicator must make room for other previous indicators
    */
@@ -479,6 +479,14 @@ export type V4NodeDatum = {
    * Holder for the post-render computed text box size
    */
   bb?: DOMRect;
+};
+
+export type V4LinkPosDatum = {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  angle: number;
 };
 
 export type V4LinkDatum = V4GenericLinkDatum<V4NodeDatum>;

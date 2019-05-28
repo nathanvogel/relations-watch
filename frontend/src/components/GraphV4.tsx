@@ -16,6 +16,7 @@ import {
   LinkDir,
   V4IndicatorDatum,
   RelationTypeValues,
+  V4LinkPosDatum,
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
@@ -33,8 +34,8 @@ const nodeSize = 40;
 type Props = {
   rRelations: V4LinkDatum[];
   rEntities: V4NodeDatum[];
-  rRelationsByKey: { [key: string]: V4LinkDatum };
-  rEntitiesByKey: { [key: string]: V4NodeDatum };
+  rRelationsByKey: { [relationId: string]: V4LinkDatum };
+  rEntitiesByKey: { [entityKey: string]: V4NodeDatum };
   width: number;
   height: number;
 } & RouteComponentProps;
@@ -45,9 +46,9 @@ function size(d: V4NodeDatum): number {
 function sizeT(type: NodeRenderType): number {
   switch (type) {
     case NodeRenderType.Primary:
-      return 35;
+      return 32;
     case NodeRenderType.Secondary:
-      return 35;
+      return 32;
     case NodeRenderType.Tertiary:
       return 25;
   }
@@ -149,6 +150,37 @@ function getShortString(str: string) {
   return str.length < 24 ? str : str.substr(0, 20) + "...";
 }
 
+/**
+ * Mutate the given position
+ */
+function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
+  const e1 = rel.source as V4NodeDatum;
+  const e2 = rel.target as V4NodeDatum;
+  const dist1 = size(e1) / 2;
+  const dist2 = size(e2) / 2;
+  p.x1 = e1.x;
+  p.y1 = e1.y - 5;
+  p.x2 = e2.x;
+  p.y2 = e2.y - 5;
+  p.angle = Math.atan2(p.y2 - p.y1, p.x2 - p.x1);
+  p.x1 += Math.cos(p.angle) * dist1;
+  p.y1 += Math.sin(p.angle) * dist1;
+  p.x2 -= Math.cos(p.angle) * dist2;
+  p.y2 -= Math.sin(p.angle) * dist2;
+}
+
+function getIndicatorX(d: V4IndicatorDatum, p: V4LinkPosDatum) {
+  const invert = d.direction === LinkDir.Invert;
+  const xDiff = Math.cos(p.angle) * (10 + 5 * d.offsetIndex);
+  return invert ? p.x1 + xDiff : p.x2 - xDiff;
+}
+
+function getIndicatorY(d: V4IndicatorDatum, p: V4LinkPosDatum) {
+  const invert = d.direction === LinkDir.Invert;
+  const yDiff = Math.sin(p.angle) * (10 + 5 * d.offsetIndex);
+  return invert ? p.y1 + yDiff : p.y2 - yDiff;
+}
+
 const clusters: Clusters = {
   [RelZone.Default]: null,
   [RelZone.Main]: null,
@@ -219,11 +251,15 @@ class GraphV4 extends React.Component<Props> {
     // D3 RELATIONS DATA
     const { rEntitiesByKey, rRelationsByKey } = this.props;
     var rRelations: V4LinkDatum[] = [];
-    for (let key in rRelationsByKey) {
-      this.linksData[key] = this.linksData[key]
-        ? Object.assign({}, this.linksData[key], rRelationsByKey[key])
-        : Object.assign({}, rRelationsByKey[key]);
-      rRelations.push(this.linksData[key]);
+    var linkPositions: { [relationId: string]: V4LinkPosDatum } = {};
+    for (let relationId in rRelationsByKey) {
+      // Perform a shallow copy to modify position data, etc. afterwards.
+      this.linksData[relationId] = Object.assign(
+        this.linksData[relationId] || {},
+        rRelationsByKey[relationId]
+      );
+      linkPositions[relationId] = { x1: 0, y1: 0, x2: 0, y2: 0, angle: 0 };
+      rRelations.push(this.linksData[relationId]);
     }
 
     // D3 INDICATORS DATA
@@ -258,6 +294,8 @@ class GraphV4 extends React.Component<Props> {
         }
       }
     }
+    // Render the dot closer to the nodes on top.
+    rIndicators.reverse();
 
     // D3 NODES DATA
     // Create a deep copy of the props and merges it to our existing data
@@ -288,7 +326,7 @@ class GraphV4 extends React.Component<Props> {
     this.simulation = d3
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
       .velocityDecay(0.82) // Akin to atmosphere friction (velocity multiplier)
-      .alphaTarget(-0.01) // Stop mini-pixel-step-motion early
+      .alphaTarget(-0.05) // Stop mini-pixel-step-motion early
       // The most important force, attraction derived from our relations.
       .force(
         "link",
@@ -519,27 +557,31 @@ class GraphV4 extends React.Component<Props> {
 
     // Update the positions from the simulation
     this.simulation.on("tick", () => {
+      for (let rRelation of rRelations) {
+        computeLinkPosition(linkPositions[rRelation.relationId], rRelation);
+      }
       linksVisual
-        .attr("x1", d => (d.source as V4NodeDatum).x as number)
-        .attr("y1", d => (d.source as V4NodeDatum).y as number)
-        .attr("x2", d => (d.target as V4NodeDatum).x as number)
-        .attr("y2", d => (d.target as V4NodeDatum).y as number);
+        .attr("x1", d => linkPositions[d.relationId].x1)
+        .attr("y1", d => linkPositions[d.relationId].y1)
+        .attr("x2", d => linkPositions[d.relationId].x2)
+        .attr("y2", d => linkPositions[d.relationId].y2);
       linksInteraction
-        .attr("x1", d => (d.source as V4NodeDatum).x as number)
-        .attr("y1", d => (d.source as V4NodeDatum).y as number)
-        .attr("x2", d => (d.target as V4NodeDatum).x as number)
-        .attr("y2", d => (d.target as V4NodeDatum).y as number);
+        .attr("x1", d => linkPositions[d.relationId].x1)
+        .attr("y1", d => linkPositions[d.relationId].y1)
+        .attr("x2", d => linkPositions[d.relationId].x2)
+        .attr("y2", d => linkPositions[d.relationId].y2);
 
       allIndicators
-        .attr("cx", d =>
-          between(this.nodesData[d.fromKey].x, this.nodesData[d.toKey].x, 0.3)
-        )
-        .attr("cy", (d: any) =>
-          between(this.nodesData[d.fromKey].y, this.nodesData[d.toKey].y, 0.3)
-        );
-      // linksC
-      //   .attr("cx", d => betweenOffD(d, 20).x)
-      //   .attr("cy", d => betweenOffD(d, 15).y);
+        .attr("cx", d => getIndicatorX(d, linkPositions[d.relationId]))
+        //   d.direction === LinkDir.Invert
+        //     ? linkPositions[d.relationId].x1
+        //     : linkPositions[d.relationId].x2
+        // )
+        .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
+      //   d.direction === LinkDir.Invert
+      //     ? linkPositions[d.relationId].y1
+      //     : linkPositions[d.relationId].y2
+      // );
 
       // With circle:
       // nodes2.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
