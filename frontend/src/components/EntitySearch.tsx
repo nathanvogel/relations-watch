@@ -137,6 +137,10 @@ const EntitySearch: FunctionComponent<Props> = (
   const [selectedWdEntity, setSelectedWdEntity] = useState(undefined);
   const [ownInputValue, setOwnInputValue] = useState("");
   const [menuIsOpen, setMenuIsOpen] = useState(false);
+  // We use a hack to force react-select to reload the options when switching
+  // databases, by re-creating the component, with mode, but then we also
+  // want to keep the focus in some cases.
+  const [forceAutoFocus, setForceAutoFocus] = useState(false);
   const { t } = useTranslation();
 
   const onChange = (object: any) => {
@@ -174,10 +178,18 @@ const EntitySearch: FunctionComponent<Props> = (
       if (props.onInputChange) props.onInputChange(text);
       else setOwnInputValue(text);
     }
+    // A way to go back to the regular database search
+    if (mode === "searchWd" && action === "input-change" && text === "") {
+      setForceAutoFocus(true);
+      setMode("searchDb");
+    }
   };
 
   const onFocus = () => {
     setMenuIsOpen(true);
+    // forceAutoFocus should only work once. It is only to keep the focus
+    // when re-creating the react-select element.
+    setForceAutoFocus(false);
   };
 
   const isValidNewOption = (inputValue: string) => {
@@ -219,6 +231,8 @@ const EntitySearch: FunctionComponent<Props> = (
   }
 
   return (
+    // Setting a key to re-create the component seems to be the only way to
+    // force a reload of the options.
     <MySelect
       key={mode}
       className={props.className}
@@ -229,10 +243,11 @@ const EntitySearch: FunctionComponent<Props> = (
       onChange={onChange}
       onInputChange={onInputChange}
       inputValue={props.onInputChange ? props.inputValue : ownInputValue}
-      autoFocus={mode === "searchWd" ? true : props.autoFocus}
+      autoFocus={forceAutoFocus || props.autoFocus}
       onCreateOption={(value: string) => {
         switch (mode) {
           case "searchDb":
+            setForceAutoFocus(true);
             setMode("searchWd");
             break;
           case "searchWd":
