@@ -264,8 +264,13 @@ class EntityScreen extends Component<Props> {
   };
 
   onEditEntity = () => {
-    const url = `/${ROUTES.edit}/${ROUTES.entity}/${this.props.entityKey}`;
-    this.props.history.push(url);
+    const { entity } = this.props;
+    if (entity && entity.ds && entity.ds.wd) {
+      window.location.href = `https://www.wikidata.org/wiki/${entity.ds.wd}`;
+    } else {
+      const url = `/${ROUTES.edit}/${ROUTES.entity}/${this.props.entityKey}`;
+      this.props.history.push(url);
+    }
   };
 
   onAddRelation = () => {
