@@ -24,21 +24,7 @@ import theme, { RELATION_COLORS } from "../styles/theme";
 import "./GraphV4.css";
 import { createIndicatorDatum } from "../utils/utils";
 
-const GraphSVG = styled.svg`
-  display: block;
-  margin: 0 auto;
-`;
-
-const nodeSize = 40;
-
-type Props = {
-  rRelations: V4LinkDatum[];
-  rEntities: V4NodeDatum[];
-  rRelationsByKey: { [relationId: string]: V4LinkDatum };
-  rEntitiesByKey: { [entityKey: string]: V4NodeDatum };
-  width: number;
-  height: number;
-} & RouteComponentProps;
+// ===== NODE APPEARANCE
 
 function size(d: V4NodeDatum): number {
   return sizeT(d.type);
@@ -51,16 +37,6 @@ function sizeT(type: NodeRenderType): number {
       return 32;
     case NodeRenderType.Tertiary:
       return 25;
-  }
-}
-function collisionSize(d: V4NodeDatum): number {
-  switch (d.type) {
-    case NodeRenderType.Primary:
-      return 42;
-    case NodeRenderType.Secondary:
-      return 42;
-    case NodeRenderType.Tertiary:
-      return 42;
   }
 }
 
@@ -92,66 +68,52 @@ function fontSize(d: V4NodeDatum): number {
   }
 }
 
-function href(d: V4NodeDatum): string {
+function nodeImage(d: V4NodeDatum): string {
   return getEntitySAsset(d.entity.type);
 }
 
-function relationColor(d: V4LinkDatum) {
-  return RELATION_COLORS[d.sortedTypes[0]];
-}
-
-function colorFromRelationType(d: V4LinkDatum) {
-  return RELATION_COLORS[d.sortedTypes[0]];
-}
-
-function strokeColor(d: V4LinkDatum) {
-  return d.withType === NodeRenderType.Primary ? "#888888" : "#dddddd";
-}
-
-function linkOpacity(d: V4LinkDatum) {
-  return d.withType === NodeRenderType.Primary ? 1 : 0.5;
-}
-
-function goToParent(this: Element | null) {
-  if (!this) return null;
-  return this.parentNode as any;
-}
-
-function between(a1: number, a2: number, percent: number) {
-  return a2 + (a1 - a2) * percent;
-}
-function betweenOffD(d: V4LinkDatum, offset: number) {
-  const source = d.source as V4NodeDatum;
-  const target = d.target as V4NodeDatum;
-
-  return betweenOff(
-    source.x as number,
-    source.y as number,
-    target.x as number,
-    target.y as number,
-    offset
-  );
-}
-function betweenOff(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-  offset: number
-) {
-  const angle = Math.atan2(y2 - y1, x2 - x1);
-  return {
-    x: x2 - offset * Math.cos(angle),
-    y: y2 - offset * Math.sin(angle),
-  };
-}
+// ===== TEXT HELPERS
 
 function getShortString(str: string) {
   return str.length < 24 ? str : str.substr(0, 20) + "...";
 }
 
+// ===== NODE PHYISCS
+
+const nodeSize = 40;
+function collisionSize(d: V4NodeDatum): number {
+  switch (d.type) {
+    case NodeRenderType.Primary:
+      return 42;
+    case NodeRenderType.Secondary:
+      return 42;
+    case NodeRenderType.Tertiary:
+      return 42;
+  }
+}
+
+// ==== LINK APPEARANCE
+
+function linkColor(d: V4LinkDatum) {
+  return RELATION_COLORS[d.sortedTypes[0]];
+}
+
+function linkOpacity(d: V4LinkDatum) {
+  const o = (Math.min(d.proximity, 4) / 4) * 0.8 + 0.2;
+  return o;
+  // return d.withType === NodeRenderType.Primary ? 1 : 0.5;
+}
+
+function linkStrokeWidth(d: V4LinkDatum) {
+  return Math.max(d.proximity, 1);
+  // return 1;
+}
+
+// ===== POSITION CALC
+
 /**
- * Mutate the given position
+ * Mutate the given position to the starting and ending points of the
+ * relation.
  */
 function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   const e1 = rel.source as V4NodeDatum;
@@ -169,18 +131,31 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   p.y2 -= Math.sin(p.angle) * dist2;
 }
 
+/**
+ * Compute the indicator x position
+ */
 function getIndicatorX(d: V4IndicatorDatum, p: V4LinkPosDatum) {
   const invert = d.direction === LinkDir.Invert;
   const xDiff = Math.cos(p.angle) * (10 + 5 * d.offsetIndex);
   return invert ? p.x1 + xDiff : p.x2 - xDiff;
 }
 
+/**
+ * Compute the indicator y position
+ */
 function getIndicatorY(d: V4IndicatorDatum, p: V4LinkPosDatum) {
   const invert = d.direction === LinkDir.Invert;
   const yDiff = Math.sin(p.angle) * (10 + 5 * d.offsetIndex);
   return invert ? p.y1 + yDiff : p.y2 - yDiff;
 }
 
+// ===== CLUSTER DATA
+
+/**
+ * Store the NodeDatum which is the leader of the cluster (and thus contain
+ * the xy position to follow for the other)
+ * @type {[type]}
+ */
 const clusters: Clusters = {
   [RelZone.Default]: null,
   [RelZone.Main]: null,
@@ -212,14 +187,33 @@ const clusterOrigins = {
   [RelZone.Participates]: { x: 0.9, y: 0.2 },
 };
 
+// ===== D3 SELECTION HELPER
+
+function goToParent(this: Element | null) {
+  if (!this) return null;
+  return this.parentNode as any;
+}
+
+type Props = {
+  rRelations: V4LinkDatum[];
+  rEntities: V4NodeDatum[];
+  rRelationsByKey: { [relationId: string]: V4LinkDatum };
+  rEntitiesByKey: { [entityKey: string]: V4NodeDatum };
+  width: number;
+  height: number;
+} & RouteComponentProps;
+
+/**
+ * Draws an SVG graph of the given size for the given relations and nodes.
+ */
 class GraphV4 extends React.Component<Props> {
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
   private gNodes: React.RefObject<SVGGElement>;
   private gIndicators: React.RefObject<SVGGElement>;
   private simulation: d3.Simulation<V4NodeDatum, V4LinkDatum>;
-  private nodesData: { [key: string]: V4NodeDatum } = {};
-  private linksData: { [key: string]: V4LinkDatum } = {};
+  private nodesData: { [entityKey: string]: V4NodeDatum } = {};
+  private linksData: { [relationId: string]: V4LinkDatum } = {};
   // private dotsData: { [key: string]: V4IndicatorDatum } = {};
 
   constructor(props: Readonly<Props>) {
@@ -230,11 +224,6 @@ class GraphV4 extends React.Component<Props> {
     this.gIndicators = React.createRef();
 
     this.simulation = d3.forceSimulation();
-    // .force("link", d3.forceLink().id(d => (d as V4NodeDatum).entityKey))
-    // .force("charge", d3.forceManyBody())
-    // .force("collide", d3.forceCollide().radius(collisionSize as any))
-    // .force("center", d3.forceCenter(width / 2, height / 2))
-    // .force("boundary", forceBoundary(0, 0, width, height)) as any;
   }
 
   componentDidMount() {
@@ -346,8 +335,6 @@ class GraphV4 extends React.Component<Props> {
       // Keep the whole graph centered
       .force("center", d3.forceCenter(width / 2, height / 2))
       // Put the primary entity at the center of the graph
-      // TODO: Make it distribute the secondary nodes depending on the type of
-      // relationship.
       .force(
         "x",
         d3
@@ -408,23 +395,15 @@ class GraphV4 extends React.Component<Props> {
       // Key function to preserve the relation between DOM and rRelations
       (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
-    const lineStrokeWidth = 3;
-    var links2 = links
+    var allLinks = links
       .enter()
       .append("g")
       .attr("class", "relation")
       .append("line")
       .classed("visual", true)
-      .attr("stroke-width", lineStrokeWidth)
-      .attr("stroke", relationColor)
+      .attr("stroke-width", linkStrokeWidth)
+      .attr("stroke", linkColor)
       .select(goToParent)
-      // .append("circle")
-      // .attr("r", 4)
-      // .attr("fill", relationColor)
-      // // .attr("stroke-width", 0)
-      // // .attr("stroke", "#aaaaaa")
-      // .attr("opacity", d => (isDirectedType(d.sortedTypes[0]) ? 1 : 0))
-      // .select(goToParent)
       .append("line")
       .classed("interaction", true)
       .attr("stroke-width", 11)
@@ -433,23 +412,25 @@ class GraphV4 extends React.Component<Props> {
       .on("mouseover", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
-          .attr("stroke-width", Math.max(11, lineStrokeWidth));
+          .attr("stroke-width", Math.max(11, linkStrokeWidth(d)));
         // .attr("stroke", "#000000");
       })
       .on("mouseout", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
-          .attr("stroke", relationColor as any)
-          .attr("stroke-width", lineStrokeWidth);
+          .attr("stroke", linkColor(d))
+          .attr("stroke-width", linkStrokeWidth(d));
       })
       .select(goToParent)
       .merge(links as any);
-    var linksVisual = links2.select("line.visual").attr("opacity", linkOpacity);
-    var linksInteraction = links2
+    // Attributes that should be update at every prop change
+    var linksVisual = allLinks
+      .select("line.visual")
+      .attr("opacity", linkOpacity);
+    var linksInteraction = allLinks
       .select("line.interaction")
       .attr("stroke", "transparent");
-
-    // var linksC = links2.select("circle"); //.attr("opacity", linkOpacity);
+    // Remove old links
     links.exit().remove();
 
     // INDICATORS rendering
@@ -466,6 +447,7 @@ class GraphV4 extends React.Component<Props> {
       .classed("indicator", true)
       .attr("r", 5)
       .attr("fill", d => RELATION_COLORS[d.type])
+      .attr("opacity", d => linkOpacity(this.linksData[d.relationId]))
       .merge(indicators as any);
     indicators.exit().remove();
 
@@ -508,7 +490,7 @@ class GraphV4 extends React.Component<Props> {
       .select(goToParent)
       // Add the image child
       .append("image")
-      .attr("href", href)
+      .attr("href", nodeImage)
       .select(goToParent)
       // General Update Pattern: Tell all to update with animation.
       .merge(nodes as any);
@@ -557,9 +539,12 @@ class GraphV4 extends React.Component<Props> {
 
     // Update the positions from the simulation
     this.simulation.on("tick", () => {
+      // First compute the starting and ending positions of the links, as
+      // they'll be reused multiple times.
       for (let rRelation of rRelations) {
         computeLinkPosition(linkPositions[rRelation.relationId], rRelation);
       }
+
       linksVisual
         .attr("x1", d => linkPositions[d.relationId].x1)
         .attr("y1", d => linkPositions[d.relationId].y1)
@@ -573,18 +558,8 @@ class GraphV4 extends React.Component<Props> {
 
       allIndicators
         .attr("cx", d => getIndicatorX(d, linkPositions[d.relationId]))
-        //   d.direction === LinkDir.Invert
-        //     ? linkPositions[d.relationId].x1
-        //     : linkPositions[d.relationId].x2
-        // )
         .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
-      //   d.direction === LinkDir.Invert
-      //     ? linkPositions[d.relationId].y1
-      //     : linkPositions[d.relationId].y2
-      // );
 
-      // With circle:
-      // nodes2.attr("cx", d => d.x as number).attr("cy", d => d.y as number);
       nodes2.attr("transform", nodeTranslate);
     });
 
@@ -611,7 +586,7 @@ class GraphV4 extends React.Component<Props> {
 
   render() {
     return (
-      <GraphSVG
+      <svg
         width={this.props.width}
         height={this.props.height}
         xmlns="http://www.w3.org/2000/svg"
@@ -620,7 +595,7 @@ class GraphV4 extends React.Component<Props> {
         <g className="links" ref={this.gLinks} />
         <g className="indicators" ref={this.gIndicators} />
         <g className="nodes" ref={this.gNodes} />
-      </GraphSVG>
+      </svg>
     );
   }
 }

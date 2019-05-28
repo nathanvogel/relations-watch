@@ -175,7 +175,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q939616", // secret service
     "Q772547", // armed forces
     "Q1378781", // obédience maçonnique
-    "Q219577", // holding
+    "Q219577", // holding company
     "Q9209474", // auction house
     "Q46970", // airline
     "Q1875615", // air carrier
@@ -188,6 +188,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1252971", // food manufacturer
     "Q891723", // public company
     "Q29643579", // multi-level marketing company
+    "Q197952", // corporate group
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -230,6 +231,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q4370110", // political party in the russian empire
     "Q388602", // electoral alliance
     "Q996839", // fraternité
+    "Q17326725", // business group: set of legally independent companies that belong together
   ],
   [EntityType.Media]: [
     "Q1110794",

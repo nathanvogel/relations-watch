@@ -289,7 +289,7 @@ export const ProximityWeights = {
   [RelationType.IsControlled]: 2,
   [RelationType.ValueExchange]: 1,
   [RelationType.Love]: 3,
-  [RelationType.Opposition]: -2,
+  [RelationType.Opposition]: 2,
   [RelationType.IsInfluenced]: 1,
   [RelationType.Attendance]: 1,
   [RelationType.GroupMember]: 1.5,
@@ -297,9 +297,9 @@ export const ProximityWeights = {
 };
 
 export const FProximityWeights = {
-  [FamilialLink.childOf]: 1,
+  [FamilialLink.childOf]: 1.5,
   [FamilialLink.siblingOf]: 1,
-  [FamilialLink.spouseOf]: 3,
+  [FamilialLink.spouseOf]: 2.2,
   [FamilialLink.other]: 0.3,
 };
 

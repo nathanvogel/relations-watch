@@ -1,13 +1,7 @@
 import {
   RelationType,
-  RelationTypeOption,
-  RelationTypeValues,
-  FamilialLinkOption,
-  FamilialLinkValues,
   RelationTypeRequirements,
   AmountSelectOption,
-  EntityTypeOption,
-  EntityTypeValues,
   FamilialLink,
 } from "./types";
 import { EntityType as E } from "./types";
