@@ -289,7 +289,7 @@ export const ProximityWeights = {
   [RelationType.IsControlled]: 2,
   [RelationType.ValueExchange]: 1,
   [RelationType.Love]: 3,
-  [RelationType.Opposition]: 2,
+  [RelationType.Opposition]: 1,
   [RelationType.IsInfluenced]: 1,
   [RelationType.Attendance]: 1,
   [RelationType.GroupMember]: 1.3,

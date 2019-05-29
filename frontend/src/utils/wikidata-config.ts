@@ -196,6 +196,18 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1125239", // public body
     "Q2659904", // governement organization
     "Q895526", // organ (entity that acts in a legal sense)
+    "Q1785733", // environmental organization
+    "Q4120211", // regional organization
+    "Q1335818", // supranational organisation
+    "Q270791", // state-owned entreprise
+    "Q4335775", // bande organisée
+    "Q1788992", // organisation criminelle
+    "Q275186", // bande criminelle
+    "Q17377208", // Railway Undertaking
+    "Q249556", // entreprise ferroviaire
+    "Q740752", // entreprise de transport
+    "Q2995256", // constructeur ferroviaire
+    "Q166280", // société anonyme
   ],
   [EntityType.Group]: [
     "Q7278",
@@ -239,6 +251,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q388602", // electoral alliance
     "Q996839", // fraternité
     "Q17326725", // business group: set of legally independent companies that belong together
+    "Q3623811", // economic union
+    "Q22679796", // correspondents' association, press association
   ],
   [EntityType.Media]: [
     "Q1110794",
