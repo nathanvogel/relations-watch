@@ -36,11 +36,11 @@ function size(d: V4NodeDatum): number {
 function sizeT(type: NodeRenderType): number {
   switch (type) {
     case NodeRenderType.Primary:
-      return 32;
+      return 14;
     case NodeRenderType.Secondary:
-      return 32;
+      return 14;
     case NodeRenderType.Tertiary:
-      return 25;
+      return 14;
   }
 }
 
@@ -387,12 +387,7 @@ class GraphV4 extends React.Component<Props> {
       // Keep all nodes within our canvas
       .force(
         "boundary",
-        forceBoundary(
-          nodeSize,
-          nodeSize,
-          width - nodeSize,
-          height - nodeSize
-        ).strength(0.4)
+        forceBoundary(120, 17, width - 120, height - 15).strength(0.4)
       ) as any;
 
     // D3 RENDERING starts here
@@ -490,29 +485,29 @@ class GraphV4 extends React.Component<Props> {
       // .append("rect")
       // .attr("opacity", 0.1)
       // .select(goToParent)
-      // Add the text child
-      .append("text")
-      .text(d => getShortString(d.entity.name))
-      .attr("text-anchor", "middle")
-      .attr("dy", "14px")
-      .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor))
-      .select(goToParent)
       // Add the image child
       .append("image")
       .attr("href", nodeImage)
       .select(goToParent)
-      // General Update Pattern: Tell all to update with animation.
+      // Add the text child
+      .append("text")
+      .text(d => getShortString(d.entity.name))
+      .attr("dy", 12)
+      .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor))
+      .select(goToParent)
       .merge(nodes as any);
     // Update dynamic attributes for all nodes:
-    nodes2
+    var labels = nodes2
       .select("text")
-      .attr("font-size", fontSize)
-      .attr("font-weight", fontWeight)
-      .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
+      .attr("font-size", 14)
+      .attr("font-weight", fontWeight);
+    // .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")
-      .attr("width", size)
-      .attr("height", size);
+      // .attr("y", 0)
+      // .attr("x", 0)
+      .attr("width", 14)
+      .attr("height", 14);
 
     /*
     // Get the text size and resize the background
@@ -543,7 +538,8 @@ class GraphV4 extends React.Component<Props> {
       .exit()
       .transition()
       .duration(300)
-      .attr("transform", d => nodeTranslate(d as any) + " scale(0,0)")
+      .attr("opacity", 0)
+      // .attr("transform", d => nodeTranslate(d as any) + " scale(0,0)")
       .remove();
 
     // Update the positions from the simulation
@@ -570,6 +566,9 @@ class GraphV4 extends React.Component<Props> {
         .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
 
       nodes2.attr("transform", nodeTranslate);
+      labels
+        .attr("text-anchor", d => (d.x < width / 2 ? "end" : "start"))
+        .attr("dx", d => (d.x < width / 2 ? -2 : 16));
     });
 
     // Update the data in the simulation.
