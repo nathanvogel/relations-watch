@@ -189,6 +189,13 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q891723", // public company
     "Q29643579", // multi-level marketing company
     "Q197952", // corporate group
+    "Q1262438", // international court
+    "Q41487", // court
+    "Q1412224", // tribunal
+    "Q15708736", // public authority
+    "Q1125239", // public body
+    "Q2659904", // governement organization
+    "Q895526", // organ (entity that acts in a legal sense)
   ],
   [EntityType.Group]: [
     "Q7278",
