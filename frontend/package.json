@@ -20,6 +20,7 @@
     "cuid": "^2.1.6",
     "cwait": "^1.1.2",
     "d3": "^5.9.2",
+    "d3-bboxCollide": "^1.0.4",
     "d3-force": "^2.0.1",
     "d3-force-cluster": "^0.1.2",
     "env-cmd": "^8.0.2",

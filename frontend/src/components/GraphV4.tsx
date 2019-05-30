@@ -5,6 +5,8 @@ import * as d3 from "d3";
 import "d3-force";
 //@ts-ignore
 import { forceCluster } from "d3-force-cluster";
+//@ts-ignore
+import { bboxCollide } from "d3-bboxCollide";
 import forceBoundary from "../utils/d3/d3-force-boundary";
 import {
   V4LinkDatum,
@@ -31,17 +33,19 @@ const SVG = styled.svg`
 // ===== NODE APPEARANCE
 
 function size(d: V4NodeDatum): number {
-  return sizeT(d.type);
+  return 14;
+  // return sizeT(d.type);
 }
 function sizeT(type: NodeRenderType): number {
-  switch (type) {
-    case NodeRenderType.Primary:
-      return 14;
-    case NodeRenderType.Secondary:
-      return 14;
-    case NodeRenderType.Tertiary:
-      return 14;
-  }
+  // switch (type) {
+  //   case NodeRenderType.Primary:
+  //     return 14;
+  //   case NodeRenderType.Secondary:
+  //     return 14;
+  //   case NodeRenderType.Tertiary:
+  //     return 14;
+  // }
+  return 14;
 }
 
 function nodeTranslate(d: V4NodeDatum): string {
@@ -122,6 +126,14 @@ function linkStrokeWidth(d: V4LinkDatum) {
 function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   const e1 = rel.source as V4NodeDatum;
   const e2 = rel.target as V4NodeDatum;
+  // if (isNaN(e1.x) || isNaN(e2.x)) {
+  //   console.error("e1 NaN", e1);
+  //   e1.x = 200;
+  //   e1.y = 200;
+  //   e2.x = 400;
+  //   e2.y = 400;
+  //   return;
+  // }
   const dist1 = size(e1) / 2 - 2;
   const dist2 = size(e2) / 2 - 2;
   p.x1 = e1.x;
@@ -306,6 +318,7 @@ class GraphV4 extends React.Component<Props> {
         : Object.assign({}, rEntitiesByKey[key]);
       const node = this.nodesData[key];
       const zone = node.sortedZones[0];
+      // TODO : calculate relative to origin
       if (typeof node.x !== "number")
         node.x = clusterOrigins[zone].x * height + Math.random() * 100 - 50;
       if (typeof node.y !== "number")
@@ -316,6 +329,8 @@ class GraphV4 extends React.Component<Props> {
 
     // D3 FORCES SETUP
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
+    const nodeCount = rEntities.length;
+    console.log(nodeCount);
     const distScale = d3
       .scaleLinear()
       .domain([1, Math.max(maxProximity, 3)])
@@ -323,8 +338,8 @@ class GraphV4 extends React.Component<Props> {
     // We need to recreate the simulation for some reason... ?
     this.simulation = d3
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
-      .velocityDecay(0.82) // Akin to atmosphere friction (velocity multiplier)
-      .alphaTarget(-0.05) // Stop mini-pixel-step-motion early
+      .velocityDecay(0.92) // Akin to atmosphere friction (velocity multiplier)
+      .alphaTarget(-0.1) // Stop mini-pixel-step-motion early
       // The most important force, attraction derived from our relations.
       .force(
         "link",
@@ -333,7 +348,7 @@ class GraphV4 extends React.Component<Props> {
           .id(d => {
             return d.entityKey;
           })
-          .strength(0.1) // Warning: crashes if higher than 2, better stay within [0,1]
+          .strength(0.5) // Warning: crashes if higher than 2, better stay within [0,1]
           // Make some links closer than others.
           .distance(d => distScale(d.proximity))
           // Emphasize this force and arrive faster at a stable result
@@ -344,18 +359,18 @@ class GraphV4 extends React.Component<Props> {
       // Keep the whole graph centered
       .force("center", d3.forceCenter(width / 2, height / 2))
       // Put the primary entity at the center of the graph
-      .force(
-        "x",
-        d3
-          .forceX<V4NodeDatum>(width / 2)
-          .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
-      )
-      .force(
-        "y",
-        d3
-          .forceY<V4NodeDatum>(height / 2)
-          .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
-      )
+      // .force(
+      //   "x",
+      //   d3
+      //     .forceX<V4NodeDatum>(width / 2)
+      //     .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
+      // )
+      // .force(
+      //   "y",
+      //   d3
+      //     .forceY<V4NodeDatum>(height / 2)
+      //     .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
+      // )
       // Pushes Tertiary entities towards an outer circle
       // .force(
       //   "radial",
@@ -368,12 +383,18 @@ class GraphV4 extends React.Component<Props> {
       //     .strength(d => (d.type === NodeRenderType.Tertiary ? 1 : 0))
       // )
       // Alternative or helper to forceManyBody()
+      // .force(
+      //   "collide",
+      //   d3
+      //     .forceCollide<V4NodeDatum>()
+      //     .radius(collisionSize)
+      //     .strength(0.2)
+      // )
       .force(
-        "collide",
-        d3
-          .forceCollide<V4NodeDatum>()
-          .radius(collisionSize)
-          .strength(0.2)
+        "collideR",
+        bboxCollide([[0, -8], [120, 8]])
+          .strength(nodeCount > 80 ? 0.3 : 1)
+          .iterations(2)
       )
       .force(
         "cluster",
@@ -536,9 +557,9 @@ class GraphV4 extends React.Component<Props> {
     // Transition OUT
     nodes
       .exit()
-      .transition()
-      .duration(300)
-      .attr("opacity", 0)
+      // .transition()
+      // .duration(300)
+      // .attr("opacity", 0)
       // .attr("transform", d => nodeTranslate(d as any) + " scale(0,0)")
       .remove();
 
