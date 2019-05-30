@@ -184,6 +184,7 @@ class EntityGraphV4 extends Component<Props> {
       zones: Object.assign({}, DefaultZones),
       zoneTotal: 0,
       sortedZones: [RelZone.Main],
+      connectedEntities: new Set(),
     };
     addEntity(primaryEntity);
 
@@ -200,6 +201,7 @@ class EntityGraphV4 extends Component<Props> {
         zones: Object.assign({}, DefaultZones),
         zoneTotal: 0,
         sortedZones: [],
+        connectedEntities: new Set(),
       };
       addEntity(rNode);
     }
@@ -221,6 +223,8 @@ class EntityGraphV4 extends Component<Props> {
       const e1IsRoot = e1.type < e2.type;
       const sourceKey = (e1IsRoot ? e1 : e2).entityKey;
       const targetKey = (e1IsRoot ? e2 : e1).entityKey;
+      e1.connectedEntities.add(e2.entityKey);
+      e2.connectedEntities.add(e1.entityKey);
 
       // Filter out secondary relationships of secondary entities
       if (

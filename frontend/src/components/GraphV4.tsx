@@ -331,11 +331,15 @@ class GraphV4 extends React.Component<Props> {
     // D3 FORCES SETUP
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
     const nodeCount = rEntities.length;
-    console.log("SETUP");
+    console.log("SETUP", nodeCount);
     const distScale = d3
       .scaleLinear()
       .domain([1, Math.max(maxProximity, 4)])
       .range([300, 80]);
+    const connectednessFactor = d3
+      .scaleLinear()
+      .domain([0, 7])
+      .range([0.3, 1]);
     // We need to recreate the simulation for some reason... ?
     this.simulation = d3
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
@@ -351,7 +355,16 @@ class GraphV4 extends React.Component<Props> {
           })
           .strength(network ? 0.4 : 0.5) // Warning: crashes if higher than 2, better stay within [0,1]
           // Make some links closer than others.
-          .distance(d => distScale(d.proximity))
+          .distance(
+            d =>
+              distScale(d.proximity) *
+              connectednessFactor(
+                (d.source as V4NodeDatum).connectedEntities.size
+              ) *
+              connectednessFactor(
+                (d.target as V4NodeDatum).connectedEntities.size
+              )
+          )
           // Emphasize this force and arrive faster at a stable result
           .iterations(network ? 1 : 4)
       )

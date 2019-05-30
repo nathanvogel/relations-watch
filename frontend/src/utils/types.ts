@@ -451,6 +451,10 @@ export type V4NodeDatum = {
    */
   radius: number;
   /**
+   * The number of nodes this node is connected to in the current graph
+   */
+  connectedEntities: Set<string>;
+  /**
    * Whether the user has visited the entity or one of its relation pages.
    */
   visited: boolean;
