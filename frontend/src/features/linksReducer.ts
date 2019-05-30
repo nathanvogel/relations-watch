@@ -4,7 +4,7 @@ import {
   Edge,
   Connections,
   LinkedEntities,
-  ConnectionsList
+  ConnectionsList,
 } from "../utils/types";
 import update from "immutability-helper";
 import { AnyAction } from "redux";
@@ -23,10 +23,10 @@ const defaultState: SubState = {
   data: {
     byentity: {},
     all: {},
-    byrelation: {}
+    byrelation: {},
   },
   status: {},
-  errors: {}
+  errors: {},
 };
 
 export default (state = defaultState, action: AnyAction) => {
@@ -38,7 +38,7 @@ export default (state = defaultState, action: AnyAction) => {
       // Just invalidate to cause a refetch for now. // TODO: Avoid
       const edge = getSimplifiedEdge(action.payload as Edge);
       return update(state, {
-        status: { $unset: [edge._from, edge._to] }
+        status: { $unset: [edge._from, edge._to] },
       });
     //   const edge = getSimplifiedEdge(action.payload as Edge);
     //   const edgePreview = getEdgePreview(edge);
@@ -59,12 +59,12 @@ export default (state = defaultState, action: AnyAction) => {
     case ACTIONS.EdgeDeleteSuccess:
       // Just invalidate to cause a refetch for now. // TODO: Avoid
       return update(state, {
-        status: { $unset: [action.meta._from, action.meta._to] }
+        status: { $unset: [action.meta._from, action.meta._to] },
       });
     case ACTIONS.LinksLoadRequested:
       const key1 = action.meta.entityKey as string;
       return update(state, {
-        status: { [key1]: { $set: action.status } }
+        status: { [key1]: { $set: action.status } },
       });
     case ACTIONS.LinksLoadSuccess:
       if (!action.payload || !action.payload.edges) {
@@ -73,7 +73,7 @@ export default (state = defaultState, action: AnyAction) => {
       }
 
       const edges = action.payload.edges as Array<EdgePreview>;
-      const baseEntityKey = action.meta.baseEntityKey as string;
+      const entityKey = action.meta.entityKey;
 
       const edgeList: { [key: string]: EdgePreview } = {};
       const cList: ConnectionsList = {};
@@ -113,17 +113,17 @@ export default (state = defaultState, action: AnyAction) => {
           all: { $merge: edgeList },
           // A shallow merge is okay, because this action should return ALL
           // the edges between the 2 entities
-          byrelation: { $merge: byRelation }
+          byrelation: { $merge: byRelation },
         },
-        status: { [baseEntityKey]: { $set: action.status } },
-        errors: { [baseEntityKey]: { $set: action.meta.error } }
+        status: { [entityKey]: { $set: action.status } },
+        errors: { [entityKey]: { $set: action.meta.error } },
       });
     case ACTIONS.LinksLoadError:
       const key3 = action.meta.relationId as string;
       return update(state, {
         data: { [key3]: { $set: null } },
         status: { [key3]: { $set: action.status } },
-        errors: { [key3]: { $set: action.meta.error } }
+        errors: { [key3]: { $set: action.meta.error } },
       });
     default:
       return state;
@@ -145,7 +145,7 @@ function addEdgeToBothEntities(
 const genEmptyConnections = (edge?: EdgePreview): Connections => ({
   edges: edge ? [edge] : [],
   entities: [],
-  toEntity: {}
+  toEntity: {},
 });
 
 function addLinkToEntityList(list: ConnectionsList, k1: string, k2: string) {

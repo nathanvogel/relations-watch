@@ -37,7 +37,7 @@ function actionLLRequest(entityKey: string): Action {
   return {
     type: ACTIONS.LinksLoadRequested,
     status: Status.Requested,
-    meta: { entityKey }
+    meta: { entityKey },
   };
 }
 
@@ -45,7 +45,7 @@ function actionLLError(entityKey: string, error: ErrorPayload): Action {
   return {
     type: ACTIONS.LinksLoadError,
     status: Status.Error,
-    meta: { entityKey, error }
+    meta: { entityKey, error },
   };
 }
 
@@ -54,6 +54,6 @@ function actionLLReceived(entityKey: string, payload: object): Action {
     type: ACTIONS.LinksLoadSuccess,
     payload,
     status: Status.Ok,
-    meta: { entityKey }
+    meta: { entityKey },
   };
 }
