@@ -257,7 +257,11 @@ class EntityGraphV4 extends Component<Props> {
         rEntitiesByKey[rRelation.targetKey].zones[RelZone.IsRelated] += 1;
         rEntitiesByKey[rRelation.targetKey].zoneTotal += 1;
         // Compute the proximity score for the relation
-        const proximityWeight = link.fType ? FProximityWeights[link.fType] : 1;
+        // and makes sure we have a defined weight for this type of relationship
+        const proximityWeight =
+          link.fType && FProximityWeights.hasOwnProperty(link.fType)
+            ? FProximityWeights[link.fType]
+            : 1;
         rRelation.proximity += proximityWeight;
         rRelation.tWeights[link.type] += proximityWeight;
       } else {
@@ -269,7 +273,11 @@ class EntityGraphV4 extends Component<Props> {
         rEntitiesByKey[rRelation.targetKey].zones[zone] += weight;
         rEntitiesByKey[rRelation.targetKey].zoneTotal += weight;
         // Compute the proximity score for the relation
-        const proximityWeight = ProximityWeights[link.type];
+        // and makes sure we have a defined weight for this type of relationship
+        const proximityWeight =
+          link.type && ProximityWeights.hasOwnProperty(link.type)
+            ? ProximityWeights[link.type]
+            : 0.3;
         rRelation.proximity += proximityWeight;
         rRelation.tWeights[link.type] += proximityWeight;
         // Compute the new direction(s)
