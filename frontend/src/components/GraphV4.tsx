@@ -222,6 +222,7 @@ type Props = {
   rEntitiesByKey: { [entityKey: string]: V4NodeDatum };
   width: number;
   height: number;
+  network: boolean;
 } & RouteComponentProps;
 
 /**
@@ -256,7 +257,7 @@ class GraphV4 extends React.Component<Props> {
   }
 
   updateGraph() {
-    const { width, height } = this.props;
+    const { width, height, network } = this.props;
 
     // D3 RELATIONS DATA
     const { rEntitiesByKey, rRelationsByKey } = this.props;
@@ -330,16 +331,16 @@ class GraphV4 extends React.Component<Props> {
     // D3 FORCES SETUP
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
     const nodeCount = rEntities.length;
-    console.log(nodeCount);
+    console.log("SETUP");
     const distScale = d3
       .scaleLinear()
-      .domain([1, Math.max(maxProximity, 3)])
+      .domain([1, Math.max(maxProximity, 4)])
       .range([300, 80]);
     // We need to recreate the simulation for some reason... ?
     this.simulation = d3
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
-      .velocityDecay(0.92) // Akin to atmosphere friction (velocity multiplier)
-      .alphaTarget(-0.1) // Stop mini-pixel-step-motion early
+      .velocityDecay(network ? 0.5 : 0.8) // Akin to atmosphere friction (velocity multiplier)
+      .alphaTarget(-0.05) // Stop mini-pixel-step-motion early
       // The most important force, attraction derived from our relations.
       .force(
         "link",
@@ -348,14 +349,20 @@ class GraphV4 extends React.Component<Props> {
           .id(d => {
             return d.entityKey;
           })
-          .strength(0.5) // Warning: crashes if higher than 2, better stay within [0,1]
+          .strength(network ? 0.4 : 0.5) // Warning: crashes if higher than 2, better stay within [0,1]
           // Make some links closer than others.
           .distance(d => distScale(d.proximity))
           // Emphasize this force and arrive faster at a stable result
-          .iterations(4)
+          .iterations(network ? 1 : 4)
       )
       // Makes nodes repulse each other
-      .force("charge", d3.forceManyBody().strength(-800))
+      .force(
+        "charge",
+        d3
+          .forceManyBody()
+          .strength(network ? -8500 : -1000)
+          .distanceMax(450)
+      )
       // Keep the whole graph centered
       .force("center", d3.forceCenter(width / 2, height / 2))
       // Put the primary entity at the center of the graph
@@ -392,11 +399,17 @@ class GraphV4 extends React.Component<Props> {
       // )
       .force(
         "collideR",
-        bboxCollide([[0, -8], [120, 8]])
+        bboxCollide([[-10, -12], [140, 12]])
           .strength(nodeCount > 80 ? 0.3 : 1)
-          .iterations(2)
+          .iterations(1)
       )
+      // Keep all nodes within our canvas
       .force(
+        "boundary",
+        forceBoundary(180, 40, width - 180, height - 0).strength(1.4)
+      );
+    if (!network) {
+      this.simulation.force(
         "cluster",
         forceCluster() // see 'Accessing the module' above for the correct syntax
           .centers((d: V4NodeDatum) => {
@@ -404,12 +417,8 @@ class GraphV4 extends React.Component<Props> {
           })
           .strength(0.5)
           .centerInertia(0.1)
-      )
-      // Keep all nodes within our canvas
-      .force(
-        "boundary",
-        forceBoundary(120, 17, width - 120, height - 15).strength(0.4)
-      ) as any;
+      );
+    }
 
     // D3 RENDERING starts here
 
@@ -589,7 +598,7 @@ class GraphV4 extends React.Component<Props> {
       nodes2.attr("transform", nodeTranslate);
       labels
         .attr("text-anchor", d => (d.x < width / 2 ? "end" : "start"))
-        .attr("dx", d => (d.x < width / 2 ? -2 : 16));
+        .attr("dx", d => (d.x < width / 2 ? -1 : 16));
     });
 
     // Update the data in the simulation.

@@ -12,6 +12,7 @@ import Importer from "../components/Importer";
 import { Entity } from "../utils/types";
 import styled from "styled-components";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
+import HistoryScreen from "./HistoryScreen";
 
 const PageContent = styled.div`
   ${PageWidthSizer}
@@ -66,6 +67,7 @@ class App extends Component {
               );
             }}
           />
+          <Route path={`/history`} component={HistoryScreen} />
           <Route component={HomeScreen} />
         </Switch>
       </React.Fragment>

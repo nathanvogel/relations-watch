@@ -49,7 +49,7 @@ export const RELATION_COLORS = {
   [RelationType.IsOwned]: "#e7b300",
   [RelationType.JobDependsOn]: "#ee8012",
   [RelationType.IsControlled]: "#a63e14",
-  [RelationType.ValueExchange]: "#ffeb00",
+  [RelationType.ValueExchange]: "#F0E262",
   [RelationType.Family]: "#007500",
   [RelationType.Love]: "#de3d83",
   [RelationType.Opposition]: "#db2f27",

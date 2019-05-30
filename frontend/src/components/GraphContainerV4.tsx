@@ -25,6 +25,7 @@ import {
   DefaultTypeWeights,
   RelationTypeValues,
   LinkDir,
+  EntityPreview,
 } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import {
@@ -45,109 +46,39 @@ const Content = styled.div`
 `;
 
 type OwnProps = {
-  entityKey: string;
+  entityKeys: string[];
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const baseEntityKey = props.entityKey;
-  // Get the entity from the Redux Store
-  const entity = state.entities.data[baseEntityKey];
-  const status = state.entities.status[baseEntityKey];
-  const error = state.entities.errors[baseEntityKey];
-  const toEntity = state.links.data.byentity[baseEntityKey]
-    ? state.links.data.byentity[baseEntityKey].toEntity
-    : {};
+  const { entityKeys } = props;
 
-  const connectedEdges: EdgePreview[] = [];
-  if (state.links.data.byentity[baseEntityKey])
-    connectedEdges.push(...state.links.data.byentity[baseEntityKey].edges);
-  const linksStatus = state.links.status[baseEntityKey];
-  const linksError = state.links.errors[baseEntityKey];
-
-  const entityPreviews = state.entities.datapreview;
-  const relationPreviews = state.links.data.byrelation;
-
-  const entitySelection = state.entitySelection;
-  /*
-  const selectedEntities = entitySelection
-    .map(entityKey => state.entities.data[entityKey])
-    .filter(entity => Boolean(entity));
-  const extraEntitySelection = entitySelection.filter(
-    selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
-  );
-  // const extraEntities = entitySelection
-  //   .filter(
-  //     selectedKey => selectedKey !== baseEntityKey && !toEntity[selectedKey]
-  //   )
-  //   .map(entityKey => state.entities.data[entityKey]);
-
-  // Add all additional useful edges
-  for (let entity of selectedEntities) {
-    // Check that the data is loaded
-    if (!entity || !entity._key || !state.links.data.byentity[entity._key])
-      continue;
-    const selectedEntityKey = entity._key;
-    // Add all edges between selected entities
-    // + edges between a selected entity and a non-selected 1st degree entity
-    connectedEdges.push(
-      ...state.links.data.byentity[entity._key].edges.filter(
-        edge =>
-          (entitySelection.indexOf(edge._from) >= 0 &&
-            entitySelection.indexOf(edge._to) >= 0) ||
-          extraEntitySelection.indexOf(selectedEntityKey) >= 0
-      )
-    );
+  const entities: { [entityKey: string]: EntityPreview } = {};
+  for (let key of entityKeys) {
+    const tmp = state.entities.datapreview[key];
+    if (tmp) entities[key] = tmp;
+    // else console.warn("No datapreview for", key);
   }
-  */
+
+  const edges: EdgePreview[] = Object.keys(state.links.data.all)
+    .map(key => state.links.data.all[key])
+    .filter(edge => entities[edge._from] && entities[edge._to]);
 
   // Return everything.
   return {
-    baseEntityKey,
-    entity,
-    status,
-    error,
-    entitySelection,
-    // selectedEntities,
-    toEntity,
-    connectedEdges,
-    linksStatus,
-    linksError,
-    entityPreviews,
-    relationPreviews,
+    entities,
+    edges,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators(
-    {
-      loadEntity,
-      loadEntityGraph,
-    },
-    dispatch
-  );
+  bindActionCreators({}, dispatch);
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
-class EntityGraphV4 extends Component<Props> {
-  componentDidMount() {
-    // if (!this.props.status || this.props.status === Status.Error)
-    //   this.props.loadEntity(this.props.baseEntityKey);
-    // if (!this.props.linksStatus || this.props.linksStatus === Status.Error)
-    //   this.props.loadEntityGraph(this.props.baseEntityKey);
-  }
-
+class GraphContainerV4 extends Component<Props> {
   render() {
-    const { entity, status, error, baseEntityKey } = this.props;
-    const { toEntity } = this.props;
-
-    // Render loading status and error.
-    if (status !== Status.Ok)
-      return (
-        <Content>
-          <Meta status={status} error={error} />
-        </Content>
-      );
+    const { entities, edges } = this.props;
 
     // Render data
     // We need arrays to preserve the order of the rendered
@@ -160,8 +91,8 @@ class EntityGraphV4 extends Component<Props> {
 
     const addEntity = (e: V4NodeDatum) => {
       // Hack to avoid re-initing position
-      delete e.x;
-      delete e.y;
+      // delete e.x;
+      // delete e.y;
       rEntities.push(e);
       rEntitiesByKey[e.entityKey] = e;
     };
@@ -173,30 +104,23 @@ class EntityGraphV4 extends Component<Props> {
     // Compute initial constants
 
     // The primary entity
-    const primaryEntity: V4NodeDatum = {
-      x: Math.random() * 500,
-      y: Math.random() * 500,
-      radius: 40,
-      entity: getEntityPreview(entity),
-      entityKey: baseEntityKey,
-      visited: true,
-      type: RenderType.Primary,
-      zones: Object.assign({}, DefaultZones),
-      zoneTotal: 0,
-      sortedZones: [RelZone.Main],
-    };
-    addEntity(primaryEntity);
+    // const primaryEntity: V4NodeDatum = {
+    //   entity: getEntityPreview(entity),
+    //   type: RenderType.Primary,
+    //   sortedZones: [RelZone.Main],
+    // };
+    // addEntity(primaryEntity);
 
     // Entities directly connected to the primary entity
-    for (let destEntityKey in toEntity) {
+    for (let key in entities) {
       const rNode: V4NodeDatum = {
         x: Math.random() * 500,
         y: Math.random() * 500,
         radius: 40,
-        entityKey: destEntityKey,
-        visited: this.props.entitySelection.indexOf(destEntityKey) >= 0,
+        entityKey: key,
+        visited: false, // this.props.entitySelection.indexOf(key) >= 0,
         type: RenderType.Secondary,
-        entity: this.props.entityPreviews[destEntityKey],
+        entity: entities[key],
         zones: Object.assign({}, DefaultZones),
         zoneTotal: 0,
         sortedZones: [],
@@ -204,7 +128,7 @@ class EntityGraphV4 extends Component<Props> {
       addEntity(rNode);
     }
 
-    for (const link of this.props.connectedEdges) {
+    for (const link of edges) {
       const relationId = getRelationId(link._from, link._to) as string;
       if (
         !rEntitiesByKey.hasOwnProperty(link._from) ||
@@ -223,13 +147,13 @@ class EntityGraphV4 extends Component<Props> {
       const targetKey = (e1IsRoot ? e2 : e1).entityKey;
 
       // Filter out secondary relationships of secondary entities
-      if (
-        (link.type === RelationType.Other ||
-          link.type === RelationType.ValueExchange ||
-          link.type === RelationType.Attendance) &&
-        relType !== RenderType.Primary
-      )
-        continue;
+      // if (
+      //   (link.type === RelationType.Other ||
+      //     link.type === RelationType.ValueExchange ||
+      //     link.type === RelationType.Attendance) &&
+      //   relType !== RenderType.Primary
+      // )
+      //   continue;
 
       const rRelation: V4LinkDatum = {
         sourceKey,
@@ -247,7 +171,8 @@ class EntityGraphV4 extends Component<Props> {
       addRel(rRelation);
     }
 
-    for (const link of this.props.connectedEdges) {
+    // Compute zones and weights for edges
+    for (const link of edges) {
       const relationId = getRelationId(link._from, link._to) as string;
       const rRelation = rRelationsByKey[relationId];
       if (!rRelation) continue;
@@ -297,6 +222,7 @@ class EntityGraphV4 extends Component<Props> {
       for (let zoneKey of RelZoneValues) {
         rEntity.zones[zoneKey] /= rEntity.zoneTotal;
       }
+      // Commpute an array of all the zones, but sorted by score.
       rEntity.sortedZones = RelZoneValues.map(relZone => relZone).sort(
         (a, b) => rEntity.zones[b] - rEntity.zones[a]
       );
@@ -331,7 +257,7 @@ class EntityGraphV4 extends Component<Props> {
               rEntities={rEntities}
               rRelationsByKey={rRelationsByKey}
               rEntitiesByKey={rEntitiesByKey}
-              network={false}
+              network={true}
             />
           </Content>
         )}
@@ -343,4 +269,4 @@ class EntityGraphV4 extends Component<Props> {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EntityGraphV4);
+)(GraphContainerV4);
