@@ -48,8 +48,7 @@ class EntityDetails extends Component<Props> {
     const { entity, status, error } = this.props;
 
     // Render loading status and error.
-    const meta = <Meta status={status} error={error} />;
-    if (status !== Status.Ok) return meta;
+    if (status !== Status.Ok) return <Meta status={status} error={error} />;
 
     return (
       <Link to={`/e/${this.props.entityKey}`}>

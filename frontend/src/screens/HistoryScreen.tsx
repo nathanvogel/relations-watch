@@ -12,6 +12,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import GraphContainerV4 from "../components/GraphContainerV4";
 import { ErrorPayload, Status, Entity } from "../utils/types";
 import { arrayWithoutDuplicates } from "../utils/utils";
+import Meta from "../components/meta/Meta";
 
 const Content = styled.div`
   position: relative;
@@ -462,7 +463,7 @@ const HistoryScreen: React.FunctionComponent<Props> = props => {
       allEntities.status[key] === Status.Requested ||
       allLinks.status[key] === Status.Requested
     )
-      return <h2> LOADING </h2>;
+      return <Meta status={Status.Requested} />;
   }
   return (
     <Content>

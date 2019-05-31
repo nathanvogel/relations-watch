@@ -263,3 +263,16 @@ router
   .description(
     "Looks for all edges between entity1 and entity2 and returns them"
   );
+
+// const query = aql`
+//
+// FOR e IN relations
+//     FILTER IS_LIST(e.sources)
+//     LET yo = FIRST(FOR s IN e.sources
+//                 FILTER s.sourceKey == "1179508"
+//                 RETURN s
+//             )
+//     FILTER yo != null
+//     LIMIT 99
+//     RETURN DISTINCT(e._to)
+//     `;

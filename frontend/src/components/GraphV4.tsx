@@ -147,7 +147,7 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   p.y2 -= Math.sin(p.angle) * dist2;
 }
 
-const indicatorDist = 18;
+const indicatorDist = 9;
 const indicatorOffset = 5;
 
 /**
@@ -257,7 +257,7 @@ class GraphV4 extends React.Component<Props> {
   }
 
   updateGraph() {
-    const { width, height, network } = this.props;
+    const { network } = this.props;
 
     // D3 RELATIONS DATA
     const { rEntitiesByKey, rRelationsByKey } = this.props;
@@ -317,25 +317,32 @@ class GraphV4 extends React.Component<Props> {
       this.nodesData[key] = this.nodesData[key]
         ? Object.assign({}, this.nodesData[key], rEntitiesByKey[key])
         : Object.assign({}, rEntitiesByKey[key]);
-      const node = this.nodesData[key];
+      rEntities.push(this.nodesData[key]);
+    }
+
+    const nodeCount = rEntities.length;
+    const bigGraph = nodeCount > 70;
+    const width = bigGraph ? this.props.width : this.props.width;
+    const height = bigGraph ? this.props.height : this.props.height;
+
+    // INITIAL node positions + clustering;
+    // TODO : calculate relative to origin
+    for (let node of rEntities) {
       const zone = node.sortedZones[0];
-      // TODO : calculate relative to origin
       if (typeof node.x !== "number")
-        node.x = clusterOrigins[zone].x * height + Math.random() * 100 - 50;
+        node.x = clusterOrigins[zone].x * width + Math.random() * 100 - 50;
       if (typeof node.y !== "number")
         node.y = clusterOrigins[zone].y * height + Math.random() * 100 - 50;
       if (!clusters[zone]) clusters[zone] = node;
-      rEntities.push(node);
     }
 
     // D3 FORCES SETUP
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
-    const nodeCount = rEntities.length;
     console.log("SETUP", nodeCount);
     const distScale = d3
       .scaleLinear()
       .domain([1, Math.max(maxProximity, 4)])
-      .range([300, 80]);
+      .range([80, 50]);
     const connectednessFactor = d3
       .scaleLinear()
       .domain([0, 7])
@@ -343,8 +350,8 @@ class GraphV4 extends React.Component<Props> {
     // We need to recreate the simulation for some reason... ?
     this.simulation = d3
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
-      .velocityDecay(network ? 0.5 : 0.8) // Akin to atmosphere friction (velocity multiplier)
-      .alphaTarget(-0.05) // Stop mini-pixel-step-motion early
+      .velocityDecay(network ? 0.5 : 0.9) // Akin to atmosphere friction (velocity multiplier)
+      .alphaTarget(-0.03) // Stop mini-pixel-step-motion early
       // The most important force, attraction derived from our relations.
       .force(
         "link",
@@ -353,7 +360,7 @@ class GraphV4 extends React.Component<Props> {
           .id(d => {
             return d.entityKey;
           })
-          .strength(network ? 0.4 : 0.5) // Warning: crashes if higher than 2, better stay within [0,1]
+          .strength(bigGraph ? 0.8 : network ? 0.4 : 0.4) // Warning: crashes if higher than 2, better stay within [0,1]
           // Make some links closer than others.
           .distance(
             d =>
@@ -366,18 +373,18 @@ class GraphV4 extends React.Component<Props> {
               )
           )
           // Emphasize this force and arrive faster at a stable result
-          .iterations(network ? 1 : 4)
+          .iterations(bigGraph ? 3 : network ? 1 : 4)
       )
       // Makes nodes repulse each other
       .force(
         "charge",
         d3
           .forceManyBody()
-          .strength(network ? -8500 : -1000)
+          .strength(bigGraph ? -4000 : network ? -8000 : -8000)
           .distanceMax(450)
       )
       // Keep the whole graph centered
-      .force("center", d3.forceCenter(width / 2, height / 2))
+      // .force("center", d3.forceCenter(width / 2, height / 2))
       // Put the primary entity at the center of the graph
       // .force(
       //   "x",
@@ -407,13 +414,13 @@ class GraphV4 extends React.Component<Props> {
       //   "collide",
       //   d3
       //     .forceCollide<V4NodeDatum>()
-      //     .radius(collisionSize)
-      //     .strength(0.2)
+      //     .radius(20)
+      //     .strength(0.4)
       // )
       .force(
         "collideR",
-        bboxCollide([[-10, -12], [140, 12]])
-          .strength(nodeCount > 80 ? 0.3 : 1)
+        bboxCollide(bigGraph ? [[-10, -20], [80, 20]] : [[-10, -12], [140, 12]])
+          .strength(bigGraph ? 0.6 : 1)
           .iterations(1)
       )
       // Keep all nodes within our canvas
@@ -610,8 +617,10 @@ class GraphV4 extends React.Component<Props> {
 
       nodes2.attr("transform", nodeTranslate);
       labels
-        .attr("text-anchor", d => (d.x < width / 2 ? "end" : "start"))
-        .attr("dx", d => (d.x < width / 2 ? -1 : 16));
+        .attr("text-anchor", d =>
+          !bigGraph && d.x < width / 2 ? "end" : "start"
+        )
+        .attr("dx", d => (!bigGraph && d.x < width / 2 ? -1 : 16));
     });
 
     // Update the data in the simulation.
@@ -636,10 +645,12 @@ class GraphV4 extends React.Component<Props> {
   };
 
   render() {
+    const { width, height } = this.props;
     return (
       <SVG
-        width={this.props.width}
-        height={this.props.height}
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
         xmlns="http://www.w3.org/2000/svg"
         ref={this.svgEl}
       >
