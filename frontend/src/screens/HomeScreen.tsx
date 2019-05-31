@@ -10,6 +10,7 @@ import R from "../strings/R";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import EntityDetails from "../components/EntityDetails";
 import { media } from "../styles/media-styles";
+import TertiaryTitle from "../components/titles/TertiaryTitle";
 
 const Content = styled.main`
   ${PageWidthSizer}
@@ -77,13 +78,6 @@ const ItemList = styled.div`
   }
 `;
 
-const Trending = styled.p`
-  color: ${props => props.theme.secondaryTextColor};
-  margin-bottom: 2px;
-  text-transform: uppercase;
-  font-size: ${props => props.theme.fontSizeS};
-`;
-
 const HomeScreen: FunctionComponent<RouterProps> = props => {
   const { t } = useTranslation();
 
@@ -100,7 +94,7 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
         <CentralSearch autoFocus onChange={onSearch} />
       </Header>
       <Article>
-        <Trending>{t(R.home_trending)}</Trending>
+        <TertiaryTitle>{t(R.home_trending)}</TertiaryTitle>
         <ItemList>
           <EntityDetails entityKey={"1539778"} />
           <EntityDetails entityKey={"1589920"} />

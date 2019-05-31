@@ -384,7 +384,7 @@ class GraphV4 extends React.Component<Props> {
           .distanceMax(450)
       )
       // Keep the whole graph centered
-      // .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("center", d3.forceCenter(width / 2, height / 2))
       // Put the primary entity at the center of the graph
       // .force(
       //   "x",

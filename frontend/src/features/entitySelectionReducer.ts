@@ -1,22 +1,35 @@
 import * as ACTIONS from "../utils/ACTIONS";
 import update from "immutability-helper";
-import { AnyAction } from "redux";
-
-const defaultState: string[] = [];
+import { AnyAction, Action, Reducer } from "redux";
+import { EntitySelectionAction } from "./entitySelectionActions";
+import { EntitySelectionState } from "../Store";
 
 /**
  * This adds or remove elements from the list of selected entities.
  */
-export default (state = defaultState, action: AnyAction) => {
+const entitySelectionReducer: Reducer<
+  EntitySelectionState,
+  EntitySelectionAction
+> = (state = [], action) => {
   switch (action.type) {
     case ACTIONS.SelectEntities:
-      var newState = state;
-      for (let key of action.entityKeys) {
-        const pos = state.indexOf(key);
-        if (pos >= 0) state = update(newState, { $splice: [[pos, 1]] });
+      const newSelection: EntitySelectionState = [];
+      for (let key of state) {
+        if (action.entityKeys.indexOf(key) < 0) newSelection.push(key);
       }
-      return update(state, { $push: action.entityKeys });
+      for (let key of action.entityKeys) {
+        newSelection.push(key);
+      }
+      return newSelection;
+    case ACTIONS.DeselectEntities:
+      const newSelection2: EntitySelectionState = [];
+      for (let key of state) {
+        if (action.entityKeys.indexOf(key) < 0) newSelection2.push(key);
+      }
+      return newSelection2;
     default:
       return state;
   }
 };
+
+export default entitySelectionReducer;

@@ -76,11 +76,13 @@ export interface RootStore {
     status: { [key: string]: Status };
   };
   sourceForms: { [key: string]: Source };
-  entitySelection: string[];
+  entitySelection: EntitySelectionState;
   dataimport: {
     [entryPoint: string]: DataImportState;
   };
 }
+
+export type EntitySelectionState = string[];
 
 export interface DataImportState {
   dsEdges: Dictionary<Edge>;

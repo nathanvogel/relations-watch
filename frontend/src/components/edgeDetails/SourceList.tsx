@@ -2,21 +2,18 @@ import React, { FunctionComponent } from "react";
 import styled from "styled-components";
 import { SourceLink, SourceLinkType } from "../../utils/types";
 import SourceDetails from "../SourceDetails";
+import TertiaryTitle from "../titles/TertiaryTitle";
 
 interface HeadProps {
   isRefuting: boolean;
 }
 
-const Head = styled.h5<HeadProps>`
+const Head = styled(TertiaryTitle)<HeadProps>`
   color: ${props =>
     props.isRefuting
       ? props.theme.refutingTextColor
-      : props.theme.mainTextColor};
-  margin-top: ${props => props.theme.marginTB};
+      : props.theme.secondaryTextColor};
   margin-bottom: -12px;
-  text-transform: uppercase;
-  font-weight: normal;
-  font-size: ${props => props.theme.fontSizeS};
 `;
 
 type Props = {

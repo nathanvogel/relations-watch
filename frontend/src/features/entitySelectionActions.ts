@@ -1,12 +1,11 @@
 import * as ACTIONS from "../utils/ACTIONS";
+import { Action } from "redux";
 
-export interface SelectEntitiesAction {
-  type: ACTIONS.SelectEntities;
+interface SelectEntitiesAction extends Action<ACTIONS.SelectEntities> {
   entityKeys: string[];
 }
 
-export interface DeselectEntitiesAction {
-  type: ACTIONS.DeselectEntities;
+interface DeselectEntitiesAction extends Action<ACTIONS.DeselectEntities> {
   entityKeys: string[];
 }
 
@@ -14,10 +13,16 @@ export type EntitySelectionAction =
   | SelectEntitiesAction
   | DeselectEntitiesAction;
 
-export function selectEntities(entityKeys: string[]): EntitySelectionAction {
-  // TODO load additionnal links or entity info ?
+export function selectEntities(entityKeys: string[]): SelectEntitiesAction {
   return {
     type: ACTIONS.SelectEntities,
-    entityKeys
+    entityKeys,
+  };
+}
+
+export function deselectEntities(entityKeys: string[]): DeselectEntitiesAction {
+  return {
+    type: ACTIONS.DeselectEntities,
+    entityKeys,
   };
 }

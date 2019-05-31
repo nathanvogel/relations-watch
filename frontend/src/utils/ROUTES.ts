@@ -3,7 +3,8 @@ const ROUTES = {
   relation: "r",
   add: "add",
   edit: "edit",
-  import: "import"
+  import: "import",
+  history: "history",
 };
 
 export default ROUTES;

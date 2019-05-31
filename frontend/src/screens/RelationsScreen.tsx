@@ -22,6 +22,7 @@ import IconButton from "../components/buttons/IconButton";
 import { EditorContainerCSS } from "../components/layout/EditorContainer";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import { ReactComponent as SearchIcon } from "../assets/ic_search.svg";
+import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 
 const Content = styled.div`
   ${PageWidthSizer}
@@ -219,7 +220,9 @@ class RelationsScreen extends React.Component<Props> {
                   dismiss={this.onCancelAddClick}
                 />
               ) : (
-                <AddButton onClick={this.onAddClick}>+</AddButton>
+                <AddButton onClick={this.onAddClick}>
+                  <AddIcon />
+                </AddButton>
               )}
               {/* PART edge list */}
               {relationsStatus !== Status.Ok ? (

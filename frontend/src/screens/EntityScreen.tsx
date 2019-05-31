@@ -28,6 +28,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import R from "../strings/R";
 import { media } from "../styles/media-styles";
+import History from "../components/History";
 
 const Content = styled.div`
   position: relative;
@@ -307,11 +308,13 @@ class EntityScreen extends Component<Props> {
       <Content>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
         {this.state.showTitleCard ? (
-          <LeftColumn onClick={this.toggleTitleCard}>
+          <LeftColumn>
             {status === Status.Ok && (
               <React.Fragment>
-                <Name>{entity.name} </Name>
-                <Description>{entity.text}</Description>
+                <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
+                <Description onClick={this.toggleTitleCard}>
+                  {entity.text}
+                </Description>
               </React.Fragment>
             )}
             <EntityButton small withText onClick={this.onEditEntity}>
@@ -327,6 +330,7 @@ class EntityScreen extends Component<Props> {
                 Update from Wikidata
               </EntityButton>
             )}
+            <History currentEntityKey={entity ? entity._key : undefined} />
           </LeftColumn>
         ) : (
           <ToggleTitleCardButton small withText onClick={this.toggleTitleCard}>

@@ -20,5 +20,5 @@ export default combineReducers({
   sources: sourcesReducer,
   sourceForms: namespaceEnhancer(sourceFormReducer),
   dataimport: namespaceEnhancer(dataimportReducer),
-  entitySelection: entitySelectionReducer
+  entitySelection: entitySelectionReducer as any,
 });

@@ -109,7 +109,6 @@ class AppBar extends React.Component<RouteComponentProps> {
               selection={null}
             />
           )}
-          <Link to="/history">History</Link>
           {/* <AppBarButton onClick={this.onAddEntity}>
             <AddIcon />
           </AppBarButton> */}
