@@ -89,11 +89,6 @@ class AppBar extends React.Component<RouteComponentProps> {
     this.props.history.push(url);
   };
 
-  onAddEntity = () => {
-    const url = `/${ROUTES.add}/${ROUTES.entity}`;
-    this.props.history.push(url);
-  };
-
   render() {
     return (
       <Bar>
@@ -109,9 +104,6 @@ class AppBar extends React.Component<RouteComponentProps> {
               selection={null}
             />
           )}
-          {/* <AppBarButton onClick={this.onAddEntity}>
-            <AddIcon />
-          </AppBarButton> */}
         </BarContent>
       </Bar>
     );

@@ -426,7 +426,9 @@ class GraphV4 extends React.Component<Props> {
       // Keep all nodes within our canvas
       .force(
         "boundary",
-        forceBoundary(180, 40, width - 180, height - 0).strength(1.4)
+        forceBoundary(bigGraph ? 0 : 180, 40, width - 180, height - 0).strength(
+          1.4
+        )
       );
     if (!network) {
       this.simulation.force(
@@ -592,6 +594,8 @@ class GraphV4 extends React.Component<Props> {
       // .attr("transform", d => nodeTranslate(d as any) + " scale(0,0)")
       .remove();
 
+    const isLabelOnTheLeft = (d: V4NodeDatum) => !bigGraph && d.x < width / 2;
+
     // Update the positions from the simulation
     this.simulation.on("tick", () => {
       // First compute the starting and ending positions of the links, as
@@ -617,10 +621,8 @@ class GraphV4 extends React.Component<Props> {
 
       nodes2.attr("transform", nodeTranslate);
       labels
-        .attr("text-anchor", d =>
-          !bigGraph && d.x < width / 2 ? "end" : "start"
-        )
-        .attr("dx", d => (!bigGraph && d.x < width / 2 ? -1 : 16));
+        .attr("text-anchor", d => (isLabelOnTheLeft(d) ? "end" : "start"))
+        .attr("dx", d => (isLabelOnTheLeft(d) ? -1 : 16));
     });
 
     // Update the data in the simulation.

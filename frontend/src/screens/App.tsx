@@ -27,10 +27,6 @@ class App extends Component {
         <Switch>
           <Route path={`/${RT.entity}/:entityKey?`} component={EntityScreen} />
           <Route
-            path={`/${RT.add}/${RT.entity}`}
-            component={CreateEntityScreen}
-          />
-          <Route
             path={`/${RT.import}/:datasetId/:entityDatasetId`}
             render={props => {
               const { datasetId, entityDatasetId } = props.match.params;
