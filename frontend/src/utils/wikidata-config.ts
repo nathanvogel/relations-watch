@@ -253,6 +253,9 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q17326725", // business group: set of legally independent companies that belong together
     "Q3623811", // economic union
     "Q22679796", // correspondents' association, press association
+    "Q188628", // board of directors (conseil d'administration)
+    "Q938236", // comittee
+    "Q5588651", // governing body
   ],
   [EntityType.Media]: [
     "Q1110794",
@@ -408,6 +411,10 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
     ownedInQualifiers: ["P1107"],
     ownedModifier: { P1107: proportionToOwned },
   }, // owned by
+  P150: {
+    type: RT.GroupMember,
+    invert: true,
+  }, // contains administrative territorial entity
   // P527 ? = has part
 };
 
