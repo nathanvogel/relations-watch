@@ -25,6 +25,7 @@ const SourceEntitiesContainer = styled.div`
 
 const StyledSourceA = styled.a`
   color: inherit;
+  font-size: ${props => props.theme.fontSizeS};
   // text-decoration: none;
 `;
 
@@ -88,9 +89,12 @@ class SourceDetails extends React.Component<Props> {
   render() {
     const { source, status, error } = this.props;
     // Wait for loading
-    const meta = <Meta status={status} error={error} />;
     if (status !== Status.Ok)
-      return <SourceListItemContainer>{meta}</SourceListItemContainer>;
+      return (
+        <SourceListItemContainer>
+          <Meta status={status} error={error} />
+        </SourceListItemContainer>
+      );
 
     const isLink: boolean = source.type === SourceType.Link;
     const { postStatus, postError } = this.props;
@@ -118,31 +122,32 @@ class SourceDetails extends React.Component<Props> {
     //     // <strong>{domain}</strong>
     //     // {refEnd}
     // }
-
+    const fullUrl = this.props.sourceLink.fullUrl || source.fullUrl;
+    const sourceText = source.pTitle || source.description;
     return (
       <SourceListItemContainer
         isRefuting={this.props.sourceLink.type === SourceLinkType.Refutes}
       >
-        <Actions>
-          {this.props.editable && (
+        {this.props.editable && (
+          <Actions>
             <IconButton onClick={this.toggleClick}>Edit</IconButton>
-          )}
-        </Actions>
-        {source._key !== "1379121" && (
-          <div>{source.pTitle || source.description}</div>
+          </Actions>
         )}
+        {sourceText && source._key !== "1379121" && <div>{sourceText}</div>}
         {isLink ? (
-          <StyledSourceA href={this.props.sourceLink.fullUrl || source.fullUrl}>
-            {source.ref}
+          <StyledSourceA href={fullUrl}>
+            {source.ref === "www.wikidata.org" ? fullUrl : source.ref}
           </StyledSourceA>
         ) : (
           <strong>{source.ref}</strong>
         )}
-        <SourceEntitiesContainer>
-          {source.authors.map(entityKey => (
-            <SourceEntityPreview key={entityKey} entityKey={entityKey} />
-          ))}
-        </SourceEntitiesContainer>
+        {source.authors && source.authors.length > 0 && (
+          <SourceEntitiesContainer>
+            {source.authors.map(entityKey => (
+              <SourceEntityPreview key={entityKey} entityKey={entityKey} />
+            ))}
+          </SourceEntitiesContainer>
+        )}
       </SourceListItemContainer>
     );
   }
