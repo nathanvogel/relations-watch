@@ -155,25 +155,6 @@ export type EdgePreview = {
 
 export type CommonEdge = Edge | EdgePreview;
 
-export type ConnectedEntity = {
-  entityKey: string;
-  edgeCount: number;
-};
-
-export type Connections = {
-  edges: Array<EdgePreview>;
-  entities: [string, number][];
-  toEntity: { [entityKey: string]: number };
-};
-
-export type ConnectionsList = {
-  [key: string]: Connections;
-};
-
-export interface LinkedEntities {
-  [key: string]: { [key: string]: number };
-}
-
 export type RelationRenderData = {
   bx1: number;
   by1: number;

@@ -6,7 +6,6 @@ import {
   Status,
   ErrorPayload,
   Entity,
-  Connections,
   EdgePreview,
   Edge,
   EntityPreview,

@@ -1,18 +1,8 @@
 import ACTIONS from "../utils/ACTIONS";
-import {
-  EdgePreview,
-  Edge,
-  Connections,
-  LinkedEntities,
-  ConnectionsList,
-} from "../utils/types";
+import { EdgePreview, Edge } from "../utils/types";
 import update from "immutability-helper";
 import { AnyAction } from "redux";
-import {
-  getSimplifiedEdge,
-  getRelationId,
-  getEdgePreview,
-} from "../utils/utils";
+import { getSimplifiedEdge, getEdgePreview } from "../utils/utils";
 
 interface SubState {
   data: {
@@ -84,27 +74,3 @@ export default (state = defaultState, action: AnyAction) => {
       return state;
   }
 };
-
-function addEdgeToBothEntities(
-  listByEntity: { [key: string]: Connections },
-  edge: EdgePreview
-) {
-  if (!listByEntity[edge._from])
-    listByEntity[edge._from] = genEmptyConnections(edge);
-  else listByEntity[edge._from].edges.push(edge);
-  if (!listByEntity[edge._to])
-    listByEntity[edge._to] = genEmptyConnections(edge);
-  else listByEntity[edge._to].edges.push(edge);
-}
-
-const genEmptyConnections = (edge?: EdgePreview): Connections => ({
-  edges: edge ? [edge] : [],
-  entities: [],
-  toEntity: {},
-});
-
-function addLinkToEntityList(list: ConnectionsList, k1: string, k2: string) {
-  if (!list[k1]) list[k1] = genEmptyConnections();
-  if (!list[k1].toEntity[k2]) list[k1].toEntity[k2] = 1;
-  else list[k1].toEntity[k2] += 1;
-}
