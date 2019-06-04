@@ -141,8 +141,8 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   //   e2.y = 400;
   //   return;
   // }
-  const dist1 = size(e1) / 2 - 2;
-  const dist2 = size(e2) / 2 - 2;
+  const dist1 = 0; // size(e1) / 2 - 2;
+  const dist2 = 0; // size(e2) / 2 - 2;
   p.x1 = e1.x;
   p.y1 = e1.y - 5;
   p.x2 = e2.x;
@@ -154,7 +154,7 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   p.y2 -= Math.sin(p.angle) * dist2;
 }
 
-const indicatorDist = 9;
+const indicatorDist = 22;
 const indicatorOffset = 5;
 
 /**
