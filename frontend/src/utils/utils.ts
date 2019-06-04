@@ -17,6 +17,7 @@ import {
 } from "./types";
 import CONSTS, { DirectedFamilialLinks } from "./consts";
 import { DirectedLinks } from "./consts";
+import { RootStore } from "../Store";
 
 // CONVENTION:
 // - relationId is the alphabetically sorted combination of both entities
@@ -151,6 +152,17 @@ export function getDsKeyObject<T extends DatasetObject>(
 }
 
 /**
+ * [filter description]
+ * @param  onlyUnique [description]
+ * @return            [description]
+ */
+export function objectFromArray(array: string[]): { [key: string]: boolean } {
+  const obj: { [key: string]: boolean } = {};
+  for (let e of array) if (e) obj[e] = true;
+  return obj;
+}
+
+/**
  * Filter out duplicate elements in an Array.
  */
 export function arrayWithoutDuplicates<T>(array: T[]): T[] {
@@ -168,6 +180,16 @@ export function getEntityPreview(entity: Entity): EntityPreview {
     type: entity.type,
     imageId: entity.imageId,
   };
+}
+
+export function getEntityPreviewFromState(
+  key: string,
+  state: RootStore
+): EntityPreview | undefined {
+  if (state.entities.datapreview[key]) return state.entities.datapreview[key];
+  else if (state.entities.data[key])
+    return getEntityPreview(state.entities.data[key]);
+  return undefined;
 }
 
 /**

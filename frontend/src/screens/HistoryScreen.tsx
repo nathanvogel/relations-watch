@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import styled from "styled-components";
 import { connect } from "react-redux";
@@ -9,10 +9,10 @@ import { loadEntity } from "../features/entitiesLoadAC";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import * as entitySelectionActions from "../features/entitySelectionActions";
 import { withTranslation, WithTranslation } from "react-i18next";
-import GraphContainerV4 from "../components/GraphContainerV4";
-import { ErrorPayload, Status, Entity } from "../utils/types";
+import { Status } from "../utils/types";
 import { arrayWithoutDuplicates } from "../utils/utils";
 import Meta from "../components/meta/Meta";
+import FreeGraphContainer from "../components/graph/FreeGraphContainer";
 
 const Content = styled.div`
   position: relative;
@@ -492,16 +492,22 @@ const HistoryScreen: React.FunctionComponent<Props> = props => {
     }
   }, [entitySelection]);
 
+  let loading = false;
   for (let key of entitySelection) {
     if (
       allEntities.status[key] === Status.Requested ||
       allLinks.status[key] === Status.Requested
     )
-      return <Meta status={Status.Requested} />;
+      loading = true;
+    break;
   }
+
+  // Don't unmount and mount the Graph, we keep it displayed through
+  // loading phases to keep it smooth.
   return (
     <Content>
-      <GraphContainerV4 entityKeys={entitySelection} />
+      {loading && <Meta status={Status.Requested} />}
+      <FreeGraphContainer entityKeys={entitySelection} />
     </Content>
   );
 };

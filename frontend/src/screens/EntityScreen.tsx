@@ -8,28 +8,19 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
-import {
-  Status,
-  DatasetId,
-  RelationTypeValues,
-  EntityType,
-} from "../utils/types";
+import { Status, DatasetId } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
-import EntityGraphV4 from "../components/EntityGraphV4";
 import * as entitySelectionActions from "../features/entitySelectionActions";
-import ButtonBar from "../components/buttons/ButtonBar";
 import IconButton from "../components/buttons/IconButton";
 import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import CONSTS from "../utils/consts";
-import { RELATION_COLORS } from "../styles/theme";
-import { LegendRelationTypeMapping } from "../strings/strings";
 import { withTranslation, WithTranslation } from "react-i18next";
-import { getEntitySAsset } from "../assets/EntityIcons";
 import R from "../strings/R";
 import { media } from "../styles/media-styles";
 import History from "../components/History";
 import GraphLegend from "../components/graph/GraphLegend";
+import EntityGraphContainer from "../components/graph/EntityGraphContainer";
 
 const Content = styled.div`
   position: relative;
@@ -242,6 +233,7 @@ class EntityScreen extends Component<Props> {
   render() {
     const { entity, status, error, entityKey, t } = this.props;
 
+    // Always render the graph, even when the data isn't loaded,
     return (
       <Content>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
@@ -285,9 +277,9 @@ class EntityScreen extends Component<Props> {
         </ToggleLegendButton>
 
         {status === Status.Ok ? (
-          <EntityGraphV4 entityKey={entityKey} />
+          <EntityGraphContainer entityKey={entityKey} />
         ) : this.state.prevEntityKey ? (
-          <EntityGraphV4 entityKey={this.state.prevEntityKey} />
+          <EntityGraphContainer entityKey={this.state.prevEntityKey} />
         ) : null}
       </Content>
     );
