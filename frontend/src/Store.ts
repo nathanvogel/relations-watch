@@ -58,9 +58,9 @@ export interface RootStore {
   links: {
     data: {
       // bylinkedentities: { [key: string]: [string, number][] };
-      byentity: { [baseEntityKey: string]: Connections };
+      // byentity: { [baseEntityKey: string]: Connections };
       all: { [edgeKey: string]: EdgePreview }; // EntityId -> EdgePreview
-      byrelation: { [relationKey: string]: { [edgeKey: string]: EdgePreview } };
+      // byrelation: { [relationKey: string]: { [edgeKey: string]: EdgePreview } };
     };
     errors: { [key: string]: ErrorPayload };
     status: { [key: string]: Status };
