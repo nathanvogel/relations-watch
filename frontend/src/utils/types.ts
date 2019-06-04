@@ -25,12 +25,12 @@ export type EntityTypeOption = {
 
 export enum RelationType {
   IsOwned = 1,
-  JobDependsOn = 30,
   IsControlled = 50,
+  JobDependsOn = 30,
   ValueExchange = 100,
-  IsInfluenced = 500,
   Attendance = 1000,
   GroupMember = 2000,
+  IsInfluenced = 500,
   Family = 300,
   Love = 320,
   Opposition = 330,
@@ -268,7 +268,7 @@ export const ProximityWeights = {
   [RelationType.JobDependsOn]: 1.6,
   [RelationType.IsOwned]: 4,
   [RelationType.IsControlled]: 2,
-  [RelationType.ValueExchange]: 1,
+  [RelationType.ValueExchange]: 1.2,
   [RelationType.Love]: 3,
   [RelationType.Opposition]: 1,
   [RelationType.IsInfluenced]: 1,

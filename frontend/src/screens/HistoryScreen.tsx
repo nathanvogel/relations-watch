@@ -462,7 +462,7 @@ const selections = {
 };
 
 const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
-  const entitySelection = state.entitySelection;
+  const entitySelection = selections.benalla; // state.entitySelection;
   return {
     entitySelection,
     allEntities: state.entities,

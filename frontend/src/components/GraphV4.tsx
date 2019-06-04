@@ -437,7 +437,7 @@ class GraphV4 extends React.Component<Props> {
           .centers((d: V4NodeDatum) => {
             return clusters[d.sortedZones[0]];
           })
-          .strength(0.5)
+          .strength(0.9)
           .centerInertia(0.1)
       );
     }

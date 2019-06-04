@@ -46,17 +46,17 @@ const theme: DefaultTheme = {
 };
 
 export const RELATION_COLORS = {
-  [RelationType.IsOwned]: "#e7b300",
-  [RelationType.JobDependsOn]: "#ee8012",
-  [RelationType.IsControlled]: "#a63e14",
-  [RelationType.ValueExchange]: "#F0E262",
-  [RelationType.Family]: "#007500",
-  [RelationType.Love]: "#de3d83",
-  [RelationType.Opposition]: "#db2f27",
-  [RelationType.IsInfluenced]: "#f45844",
-  [RelationType.Attendance]: "#0095a3",
-  [RelationType.GroupMember]: "#0095a3",
-  [RelationType.Other]: "#444444",
+  [RelationType.IsOwned]: "#7E57C2",
+  [RelationType.IsControlled]: "#2196F3",
+  [RelationType.JobDependsOn]: "#009688",
+  [RelationType.ValueExchange]: "#8BC34A",
+  [RelationType.Family]: "#ffd32a",
+  [RelationType.Love]: "#ef5777",
+  [RelationType.Opposition]: "#ff3f34",
+  [RelationType.IsInfluenced]: "#ffa801",
+  [RelationType.Attendance]: "#4DD0E1",
+  [RelationType.GroupMember]: "#4DD0E1",
+  [RelationType.Other]: "#1e272e",
 };
 
 export default theme;
