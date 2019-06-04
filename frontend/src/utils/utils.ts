@@ -267,13 +267,16 @@ export function createIndicatorDatum(
 /**
  * Returns true if the given type has a precise direction (sens).
  */
-export function isDirectedType(t: RelationType) {
+export function isDirectedType(t: RelationType, ft: FamilialLink | undefined) {
+  if (t === RelationType.Family) return isDirectedFamilialType(ft);
   return DirectedLinks.indexOf(t) >= 0;
 }
 
 /**
  * Returns true if the given familial link type has a precise direction (sens).
  */
-export function isDirectedFamilialType(t: FamilialLink) {
+export function isDirectedFamilialType(t: FamilialLink | undefined) {
+  // '==' checks for undefined and null.
+  if (t == null) return false;
   return DirectedFamilialLinks.indexOf(t) >= 0;
 }

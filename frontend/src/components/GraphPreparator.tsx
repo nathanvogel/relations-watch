@@ -151,6 +151,8 @@ class GraphPreparator extends Component<Props> {
       const link = edges[edgeKey];
       const relationId = getRelationId(link._from, link._to) as string;
       const rRelation = rRelationsByKey[relationId];
+      const invertDirection = link._from === rRelation.source;
+      let proximityWeight = 0;
       if (!rRelation) continue;
       if (link.type === RelationType.Family) {
         // special family case
@@ -159,14 +161,11 @@ class GraphPreparator extends Component<Props> {
         rEntitiesByKey[rRelation.targetKey].zoneTotal += 1;
         // Compute the proximity score for the relation
         // and makes sure we have a defined weight for this type of relationship
-        const proximityWeight =
+        proximityWeight =
           link.fType && FProximityWeights.hasOwnProperty(link.fType)
             ? FProximityWeights[link.fType]
             : 1;
-        rRelation.proximity += proximityWeight;
-        rRelation.tWeights[link.type] += proximityWeight;
       } else {
-        const invertDirection = link._from === rRelation.source;
         // Compute the "zone correspondance" score for the entity.
         const [zone, weight] = TypeWeights[link.type][
           invertDirection ? "nor" : "inv"
@@ -175,19 +174,19 @@ class GraphPreparator extends Component<Props> {
         rEntitiesByKey[rRelation.targetKey].zoneTotal += weight;
         // Compute the proximity score for the relation
         // and makes sure we have a defined weight for this type of relationship
-        const proximityWeight =
+        proximityWeight =
           link.type && ProximityWeights.hasOwnProperty(link.type)
             ? ProximityWeights[link.type]
             : 0.3;
-        rRelation.proximity += proximityWeight;
-        rRelation.tWeights[link.type] += proximityWeight;
-        // Compute the new direction(s)
-        if (isDirectedType(link.type)) {
-          rRelation.tDirections[link.type] = getNewDirection(
-            rRelation.tDirections[link.type],
-            invertDirection ? LinkDir.Invert : LinkDir.Normal
-          );
-        }
+      }
+      rRelation.proximity += proximityWeight;
+      rRelation.tWeights[link.type] += proximityWeight;
+      // Compute the new direction(s)
+      if (isDirectedType(link.type, link.fType)) {
+        rRelation.tDirections[link.type] = getNewDirection(
+          rRelation.tDirections[link.type],
+          invertDirection ? LinkDir.Invert : LinkDir.Normal
+        );
       }
     }
 
