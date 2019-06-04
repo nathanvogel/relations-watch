@@ -19,7 +19,12 @@ import {
   LinkDir,
   EntityPreview,
 } from "../utils/types";
-import { getRelationId, getNewDirection, isDirectedType } from "../utils/utils";
+import {
+  getRelationId,
+  getNewDirection,
+  isDirectedType,
+  arrayWithoutDuplicates,
+} from "../utils/utils";
 import GraphV4 from "./GraphV4";
 import Measure from "react-measure";
 
@@ -142,6 +147,7 @@ class GraphPreparator extends Component<Props> {
         tDirections: Object.assign({}, DefaultTypeDirs),
         tWeights: Object.assign({}, DefaultTypeWeights),
         sortedTypes: [],
+        fTypes: [],
       };
       addRel(rRelation);
     }
@@ -165,6 +171,7 @@ class GraphPreparator extends Component<Props> {
           link.fType && FProximityWeights.hasOwnProperty(link.fType)
             ? FProximityWeights[link.fType]
             : 1;
+        if (link.fType) rRelation.fTypes.push(link.fType);
       } else {
         // Compute the "zone correspondance" score for the entity.
         const [zone, weight] = TypeWeights[link.type][
@@ -210,6 +217,10 @@ class GraphPreparator extends Component<Props> {
       }
       rRelation.sortedTypes = rRelation.sortedTypes.sort(
         (a, b) => rRelation.tWeights[b] - rRelation.tWeights[a]
+      );
+      // Sort family types
+      rRelation.fTypes = arrayWithoutDuplicates(rRelation.fTypes).sort(
+        (a, b) => b - a // will give the order child/sibling/spouse/other
       );
     }
 

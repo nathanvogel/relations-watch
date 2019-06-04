@@ -386,6 +386,7 @@ export type V4GenericLinkDatum<T> = {
    * Rank non-null RelationType scores, from highest to lowest.
    */
   sortedTypes: RelationType[];
+  fTypes: FamilialLink[];
 };
 
 export type V4IndicatorDatum = {

@@ -19,6 +19,7 @@ import {
   V4IndicatorDatum,
   RelationTypeValues,
   V4LinkPosDatum,
+  FamilialLink,
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
@@ -103,6 +104,12 @@ function collisionSize(d: V4NodeDatum): number {
 // ==== LINK APPEARANCE
 
 function linkColor(d: V4LinkDatum) {
+  if (
+    d.sortedTypes[0] === RelationType.Family &&
+    d.fTypes.length > 0 &&
+    d.fTypes[0] === FamilialLink.spouseOf
+  )
+    return RELATION_COLORS[RelationType.Love];
   return RELATION_COLORS[d.sortedTypes[0]];
 }
 
