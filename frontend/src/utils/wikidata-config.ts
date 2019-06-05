@@ -208,6 +208,8 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q740752", // entreprise de transport
     "Q2995256", // constructeur ferroviaire
     "Q166280", // société anonyme
+    "Q19973770", // Ministry of culture
+    "Q4481741", // federal ministry (Russian federation)
   ],
   [EntityType.Group]: [
     "Q7278",

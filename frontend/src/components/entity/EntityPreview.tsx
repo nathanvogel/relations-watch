@@ -17,6 +17,7 @@ const Container = styled(EntityPreviewContainer)`
   font-size: ${props => props.theme.fontSizeS};
   background-color: ${props => props.theme.inputBG};
   border-radius: ${props => props.theme.radius};
+  text-align: left;
 `;
 
 const EntityPreview: FunctionComponent<Props> = props => {

@@ -2,11 +2,12 @@ import { RelationType } from "../utils/types";
 import { DefaultTheme } from "styled-components";
 
 const theme: DefaultTheme = {
-  mainFont: '"Barlow", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
+  mainFont:
+    '"IBM Plex Sans", "Barlow", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   fontSizeS: "14px",
   fontSizeM: "19px",
   fontSizeL: "26px",
-  mainTextColor: "rgb(0, 0, 0, 0.84)" /* Stolen from Medium */,
+  mainTextColor: "rgba(0, 0, 0, 0.84)" /* Stolen from Medium */,
   lightTextColor: "#ffffff",
   linkTextColor: "#0077CC", // Stackoverflow
   visitedLinkTextColor: "#0077CC",
