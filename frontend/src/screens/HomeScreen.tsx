@@ -113,7 +113,10 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
         </p>
       </Article>
       <Footer>
-        <a href="/?lng=en">EN</a> / <a href="/?lng=fr">FR</a>
+        <a href="/?lng=en">EN</a> / <a href="/?lng=fr">FR</a> -{" "}
+        <a href="https://github.com/nathanvogel/relations-watch">
+          {t(R.source_link_text)}
+        </a>
       </Footer>
     </Content>
   );
