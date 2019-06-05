@@ -4,7 +4,7 @@
   "description": "Import the dataset from Le Monde Diplomatique to the ArangoDB database",
   "main": "index.ts",
   "author": "Nathan Vogel",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
     "tsc": "tsc",

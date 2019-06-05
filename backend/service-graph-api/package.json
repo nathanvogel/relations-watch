@@ -1,9 +1,9 @@
 {
-  "name": "diploma-service-graph-api",
-  "version": "0.0.1",
+  "name": "relations-watch-api",
+  "version": "0.0.2",
   "main": "index.js",
   "author": "Nathan Vogel",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "test": "jest"
   },
