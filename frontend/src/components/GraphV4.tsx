@@ -33,6 +33,7 @@ const SVG = styled.svg`
 
 // ===== NODE APPEARANCE
 const fontSizeS: number = parseInt(theme.fontSizeS);
+const fontSizeM: number = parseInt(theme.fontSizeM);
 
 function size(d: V4NodeDatum): number {
   return fontSizeS;
@@ -70,6 +71,7 @@ function fontWeight(d: V4NodeDatum): string {
 function fontSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
+      return fontSizeM;
     case NodeRenderType.Secondary:
       return fontSizeS;
     case NodeRenderType.Tertiary:
@@ -554,22 +556,22 @@ class GraphV4 extends React.Component<Props> {
       // Add the text child
       .append("text")
       .text(d => getShortString(d.entity.name))
-      .attr("dy", 12)
+      .attr("dy", d => fontSize(d) * 0.8)
       .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor))
       .select(goToParent)
       .merge(nodes as any);
     // Update dynamic attributes for all nodes:
     var labels = nodes2
       .select("text")
-      .attr("font-size", 14)
+      .attr("font-size", fontSize)
       .attr("font-weight", fontWeight);
     // .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")
       // .attr("y", 0)
       // .attr("x", 0)
-      .attr("width", 14)
-      .attr("height", 14);
+      .attr("width", fontSize)
+      .attr("height", fontSize);
 
     /*
     // Get the text size and resize the background
@@ -632,7 +634,7 @@ class GraphV4 extends React.Component<Props> {
       nodes2.attr("transform", nodeTranslate);
       labels
         .attr("text-anchor", d => (isLabelOnTheLeft(d) ? "end" : "start"))
-        .attr("dx", d => (isLabelOnTheLeft(d) ? -1 : 16));
+        .attr("dx", d => (isLabelOnTheLeft(d) ? -1 : fontSize(d) + 1));
     });
 
     // Update the data in the simulation.

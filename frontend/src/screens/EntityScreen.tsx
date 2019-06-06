@@ -136,14 +136,12 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 type State = {
   prevEntityKey: null | string;
   showLegend: boolean;
-  showTitleCard: boolean;
 };
 
 class EntityScreen extends Component<Props> {
   readonly state: State = {
     prevEntityKey: null,
-    showLegend: window.innerWidth >= 800,
-    showTitleCard: true,
+    showLegend: false,
   };
 
   get isWikidataEntity() {
@@ -213,12 +211,6 @@ class EntityScreen extends Component<Props> {
     });
   };
 
-  toggleTitleCard = () => {
-    this.setState({
-      showTitleCard: !this.state.showTitleCard,
-    });
-  };
-
   render() {
     const { entity, status, error, entityKey, t } = this.props;
 
@@ -229,10 +221,8 @@ class EntityScreen extends Component<Props> {
           <InfoColumn>
             {status === Status.Ok && (
               <React.Fragment>
-                <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
-                <Description onClick={this.toggleTitleCard}>
-                  {entity.text}
-                </Description>
+                <Name>{entity.name} </Name>
+                <Description>{entity.text}</Description>
               </React.Fragment>
             )}
             <EntityButton small withText onClick={this.onEditEntity}>
