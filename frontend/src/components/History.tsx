@@ -92,7 +92,6 @@ const History: React.FunctionComponent<Props> = props => {
         {entities.map((_, index) => {
           const e = entities[entities.length - 1 - index];
           if (!e) return null;
-          if (props.currentEntityKey === e._key) return null;
           return (
             <li key={e._key}>
               <ClearButton onClick={() => props.deselectEntities([e._key])} />

@@ -1,11 +1,8 @@
-import React, { Component, FunctionComponent } from "react";
+import React, { Component } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
-import Hidden from "@material-ui/core/Hidden";
-import Drawer from "@material-ui/core/Drawer";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
@@ -20,19 +17,10 @@ import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import CONSTS from "../utils/consts";
 import { withTranslation, WithTranslation } from "react-i18next";
 import R from "../strings/R";
-import { media, Mobile, NotMobile } from "../styles/responsive-utils";
 import History from "../components/History";
 import GraphLegend from "../components/graph/GraphLegend";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
-import AppBar from "../components/AppBar";
-import WebsiteTitle from "../components/titles/WebsiteTitle";
-
-const Content = styled.div`
-  position: relative;
-  overflow: hidden;
-  margin-left: ${props => props.theme.appSidebarWidth};
-  ${media.mobile`margin-left: 0;`}
-`;
+import DrawerLayout from "../components/layout/DrawerLayout";
 
 const StyledMeta = styled(Meta)`
   position: absolute;
@@ -59,39 +47,16 @@ const EntityButton = styled(IconButton)`
   margin: ${props => props.theme.inputTBSpacing} 0px;
 `;
 
-interface ColumnProps {
+const InfoColumn = styled.div`
+  padding: ${props => props.theme.blockPadding};
+  padding-top: 0.85em;
+`;
+
+interface LegendProps {
   hideColumn?: boolean;
 }
 
-const StyledDrawer = styled(Drawer)`
-  border-right: none;
-
-  .MuiDrawer-paperAnchorDockedLeft {
-    border-right: none;
-  }
-` as typeof Drawer;
-// = necessary hack for now
-// https://github.com/mui-org/material-ui/issues/13921#issuecomment-484133463
-
-const DrawerContent = styled.div`
-  background-color: ${props => props.theme.sidebarBG};
-  border-right: solid 1px ${props => props.theme.darkBG};
-  box-sizing: border-box;
-  height: 100%;
-`;
-
-const LeftColumn = styled.div`
-  display: block;
-  min-width: ${props => props.theme.appSidebarWidth};
-  width: ${props => props.theme.appSidebarWidth};
-  max-width: 100vw;
-  padding: ${props => props.theme.blockPadding};
-  padding-top: 16px;
-  box-sizing: border-box;
-  background-color: ${props => props.theme.sidebarBG};
-`;
-
-const RightColumn = styled(LeftColumn)<ColumnProps>`
+const LegendColumn = styled.div<LegendProps>`
   display: ${props => (props.hideColumn ? "none" : "block")}
   position: absolute;
   right: 16px;
@@ -102,11 +67,15 @@ const RightColumn = styled(LeftColumn)<ColumnProps>`
   overflow-y: auto;
   min-width: ${props => props.theme.appMiniSidebarWidth};
   width: ${props => props.theme.appMiniSidebarWidth};
-  background-color: ${props => props.theme.appBG};
-  opacity: 0.95;
+  max-height: calc(100vh - ${props => props.theme.navBarHeight} - 20px);
+  padding: ${props => props.theme.blockPadding};
+  box-sizing: border-box;
   // box-shadow: -15px 0px 15px 0px ${props => props.theme.sidebarBG};
   // Space for the toggle button
   padding-bottom: 44px;
+
+  background-color: ${props => props.theme.appBG};
+  opacity: 0.95;
 
   transition: transform 0.18s ease-out;
   transform: translateX(${props => (props.hideColumn ? "100" : "0")}%);
@@ -168,7 +137,6 @@ type State = {
   prevEntityKey: null | string;
   showLegend: boolean;
   showTitleCard: boolean;
-  mobileOpen: boolean;
 };
 
 class EntityScreen extends Component<Props> {
@@ -176,7 +144,6 @@ class EntityScreen extends Component<Props> {
     prevEntityKey: null,
     showLegend: window.innerWidth >= 800,
     showTitleCard: true,
-    mobileOpen: false,
   };
 
   get isWikidataEntity() {
@@ -252,80 +219,44 @@ class EntityScreen extends Component<Props> {
     });
   };
 
-  handleDrawerToggle = () => {
-    this.setState({ mobileOpen: !this.state.mobileOpen });
-  };
-  handleDrawerOpen = () => {
-    this.setState({ mobileOpen: true });
-  };
-  handleDrawerClose = () => {
-    this.setState({ mobileOpen: false });
-  };
-
   render() {
     const { entity, status, error, entityKey, t } = this.props;
 
-    const drawerContent = (
-      <DrawerContent>
-        <WebsiteTitle />
-        <LeftColumn>
-          {status === Status.Ok && (
-            <React.Fragment>
-              <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
-              <Description onClick={this.toggleTitleCard}>
-                {entity.text}
-              </Description>
-            </React.Fragment>
-          )}
-          <EntityButton small withText onClick={this.onEditEntity}>
-            <EditIcon />
-            Edit
-          </EntityButton>
-          <EntityButton small withText onClick={this.onAddRelation}>
-            <AddIcon />
-            Relation
-          </EntityButton>
-          {this.isWikidataEntity && (
-            <EntityButton small withText onClick={this.importWikidata}>
-              Update from Wikidata
-            </EntityButton>
-          )}
-          <History currentEntityKey={entity ? entity._key : undefined} />
-        </LeftColumn>
-      </DrawerContent>
-    );
-
     // Always render the graph, even when the data isn't loaded,
     return (
-      <Content>
-        <AppBar onLeftMenuClick={this.handleDrawerToggle} />
+      <DrawerLayout
+        drawerContent={
+          <InfoColumn>
+            {status === Status.Ok && (
+              <React.Fragment>
+                <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
+                <Description onClick={this.toggleTitleCard}>
+                  {entity.text}
+                </Description>
+              </React.Fragment>
+            )}
+            <EntityButton small withText onClick={this.onEditEntity}>
+              <EditIcon />
+              Edit
+            </EntityButton>
+            <EntityButton small withText onClick={this.onAddRelation}>
+              <AddIcon />
+              Relation
+            </EntityButton>
+            {this.isWikidataEntity && (
+              <EntityButton small withText onClick={this.importWikidata}>
+                Update from Wikidata
+              </EntityButton>
+            )}
+            <History currentEntityKey={entity ? entity._key : undefined} />
+          </InfoColumn>
+        }
+      >
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
 
-        <nav className={"test"} aria-label="Graph Info">
-          <Mobile>
-            <SwipeableDrawer
-              variant="temporary"
-              anchor="left"
-              open={this.state.mobileOpen}
-              onOpen={this.handleDrawerOpen}
-              onClose={this.handleDrawerClose}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
-            >
-              {drawerContent}
-            </SwipeableDrawer>
-          </Mobile>
-          <NotMobile>
-            <StyledDrawer variant="permanent" open>
-              {drawerContent}
-            </StyledDrawer>
-          </NotMobile>
-        </nav>
-
-        <RightColumn hideColumn={!this.state.showLegend}>
+        <LegendColumn hideColumn={!this.state.showLegend}>
           <GraphLegend />
-        </RightColumn>
+        </LegendColumn>
         <ToggleLegendButton small withText onClick={this.toggleLegend}>
           {t(
             this.state.showLegend ? R.button_hide_legend : R.button_show_legend
@@ -337,7 +268,7 @@ class EntityScreen extends Component<Props> {
         ) : this.state.prevEntityKey ? (
           <EntityGraphContainer entityKey={this.state.prevEntityKey} />
         ) : null}
-      </Content>
+      </DrawerLayout>
     );
   }
 }
