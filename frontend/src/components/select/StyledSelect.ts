@@ -47,6 +47,21 @@ export const styledSelectCSS = css`
     box-shadow: none;
   }
 
+  .rs__placeholder {
+    // Make sure the placeholder doesn't wrap
+    white-space: nowrap;
+    // Make sure the placeholder can't be selected by the user
+    // (mostly when long-pressing to paste)
+    user-select: none;
+  }
+
+  // Goal:    Make sure the user can long-press to paste
+  // But:     It doesn't work, rs__value-container seems to be blocking
+  //          or re-interpreting the event as unfocus/refocus.
+  input {
+    min-width: 5em;
+  }
+
   .rs__menu {
     margin-top: 0px;
     margin-bottom: 0px;
