@@ -23,7 +23,6 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <AppBar />
         <Switch>
           <Route path={`/${RT.entity}/:entityKey?`} component={EntityScreen} />
           <Route
@@ -31,17 +30,20 @@ class App extends Component {
             render={props => {
               const { datasetId, entityDatasetId } = props.match.params;
               return (
-                <PageContent>
-                  <Importer
-                    key={datasetId + ":" + entityDatasetId}
-                    datasetId={datasetId}
-                    entityDatasetId={entityDatasetId}
-                    onDone={(newEntity: Entity | undefined) => {
-                      if (newEntity)
-                        props.history.push(`/${RT.entity}/${newEntity._key}`);
-                    }}
-                  />
-                </PageContent>
+                <React.Fragment>
+                  <AppBar />
+                  <PageContent>
+                    <Importer
+                      key={datasetId + ":" + entityDatasetId}
+                      datasetId={datasetId}
+                      entityDatasetId={entityDatasetId}
+                      onDone={(newEntity: Entity | undefined) => {
+                        if (newEntity)
+                          props.history.push(`/${RT.entity}/${newEntity._key}`);
+                      }}
+                    />
+                  </PageContent>
+                </React.Fragment>
               );
             }}
           />
@@ -54,12 +56,15 @@ class App extends Component {
             render={props => {
               const { entity1Key, entity2Key } = props.match.params;
               return (
-                <RelationsScreen
-                  {...props}
-                  key={getRelationId(entity1Key, entity2Key) || undefined}
-                  entity1Key={entity1Key}
-                  entity2Key={entity2Key}
-                />
+                <React.Fragment>
+                  <AppBar />
+                  <RelationsScreen
+                    {...props}
+                    key={getRelationId(entity1Key, entity2Key) || undefined}
+                    entity1Key={entity1Key}
+                    entity2Key={entity2Key}
+                  />
+                </React.Fragment>
               );
             }}
           />

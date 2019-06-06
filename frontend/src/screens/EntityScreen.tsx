@@ -3,6 +3,9 @@ import { RouteComponentProps, withRouter } from "react-router";
 import styled, { css } from "styled-components";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
+import Hidden from "@material-ui/core/Hidden";
+import Drawer from "@material-ui/core/Drawer";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
@@ -21,10 +24,12 @@ import { media } from "../styles/media-styles";
 import History from "../components/History";
 import GraphLegend from "../components/graph/GraphLegend";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
+import AppBar from "../components/AppBar";
 
 const Content = styled.div`
   position: relative;
   overflow: hidden;
+  margin-left: ${props => props.theme.appSidebarWidth};
 `;
 
 const StyledMeta = styled(Meta)`
@@ -49,19 +54,14 @@ const Description = styled.div`
 const EntityButton = styled(IconButton)`
   display: block;
   margin: ${props => props.theme.inputTBSpacing} 0px;
-  ${media.mobile`display: none;`}
 `;
 
 interface ColumnProps {
   hideColumn?: boolean;
 }
 
-const LeftColumn = styled.div<ColumnProps>`
-  display: ${props => (props.hideColumn ? "none" : "block")}
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  max-height: 100%;
+const LeftColumn = styled.div`
+  display: block;
   min-width: ${props => props.theme.appSidebarWidth};
   width: ${props => props.theme.appSidebarWidth};
   padding: ${props => props.theme.blockPadding};
@@ -72,6 +72,8 @@ const LeftColumn = styled.div<ColumnProps>`
 `;
 
 const RightColumn = styled(LeftColumn)<ColumnProps>`
+display: ${props => (props.hideColumn ? "none" : "block")}
+position: absolute;
   right: 16px;
   left: unset;
   top: unset;
@@ -144,6 +146,7 @@ type State = {
   prevEntityKey: null | string;
   showLegend: boolean;
   showTitleCard: boolean;
+  mobileOpen: boolean;
 };
 
 class EntityScreen extends Component<Props> {
@@ -151,6 +154,7 @@ class EntityScreen extends Component<Props> {
     prevEntityKey: null,
     showLegend: window.innerWidth >= 800,
     showTitleCard: true,
+    mobileOpen: false,
   };
 
   get isWikidataEntity() {
@@ -226,43 +230,75 @@ class EntityScreen extends Component<Props> {
     });
   };
 
+  handleDrawerToggle = () => {
+    this.setState({ mobileOpen: !this.state.mobileOpen });
+  };
+  handleDrawerOpen = () => {
+    this.setState({ mobileOpen: true });
+  };
+  handleDrawerClose = () => {
+    this.setState({ mobileOpen: false });
+  };
+
   render() {
     const { entity, status, error, entityKey, t } = this.props;
+
+    const drawerContent = (
+      <LeftColumn>
+        {status === Status.Ok && (
+          <React.Fragment>
+            <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
+            <Description onClick={this.toggleTitleCard}>
+              {entity.text}
+            </Description>
+          </React.Fragment>
+        )}
+        <EntityButton small withText onClick={this.onEditEntity}>
+          <EditIcon />
+          Edit
+        </EntityButton>
+        <EntityButton small withText onClick={this.onAddRelation}>
+          <AddIcon />
+          Relation
+        </EntityButton>
+        {this.isWikidataEntity && (
+          <EntityButton small withText onClick={this.importWikidata}>
+            Update from Wikidata
+          </EntityButton>
+        )}
+        <History currentEntityKey={entity ? entity._key : undefined} />
+      </LeftColumn>
+    );
 
     // Always render the graph, even when the data isn't loaded,
     return (
       <Content>
+        <AppBar />
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
-        {this.state.showTitleCard ? (
-          <LeftColumn>
-            {status === Status.Ok && (
-              <React.Fragment>
-                <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
-                <Description onClick={this.toggleTitleCard}>
-                  {entity.text}
-                </Description>
-              </React.Fragment>
-            )}
-            <EntityButton small withText onClick={this.onEditEntity}>
-              <EditIcon />
-              Edit
-            </EntityButton>
-            <EntityButton small withText onClick={this.onAddRelation}>
-              <AddIcon />
-              Relation
-            </EntityButton>
-            {this.isWikidataEntity && (
-              <EntityButton small withText onClick={this.importWikidata}>
-                Update from Wikidata
-              </EntityButton>
-            )}
-            <History currentEntityKey={entity ? entity._key : undefined} />
-          </LeftColumn>
-        ) : (
-          <ToggleTitleCardButton small withText onClick={this.toggleTitleCard}>
-            {t(R.button_show_more)}
-          </ToggleTitleCardButton>
-        )}
+
+        <nav className={"test"} aria-label="Graph Info">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <SwipeableDrawer
+              variant="temporary"
+              anchor="left"
+              open={this.state.mobileOpen}
+              onOpen={this.handleDrawerOpen}
+              onClose={this.handleDrawerClose}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {drawerContent}
+            </SwipeableDrawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer variant="permanent" open>
+              {drawerContent}
+            </Drawer>
+          </Hidden>
+        </nav>
+
         <RightColumn hideColumn={!this.state.showLegend}>
           <GraphLegend />
         </RightColumn>
