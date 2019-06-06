@@ -24,14 +24,6 @@ const Content = styled.main`
   flex-direction: column;
 `;
 
-const StyledWebsiteTitle = styled(WebsiteTitle)`
-  & > * {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-  }
-`;
-
 const Bar = styled.div`
   display: inline-block;
   height: ${props => props.theme.navBarHeight};
@@ -106,7 +98,7 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
 
   return (
     <React.Fragment>
-      <StyledWebsiteTitle />
+      <WebsiteTitle />
       <Bar />
       <Content>
         <Header>
