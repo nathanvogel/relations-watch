@@ -15,7 +15,7 @@ const promiseAutocomplete = async (inputValue: string) => {
   if (!inputValue || inputValue.length <= 1) return;
   // Query our beautiful API
   const response = await api.get("/sources/autocomplete", {
-    params: { search: inputValue }
+    params: { search: inputValue },
   });
   if (response.status === 200) {
     // Convert the API data to react-select format.
@@ -27,7 +27,7 @@ const promiseAutocomplete = async (inputValue: string) => {
         label: data[i].pTitle || data[i].ref,
         ref: data[i].ref,
         pTitle: data[i].pTitle,
-        fullUrl: data[i].fullUrl
+        fullUrl: data[i].fullUrl,
       });
     }
     return suggestions;
@@ -85,7 +85,7 @@ const SourceRefSearch: FunctionComponent<Props> = (props: Props) => {
       placeholder={t(R.placeholder_add_reference)}
       loadOptions={promiseAutocomplete}
       formatCreateLabel={(inputValue: string) =>
-        t(R.label_select_add, { userInput: inputValue })
+        t(R.label_select_create, { userInput: inputValue })
       }
     />
   );

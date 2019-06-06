@@ -114,6 +114,10 @@ const MySelect = styled(StyledAsyncCreatableSelect)`
   display: inline-block;
 `;
 
+const WikidataCreateSubtitle = styled.div`
+  font-size: ${props => props.theme.fontSizeS};
+`;
+
 export interface Props {
   selection?: any;
   onChange?: (value: EntitySelectOption) => void;
@@ -272,9 +276,16 @@ const EntitySearch: FunctionComponent<Props> = (
       isValidNewOption={isValidNewOption}
       allowCreateWhileLoading={false}
       formatCreateLabel={(inputValue: string) =>
-        mode === "searchDb"
-          ? "Search " + inputValue + " on Wikidata"
-          : t(R.label_select_add, { userInput: inputValue })
+        mode === "searchDb" ? (
+          <React.Fragment>
+            <div>{t(R.label_select_create_wikidata)}</div>
+            <WikidataCreateSubtitle>
+              {t(R.label_select_create_wikidata_sub, { userInput: inputValue })}
+            </WikidataCreateSubtitle>
+          </React.Fragment>
+        ) : (
+          t(R.label_select_create, { userInput: inputValue })
+        )
       }
       menuIsOpen={menuIsOpen}
       onFocus={onFocus}
