@@ -1,12 +1,12 @@
 import { RelationType } from "../utils/types";
-import { DefaultTheme } from "styled-components";
+// import { DefaultTheme } from "styled-components";
 
-const theme: DefaultTheme = {
+const theme = {
   mainFont:
-    '"IBM Plex Sans", "Barlow", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
+    '"Proxima Nova", "IBM Plex Sans", "Barlow", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   fontSizeS: "14px",
-  fontSizeM: "19px",
-  fontSizeL: "26px",
+  fontSizeM: "20px",
+  fontSizeL: "28px",
   mainTextColor: "rgba(0, 0, 0, 0.84)" /* Stolen from Medium */,
   lightTextColor: "#ffffff",
   linkTextColor: "#0077CC", // Stackoverflow
@@ -16,6 +16,7 @@ const theme: DefaultTheme = {
   focusColor: "#5B44E8",
   appBG: "#FFFFFF",
   sidebarBG: "rgba(255, 255, 255, 0.78)",
+  darkBG: "rgba(0, 0, 0, 0.84)" /* Stolen from Medium */,
   lightBG: "#EFEFF2",
   inputBG: "#EFEFF2",
   errorBG: "#E37777",
@@ -38,7 +39,7 @@ const theme: DefaultTheme = {
   blockSpacingTB: "20px",
   navBarHeight: "54px",
   appMaxWidth: "1024px",
-  appSidebarWidth: "200px",
+  appSidebarWidth: "240px",
   appMiniSidebarWidth: "120px",
   appPaddingLR: "24px",
   appPaddingTB: "12px",

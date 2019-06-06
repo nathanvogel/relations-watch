@@ -5,14 +5,13 @@ import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
 import { ReactSelectOption } from "../utils/types";
-import IconButton from "./buttons/IconButton";
-import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
-import { ReactComponent as AppIcon } from "../assets/ic_app.svg";
 
 const Bar = styled.nav`
   display: block;
   height: ${props => props.theme.navBarHeight};
   background: ${props => props.theme.lightBG};
+  border-bottom: solid 1px ${props => props.theme.darkBG};
+  box-sizing: border-box;
 `;
 
 const BarContent = styled.div`
@@ -24,46 +23,22 @@ const BarContent = styled.div`
   padding-right: ${props => props.theme.appPaddingLR};
 `;
 
-const StyledAppIcon = styled(AppIcon)`
-  height: calc(${props => props.theme.navBarHeight} - 6px);
-  width: calc(${props => props.theme.navBarHeight} - 6px);
-  // width: 100%;
-  // max-height: 100%;
-`;
-
-const AppBarButton = styled(IconButton)`
-  height: calc(${props => props.theme.navBarHeight} - 4px);
-  max-height: 100%;
-  margin-left: ${props => props.theme.marginLR};
-  margin-right: ${props => props.theme.marginLR};
-`;
-
-const HomeLink = styled(Link)`
-  font-weight: 700;
-  display: flex;
-  // height: 100%;
-  &:link,
-  &:active,
-  &:visited {
-    text-decoration: none;
-    color: ${props => props.theme.mainTextColor};
-  }
-  &:hover {
-    text-decoration: none;
-    opacity: 0.7;
-  }
-  font-size: ${props => props.theme.fontSizeL};
-`;
+// const AppBarButton = styled(IconButton)`
+//   height: calc(${props => props.theme.navBarHeight} - 4px);
+//   max-height: 100%;
+//   margin-left: ${props => props.theme.marginLR};
+//   margin-right: ${props => props.theme.marginLR};
+// `;
 
 const StyledSearch = styled(EntitySearch)`
   flex-grow: 1;
   & > .rs__control {
     height: 100%;
   }
-  margin-left: ${props => props.theme.marginLR};
-  margin-right: ${props => props.theme.marginLR};
-  padding-top: 2px;
-  padding-bottom: 2px;
+  // margin-left: ${props => props.theme.marginLR};
+  // margin-right: ${props => props.theme.marginLR};
+  padding-top: 6px;
+  padding-bottom: 6px;
   height: 100%;
   width: 150px;
   min-width: 60px;
@@ -93,9 +68,6 @@ class AppBar extends React.Component<RouteComponentProps> {
     return (
       <Bar>
         <BarContent>
-          <HomeLink to="/">
-            <StyledAppIcon />
-          </HomeLink>
           {this.props.location.pathname !== "/" && (
             <StyledSearch
               onChange={this.onSearch}

@@ -32,9 +32,10 @@ const SVG = styled.svg`
 `;
 
 // ===== NODE APPEARANCE
+const fontSizeS: number = parseInt(theme.fontSizeS);
 
 function size(d: V4NodeDatum): number {
-  return 14;
+  return fontSizeS;
   // return sizeT(d.type);
 }
 function sizeT(type: NodeRenderType): number {
@@ -46,7 +47,7 @@ function sizeT(type: NodeRenderType): number {
   //   case NodeRenderType.Tertiary:
   //     return 14;
   // }
-  return 14;
+  return fontSizeS;
 }
 
 function nodeTranslate(d: V4NodeDatum): string {
@@ -69,11 +70,10 @@ function fontWeight(d: V4NodeDatum): string {
 function fontSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
-      return 14;
     case NodeRenderType.Secondary:
-      return 14;
+      return fontSizeS;
     case NodeRenderType.Tertiary:
-      return 12;
+      return fontSizeS - 2;
   }
 }
 
@@ -433,9 +433,12 @@ class GraphV4 extends React.Component<Props> {
       // Keep all nodes within our canvas
       .force(
         "boundary",
-        forceBoundary(bigGraph ? 0 : 180, 40, width - 180, height - 0).strength(
-          1.4
-        )
+        forceBoundary(
+          bigGraph ? 20 : 180,
+          40,
+          width - 180,
+          height - 20
+        ).strength(1.4)
       );
     if (!network) {
       this.simulation.force(

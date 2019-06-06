@@ -11,6 +11,8 @@ import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import EntityDetails from "../components/EntityDetails";
 import { media } from "../styles/media-styles";
 import TertiaryTitle from "../components/titles/TertiaryTitle";
+import WebsiteTitle from "../components/titles/WebsiteTitle";
+import AppBar from "../components/AppBar";
 
 const Content = styled.main`
   ${PageWidthSizer}
@@ -19,6 +21,25 @@ const Content = styled.main`
   display: flex;
   min-height: calc(100vh - ${props => props.theme.navBarHeight});
   flex-direction: column;
+`;
+
+const StyledWebsiteTitle = styled(WebsiteTitle)`
+  & > * {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+`;
+
+const Bar = styled.div`
+  background-color: ${props => props.theme.lightBG};
+  display: inline-block;
+  position: absolute;
+  left: ${props => props.theme.appSidebarWidth};
+  right: 0px;
+  top: 0px;
+  // width: 100%;
+  height: ${props => props.theme.navBarHeight};
 `;
 
 const Header = styled.header`
@@ -88,37 +109,41 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
   };
 
   return (
-    <Content>
-      <Header>
-        {/* <CentralTitle>Explore the relation graph</CentralTitle> */}
-        <CentralSearch autoFocus onChange={onSearch} />
-      </Header>
-      <Article>
-        <TertiaryTitle>{t(R.home_trending)}</TertiaryTitle>
-        <ItemList>
-          <EntityDetails entityKey={"1539778"} />
-          <EntityDetails entityKey={"1589920"} />
-          <EntityDetails entityKey={"222110"} />
-          {/* <EntityDetails entityKey={"1701669"} /> */}
-        </ItemList>
-        <br />
-        {/* <h2>{t(R.slogan)}</h2> */}
-        <h3>{t(R.faq_about_q)}</h3>
-        <p>{t(R.faq_about_a)}</p>
-        <h3>{t(R.faq_data_q)}</h3>
-        <p>
-          <Trans i18nKey={R.faq_data_a}>
-            <a href="https://www.monde-diplomatique.fr/cartes/PPA" />
-          </Trans>
-        </p>
-      </Article>
-      <Footer>
-        <a href="/?lng=en">EN</a> / <a href="/?lng=fr">FR</a> -{" "}
-        <a href="https://github.com/nathanvogel/relations-watch">
-          {t(R.source_link_text)}
-        </a>
-      </Footer>
-    </Content>
+    <React.Fragment>
+      <StyledWebsiteTitle />
+      <Bar />
+      <Content>
+        <Header>
+          {/* <CentralTitle>Explore the relation graph</CentralTitle> */}
+          <CentralSearch autoFocus onChange={onSearch} />
+        </Header>
+        <Article>
+          <TertiaryTitle>{t(R.home_trending)}</TertiaryTitle>
+          <ItemList>
+            <EntityDetails entityKey={"1539778"} />
+            <EntityDetails entityKey={"1589920"} />
+            <EntityDetails entityKey={"222110"} />
+            {/* <EntityDetails entityKey={"1701669"} /> */}
+          </ItemList>
+          <br />
+          {/* <h2>{t(R.slogan)}</h2> */}
+          <h3>{t(R.faq_about_q)}</h3>
+          <p>{t(R.faq_about_a)}</p>
+          <h3>{t(R.faq_data_q)}</h3>
+          <p>
+            <Trans i18nKey={R.faq_data_a}>
+              <a href="https://www.monde-diplomatique.fr/cartes/PPA" />
+            </Trans>
+          </p>
+        </Article>
+        <Footer>
+          <a href="/?lng=en">EN</a> / <a href="/?lng=fr">FR</a> -{" "}
+          <a href="https://github.com/nathanvogel/relations-watch">
+            {t(R.source_link_text)}
+          </a>
+        </Footer>
+      </Content>
+    </React.Fragment>
   );
 };
 

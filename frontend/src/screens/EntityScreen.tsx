@@ -25,6 +25,7 @@ import History from "../components/History";
 import GraphLegend from "../components/graph/GraphLegend";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
 import AppBar from "../components/AppBar";
+import WebsiteTitle from "../components/titles/WebsiteTitle";
 
 const Content = styled.div`
   position: relative;
@@ -40,14 +41,14 @@ const StyledMeta = styled(Meta)`
 
 const Name = styled.div`
   text-align: left;
-  font-weight: bold;
+  font-weight: 700;
   font-size: ${props => props.theme.fontSizeM};
   ${media.mobile`font-size: ${(props: any) => props.theme.fontSizeS};`}
 `;
 
 const Description = styled.div`
   text-align: left;
-  font-size: ${props => props.theme.fontSizeS};
+  font-size: ${props => props.theme.fontSizeM};
   margin-bottom: ${props => props.theme.marginTB};
 `;
 
@@ -60,20 +61,37 @@ interface ColumnProps {
   hideColumn?: boolean;
 }
 
+const StyledDrawer = styled(Drawer)`
+  border-right: none;
+
+  .MuiDrawer-paperAnchorDockedLeft {
+    border-right: none;
+  }
+` as typeof Drawer;
+// = necessary hack for now
+// https://github.com/mui-org/material-ui/issues/13921#issuecomment-484133463
+
+const DrawerContent = styled.div`
+  background-color: ${props => props.theme.sidebarBG};
+  border-right: solid 1px ${props => props.theme.darkBG};
+  box-sizing: border-box;
+  height: 100%;
+`;
+
 const LeftColumn = styled.div`
   display: block;
   min-width: ${props => props.theme.appSidebarWidth};
   width: ${props => props.theme.appSidebarWidth};
+  max-width: 100vw;
   padding: ${props => props.theme.blockPadding};
   padding-top: 16px;
   box-sizing: border-box;
   background-color: ${props => props.theme.sidebarBG};
-  box-shadow: 15px 0px 15px 0px ${props => props.theme.sidebarBG};
 `;
 
 const RightColumn = styled(LeftColumn)<ColumnProps>`
-display: ${props => (props.hideColumn ? "none" : "block")}
-position: absolute;
+  display: ${props => (props.hideColumn ? "none" : "block")}
+  position: absolute;
   right: 16px;
   left: unset;
   top: unset;
@@ -82,7 +100,9 @@ position: absolute;
   overflow-y: auto;
   min-width: ${props => props.theme.appMiniSidebarWidth};
   width: ${props => props.theme.appMiniSidebarWidth};
-  box-shadow: -15px 0px 15px 0px ${props => props.theme.sidebarBG};
+  background-color: ${props => props.theme.appBG};
+  opacity: 0.95;
+  // box-shadow: -15px 0px 15px 0px ${props => props.theme.sidebarBG};
   // Space for the toggle button
   padding-bottom: 44px;
 
@@ -244,30 +264,33 @@ class EntityScreen extends Component<Props> {
     const { entity, status, error, entityKey, t } = this.props;
 
     const drawerContent = (
-      <LeftColumn>
-        {status === Status.Ok && (
-          <React.Fragment>
-            <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
-            <Description onClick={this.toggleTitleCard}>
-              {entity.text}
-            </Description>
-          </React.Fragment>
-        )}
-        <EntityButton small withText onClick={this.onEditEntity}>
-          <EditIcon />
-          Edit
-        </EntityButton>
-        <EntityButton small withText onClick={this.onAddRelation}>
-          <AddIcon />
-          Relation
-        </EntityButton>
-        {this.isWikidataEntity && (
-          <EntityButton small withText onClick={this.importWikidata}>
-            Update from Wikidata
+      <DrawerContent>
+        <WebsiteTitle />
+        <LeftColumn>
+          {status === Status.Ok && (
+            <React.Fragment>
+              <Name onClick={this.toggleTitleCard}>{entity.name} </Name>
+              <Description onClick={this.toggleTitleCard}>
+                {entity.text}
+              </Description>
+            </React.Fragment>
+          )}
+          <EntityButton small withText onClick={this.onEditEntity}>
+            <EditIcon />
+            Edit
           </EntityButton>
-        )}
-        <History currentEntityKey={entity ? entity._key : undefined} />
-      </LeftColumn>
+          <EntityButton small withText onClick={this.onAddRelation}>
+            <AddIcon />
+            Relation
+          </EntityButton>
+          {this.isWikidataEntity && (
+            <EntityButton small withText onClick={this.importWikidata}>
+              Update from Wikidata
+            </EntityButton>
+          )}
+          <History currentEntityKey={entity ? entity._key : undefined} />
+        </LeftColumn>
+      </DrawerContent>
     );
 
     // Always render the graph, even when the data isn't loaded,
@@ -293,9 +316,9 @@ class EntityScreen extends Component<Props> {
             </SwipeableDrawer>
           </Hidden>
           <Hidden xsDown implementation="css">
-            <Drawer variant="permanent" open>
+            <StyledDrawer variant="permanent" open>
               {drawerContent}
-            </Drawer>
+            </StyledDrawer>
           </Hidden>
         </nav>
 

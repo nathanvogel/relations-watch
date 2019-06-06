@@ -18,9 +18,12 @@ const Content = styled.div`
   width: 100%;
 `;
 
-const HistoryGraphTitle = styled(TertiaryTitle)`
+const HistoryGraphTitle = styled.h3`
   color: inherit;
   font-weight: bold;
+  margin-top: ${props => props.theme.marginTB};
+  margin-bottom: 0.4em;
+  font-size: ${props => props.theme.fontSizeM};
 `;
 
 const List = styled.ul`
@@ -82,7 +85,7 @@ const History: React.FunctionComponent<Props> = props => {
   return (
     <Content>
       <Link to={`/${ROUTES.history}`}>
-        <HistoryGraphTitle>Your history graph</HistoryGraphTitle>
+        <HistoryGraphTitle>History</HistoryGraphTitle>
       </Link>
       <List>
         {entities.map((_, index) => {
