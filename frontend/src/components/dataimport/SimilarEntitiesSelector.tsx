@@ -6,7 +6,7 @@ import {
   Dictionary,
 } from "../../utils/types";
 import styled from "styled-components";
-import { media } from "../../styles/media-styles";
+import { media } from "../../styles/responsive-utils";
 import EntityPreview from "../entity/EntityPreview";
 
 const Row = styled.div`

@@ -6,7 +6,7 @@ import cuid from "cuid";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
-import { media } from "../styles/media-styles";
+import { media } from "../styles/responsive-utils";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";

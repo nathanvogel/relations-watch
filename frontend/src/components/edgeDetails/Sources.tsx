@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { media } from "../../styles/media-styles";
+import { media } from "../../styles/responsive-utils";
 
 const Content = styled.div`
   display: flex;

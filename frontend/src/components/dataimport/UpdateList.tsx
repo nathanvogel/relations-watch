@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { Entity, Edge, Dictionary } from "../../utils/types";
 import styled from "styled-components";
-import { media } from "../../styles/media-styles";
+import { media } from "../../styles/responsive-utils";
 import EdgeSummary from "../edgeDetails/EdgeSummary";
 import ErrorBox from "../meta/ErrorBox";
 import EntityPreview from "../entity/EntityPreview";

@@ -9,7 +9,7 @@ import { ReactSelectOption } from "../utils/types";
 import R from "../strings/R";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import EntityDetails from "../components/EntityDetails";
-import { media } from "../styles/media-styles";
+import { media } from "../styles/responsive-utils";
 import TertiaryTitle from "../components/titles/TertiaryTitle";
 import WebsiteTitle from "../components/titles/WebsiteTitle";
 import AppBar from "../components/AppBar";

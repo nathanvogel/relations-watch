@@ -20,7 +20,7 @@ import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import CONSTS from "../utils/consts";
 import { withTranslation, WithTranslation } from "react-i18next";
 import R from "../strings/R";
-import { media } from "../styles/media-styles";
+import { media, Mobile, NotMobile } from "../styles/responsive-utils";
 import History from "../components/History";
 import GraphLegend from "../components/graph/GraphLegend";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
@@ -31,6 +31,7 @@ const Content = styled.div`
   position: relative;
   overflow: hidden;
   margin-left: ${props => props.theme.appSidebarWidth};
+  ${media.mobile`margin-left: 0;`}
 `;
 
 const StyledMeta = styled(Meta)`
@@ -43,8 +44,7 @@ const Name = styled.div`
   text-align: left;
   font-weight: 700;
   font-size: ${props => props.theme.fontSizeM};
-  ${media.mobile`font-size: ${(props: any) => props.theme.fontSizeS};`}
-  font-family: ${props => props.theme.secondaryFont};;
+  font-family: ${props => props.theme.secondaryFont};
   font-size: 24px;
 `;
 
@@ -298,12 +298,11 @@ class EntityScreen extends Component<Props> {
     // Always render the graph, even when the data isn't loaded,
     return (
       <Content>
-        <AppBar />
+        <AppBar onLeftMenuClick={this.handleDrawerToggle} />
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
 
         <nav className={"test"} aria-label="Graph Info">
-          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-          <Hidden smUp implementation="css">
+          <Mobile>
             <SwipeableDrawer
               variant="temporary"
               anchor="left"
@@ -316,12 +315,12 @@ class EntityScreen extends Component<Props> {
             >
               {drawerContent}
             </SwipeableDrawer>
-          </Hidden>
-          <Hidden xsDown implementation="css">
+          </Mobile>
+          <NotMobile>
             <StyledDrawer variant="permanent" open>
               {drawerContent}
             </StyledDrawer>
-          </Hidden>
+          </NotMobile>
         </nav>
 
         <RightColumn hideColumn={!this.state.showLegend}>
