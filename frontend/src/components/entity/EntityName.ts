@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const EntityName = styled.div`
   font-weight: bold;
-  font-size: ${props => props.theme.fontSizeS};
+  font-size: ${props => props.theme.fontSizeM};
   font-family: ${props => props.theme.secondaryFont};
 `;
 

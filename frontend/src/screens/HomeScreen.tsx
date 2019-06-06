@@ -33,14 +33,15 @@ const StyledWebsiteTitle = styled(WebsiteTitle)`
 `;
 
 const Bar = styled.div`
-  background-color: ${props => props.theme.darkBG};
   display: inline-block;
+  height: ${props => props.theme.navBarHeight};
+
   position: absolute;
+  top: 0px;
   left: ${props => props.theme.appSidebarWidth};
   right: 0px;
-  top: 0px;
-  // width: 100%;
-  height: ${props => props.theme.navBarHeight};
+
+  background-color: ${props => props.theme.darkBG};
 `;
 
 const Header = styled.header`
@@ -49,6 +50,9 @@ const Header = styled.header`
 
 const Article = styled.article`
   flex-grow: 1;
+  display: flex;
+  flex-flow: row-reverse;
+  ${media.tablet`display: block;`}
 `;
 
 const Footer = styled.footer`
@@ -69,29 +73,25 @@ const CentralSearch = styled(EntitySearch)`
   }
 `;
 
-const ItemList = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  // overflow: auto;
-  // white-space: nowrap;
-  // margin-top: -18px;
+const ItemsSection = styled.section`
+  min-width: 300px;
+  width: 300px;
+  max-width: 40%;
+  margin-top: 2em;
+  margin-left: 2.5em;
+  ${media.tablet`
+    margin-left: 0;
+    margin-top: 0;
+    width: 100%;
+    max-width: 100%;
+    `}
+`;
 
+const ItemList = styled.div`
   & > * {
-    display: inline-block;
-    min-width: 12em;
-    max-width: 19em;
-    margin-right: ${props => props.theme.marginLR};
+    display: block;
     margin-top: ${props => props.theme.marginTB};
     margin-bottom: ${props => props.theme.marginTB};
-    ${media.mobile`width: 100%;`}
-
-    > div {
-      height: calc(
-        100% - ${props => props.theme.inputPaddingTB} -
-          ${props => props.theme.inputPaddingTB}
-      );
-    }
   }
 `;
 
@@ -118,23 +118,26 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
           />
         </Header>
         <Article>
-          <TertiaryTitle>{t(R.home_trending)}</TertiaryTitle>
-          <ItemList>
-            <EntityDetails entityKey={"1539778"} />
-            <EntityDetails entityKey={"1589920"} />
-            <EntityDetails entityKey={"222110"} />
-            {/* <EntityDetails entityKey={"1701669"} /> */}
-          </ItemList>
-          <br />
-          {/* <h2>{t(R.slogan)}</h2> */}
-          <SecondaryTitle>{t(R.faq_about_q)}</SecondaryTitle>
-          <p>{t(R.faq_about_a)}</p>
-          <SecondaryTitle>{t(R.faq_data_q)}</SecondaryTitle>
-          <p>
-            <Trans i18nKey={R.faq_data_a}>
-              <a href="https://www.monde-diplomatique.fr/cartes/PPA" />
-            </Trans>
-          </p>
+          <ItemsSection>
+            <TertiaryTitle>{t(R.home_trending)}</TertiaryTitle>
+            <ItemList>
+              <EntityDetails entityKey={"1539778"} />
+              <EntityDetails entityKey={"1589920"} />
+              <EntityDetails entityKey={"222110"} />
+              {/* <EntityDetails entityKey={"1701669"} /> */}
+            </ItemList>
+          </ItemsSection>
+          <div>
+            {/* <h2>{t(R.slogan)}</h2> */}
+            <SecondaryTitle>{t(R.faq_about_q)}</SecondaryTitle>
+            <p>{t(R.faq_about_a)}</p>
+            <SecondaryTitle>{t(R.faq_data_q)}</SecondaryTitle>
+            <p>
+              <Trans i18nKey={R.faq_data_a}>
+                <a href="https://www.monde-diplomatique.fr/cartes/PPA" />
+              </Trans>
+            </p>
+          </div>
         </Article>
         <Footer>
           <a href="/?lng=en">EN</a> / <a href="/?lng=fr">FR</a> -{" "}
