@@ -3,7 +3,7 @@ import { RelationType } from "../utils/types";
 
 const theme = {
   mainFont:
-    '"Proxima Nova", "IBM Plex Sans", "Barlow", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
+    '"Proxima Nova", proxima-nova, "IBM Plex Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   secondaryFont: '"SangBleu Republic", "Calluna", "Lapture", serif',
   fontSizeS: "15px",
   fontSizeM: "20px",

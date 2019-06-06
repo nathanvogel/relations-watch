@@ -1,0 +1,11 @@
+@font-face {
+  font-family: "SangBleu Republic";
+  src: url("SangBleuRepublic-Bold-WebS.eot");
+  src: url("SangBleuRepublic-Bold-WebS.eot?#iefix") format("embedded-opentype"),
+    url("SangBleuRepublic-Bold-WebS.woff2") format("woff2"),
+    url("SangBleuRepublic-Bold-WebS.woff") format("woff"),
+    url("SangBleuRepublic-Bold-WebS.ttf") format("truetype"),
+    url("SangBleuRepublic-Bold-WebS.svg") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
