@@ -13,6 +13,7 @@ import { media } from "../styles/media-styles";
 import TertiaryTitle from "../components/titles/TertiaryTitle";
 import WebsiteTitle from "../components/titles/WebsiteTitle";
 import AppBar from "../components/AppBar";
+import SecondaryTitle from "../components/titles/SecondaryTitle";
 
 const Content = styled.main`
   ${PageWidthSizer}
@@ -32,7 +33,7 @@ const StyledWebsiteTitle = styled(WebsiteTitle)`
 `;
 
 const Bar = styled.div`
-  background-color: ${props => props.theme.lightBG};
+  background-color: ${props => props.theme.darkBG};
   display: inline-block;
   position: absolute;
   left: ${props => props.theme.appSidebarWidth};
@@ -66,11 +67,6 @@ const CentralSearch = styled(EntitySearch)`
   .rs__control {
     padding: 4px ${props => props.theme.inputPaddingLR};
   }
-`;
-
-const CentralTitle = styled.h2`
-  text-align: center;
-  font-size: 24px;
 `;
 
 const ItemList = styled.div`
@@ -115,7 +111,11 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
       <Content>
         <Header>
           {/* <CentralTitle>Explore the relation graph</CentralTitle> */}
-          <CentralSearch autoFocus onChange={onSearch} />
+          <CentralSearch
+            autoFocus
+            onChange={onSearch}
+            placeholder={t(R.placeholder_explicit_search)}
+          />
         </Header>
         <Article>
           <TertiaryTitle>{t(R.home_trending)}</TertiaryTitle>
@@ -127,9 +127,9 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
           </ItemList>
           <br />
           {/* <h2>{t(R.slogan)}</h2> */}
-          <h3>{t(R.faq_about_q)}</h3>
+          <SecondaryTitle>{t(R.faq_about_q)}</SecondaryTitle>
           <p>{t(R.faq_about_a)}</p>
-          <h3>{t(R.faq_data_q)}</h3>
+          <SecondaryTitle>{t(R.faq_data_q)}</SecondaryTitle>
           <p>
             <Trans i18nKey={R.faq_data_a}>
               <a href="https://www.monde-diplomatique.fr/cartes/PPA" />

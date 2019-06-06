@@ -122,6 +122,7 @@ export interface Props {
   className?: string;
   autoFocus?: boolean;
   isMulti?: boolean;
+  placeholder?: string;
 }
 
 const defaultProps: Props = {
@@ -262,7 +263,9 @@ const EntitySearch: FunctionComponent<Props> = (
           ? t(R.label_no_element_found)
           : null;
       }}
-      placeholder={t(R.placeholder_search)}
+      placeholder={
+        props.placeholder == null ? t(R.placeholder_search) : props.placeholder
+      }
       loadOptions={
         mode === "searchWd" ? promiseWikidataAutocomplete : promiseAutocomplete
       }

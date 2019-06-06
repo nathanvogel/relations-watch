@@ -23,7 +23,8 @@ const HistoryGraphTitle = styled.h3`
   font-weight: bold;
   margin-top: ${props => props.theme.marginTB};
   margin-bottom: 0.4em;
-  font-size: ${props => props.theme.fontSizeM};
+  font-family: ${props => props.theme.secondaryFont};
+  font-size: 24px;
 `;
 
 const List = styled.ul`

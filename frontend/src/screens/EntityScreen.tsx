@@ -44,6 +44,8 @@ const Name = styled.div`
   font-weight: 700;
   font-size: ${props => props.theme.fontSizeM};
   ${media.mobile`font-size: ${(props: any) => props.theme.fontSizeS};`}
+  font-family: ${props => props.theme.secondaryFont};;
+  font-size: 24px;
 `;
 
 const Description = styled.div`

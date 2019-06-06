@@ -144,9 +144,9 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   const dist1 = 0; // size(e1) / 2 - 2;
   const dist2 = 0; // size(e2) / 2 - 2;
   p.x1 = e1.x;
-  p.y1 = e1.y - 5;
+  p.y1 = e1.y - 6;
   p.x2 = e2.x;
-  p.y2 = e2.y - 5;
+  p.y2 = e2.y - 6;
   p.angle = Math.atan2(p.y2 - p.y1, p.x2 - p.x1);
   p.x1 += Math.cos(p.angle) * dist1;
   p.y1 += Math.sin(p.angle) * dist1;

@@ -4,7 +4,8 @@ import { RelationType } from "../utils/types";
 const theme = {
   mainFont:
     '"Proxima Nova", "IBM Plex Sans", "Barlow", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
-  fontSizeS: "14px",
+  secondaryFont: '"SangBleu Republic", "Calluna", "Lapture", serif',
+  fontSizeS: "15px",
   fontSizeM: "20px",
   fontSizeL: "28px",
   mainTextColor: "rgba(0, 0, 0, 0.84)" /* Stolen from Medium */,
@@ -40,11 +41,11 @@ const theme = {
   navBarHeight: "54px",
   appMaxWidth: "1024px",
   appSidebarWidth: "240px",
-  appMiniSidebarWidth: "120px",
+  appMiniSidebarWidth: "130px",
   appPaddingLR: "24px",
   appPaddingTB: "12px",
   longFieldHeight: "3em",
-  radius: "4px",
+  radius: "2px",
 };
 
 export const RELATION_COLORS = {
