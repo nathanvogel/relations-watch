@@ -81,6 +81,16 @@ function fontSize(d: V4NodeDatum): number {
   }
 }
 
+const iconSize = fontSize;
+
+function labelDx(d: V4NodeDatum): number {
+  return d.isLabelOnTheLeft ? -1 : fontSize(d) + 1;
+}
+
+function labelAnchor(d: V4NodeDatum): string {
+  return d.isLabelOnTheLeft ? "end" : "start";
+}
+
 function nodeImage(d: V4NodeDatum): string {
   return getEntitySAsset(d.entity.type);
 }
@@ -379,7 +389,8 @@ class GraphV4 extends React.Component<Props> {
           .id(d => {
             return d.entityKey;
           })
-          .strength(bigGraph ? 0.8 : network ? 0.4 : 0.4) // Warning: crashes if higher than 2, better stay within [0,1]
+          // Warning: crashes if higher than 2, better stay within [0,1]
+          .strength(bigGraph ? 0.8 : network ? 0.4 : 0.4)
           // Make some links closer than others.
           .distance(
             d =>
@@ -490,14 +501,20 @@ class GraphV4 extends React.Component<Props> {
       .on("mouseover", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
+          .transition()
+          .duration(110)
+          .attr("opacity", 1)
           .attr("stroke-width", Math.max(11, linkStrokeWidth(d)));
         // .attr("stroke", "#000000");
       })
       .on("mouseout", function(d) {
         d3.select(this.parentNode as any)
           .select(".visual")
-          .attr("stroke", linkColor(d))
+          .transition()
+          .duration(80)
+          .attr("opacity", linkOpacity(d))
           .attr("stroke-width", linkStrokeWidth(d));
+        // .attr("stroke", linkColor(d))
       })
       .select(goToParent)
       .merge(links as any);
@@ -551,13 +568,31 @@ class GraphV4 extends React.Component<Props> {
       .on("mouseover", function(d) {
         d3.select(this)
           .select("text")
-          .text(d.entity.name);
+          .text(d.entity.name)
+          .transition()
+          .duration(120)
+          .attr("dx", labelDx(d) + (d.isLabelOnTheLeft ? -3 : 3))
+          .attr("transform", "scale(1.1)");
+        d3.select(this)
+          .select("image")
+          .transition()
+          .duration(120)
+          .attr("transform", "scale(1.4)");
       })
       .on("mouseout", function(d) {
         // this.textContent = d.entity.name;
         d3.select(this)
           .select("text")
-          .text(getShortString(d.entity.name));
+          .text(getShortString(d.entity.name))
+          .transition()
+          .duration(120)
+          .attr("dx", labelDx(d))
+          .attr("transform", "scale(1)");
+        d3.select(this)
+          .select("image")
+          .transition()
+          .duration(120)
+          .attr("transform", "scale(1)");
       })
       // Add the text background
       // .append("rect")
@@ -570,22 +605,26 @@ class GraphV4 extends React.Component<Props> {
       // Add the text child
       .append("text")
       .text(d => getShortString(d.entity.name))
-      .attr("dy", d => fontSize(d) * 0.8)
-      .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor))
       .select(goToParent)
       .merge(nodes as any);
     // Update dynamic attributes for all nodes:
     var labels = nodes2
       .select("text")
       .attr("font-size", fontSize)
-      .attr("font-weight", fontWeight);
+      .attr("font-weight", fontWeight)
+      .attr("dy", d => iconSize(d) * 0.8)
+      .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor));
     // .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")
       // .attr("y", 0)
       // .attr("x", 0)
-      .attr("width", fontSize)
-      .attr("height", fontSize);
+      .attr(
+        "transform-origin",
+        d => `${iconSize(d) / 2}px ${iconSize(d) / 2}px`
+      )
+      .attr("width", iconSize)
+      .attr("height", iconSize);
 
     /*
     // Get the text size and resize the background
@@ -630,6 +669,10 @@ class GraphV4 extends React.Component<Props> {
         computeLinkPosition(linkPositions[rRelation.relationId], rRelation);
       }
 
+      for (let rEntity of rEntities) {
+        rEntity.isLabelOnTheLeft = isLabelOnTheLeft(rEntity);
+      }
+
       linksVisual
         .attr("x1", d => linkPositions[d.relationId].x1)
         .attr("y1", d => linkPositions[d.relationId].y1)
@@ -656,9 +699,7 @@ class GraphV4 extends React.Component<Props> {
       // .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
 
       nodes2.attr("transform", nodeTranslate);
-      labels
-        .attr("text-anchor", d => (isLabelOnTheLeft(d) ? "end" : "start"))
-        .attr("dx", d => (isLabelOnTheLeft(d) ? -1 : fontSize(d) + 1));
+      labels.attr("text-anchor", labelAnchor).attr("dx", labelDx);
     });
 
     // Update the data in the simulation.

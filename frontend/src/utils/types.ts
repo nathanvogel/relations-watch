@@ -465,6 +465,11 @@ export type V4NodeDatum = {
    * Holder for the post-render computed text box size
    */
   bb?: DOMRect;
+  /**
+   * Each frame, it should be computed whether the text is in a non-default
+   * position. (to be reused on hover for example)
+   */
+  isLabelOnTheLeft?: boolean;
 };
 
 export type V4LinkPosDatum = {

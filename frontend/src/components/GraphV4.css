@@ -17,6 +17,14 @@ svg .nodes g:hover text {
   font-weight: bold;
 }
 
+svg g.node {
+  pointer-events: bounding-box;
+}
+
+/* svg g.links {
+  pointer-events: visible;
+} */
+
 /* svg .nodes image {
   opacity: 0.4;
 } */
