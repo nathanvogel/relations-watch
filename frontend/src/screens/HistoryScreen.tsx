@@ -14,6 +14,7 @@ import Meta from "../components/meta/Meta";
 import FreeGraphContainer from "../components/graph/FreeGraphContainer";
 import DrawerLayout from "../components/layout/DrawerLayout";
 import History from "../components/History";
+import graphSelections from "../utils/some-graph-selections";
 
 const HistoryWrapper = styled.div`
   padding: ${props => props.theme.blockPadding};
@@ -24,7 +25,7 @@ type Props = ReturnType<typeof mapStateToProps> &
   WithTranslation;
 
 const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
-  const entitySelection = state.entitySelection; // selections.trumpfamily;
+  const entitySelection = state.entitySelection; //graphSelections.benalla2;
   return {
     entitySelection,
     allEntities: state.entities,

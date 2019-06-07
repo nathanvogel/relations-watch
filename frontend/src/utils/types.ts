@@ -269,7 +269,7 @@ export const ProximityWeights = {
   [RelationType.IsOwned]: 4,
   [RelationType.IsControlled]: 2,
   [RelationType.ValueExchange]: 1.2,
-  [RelationType.Love]: 3,
+  [RelationType.Love]: 1.3,
   [RelationType.Opposition]: 1,
   [RelationType.IsInfluenced]: 1,
   [RelationType.Attendance]: 1,
@@ -280,7 +280,7 @@ export const ProximityWeights = {
 export const FProximityWeights = {
   [FamilialLink.childOf]: 1.5,
   [FamilialLink.siblingOf]: 1,
-  [FamilialLink.spouseOf]: 2.2,
+  [FamilialLink.spouseOf]: 1.3,
   [FamilialLink.other]: 0.3,
 };
 
@@ -473,6 +473,7 @@ export type V4LinkPosDatum = {
   x2: number;
   y2: number;
   angle: number;
+  degAngle: number;
 };
 
 export type V4LinkDatum = V4GenericLinkDatum<V4NodeDatum>;

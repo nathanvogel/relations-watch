@@ -31,6 +31,8 @@ const SVG = styled.svg`
   display: block;
 `;
 
+const RAD_TO_DEG = 180 / Math.PI;
+
 // ===== NODE APPEARANCE
 const fontSizeS: number = parseInt(theme.fontSizeS);
 const fontSizeM: number = parseInt(theme.fontSizeM);
@@ -150,6 +152,7 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   p.x2 = e2.x;
   p.y2 = e2.y - 6;
   p.angle = Math.atan2(p.y2 - p.y1, p.x2 - p.x1);
+  p.degAngle = p.angle * RAD_TO_DEG;
   p.x1 += Math.cos(p.angle) * dist1;
   p.y1 += Math.sin(p.angle) * dist1;
   p.x2 -= Math.cos(p.angle) * dist2;
@@ -278,7 +281,14 @@ class GraphV4 extends React.Component<Props> {
         this.linksData[relationId] || {},
         rRelationsByKey[relationId]
       );
-      linkPositions[relationId] = { x1: 0, y1: 0, x2: 0, y2: 0, angle: 0 };
+      linkPositions[relationId] = {
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
+        angle: 0,
+        degAngle: 0,
+      };
       rRelations.push(this.linksData[relationId]);
     }
 
@@ -504,17 +514,21 @@ class GraphV4 extends React.Component<Props> {
     // INDICATORS rendering
     var indicatorGroup = d3.select(this.gIndicators.current);
     var indicators = indicatorGroup
-      .selectAll("circle.indicator")
+      .selectAll("path.indicator")
       .data(
         rIndicators,
         (d: V4IndicatorDatum | {}) => (d as V4IndicatorDatum).indicatorId
       );
+
     const allIndicators = indicators
       .enter()
-      .append("circle")
+      .append("path")
       .classed("indicator", true)
+      .attr("d", "M11 0L0 5.5V-5.5L11 0Z")
       .attr("r", 5)
       .attr("fill", d => RELATION_COLORS[d.type])
+      // .attr("stroke-width", 1)
+      // .attr("stroke", "white")
       .attr("opacity", d => linkOpacity(this.linksData[d.relationId]))
       .merge(indicators as any);
     indicators.exit().remove();
@@ -627,9 +641,19 @@ class GraphV4 extends React.Component<Props> {
         .attr("x2", d => linkPositions[d.relationId].x2)
         .attr("y2", d => linkPositions[d.relationId].y2);
 
-      allIndicators
-        .attr("cx", d => getIndicatorX(d, linkPositions[d.relationId]))
-        .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
+      allIndicators.attr(
+        "transform",
+        d =>
+          `
+          translate(${getIndicatorX(
+            d,
+            linkPositions[d.relationId]
+          )},${getIndicatorY(d, linkPositions[d.relationId])})
+          rotate(${linkPositions[d.relationId].degAngle +
+            (d.direction === LinkDir.Invert ? 180 : 0)})`
+      );
+      // .attr("cx", d => getIndicatorX(d, linkPositions[d.relationId]))
+      // .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
 
       nodes2.attr("transform", nodeTranslate);
       labels

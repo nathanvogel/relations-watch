@@ -54,7 +54,7 @@ export const RELATION_COLORS = {
   [RelationType.JobDependsOn]: "#009688",
   [RelationType.ValueExchange]: "#8BC34A",
   [RelationType.Family]: "#ffd32a",
-  [RelationType.Love]: "#ef5777",
+  [RelationType.Love]: "#F669D7",
   [RelationType.Opposition]: "#ff3f34",
   [RelationType.IsInfluenced]: "#ffa801",
   [RelationType.Attendance]: "#4DD0E1",
