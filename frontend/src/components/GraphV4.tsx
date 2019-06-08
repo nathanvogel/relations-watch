@@ -544,7 +544,10 @@ class GraphV4 extends React.Component<Props> {
       .enter()
       .append("path")
       .classed("indicator", true)
-      .attr("d", "M11 0L0 5.5V-5.5L11 0Z")
+      .attr(
+        "d",
+        "M10 1.78814e-07C4.97333 1.66477 2.70397 2.54868 -1 6C0.283061 1.23629 0.200861 -1.0839 -1 -6C2.67854 -3.13956 5.08208 -1.82966 10 1.78814e-07Z"
+      )
       .attr("r", 5)
       .attr("fill", d => RELATION_COLORS[d.type])
       // .attr("stroke-width", 1)
