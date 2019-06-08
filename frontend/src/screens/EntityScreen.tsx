@@ -238,7 +238,10 @@ class EntityScreen extends Component<Props> {
                 Update from Wikidata
               </EntityButton>
             )}
-            <History currentEntityKey={entity ? entity._key : undefined} />
+            <History
+              currentEntityKey={entity ? entity._key : undefined}
+              editable={false}
+            />
           </InfoColumn>
         }
       >

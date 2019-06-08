@@ -25,7 +25,7 @@ type Props = ReturnType<typeof mapStateToProps> &
   WithTranslation;
 
 const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
-  const entitySelection = state.entitySelection; //graphSelections.benalla2;
+  const entitySelection = graphSelections.benalla2;
   return {
     entitySelection,
     allEntities: state.entities,
@@ -71,7 +71,7 @@ const HistoryScreen: React.FunctionComponent<Props> = props => {
     <DrawerLayout
       drawerContent={
         <HistoryWrapper>
-          <History />
+          <History editable />
         </HistoryWrapper>
       }
     >
