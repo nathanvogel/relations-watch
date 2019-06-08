@@ -379,6 +379,11 @@ export type V4GenericLinkDatum<T> = {
    */
   tDirections: { [key: number]: LinkDir };
   /**
+   * A summary of the directions: with all types considered, is this relattions
+   * None/Normal/Invert or Both ?
+   */
+  direction: LinkDir;
+  /**
    * For each RelationType, a score of the importance of this edge is computed.
    */
   tWeights: { [key: number]: number };

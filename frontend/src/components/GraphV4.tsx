@@ -54,9 +54,10 @@ function sizeT(type: NodeRenderType): number {
 }
 
 function nodeTranslate(d: V4NodeDatum): string {
+  let height = d.bb ? d.bb.height : iconSize(d);
   return `translate(
-    ${d.x - size(d) / 2},
-    ${d.y - size(d) / 2 - 5})`;
+    ${d.x - iconSize(d) / 2},
+    ${d.y - height / 2})`;
 }
 
 function fontWeight(d: V4NodeDatum): string {
@@ -155,12 +156,16 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
   //   e2.y = 400;
   //   return;
   // }
-  const dist1 = 0; // size(e1) / 2 - 2;
-  const dist2 = 0; // size(e2) / 2 - 2;
+  const hasBeginIndic =
+    rel.direction === LinkDir.Invert || rel.direction === LinkDir.Both;
+  const hasEndIndic =
+    rel.direction === LinkDir.Normal || rel.direction === LinkDir.Both;
+  const dist1 = hasBeginIndic ? indicatorDist : 0; // size(e1) / 2 - 2;
+  const dist2 = hasEndIndic ? indicatorDist : 0; // size(e2) / 2 - 2;
   p.x1 = e1.x;
-  p.y1 = e1.y - 6;
+  p.y1 = e1.y - 2;
   p.x2 = e2.x;
-  p.y2 = e2.y - 6;
+  p.y2 = e2.y - 2;
   p.angle = Math.atan2(p.y2 - p.y1, p.x2 - p.x1);
   p.degAngle = p.angle * RAD_TO_DEG;
   p.x1 += Math.cos(p.angle) * dist1;
@@ -177,8 +182,7 @@ const indicatorOffset = 5;
  */
 function getIndicatorX(d: V4IndicatorDatum, p: V4LinkPosDatum) {
   const invert = d.direction === LinkDir.Invert;
-  const xDiff =
-    Math.cos(p.angle) * (indicatorDist + indicatorOffset * d.offsetIndex);
+  const xDiff = Math.cos(p.angle) * (0 + indicatorOffset * d.offsetIndex);
   return invert ? p.x1 + xDiff : p.x2 - xDiff;
 }
 
@@ -187,8 +191,7 @@ function getIndicatorX(d: V4IndicatorDatum, p: V4LinkPosDatum) {
  */
 function getIndicatorY(d: V4IndicatorDatum, p: V4LinkPosDatum) {
   const invert = d.direction === LinkDir.Invert;
-  const yDiff =
-    Math.sin(p.angle) * (indicatorDist + indicatorOffset * d.offsetIndex);
+  const yDiff = Math.sin(p.angle) * (0 + indicatorOffset * d.offsetIndex);
   return invert ? p.y1 + yDiff : p.y2 - yDiff;
 }
 
@@ -502,7 +505,7 @@ class GraphV4 extends React.Component<Props> {
         d3.select(this.parentNode as any)
           .select(".visual")
           .transition()
-          .duration(110)
+          .duration(120)
           .attr("opacity", 1)
           .attr("stroke-width", Math.max(11, linkStrokeWidth(d)));
         // .attr("stroke", "#000000");
@@ -511,7 +514,7 @@ class GraphV4 extends React.Component<Props> {
         d3.select(this.parentNode as any)
           .select(".visual")
           .transition()
-          .duration(80)
+          .duration(200)
           .attr("opacity", linkOpacity(d))
           .attr("stroke-width", linkStrokeWidth(d));
         // .attr("stroke", linkColor(d))
@@ -585,13 +588,13 @@ class GraphV4 extends React.Component<Props> {
           .select("text")
           .text(getShortString(d.entity.name))
           .transition()
-          .duration(120)
+          .duration(200)
           .attr("dx", labelDx(d))
           .attr("transform", "scale(1)");
         d3.select(this)
           .select("image")
           .transition()
-          .duration(120)
+          .duration(200)
           .attr("transform", "scale(1)");
       })
       // Add the text background
@@ -617,7 +620,7 @@ class GraphV4 extends React.Component<Props> {
     // .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")
-      // .attr("y", 0)
+      // .attr("y", d => iconSize(d) * 0.0)
       // .attr("x", 0)
       .attr(
         "transform-origin",
@@ -625,6 +628,10 @@ class GraphV4 extends React.Component<Props> {
       )
       .attr("width", iconSize)
       .attr("height", iconSize);
+
+    nodes2.each(function(d, _index) {
+      d.bb = this.getBBox();
+    });
 
     /*
     // Get the text size and resize the background

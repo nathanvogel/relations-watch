@@ -147,6 +147,7 @@ class GraphPreparator extends Component<Props> {
         withType: relType,
         visited: e1.visited && e2.visited,
         proximity: 0,
+        direction: LinkDir.None,
         tDirections: Object.assign({}, DefaultTypeDirs),
         tWeights: Object.assign({}, DefaultTypeWeights),
         sortedTypes: [],
@@ -195,6 +196,10 @@ class GraphPreparator extends Component<Props> {
       if (isDirectedType(link.type, link.fType)) {
         rRelation.tDirections[link.type] = getNewDirection(
           rRelation.tDirections[link.type],
+          invertDirection ? LinkDir.Invert : LinkDir.Normal
+        );
+        rRelation.direction = getNewDirection(
+          rRelation.direction,
           invertDirection ? LinkDir.Invert : LinkDir.Normal
         );
       }
