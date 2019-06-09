@@ -96,6 +96,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 
 const EdgeDetails: React.FunctionComponent<Props> = props => {
   const [editing, setEditing] = useState(false);
+  const [showDatasetEditInfo, setShowDatasetEditInfo] = useState(false);
 
   const { edge, entityFrom, entityTo } = props;
   if (!edge._key) return <Content>Error: missing _key attribute.</Content>;
@@ -124,16 +125,19 @@ const EdgeDetails: React.FunctionComponent<Props> = props => {
         <div>Previous source: {edge.sourceText}</div>
       )}
       <SourceList sources={edge.sources} />
-      {edge.ds ? (
+      {showDatasetEditInfo ? (
         <DatasetInfoText>
-          <i>
-            Imported from another database: To modify, edit the original source
-            and re-import the entity.
-          </i>
+          {edge.ds && edge.ds.wd
+            ? "This information comes from Wikidata. You can modify it by going to the source link, making the changes on Wikidata and clicking 'Update from Wikidata' here on the relevant entity. This way, you'll be contributing to both relations.watch and Wikidata!"
+            : "This information comes from an external source and can't be modified directly here."}
         </DatasetInfoText>
       ) : (
         <ButtonBar buttonsAlign="right">
-          <AddSourceButton onClick={() => setEditing(true)}>
+          <AddSourceButton
+            onClick={() =>
+              edge.ds ? setShowDatasetEditInfo(true) : setEditing(true)
+            }
+          >
             <EditIcon />
           </AddSourceButton>
         </ButtonBar>
