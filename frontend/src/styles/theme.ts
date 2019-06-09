@@ -9,7 +9,7 @@ const theme = {
     '"Proxima Nova", proxima-nova, "IBM Plex Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   fontSizeS: "15px",
   fontSizeM: "20px",
-  fontSizeL: "28px",
+  fontSizeL: "30px",
   mainTextColor: "rgba(0, 0, 0, 0.84)" /* Stolen from Medium */,
   lightTextColor: "#ffffff",
   linkTextColor: "#0077CC", // Stackoverflow

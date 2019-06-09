@@ -8,7 +8,7 @@ import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import ROUTES from "../utils/ROUTES";
 import Meta from "../components/meta/Meta";
-import { Status, DatasetId } from "../utils/types";
+import { Status, DatasetId, ErrorPayload, Entity } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import * as entitySelectionActions from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
@@ -23,33 +23,15 @@ import EntityGraphContainer from "../components/graph/EntityGraphContainer";
 import DrawerLayout from "../components/layout/DrawerLayout";
 import EntityName from "../components/entity/EntityName";
 
+const Content = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
 const StyledMeta = styled(Meta)`
   position: absolute;
   left: 50%;
   transform: translateX(-50%) translateY(20vh);
-`;
-
-const Name = styled.div`
-  text-align: left;
-  font-weight: 700;
-  font-size: ${props => props.theme.fontSizeM};
-  font-size: 24px;
-`;
-
-const Description = styled.div`
-  text-align: left;
-  font-size: ${props => props.theme.fontSizeM};
-  margin-bottom: ${props => props.theme.marginTB};
-`;
-
-const EntityButton = styled(IconButton)`
-  display: block;
-  margin: ${props => props.theme.inputTBSpacing} 0px;
-`;
-
-const InfoColumn = styled.div`
-  padding: ${props => props.theme.blockPadding};
-  padding-top: 0.85em;
 `;
 
 interface LegendProps {
@@ -87,13 +69,7 @@ const ToggleLegendButton = styled(IconButton)`
   right: 18px;
 `;
 
-const ToggleTitleCardButton = styled(IconButton)`
-  position: absolute;
-  top: ${props => props.theme.blockPadding};
-  left: ${props => props.theme.blockPadding};
-`;
-
-interface EntityMatch {
+interface OwnProps extends RouteComponentProps {
   entityKey: string;
 }
 
@@ -101,16 +77,14 @@ type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps> &
   WithTranslation;
 
-const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
-  // Get the entityKey from the Router props
-  const params = props.match.params as EntityMatch;
-  const entityKey: string = params["entityKey"];
+const mapStateToProps = (state: RootStore, props: OwnProps) => {
+  const { entityKey } = props;
   // Get the entity from the Redux Store
-  const entity = state.entities.data[entityKey];
-  const status = state.entities.status[entityKey];
-  const error = state.entities.errors[entityKey];
-  const linksStatus = state.links.status[entityKey];
-  const linksError = state.links.errors[entityKey];
+  const entity = state.entities.data[entityKey] as Entity | undefined;
+  const status = state.entities.status[entityKey] as Status | undefined;
+  const error = state.entities.errors[entityKey] as ErrorPayload | undefined;
+  const linksStatus = state.links.status[entityKey] as Status | undefined;
+  const linksError = state.links.errors[entityKey] as ErrorPayload | undefined;
   // Return everything.
   return {
     ...props,
@@ -191,9 +165,9 @@ class EntityScreen extends Component<Props> {
   };
 
   onAddRelation = () => {
-    const url = `/${ROUTES.relation}/${this.props.entityKey}/${
-      CONSTS.EMPTY_KEY
-    }`;
+    const url = `/${ROUTES.entity}/${this.props.entityKey}/${ROUTES.relation}/${
+      this.props.entityKey
+    }/${CONSTS.EMPTY_KEY}`;
     this.props.history.push(url);
   };
 
@@ -216,35 +190,7 @@ class EntityScreen extends Component<Props> {
 
     // Always render the graph, even when the data isn't loaded,
     return (
-      <DrawerLayout
-        drawerContent={
-          <InfoColumn>
-            {status === Status.Ok && (
-              <React.Fragment>
-                <EntityName>{entity.name} </EntityName>
-                <Description>{entity.text}</Description>
-              </React.Fragment>
-            )}
-            <EntityButton small withText onClick={this.onEditEntity}>
-              <EditIcon />
-              Edit
-            </EntityButton>
-            <EntityButton small withText onClick={this.onAddRelation}>
-              <AddIcon />
-              Relation
-            </EntityButton>
-            {this.isWikidataEntity && (
-              <EntityButton small withText onClick={this.importWikidata}>
-                Update from Wikidata
-              </EntityButton>
-            )}
-            <History
-              currentEntityKey={entity ? entity._key : undefined}
-              editable={false}
-            />
-          </InfoColumn>
-        }
-      >
+      <Content>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
 
         <LegendColumn hideColumn={!this.state.showLegend}>
@@ -261,7 +207,7 @@ class EntityScreen extends Component<Props> {
         ) : this.state.prevEntityKey ? (
           <EntityGraphContainer entityKey={this.state.prevEntityKey} />
         ) : null}
-      </DrawerLayout>
+      </Content>
     );
   }
 }

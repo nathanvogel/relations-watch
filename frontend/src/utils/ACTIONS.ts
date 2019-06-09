@@ -68,6 +68,12 @@ export type SelectEntities = typeof SelectEntities;
 export const DeselectEntities = "DeselectEntities";
 export type DeselectEntities = typeof DeselectEntities;
 
+// ===== Hover
+export const HoverEntity = "HoverEntity";
+export type HoverEntity = typeof HoverEntity;
+export const HoverRelation = "HoverRelation";
+export type HoverRelation = typeof HoverRelation;
+
 // ===== Dataset Import
 export const DI_Error = "DI_Error";
 export type DI_Error = typeof DI_Error;

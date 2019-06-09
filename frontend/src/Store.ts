@@ -79,7 +79,14 @@ export interface RootStore {
   dataimport: {
     [entryPoint: string]: DataImportState;
   };
+  hover: HoverState;
 }
+
+export type HoverState = {
+  entityKey: string;
+  relationSourceKey: string;
+  relationTargetKey: string;
+};
 
 export type EntitySelectionState = string[];
 

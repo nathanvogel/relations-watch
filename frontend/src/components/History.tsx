@@ -57,7 +57,6 @@ const ClearButton = styled(CloseIcon)`
 `;
 
 type OwnProps = {
-  currentEntityKey?: string;
   editable: boolean;
 };
 

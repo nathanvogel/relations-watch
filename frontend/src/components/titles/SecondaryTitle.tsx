@@ -5,7 +5,6 @@ const SecondaryTitle = styled.h3`
   font-size: ${props => props.theme.fontSizeL};
   font-weight: bold;
   font-family: ${props => props.theme.brandFont};
-  font-size: 24px;
 `;
 
 export default SecondaryTitle;

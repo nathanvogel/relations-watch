@@ -1,5 +1,7 @@
 import * as React from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
+import { AnyAction, bindActionCreators, Dispatch } from "redux";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import * as d3 from "d3";
 import "d3-force";
@@ -26,6 +28,8 @@ import { getEntitySAsset } from "../assets/EntityIcons";
 import theme, { RELATION_COLORS } from "../styles/theme";
 import "./GraphV4.css";
 import { createIndicatorDatum } from "../utils/utils";
+import { hoverEntity, hoverRelation } from "../features/hoverActions";
+import { RootStore } from "../Store";
 
 const SVG = styled.svg`
   display: block;
@@ -240,7 +244,7 @@ function goToParent(this: Element | null) {
   return this.parentNode as any;
 }
 
-type Props = {
+interface OwnProps {
   rRelations: V4LinkDatum[];
   rEntities: V4NodeDatum[];
   rRelationsByKey: { [relationId: string]: V4LinkDatum };
@@ -248,7 +252,14 @@ type Props = {
   width: number;
   height: number;
   network: boolean;
-} & RouteComponentProps;
+}
+
+const mapStateToProps = (_: RootStore, props: OwnProps) => props;
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+  bindActionCreators({ hoverEntity, hoverRelation }, dispatch);
+type Props = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps> &
+  RouteComponentProps;
 
 /**
  * Draws an SVG graph of the given size for the given relations and nodes.
@@ -282,7 +293,7 @@ class GraphV4 extends React.Component<Props> {
   }
 
   updateGraph() {
-    const { network } = this.props;
+    const { network, hoverEntity, hoverRelation } = this.props;
 
     // D3 RELATIONS DATA
     const { rEntitiesByKey, rRelationsByKey } = this.props;
@@ -517,6 +528,7 @@ class GraphV4 extends React.Component<Props> {
           .attr("opacity", 1)
           .attr("stroke-width", Math.max(11, linkStrokeWidth(d)));
         // .attr("stroke", "#000000");
+        hoverRelation(d.sourceKey, d.targetKey);
       })
       .on("mouseout", function(d) {
         d3.select(this.parentNode as any)
@@ -526,6 +538,7 @@ class GraphV4 extends React.Component<Props> {
           .attr("opacity", linkOpacity(d))
           .attr("stroke-width", linkStrokeWidth(d));
         // .attr("stroke", linkColor(d))
+        hoverRelation("", "");
       })
       .select(goToParent)
       .merge(links as any);
@@ -592,6 +605,7 @@ class GraphV4 extends React.Component<Props> {
           .transition()
           .duration(120)
           .attr("transform", "scale(1.4)");
+        hoverEntity(d.entityKey);
       })
       .on("mouseout", function(d) {
         // this.textContent = d.entity.name;
@@ -607,6 +621,7 @@ class GraphV4 extends React.Component<Props> {
           .transition()
           .duration(200)
           .attr("transform", "scale(1)");
+        hoverEntity("");
       })
       // Add the text background
       // .append("rect")
@@ -737,7 +752,7 @@ class GraphV4 extends React.Component<Props> {
 
   onRelationClick = (d: V4LinkDatum, _index: number) => {
     this.props.history.push(
-      `/${ROUTES.relation}/${d.sourceKey}/${d.targetKey}`
+      `${this.props.match.url}/${ROUTES.relation}/${d.sourceKey}/${d.targetKey}`
     );
   };
 
@@ -760,4 +775,9 @@ class GraphV4 extends React.Component<Props> {
 }
 
 // export default withRouter(withContentRect("bounds")<Props>(GraphV4));
-export default withRouter(GraphV4);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GraphV4)
+);

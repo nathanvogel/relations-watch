@@ -10,6 +10,7 @@ import sourceFormReducer from "./sourceFormReducer";
 import dataimportReducer from "./dataimportReducer";
 import sourcesReducer from "./sourcesReducer";
 import entitySelectionReducer from "./entitySelectionReducer";
+import hoverReducer from "./hoverReducer";
 
 export default combineReducers({
   requests: saveRequestReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
   sourceForms: namespaceEnhancer(sourceFormReducer),
   dataimport: namespaceEnhancer(dataimportReducer),
   entitySelection: entitySelectionReducer as any,
+  hover: hoverReducer as any,
 });

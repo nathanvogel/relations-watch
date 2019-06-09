@@ -99,6 +99,14 @@ export function shouldLoad(status: Status | undefined | null) {
   return Boolean(!status || status === Status.Error);
 }
 
+/**
+ * From a react-router parameter, returns either a real key or an empty string
+ * (because empty strings can be used to get an undefined element from an
+ * object like a part of a redux stom)
+ * @param  key the param, which might be falsy, a real key, or the Empty Key
+ *             constant
+ * @return     an empty string or the given non-empty truthy string
+ */
 export function emptyOrRealKey(key?: string): string {
   if (key === CONSTS.EMPTY_KEY) return "";
   else if (key) return key;

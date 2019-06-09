@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import ModalBackground from "./ModalBackground";
 
 const ModalContent = styled.div`
   position: fixed;
@@ -13,7 +14,7 @@ const ModalContent = styled.div`
   top: 70px;
   left: 50%;
   transform: translateX(calc(-50% - ${props => props.theme.marginLR}));
-  z-index: 1000;
+  z-index: 3000;
   padding: ${props => props.theme.blockPadding};
   margin-bottom: ${props => props.theme.marginTB};
   margin-left: ${props => props.theme.marginLR};
@@ -25,18 +26,6 @@ const ModalContent = styled.div`
   border-color: ${props => props.theme.border};
   border-width: ${props => props.theme.borderWidth};
   border-radius: ${props => props.theme.radius};
-`;
-
-const ModalBackground = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  right: 0px;
-  z-index: 999;
-  background-color: rgba(255, 255, 255, 0.7);
 `;
 
 type Props = {

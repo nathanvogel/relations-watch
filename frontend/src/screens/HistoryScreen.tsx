@@ -69,16 +69,10 @@ const HistoryScreen: React.FunctionComponent<Props> = props => {
   // Don't unmount and mount the Graph, we keep it displayed through
   // loading phases to keep it smooth.
   return (
-    <DrawerLayout
-      drawerContent={
-        <HistoryWrapper>
-          <History editable />
-        </HistoryWrapper>
-      }
-    >
+    <React.Fragment>
       {loading && <Meta status={Status.Requested} />}
       <FreeGraphContainer entityKeys={entitySelection} />
-    </DrawerLayout>
+    </React.Fragment>
   );
 };
 
