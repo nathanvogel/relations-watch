@@ -25,7 +25,8 @@ type Props = ReturnType<typeof mapStateToProps> &
   WithTranslation;
 
 const mapStateToProps = (state: RootStore, props: RouteComponentProps) => {
-  const entitySelection = graphSelections.benalla2;
+  const entitySelection = state.entitySelection;
+  // const entitySelection =  graphSelections.benalla2;
   return {
     entitySelection,
     allEntities: state.entities,

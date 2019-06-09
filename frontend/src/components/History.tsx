@@ -95,7 +95,7 @@ const History: React.FunctionComponent<Props> = props => {
         <Route exact path={`/${ROUTES.history}`} render={_ => null} />
         <Route
           path="/:subpath"
-          render={_ => <Link to={`/${ROUTES.history}`}>➡ Network graph</Link>}
+          render={_ => <Link to={`/${ROUTES.history}`}>Network graph</Link>}
         />
       </Switch>
       {props.entitySelection.length <= 0 ? (

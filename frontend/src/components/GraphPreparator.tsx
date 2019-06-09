@@ -75,8 +75,8 @@ class GraphPreparator extends Component<Props> {
     const addEntity = (e: V4NodeDatum) => {
       // Hack to avoid re-initing position
       // TODO: Check
-      // delete e.x;
-      // delete e.y;
+      delete e.x;
+      delete e.y;
       rEntities.push(e);
       rEntitiesByKey[e.entityKey] = e;
     };
@@ -99,6 +99,9 @@ class GraphPreparator extends Component<Props> {
       const rNode: V4NodeDatum = {
         x: Math.random() * 500,
         y: Math.random() * 500,
+        goalX: 0,
+        goalY: 0,
+        goalStrength: 0,
         radius: 40,
         entityKey: key,
         visited: entitySelection[key],
@@ -161,9 +164,9 @@ class GraphPreparator extends Component<Props> {
       const link = edges[edgeKey];
       const relationId = getRelationId(link._from, link._to) as string;
       const rRelation = rRelationsByKey[relationId];
+      if (!rRelation) continue;
       const invertDirection = link._from === rRelation.source;
       let proximityWeight = 0;
-      if (!rRelation) continue;
       if (link.type === RelationType.Family) {
         // special family case
         // Compute the "zone correspondance" score for the entity.
@@ -208,9 +211,10 @@ class GraphPreparator extends Component<Props> {
     // Normalize zones weight across each single entity.
     for (let rEntity of rEntities) {
       // avoid divide by zero
-      if (!rEntity.zoneTotal) continue;
-      for (let zoneKey of RelZoneValues) {
-        rEntity.zones[zoneKey] /= rEntity.zoneTotal;
+      if (rEntity.zoneTotal) {
+        for (let zoneKey of RelZoneValues) {
+          rEntity.zones[zoneKey] /= rEntity.zoneTotal;
+        }
       }
       // Commpute an array of all the zones, but sorted by score.
       rEntity.sortedZones = RelZoneValues.map(relZone => relZone).sort(

@@ -433,6 +433,9 @@ export type V4NodeDatum = {
    * the d3-force simulation
    */
   y: number;
+  goalX: number;
+  goalY: number;
+  goalStrength: number;
   /**
    * Used by some d3-force plugin I think.
    */

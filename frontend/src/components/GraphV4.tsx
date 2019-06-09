@@ -361,16 +361,28 @@ class GraphV4 extends React.Component<Props> {
     // TODO : calculate relative to origin
     for (let node of rEntities) {
       const zone = node.sortedZones[0];
+      // Gives an inital position
       if (typeof node.x !== "number")
         node.x = clusterOrigins[zone].x * width + Math.random() * 100 - 50;
       if (typeof node.y !== "number")
         node.y = clusterOrigins[zone].y * height + Math.random() * 100 - 50;
+      // The first node of its type will lead the pack.
       if (!clusters[zone]) clusters[zone] = node;
+      // Add targets for the nodes.
+      if (node.type === NodeRenderType.Primary) {
+        node.goalX = width * clusterOrigins[RelZone.Main].x;
+        node.goalY = height * clusterOrigins[RelZone.Main].y;
+        node.goalStrength = 3;
+      } else if (!network) {
+        node.goalX = clusterOrigins[zone].x * width;
+        node.goalY = clusterOrigins[zone].y * width;
+        node.goalStrength = 1;
+      }
     }
 
     // D3 FORCES SETUP
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
-    console.log("SETUP", nodeCount);
+    console.log("GRAPH INIT", nodeCount);
     const distScale = d3
       .scaleLinear()
       .domain([1, Math.max(maxProximity, 4)])
@@ -419,18 +431,14 @@ class GraphV4 extends React.Component<Props> {
       // Keep the whole graph centered
       .force("center", d3.forceCenter(width / 2, height / 2))
       // Put the primary entity at the center of the graph
-      // .force(
-      //   "x",
-      //   d3
-      //     .forceX<V4NodeDatum>(width / 2)
-      //     .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
-      // )
-      // .force(
-      //   "y",
-      //   d3
-      //     .forceY<V4NodeDatum>(height / 2)
-      //     .strength(d => (d.type === NodeRenderType.Primary ? 1 : 0))
-      // )
+      .force(
+        "x",
+        d3.forceX<V4NodeDatum>(d => d.goalX).strength(d => d.goalStrength)
+      )
+      .force(
+        "y",
+        d3.forceY<V4NodeDatum>(d => d.goalY).strength(d => d.goalStrength)
+      )
       // Pushes Tertiary entities towards an outer circle
       // .force(
       //   "radial",
