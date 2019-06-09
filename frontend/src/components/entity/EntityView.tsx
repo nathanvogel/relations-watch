@@ -1,17 +1,17 @@
 import React, { FunctionComponent } from "react";
-import { Entity } from "../../utils/types";
+import { Entity, EntityPreview } from "../../utils/types";
 import styled from "styled-components";
 import { getEntitySAsset } from "../../assets/EntityIcons";
 import EntityImage from "./EntityImage";
 import EntityDescription from "./EntityDescription";
 import EntityName from "./EntityName";
-import EntityPreviewContainer from "./EntityPreviewContainer";
+import EntityViewContainer from "./EntityViewContainer";
 
 type Props = {
-  entity: Entity;
+  entity: Entity | EntityPreview;
 };
 
-const Container = styled(EntityPreviewContainer)`
+const Container = styled(EntityViewContainer)`
   padding: ${props => props.theme.inputPaddingTB}
     ${props => props.theme.inputPaddingLR};
   font-size: ${props => props.theme.fontSizeS};
@@ -20,7 +20,7 @@ const Container = styled(EntityPreviewContainer)`
   text-align: left;
 `;
 
-const EntityPreview: FunctionComponent<Props> = props => {
+const EntityView: FunctionComponent<Props> = props => {
   const { entity } = props;
 
   return (
@@ -34,4 +34,4 @@ const EntityPreview: FunctionComponent<Props> = props => {
   );
 };
 
-export default EntityPreview;
+export default EntityView;

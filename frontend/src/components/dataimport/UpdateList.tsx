@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { media } from "../../styles/responsive-utils";
 import EdgeSummary from "../edgeDetails/EdgeSummary";
 import ErrorBox from "../meta/ErrorBox";
-import EntityPreview from "../entity/EntityPreview";
+import EntityView from "../entity/EntityView";
 
 const Row = styled.div`
   margin: ${props => props.theme.marginTB} 0;
@@ -66,7 +66,7 @@ const UpdateList: FunctionComponent<Props> = props => {
       </ErrorBox>
     );
   const renderEntity = (entity: Entity, index: number) => (
-    <EntityPreview key={index} entity={entity} />
+    <EntityView key={index} entity={entity} />
   );
 
   return (

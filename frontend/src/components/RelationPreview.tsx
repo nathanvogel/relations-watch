@@ -125,7 +125,7 @@ class RelationPreview extends React.Component<Props> {
               </ClearButton>
             </div>
           ) : (
-            <EntitySearch onChange={this.onEntity1Selected} autoFocus />
+            <EntitySearch onChange={this.onEntity1Selected} />
           )}
         </EntityColumn>
         <LinksColumn>
@@ -142,7 +142,7 @@ class RelationPreview extends React.Component<Props> {
               </ClearButton>
             </div>
           ) : (
-            <EntitySearch onChange={this.onEntity2Selected} autoFocus />
+            <EntitySearch onChange={this.onEntity2Selected} />
           )}
         </EntityColumn>
       </Header>

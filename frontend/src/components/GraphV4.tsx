@@ -264,7 +264,9 @@ type Props = ReturnType<typeof mapStateToProps> &
 /**
  * Draws an SVG graph of the given size for the given relations and nodes.
  */
-class GraphV4 extends React.Component<Props> {
+class GraphV4 extends React.PureComponent<Props> {
+  static whyDidYouRender = true;
+
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
   private gNodes: React.RefObject<SVGGElement>;

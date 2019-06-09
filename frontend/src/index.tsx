@@ -17,6 +17,11 @@ import * as serviceWorker from "./serviceWorker";
 import theme from "./styles/theme";
 import GlobalStyle from "./styles/GlobalStyle";
 
+if (process.env.NODE_ENV !== "production") {
+  const whyDidYouRender = require("@welldone-software/why-did-you-render");
+  whyDidYouRender(React);
+}
+
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <Provider store={Store}>

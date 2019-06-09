@@ -6,10 +6,14 @@ import { RootStore } from "../../Store";
 import { EdgePreview, EntityPreview } from "../../utils/types";
 import { getEntityPreviewFromState, objectFromArray } from "../../utils/utils";
 import GraphPreparator from "../GraphPreparator";
+import { getSelectedEntitiesObj } from "../../features/entitySelectionSelector";
 
 type OwnProps = {
   entityKeys: string[];
 };
+
+// For memoization
+const defaultSpecialEntities = {};
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { entityKeys } = props;
@@ -39,8 +43,8 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   return {
     entities,
     edges,
-    entitySelection: objectFromArray(state.entitySelection),
-    specialEntities: {},
+    selectedEntities: getSelectedEntitiesObj(state),
+    specialEntities: defaultSpecialEntities,
     network: true,
   };
 };

@@ -5,14 +5,14 @@ import { getEntitySAsset } from "../../assets/EntityIcons";
 import EntityImage from "./EntityImage";
 import EntityDescription from "./EntityDescription";
 import EntityName from "./EntityName";
-import EntityPreviewContainer from "./EntityPreviewContainer";
+import EntityViewContainer from "./EntityViewContainer";
 import { getDatasetSAsset } from "../../assets/dataset/DatasetIcons";
 
 type Props = {
   entity: EntitySelectOption;
 };
 
-const Container = styled(EntityPreviewContainer)`
+const Container = styled(EntityViewContainer)`
   // padding: ${props => props.theme.inputPaddingTB}
   //   ${props => props.theme.inputPaddingLR};
   font-size: ${props => props.theme.fontSizeS};

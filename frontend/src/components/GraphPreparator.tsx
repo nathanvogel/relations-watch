@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import {
@@ -45,7 +45,7 @@ type Props = {
   /**
    * Absence of key or false value indicates that it's not selected.
    */
-  entitySelection: { [entityKey: string]: boolean };
+  selectedEntities: { [entityKey: string]: boolean };
   /**
    * Used to pin entities, indicate if they're primary, etc.
    */
@@ -59,9 +59,11 @@ type Props = {
   network: boolean;
 };
 
-class GraphPreparator extends Component<Props> {
+class GraphPreparator extends React.PureComponent<Props> {
+  static whyDidYouRender = true;
+
   render() {
-    const { entities, edges, entitySelection, specialEntities } = this.props;
+    const { entities, edges, selectedEntities, specialEntities } = this.props;
 
     // Render data
     // We need arrays to preserve the order of the rendered
@@ -104,7 +106,7 @@ class GraphPreparator extends Component<Props> {
         goalStrength: 0,
         radius: 40,
         entityKey: key,
-        visited: entitySelection[key],
+        visited: selectedEntities[key],
         type: specialEntities[key]
           ? specialEntities[key].type
           : NodeRenderType.Secondary,

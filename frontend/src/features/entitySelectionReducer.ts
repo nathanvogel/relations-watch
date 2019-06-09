@@ -1,8 +1,10 @@
 import * as ACTIONS from "../utils/ACTIONS";
-import update from "immutability-helper";
-import { AnyAction, Action, Reducer } from "redux";
+import { Reducer } from "redux";
 import { EntitySelectionAction } from "./entitySelectionActions";
 import { EntitySelectionState } from "../Store";
+
+// Create it once for correct memoization
+const defaultSelection: EntitySelectionState = [];
 
 /**
  * This adds or remove elements from the list of selected entities.
@@ -10,7 +12,7 @@ import { EntitySelectionState } from "../Store";
 const entitySelectionReducer: Reducer<
   EntitySelectionState,
   EntitySelectionAction
-> = (state = [], action) => {
+> = (state = defaultSelection, action) => {
   switch (action.type) {
     case ACTIONS.SelectEntities:
       const newSelection: EntitySelectionState = [];

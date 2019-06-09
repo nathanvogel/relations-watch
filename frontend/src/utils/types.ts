@@ -128,6 +128,7 @@ export type EntityPreview = {
   name: string;
   imageId?: string;
   type: EntityType;
+  text?: string;
 };
 
 export type Edge = {

@@ -7,7 +7,7 @@ import {
 } from "../../utils/types";
 import styled from "styled-components";
 import { media } from "../../styles/responsive-utils";
-import EntityPreview from "../entity/EntityPreview";
+import EntityView from "../entity/EntityView";
 
 const Row = styled.div`
   width: 100%;
@@ -86,7 +86,7 @@ const SimilarEntitiesSelector: FunctionComponent<Props> = props => {
       {Object.keys(props.similarEntities).map((key, index) => (
         <Row key={key}>
           <BaseColumn>
-            <EntityPreview entity={props.dsEntities[key]} />
+            <EntityView entity={props.dsEntities[key]} />
           </BaseColumn>
           <OptionsColumn>
             <Label>
@@ -112,7 +112,7 @@ const SimilarEntitiesSelector: FunctionComponent<Props> = props => {
                   onChange={onSelect}
                   checked={props.similarEntitiesSelection[key] === index}
                 />
-                <EntityPreview key={index} entity={entity} />
+                <EntityView key={index} entity={entity} />
               </Label>
             ))}
           </OptionsColumn>
