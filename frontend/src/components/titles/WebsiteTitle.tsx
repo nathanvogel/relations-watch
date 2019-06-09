@@ -10,6 +10,7 @@ const Container = styled.div`
   background: ${props => props.theme.darkBG};
   color: white;
   font-size: 23px;
+  font-family: ${props => props.theme.brandFont};
   padding-left: ${props => props.theme.marginLR};
   box-sizing: border-box;
   display: flex;

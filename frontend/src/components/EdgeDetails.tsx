@@ -34,8 +34,8 @@ const Content = styled.section`
 `;
 
 const EdgeMainText = styled.p`
-  font-size: ${props => props.theme.fontSizeL};
-  margin-top: 24px;
+  font-size: ${props => props.theme.fontSizeM};
+  margin-top: 0.8em;
   margin-bottom: 20px;
 `;
 

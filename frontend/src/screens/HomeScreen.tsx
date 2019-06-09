@@ -10,9 +10,7 @@ import R from "../strings/R";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import EntityDetails from "../components/EntityDetails";
 import { media } from "../styles/responsive-utils";
-import TertiaryTitle from "../components/titles/TertiaryTitle";
 import WebsiteTitle from "../components/titles/WebsiteTitle";
-import AppBar from "../components/AppBar";
 import SecondaryTitle from "../components/titles/SecondaryTitle";
 
 const Content = styled.main`
@@ -69,11 +67,10 @@ const ItemsSection = styled.section`
   min-width: 300px;
   width: 300px;
   max-width: 40%;
-  margin-top: 2em;
+  // margin-top: 2em;
   margin-left: 2.5em;
   ${media.tablet`
     margin-left: 0;
-    margin-top: 0;
     width: 100%;
     max-width: 100%;
     `}
@@ -111,7 +108,7 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
         </Header>
         <Article>
           <ItemsSection>
-            <TertiaryTitle>{t(R.home_trending)}</TertiaryTitle>
+            <SecondaryTitle>{t(R.home_trending)}</SecondaryTitle>
             <ItemList>
               <EntityDetails entityKey={"1539778"} />
               <EntityDetails entityKey={"1589920"} />

@@ -7,6 +7,8 @@ import { RELATION_COLORS } from "../../styles/theme";
 
 const Span = styled.span`
   & {
+    font-family: ${props => props.theme.mainFont};
+    font-size: ${props => props.theme.fontSizeM};
     font-weight: bold;
     position: relative;
     z-index: 1;

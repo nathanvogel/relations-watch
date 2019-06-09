@@ -21,6 +21,7 @@ import History from "../components/History";
 import GraphLegend from "../components/graph/GraphLegend";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
 import DrawerLayout from "../components/layout/DrawerLayout";
+import EntityName from "../components/entity/EntityName";
 
 const StyledMeta = styled(Meta)`
   position: absolute;
@@ -32,7 +33,6 @@ const Name = styled.div`
   text-align: left;
   font-weight: 700;
   font-size: ${props => props.theme.fontSizeM};
-  font-family: ${props => props.theme.secondaryFont};
   font-size: 24px;
 `;
 
@@ -221,7 +221,7 @@ class EntityScreen extends Component<Props> {
           <InfoColumn>
             {status === Status.Ok && (
               <React.Fragment>
-                <Name>{entity.name} </Name>
+                <EntityName>{entity.name} </EntityName>
                 <Description>{entity.text}</Description>
               </React.Fragment>
             )}

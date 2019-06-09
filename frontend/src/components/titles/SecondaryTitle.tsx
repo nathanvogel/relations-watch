@@ -4,7 +4,7 @@ const SecondaryTitle = styled.h3`
   color: ${props => props.theme.mainTextColor};
   font-size: ${props => props.theme.fontSizeL};
   font-weight: bold;
-  font-family: ${props => props.theme.secondaryFont};
+  font-family: ${props => props.theme.brandFont};
   font-size: 24px;
 `;
 
