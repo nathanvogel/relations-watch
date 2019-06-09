@@ -10,6 +10,7 @@ import { forceCluster } from "d3-force-cluster";
 //@ts-ignore
 import { bboxCollide } from "d3-bboxCollide";
 import forceBoundary from "../utils/d3/d3-force-boundary";
+import debounce from "lodash-es/debounce";
 import {
   V4LinkDatum,
   V4NodeDatum,
@@ -295,7 +296,9 @@ class GraphV4 extends React.PureComponent<Props> {
   }
 
   updateGraph() {
-    const { network, hoverEntity, hoverRelation } = this.props;
+    const { network } = this.props;
+    const hoverEntity = debounce(this.props.hoverEntity, 100);
+    const hoverRelation = debounce(this.props.hoverRelation, 100);
 
     // D3 RELATIONS DATA
     const { rEntitiesByKey, rRelationsByKey } = this.props;
@@ -530,6 +533,8 @@ class GraphV4 extends React.PureComponent<Props> {
           .attr("opacity", 1)
           .attr("stroke-width", Math.max(11, linkStrokeWidth(d)));
         // .attr("stroke", "#000000");
+        // TODO: Debounce
+
         hoverRelation(d.sourceKey, d.targetKey);
       })
       .on("mouseout", function(d) {
