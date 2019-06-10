@@ -5,7 +5,7 @@ import {
   EntityPreview,
   Entity,
   Status,
-  ErrorPayload
+  ErrorPayload,
 } from "../utils/types";
 import update from "immutability-helper";
 import { SouAuthorsChange } from "./sourceFormActions";
@@ -39,7 +39,7 @@ export default (state = defaultState, action: AnyAction) => {
   switch (action.type) {
     case ACTIONS.EntityLoadManyRequested:
       return update(state, {
-        status: { $merge: statusList }
+        status: { $merge: statusList },
       });
     case ACTIONS.EntityLoadManySuccess:
       // Put all the freshest data:
@@ -53,7 +53,7 @@ export default (state = defaultState, action: AnyAction) => {
       return update(state, {
         datapreview: { $merge: entityPreviewList },
         data: { $merge: entityList },
-        status: { $merge: statusList }
+        status: { $merge: statusList },
       });
     case ACTIONS.EntityLoadManyError:
       const errorList: { [key: string]: ErrorPayload } = {};
@@ -65,12 +65,12 @@ export default (state = defaultState, action: AnyAction) => {
       // Leave the .data[key] untouched because I'm bored.
       return update(state, {
         status: { $merge: statusList },
-        errors: { $merge: errorList }
+        errors: { $merge: errorList },
       });
     case ACTIONS.EntityLoadRequested:
       const key1 = action.meta.entityKey as string;
       return update(state, {
-        status: { [key1]: { $set: action.status } }
+        status: { [key1]: { $set: action.status } },
       });
     case ACTIONS.EntityLoadSuccess:
       const key2 = action.meta.entityKey as string;
@@ -78,14 +78,14 @@ export default (state = defaultState, action: AnyAction) => {
       return update(state, {
         datapreview: { [key2]: { $set: entityPreview1 } },
         data: { [key2]: { $set: action.payload } },
-        status: { [key2]: { $set: action.status } }
+        status: { [key2]: { $set: action.status } },
       });
     case ACTIONS.EntityLoadError:
       const key3 = action.meta.entityKey as string;
       return update(state, {
         data: { [key3]: { $set: null } },
         status: { [key3]: { $set: action.status } },
-        errors: { [key3]: { $set: action.meta.error } }
+        errors: { [key3]: { $set: action.meta.error } },
       });
     case ACTIONS.EntitySaveSuccess:
       const key4 = action.payload._key as string;
@@ -102,7 +102,7 @@ export default (state = defaultState, action: AnyAction) => {
       return update(state, {
         datapreview: { [key4]: { $set: entityPreview2 } },
         data: { [key4]: { $set: action.payload } },
-        status: { [key4]: { $set: action.status } }
+        status: { [key4]: { $set: action.status } },
       });
     case TYPED_ACTIONS.SOU_AUTHORS_CHANGE:
       const authorsAction = action as SouAuthorsChange;
@@ -113,14 +113,19 @@ export default (state = defaultState, action: AnyAction) => {
       // Push the entity previews to the state.
       const newEntityPreviews: { [key: string]: EntityPreview } = {};
       for (let option of selectionArray) {
+        if (typeof option.type !== "number")
+          throw new Error(
+            "Missing entity type in source selection " + option.value
+          );
         newEntityPreviews[option.value] = {
           _key: option.value,
           name: option.label,
-          type: option.type
+          type: option.type,
+          text: option.text,
         };
       }
       return update(state, {
-        datapreview: { $merge: newEntityPreviews }
+        datapreview: { $merge: newEntityPreviews },
       });
     case ACTIONS.LinksLoadSuccess:
       if (!action.payload || !action.payload.vertices) {

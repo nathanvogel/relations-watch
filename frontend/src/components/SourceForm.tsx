@@ -3,7 +3,13 @@ import { Dispatch, bindActionCreators, AnyAction } from "redux";
 import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
 
-import { Source, ReactSelectOption, SourceType } from "../utils/types";
+import {
+  Source,
+  EntitySelectOption,
+  SourceType,
+  EntityPreview,
+  EntityType,
+} from "../utils/types";
 import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
 import EntitySearch from "./EntitySearch";
 import { RootStore } from "../Store";
@@ -28,14 +34,21 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   // Besides the [entityKey1, entityKey2, ...] selection format stored
   // in the database, we need the same array with {value, label} pairs.
   // So we generate one here from the store.
-  const selectedAuthors: ValueType<ReactSelectOption> = [];
+  const selectedAuthors: ValueType<EntitySelectOption> = [];
   if (formData) {
     const entities = state.entities.datapreview;
     for (let entityKey of formData.authors) {
-      const name = entities[entityKey] ? entities[entityKey].name : entityKey;
+      const e: EntityPreview = entities[entityKey] || {
+        _key: entityKey,
+        name: "<Missing entity preview>",
+        type: EntityType.Human,
+        text: "<Missing entity preview>",
+      };
       selectedAuthors.push({
-        label: name,
         value: entityKey,
+        label: e.name,
+        text: e.text,
+        type: e.type,
       });
     }
   }
@@ -81,7 +94,7 @@ class SourceForm extends React.Component<Props> {
     this.props.onDescriptionChange(this.props.editorId, event.target.value);
   };
 
-  onAuthorsChange = (selection: ValueType<ReactSelectOption>) => {
+  onAuthorsChange = (selection: ValueType<EntitySelectOption>) => {
     this.props.onAuthorsChange(this.props.editorId, selection);
   };
 

@@ -2,7 +2,6 @@ import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import styled from "styled-components";
-import cuid from "cuid";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
@@ -10,19 +9,13 @@ import { media } from "../styles/responsive-utils";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";
-import EdgesList from "../components/EdgesList";
-import EdgeEditor from "../components/EdgeEditor";
 import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
-import { Edge, Status, ReactSelectOption } from "../utils/types";
+import { Edge, EntitySelectOption } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
-import Meta from "../components/meta/Meta";
 import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
-import { EditorContainerCSS } from "../components/layout/EditorContainer";
-import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import { ReactComponent as SearchIcon } from "../assets/ic_search.svg";
-import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 
 const Header = styled.div`
   display: flex;
@@ -77,7 +70,7 @@ type Props = ReturnType<typeof mapStateToProps> &
   RouteComponentProps;
 
 class RelationPreview extends React.Component<Props> {
-  onEntity1Selected = (option: ReactSelectOption) => {
+  onEntity1Selected = (option: EntitySelectOption) => {
     const k1 = keyForUrl(option.value);
     const k2 = keyForUrl(this.props.realKey2);
     this.props.history.push(
@@ -85,7 +78,7 @@ class RelationPreview extends React.Component<Props> {
     );
   };
 
-  onEntity2Selected = (option: ReactSelectOption) => {
+  onEntity2Selected = (option: EntitySelectOption) => {
     const k1 = keyForUrl(this.props.realKey1);
     const k2 = keyForUrl(option.value);
     this.props.history.push(

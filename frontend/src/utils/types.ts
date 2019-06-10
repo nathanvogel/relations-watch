@@ -545,11 +545,11 @@ export enum SourceLinkType {
   Refutes,
 }
 
-export type ReactSelectOption = {
-  value: string;
-  label: string;
-  [key: string]: any;
-};
+// export type ReactSelectOption = {
+//   value: string;
+//   label: string;
+//   [key: string]: any;
+// };
 
 export type EntitySelectOption = {
   value: string;

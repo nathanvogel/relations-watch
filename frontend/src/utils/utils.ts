@@ -187,6 +187,7 @@ export function getEntityPreview(entity: Entity): EntityPreview {
     name: entity.name,
     type: entity.type,
     imageId: entity.imageId,
+    text: entity.text,
   };
 }
 

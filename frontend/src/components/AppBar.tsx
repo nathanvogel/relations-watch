@@ -4,7 +4,7 @@ import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 
 import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
-import { ReactSelectOption } from "../utils/types";
+import { EntitySelectOption } from "../utils/types";
 import IconButton from "./buttons/IconButton";
 import { ReactComponent as MenuIcon } from "../assets/ic_main_menu.svg";
 import { Mobile } from "../styles/responsive-utils";
@@ -74,7 +74,7 @@ class AppBar extends React.Component<Props> {
     this.setState({ searchValue: value });
   };
 
-  onSearch = (option: ReactSelectOption) => {
+  onSearch = (option: EntitySelectOption) => {
     this.setState({ searchValue: "" });
     const url = `/${ROUTES.entity}/${option.value}`;
     this.props.history.push(url);

@@ -5,7 +5,7 @@ import { useTranslation, Trans } from "react-i18next";
 
 import EntitySearch from "../components/EntitySearch";
 import ROUTES from "../utils/ROUTES";
-import { ReactSelectOption } from "../utils/types";
+import { EntitySelectOption } from "../utils/types";
 import R from "../strings/R";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import EntityDetails from "../components/EntityDetails";
@@ -87,7 +87,7 @@ const ItemList = styled.div`
 const HomeScreen: FunctionComponent<RouterProps> = props => {
   const { t } = useTranslation();
 
-  const onSearch = (searchSelection: ReactSelectOption) => {
+  const onSearch = (searchSelection: EntitySelectOption) => {
     const entityKey = searchSelection.value;
     const url = `/${ROUTES.entity}/${entityKey}`;
     props.history.push(url);
