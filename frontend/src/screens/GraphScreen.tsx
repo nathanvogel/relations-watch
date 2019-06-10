@@ -12,15 +12,15 @@ import EdgesListContainer from "../components/EdgesListContainer";
 import HeaderModal from "../components/layout/HeaderModal";
 import ROUTES from "../utils/ROUTES";
 
-const StyledMeta = styled(Meta)`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) translateY(20vh);
-`;
-
 const DrawerPadder = styled.div`
   padding: ${props => props.theme.blockPadding};
   padding-top: 0.85em;
+`;
+
+const EdgeListWrapper = styled.div`
+  padding-top: 2em;
+  padding-bottom: 2em;
+  min-height: 30vh;
 `;
 
 interface OwnProps {
@@ -70,10 +70,12 @@ const GraphScreen: React.FunctionComponent<Props> = props => {
                 />
               }
             >
-              <EdgesListContainer
-                entity1Key={props.match.params.entity1Key}
-                entity2Key={props.match.params.entity2Key}
-              />
+              <EdgeListWrapper>
+                <EdgesListContainer
+                  entity1Key={props.match.params.entity1Key}
+                  entity2Key={props.match.params.entity2Key}
+                />
+              </EdgeListWrapper>
             </HeaderModal>
           )}
         />

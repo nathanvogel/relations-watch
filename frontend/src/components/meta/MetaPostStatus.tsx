@@ -22,13 +22,21 @@ export default function MetaPostStatus(props: Props) {
           <p className={props.className}>
             Error: {error ? error.eMessage : "Unkown error"}
           </p>
-          {clearRequest && <IconButton onClick={clearRequest}>Ok</IconButton>}
+          {clearRequest && (
+            <IconButton withText onClick={clearRequest}>
+              Ok
+            </IconButton>
+          )}
         </React.Fragment>
       )}
       {status === Status.Ok && (
         <React.Fragment>
           <p className={props.className}>Successfully saved!</p>
-          {clearRequest && <IconButton onClick={clearRequest}>Ok</IconButton>}
+          {clearRequest && (
+            <IconButton withText onClick={clearRequest}>
+              Ok
+            </IconButton>
+          )}
         </React.Fragment>
       )}
     </React.Fragment>

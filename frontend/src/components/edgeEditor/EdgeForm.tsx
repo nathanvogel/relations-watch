@@ -519,6 +519,7 @@ class EdgeForm extends React.Component<Props> {
               </ButtonWithConfirmation>
             )}
             <IconButton
+              withText
               disabled={this.isNew && !hasSource}
               type="submit"
               ref={this.ref_saveButton}
@@ -526,7 +527,11 @@ class EdgeForm extends React.Component<Props> {
               Save
             </IconButton>
             {hasSource && (
-              <IconButton type="button" onClick={this.onRefutingSubmit}>
+              <IconButton
+                withText
+                type="button"
+                onClick={this.onRefutingSubmit}
+              >
                 Save with refuting reference
               </IconButton>
             )}

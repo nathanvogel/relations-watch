@@ -7,16 +7,32 @@ import { Link } from "react-router-dom";
 import { RootStore } from "../Store";
 import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/meta/Meta";
-import { Status, EntityPreview, Entity } from "../utils/types";
+import { Status, EntityPreview, Entity, DatasetId } from "../utils/types";
 import EntityView from "./entity/EntityView";
+import IconButton, { IconButtonLink } from "./buttons/IconButton";
+import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
+import ROUTES from "../utils/ROUTES";
+import SmallA, { SmallLink } from "./buttons/SmallA";
+import ButtonBar from "./buttons/ButtonBar";
 
-type OwnProps = { entityKey: string };
+const ActionLinksBox = styled.div`
+  margin-top: ${props => props.theme.inputTBSpacing};
+
+  & > * {
+    display: block;
+  }
+`;
+
+type OwnProps = {
+  entityKey: string;
+  expanded?: boolean;
+};
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const entityKey = props.entityKey;
+  const { entityKey, expanded } = props;
   // Get the entity from the Redux Store
   const entityPreview = state.entities.datapreview[entityKey] as
     | EntityPreview
@@ -27,6 +43,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   // Return everything.
   return {
     entityKey,
+    expanded,
     entityPreview,
     entity,
     status,
@@ -45,32 +62,68 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 class EntityDetails extends Component<Props> {
   componentDidMount() {
     if (
-      !this.props.entityPreview &&
+      (!this.props.entityPreview || this.props.expanded) &&
       (!this.props.status || this.props.status === Status.Error)
     )
       this.props.loadEntity(this.props.entityKey);
   }
 
   render() {
-    const { entity, entityPreview, status, error } = this.props;
+    const { entity, entityPreview, status, error, expanded } = this.props;
 
-    if (entityPreview)
+    // If we don't need the full entity data, we can directly use the
+    // EntityPreview if available
+    if (!expanded && entityPreview)
       return (
         <Link to={`/e/${this.props.entityKey}`}>
           <EntityView entity={entityPreview} />
         </Link>
       );
 
-    // Render loading status and error.
+    // We can't use the EntityPreview, so we might need to render a loading
+    // status or error
     if (status !== Status.Ok) return <Meta status={status} error={error} />;
+    // TS assert. If Status === Ok and we don't have an entity, then we have
+    // a problem
+    if (!entity) return "Error";
 
-    if (entity)
+    // Render either the simple preview, or the full view with edit control
+    // at this point.
+    const entityView = (
+      <Link to={`/e/${this.props.entityKey}`}>
+        <EntityView entity={entity} />
+      </Link>
+    );
+
+    if (!expanded) return entityView;
+    else
       return (
-        <Link to={`/e/${this.props.entityKey}`}>
-          <EntityView entity={entity} />
-        </Link>
+        <div>
+          {entityView}
+          {entity.ds && entity.ds.wd ? (
+            <ActionLinksBox>
+              <SmallA href={`https://www.wikidata.org/wiki/${entity.ds.wd}`}>
+                Edit on Wikidata
+              </SmallA>
+              <SmallLink
+                to={`/${ROUTES.import}/${DatasetId.Wikidata}/${entity.ds.wd}`}
+              >
+                Auto-update from Wikidata
+              </SmallLink>
+            </ActionLinksBox>
+          ) : (
+            <div>
+              <ButtonBar>
+                <IconButtonLink
+                  to={`/${ROUTES.edit}/${ROUTES.entity}/${entity._key}`}
+                >
+                  <EditIcon />
+                </IconButtonLink>
+              </ButtonBar>
+            </div>
+          )}
+        </div>
       );
-    return "Error";
   }
 }
 

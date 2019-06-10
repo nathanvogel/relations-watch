@@ -9,10 +9,10 @@ import { RootStore } from "../Store";
 import { Dispatch, AnyAction, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
-import SourceListItemContainerCSS from "./sourceDetails/SourceListItemContainer";
 import IconButton from "./buttons/IconButton";
 import SourceList from "./edgeDetails/SourceList";
 import ButtonBar from "./buttons/ButtonBar";
+import { MiniInfoText } from "./titles/MiniInfoText";
 
 const Content = styled.section`
   box-sizing: border-box;
@@ -39,40 +39,12 @@ const EdgeMainText = styled.p`
   margin-bottom: 20px;
 `;
 
-const DatasetInfoText = styled.p`
-  font-size: ${props => props.theme.fontSizeS};
-  color: ${props => props.theme.secondaryTextColor};
-  margin-top: ${props => props.theme.inputTBSpacing};
-  margin-bottom: ${props => props.theme.inputTBSpacing};
-`;
-
-const AddSourceButton = styled(IconButton)`
-  ${SourceListItemContainerCSS}
-  // width: 100%;
-  display: block;
-  padding-top: ${props => props.theme.inputPaddingTB};
-  padding-bottom: ${props => props.theme.inputPaddingTB};
-  margin-bottom: 0px; // It's the last element
-  font-size: 6px; // smaller than the icon so that it is centered
-  // background-color: white;
-
-  & > svg {
-    height: 18px;
-    width: 18px;
-    // margin-right: 10px;
-  }
-`;
-
 type OwnProps = {
   edge: Edge;
 };
 
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
-
-type State = {
-  editing: boolean;
-};
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { edge } = props;
@@ -126,20 +98,20 @@ const EdgeDetails: React.FunctionComponent<Props> = props => {
       )}
       <SourceList sources={edge.sources} />
       {showDatasetEditInfo ? (
-        <DatasetInfoText>
+        <MiniInfoText>
           {edge.ds && edge.ds.wd
             ? "This information comes from Wikidata. You can modify it by going to the source link, making the changes on Wikidata and clicking 'Update from Wikidata' here on the relevant entity. This way, you'll be contributing to both relations.watch and Wikidata!"
             : "This information comes from an external source and can't be modified directly here."}
-        </DatasetInfoText>
+        </MiniInfoText>
       ) : (
         <ButtonBar buttonsAlign="right">
-          <AddSourceButton
+          <IconButton
             onClick={() =>
               edge.ds ? setShowDatasetEditInfo(true) : setEditing(true)
             }
           >
             <EditIcon />
-          </AddSourceButton>
+          </IconButton>
         </ButtonBar>
       )}
     </Content>

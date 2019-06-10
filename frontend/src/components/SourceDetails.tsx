@@ -12,6 +12,7 @@ import { patchSource } from "../features/sourcesAC";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import SourceListItemContainerCSS from "./sourceDetails/SourceListItemContainer";
 import IconButton from "./buttons/IconButton";
+import SmallA from "./buttons/SmallA";
 
 const SourceListItemContainer = styled.div`
   ${SourceListItemContainerCSS}
@@ -21,12 +22,6 @@ const SourceEntitiesContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-`;
-
-const StyledSourceA = styled.a`
-  color: inherit;
-  font-size: ${props => props.theme.fontSizeS};
-  // text-decoration: none;
 `;
 
 const Actions = styled.div`
@@ -130,14 +125,16 @@ class SourceDetails extends React.Component<Props> {
       >
         {this.props.editable && (
           <Actions>
-            <IconButton onClick={this.toggleClick}>Edit</IconButton>
+            <IconButton withText onClick={this.toggleClick}>
+              Edit
+            </IconButton>
           </Actions>
         )}
         {sourceText && source._key !== "1379121" && <div>{sourceText}</div>}
         {isLink ? (
-          <StyledSourceA href={fullUrl}>
+          <SmallA href={fullUrl}>
             {source.ref === "www.wikidata.org" ? fullUrl : source.ref}
-          </StyledSourceA>
+          </SmallA>
         ) : (
           <strong>{source.ref}</strong>
         )}

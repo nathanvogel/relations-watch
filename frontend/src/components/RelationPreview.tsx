@@ -14,6 +14,7 @@ import { Edge, EntitySelectOption } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
 import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
+import { MiniInfoText } from "./titles/MiniInfoText";
 
 const limitedContainerCSS = css`
   height: 100%;
@@ -76,7 +77,7 @@ type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps> &
   RouteComponentProps;
 
-class RelationPreview extends React.PureComponent<Props> {
+class RelationPreview extends React.Component<Props> {
   onEntity1Selected = (option: EntitySelectOption) => {
     const k1 = keyForUrl(option.value);
     const k2 = keyForUrl(this.props.realKey2);
@@ -114,36 +115,47 @@ class RelationPreview extends React.PureComponent<Props> {
     const { relations } = this.props;
 
     return (
-      <Container fullyVisible={fullyVisible}>
-        <EntityColumn>
-          {realKey1 ? (
-            <div>
-              <EntityDetails key={realKey1} entityKey={realKey1} />
-            </div>
-          ) : (
-            <EntitySearch
-              placeholder="Search another..."
-              onChange={this.onEntity1Selected}
-            />
-          )}
-        </EntityColumn>
-        <LinksColumn>
-          {/* PART links preview */}
-          <BigLinksPreview relations={relations} />
-        </LinksColumn>
-        <EntityColumn>
-          {realKey2 ? (
-            <div style={{ textAlign: "right" }}>
-              <EntityDetails key={realKey2} entityKey={realKey2} />
-            </div>
-          ) : (
-            <EntitySearch
-              placeholder="Search another..."
-              onChange={this.onEntity2Selected}
-            />
-          )}
-        </EntityColumn>
-      </Container>
+      <div>
+        <Container fullyVisible={fullyVisible}>
+          <EntityColumn>
+            {realKey1 ? (
+              <EntityDetails
+                expanded={fullyVisible}
+                key={realKey1}
+                entityKey={realKey1}
+              />
+            ) : (
+              <EntitySearch
+                placeholder="Search another..."
+                onChange={this.onEntity1Selected}
+              />
+            )}
+          </EntityColumn>
+          <LinksColumn>
+            {/* PART links preview */}
+            <BigLinksPreview relations={relations} />
+          </LinksColumn>
+          <EntityColumn>
+            {realKey2 ? (
+              <EntityDetails
+                expanded={fullyVisible}
+                key={realKey2}
+                entityKey={realKey2}
+              />
+            ) : (
+              <EntitySearch
+                placeholder="Search another..."
+                onChange={this.onEntity2Selected}
+              />
+            )}
+          </EntityColumn>
+        </Container>
+        {!fullyVisible && realKey2 && (
+          <MiniInfoText>
+            Click on the relation to show the full details.
+          </MiniInfoText>
+        )}
+      </div>
     );
   }
 }

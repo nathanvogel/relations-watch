@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { SourceLink, SourceLinkType } from "../../utils/types";
 import SourceDetails from "../SourceDetails";
 import TertiaryTitle from "../titles/TertiaryTitle";
+import { MiniInfoText } from "../titles/MiniInfoText";
 
 interface HeadProps {
   isRefuting: boolean;
@@ -22,11 +23,7 @@ type Props = {
 
 const SourceList: FunctionComponent<Props> = ({ sources }: Props) => {
   if (!sources || sources.length === 0)
-    return (
-      <Head isRefuting={false}>
-        <em>UNSOURCED INFORMATION</em>
-      </Head>
-    );
+    return <MiniInfoText>UNSOURCED INFORMATION</MiniInfoText>;
   const confirmingSources: SourceLink[] = sources.filter(
     s => s.type === SourceLinkType.Confirms
   );

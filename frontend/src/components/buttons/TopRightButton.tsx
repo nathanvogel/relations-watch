@@ -2,10 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import IconButton from "../buttons/IconButton";
 
-interface Props {
-  className?: string;
-}
-
 const StyledButton = styled(IconButton)`
   display: block;
   position: absolute;

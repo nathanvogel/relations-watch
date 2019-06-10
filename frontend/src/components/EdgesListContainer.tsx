@@ -16,6 +16,7 @@ import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
 import { EditorContainerCSS } from "../components/layout/EditorContainer";
 import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
+import { MiniInfoText } from "./titles/MiniInfoText";
 
 const RelationsColumn = styled.div`
   width: 100%;
@@ -43,6 +44,9 @@ type OwnProps = {
   entity2Key?: string;
 };
 
+// For memoization
+const defaultRelations: Edge[] = [];
+
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { entity1Key, entity2Key } = props;
   const realKey1 = emptyOrRealKey(entity1Key);
@@ -54,7 +58,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const relations: Edge[] =
     relationId && state.relations.data[relationId]
       ? state.relations.data[relationId]
-      : [];
+      : defaultRelations;
   const relationsStatus = relationId
     ? state.relations.status[relationId]
     : null;
@@ -117,8 +121,9 @@ class EdgesListContainer extends React.Component<Props> {
     if (!hasBothSelection) {
       return (
         <RelationsColumn>
-          {" "}
-          <p>No entity selected</p>
+          <MiniInfoText>
+            Select two entities to display their relations.
+          </MiniInfoText>
         </RelationsColumn>
       );
     }

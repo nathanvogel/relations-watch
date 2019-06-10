@@ -1,29 +1,25 @@
 import styled, { css } from "styled-components";
+import { Link } from "react-router-dom";
 
 type IconButtonProps = {
   small?: boolean;
   withText?: boolean;
 };
 
-const withTextCSS = css`
+const withTextCSS = css<IconButtonProps>`
   & > svg {
-    margin-right: ${props => props.theme.inputMarginTB};
+    margin-right: ${props => (props.small ? "6px" : "9px")};
   }
 `;
 
-const smallIconCSS = css`
-  & > svg {
-    margin-right: 6px;
-    width: 12px;
-    height: 12px;
-  }
-`;
-
-const IconButton = styled.button<IconButtonProps>`
+const iconButtonCSS = css<IconButtonProps>`
   height: auto;
-  min-height: ${props => (props.small ? "16px" : "28px")};
-  min-width: ${props => (props.small ? "16px" : "28px")};
+  min-height: ${props => (props.small ? "16px" : "32px")};
+  min-width: ${props => (props.small ? "16px" : "32px")};
+  text-align: center;
   font-size: ${props => (props.small ? props.theme.fontSizeS : "inherit")}
+  line-height: 1;
+  box-sizing: border-box;
   padding: ${props => props.theme.inputPaddingTB}
     ${props => props.theme.inputPaddingLR};
   background-color: ${props => props.theme.inputBG};
@@ -32,8 +28,15 @@ const IconButton = styled.button<IconButtonProps>`
   border-style: solid;
   border-radius: ${props => props.theme.radius};
 
+  & > svg {
+    height: ${props => (props.small ? "12px" : "20px")}
+    width: ${props => (props.small ? "12px" : "20px")}
+    // Vertically center the icon
+    transform: translateY(2px);
+  }
+
   cursor: pointer;
-  color: inherit;
+  color: ${props => props.theme.mainTextColor};
 
   &:not([disabled]):hover {
     background-color: ${props => props.theme.surfaceHover};
@@ -52,7 +55,24 @@ const IconButton = styled.button<IconButtonProps>`
   }
 
   ${props => props.withText && withTextCSS}
-  ${props => props.small && smallIconCSS}
+`;
+
+export const IconButton = styled.button<IconButtonProps>`
+  ${iconButtonCSS}
+`;
+
+export const IconButtonLink = styled(Link)<IconButtonProps>`
+  ${iconButtonCSS}
+  // Prevent text breaking + allow parent (ButtonBar) to apply margin
+  display: inline-block;
+
+  &:link,
+  &:visited,
+  &:hover,
+  &:active {
+    color: ${props => props.theme.mainTextColor};
+    text-decoration: none;
+  }
 `;
 
 export default IconButton;

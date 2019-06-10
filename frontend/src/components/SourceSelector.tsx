@@ -162,7 +162,9 @@ class SourceSelector extends React.Component<Props> {
         }
         return (
           <div>
-            <IconButton onClick={this.deselect}>Pick another</IconButton>
+            <IconButton withText onClick={this.deselect}>
+              Pick another
+            </IconButton>
             {this.props.sourceKey ? (
               <SourceDetails
                 sourceKey={this.props.sourceKey}

@@ -8,11 +8,11 @@ interface Props {
 
 class ButtonWithConfirmation extends React.Component<Props> {
   readonly state = {
-    confirming: false
+    confirming: false,
   };
 
   static defaultProps = {
-    textCancel: "Cancel"
+    textCancel: "Cancel",
   };
 
   onClick = () => {
@@ -32,11 +32,11 @@ class ButtonWithConfirmation extends React.Component<Props> {
     return (
       <React.Fragment>
         {this.state.confirming && (
-          <IconButton type="button" onClick={this.onCancelClick}>
+          <IconButton withText type="button" onClick={this.onCancelClick}>
             {textCancel}
           </IconButton>
         )}
-        <IconButton type="button" onClick={this.onClick}>
+        <IconButton withText type="button" onClick={this.onClick}>
           {children}
         </IconButton>
       </React.Fragment>

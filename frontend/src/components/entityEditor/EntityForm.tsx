@@ -148,11 +148,17 @@ class EntityForm extends React.Component<Props> {
           placeholder="..."
         />
         <ButtonBar>
-          <IconButton disabled={this.props.disabled} onClick={this.onSubmit}>
+          <IconButton
+            withText
+            disabled={this.props.disabled}
+            onClick={this.onSubmit}
+          >
             Save
           </IconButton>
           {this.props.onFormCancel && (
-            <IconButton onClick={this.props.onFormCancel}>Cancel</IconButton>
+            <IconButton withText onClick={this.props.onFormCancel}>
+              Cancel
+            </IconButton>
           )}
         </ButtonBar>
       </EditorContainer>

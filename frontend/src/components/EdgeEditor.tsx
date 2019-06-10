@@ -8,7 +8,7 @@ import { getRelationId, shouldLoad } from "../utils/utils";
 import {
   saveEdge,
   clearPostRequest,
-  deleteEdge
+  deleteEdge,
 } from "../features/edgesSaveAC";
 import { loadEdge } from "../features/edgesLoadAC";
 import { loadSources } from "../features/sourcesAC";
@@ -16,7 +16,6 @@ import { Edge, Status, SourceLink } from "../utils/types";
 import MetaPostStatus from "./meta/MetaPostStatus";
 import Meta from "./meta/Meta";
 import EdgeForm from "./edgeEditor/EdgeForm";
-import IconButton from "./buttons/IconButton";
 
 type OwnProps = {
   entity1Key: string;
@@ -77,7 +76,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     entity2Status,
     edge,
     edgeStatus,
-    edgeError
+    edgeError,
   };
 };
 
@@ -88,7 +87,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
       saveEdge,
       deleteEdge,
       clearPostRequest,
-      loadSources
+      loadSources,
     },
     dispatch
   );

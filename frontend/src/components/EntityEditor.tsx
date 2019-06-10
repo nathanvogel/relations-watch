@@ -120,7 +120,9 @@ class EntityEditor extends React.Component<Props> {
         <Content>
           <p>Saved!</p>
           {this.props.onDone ? (
-            <IconButton onClick={this.onClearClick}>Ok</IconButton>
+            <IconButton withText onClick={this.onClearClick}>
+              Ok
+            </IconButton>
           ) : (
             <Link
               onClick={this.onClearClick}
