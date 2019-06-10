@@ -28,7 +28,8 @@ const StyledDrawer = styled(Drawer)`
 const DrawerWrapper = styled.div`
   // Colors
   background-color: ${props => props.theme.sidebarBG};
-  border-right: solid 1px ${props => props.theme.darkBG};
+  border-right: solid ${props => props.theme.strongBorderWidth}
+    ${props => props.theme.darkBG};
   // Size
   box-sizing: border-box;
   height: 100%;

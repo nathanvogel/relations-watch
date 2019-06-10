@@ -754,10 +754,14 @@ class GraphV4 extends React.PureComponent<Props> {
   }
 
   onNodeClick = (d: V4NodeDatum, _index: number) => {
+    // Clear the hover (because mouseout won't be called)
+    this.props.hoverEntity("");
     this.props.history.push(`/${ROUTES.entity}/${d.entityKey}`);
   };
 
   onRelationClick = (d: V4LinkDatum, _index: number) => {
+    // Clear the hover (because mouseout won't be called)
+    this.props.hoverRelation("", "");
     this.props.history.push(
       `${this.props.match.url}/${ROUTES.relation}/${d.sourceKey}/${d.targetKey}`
     );

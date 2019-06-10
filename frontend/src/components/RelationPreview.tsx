@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
@@ -14,35 +14,40 @@ import { Edge, EntitySelectOption } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
 import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
-import IconButton from "../components/buttons/IconButton";
-import { ReactComponent as SearchIcon } from "../assets/ic_search.svg";
 
-const Header = styled.div`
+const limitedContainerCSS = css`
+  max-height: 100%;
+  overflow: hidden;
+`;
+
+interface ContainerProps {
+  fullyVisible: boolean;
+}
+const Container = styled.div<ContainerProps>`
+  ${props => (props.fullyVisible ? "" : limitedContainerCSS)}
+
   display: flex;
   ${media.mobile`display: block;`}
 `;
 
 const EntityColumn = styled.div`
   flex: 1;
-  width: 100%;
-  max-width: 220px;
 `;
 const LinksColumn = styled.div`
   flex-grow: 1;
 `;
 
-const ClearButton = styled(IconButton)`
-  display: inline-block;
-  margin: ${props => props.theme.inputMarginTB} 0;
-`;
-
 type OwnProps = {
   entity1Key?: string;
   entity2Key?: string;
+  fullyVisible: boolean;
 };
 
+// For memoization
+const defaultRelations: Edge[] = [];
+
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const { entity1Key, entity2Key } = props;
+  const { entity1Key, entity2Key, fullyVisible } = props;
   const realKey1 = emptyOrRealKey(entity1Key);
   const realKey2 = emptyOrRealKey(entity2Key);
   const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
@@ -52,13 +57,14 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const relations: Edge[] =
     relationId && state.relations.data[relationId]
       ? state.relations.data[relationId]
-      : [];
+      : defaultRelations;
 
   return {
     realKey1,
     realKey2,
     relations,
     hasBothSelection,
+    fullyVisible,
   };
 };
 
@@ -69,7 +75,7 @@ type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps> &
   RouteComponentProps;
 
-class RelationPreview extends React.Component<Props> {
+class RelationPreview extends React.PureComponent<Props> {
   onEntity1Selected = (option: EntitySelectOption) => {
     const k1 = keyForUrl(option.value);
     const k2 = keyForUrl(this.props.realKey2);
@@ -103,22 +109,21 @@ class RelationPreview extends React.Component<Props> {
   };
 
   render() {
-    const { realKey1, realKey2, hasBothSelection } = this.props;
+    const { realKey1, realKey2, fullyVisible } = this.props;
     const { relations } = this.props;
 
     return (
-      <Header>
+      <Container fullyVisible={fullyVisible}>
         <EntityColumn>
           {realKey1 ? (
             <div>
               <EntityDetails key={realKey1} entityKey={realKey1} />
-              <ClearButton withText small onClick={this.onEntity1Cleared}>
-                <SearchIcon />
-                Search
-              </ClearButton>
             </div>
           ) : (
-            <EntitySearch onChange={this.onEntity1Selected} />
+            <EntitySearch
+              placeholder="Search another..."
+              onChange={this.onEntity1Selected}
+            />
           )}
         </EntityColumn>
         <LinksColumn>
@@ -129,16 +134,15 @@ class RelationPreview extends React.Component<Props> {
           {realKey2 ? (
             <div style={{ textAlign: "right" }}>
               <EntityDetails key={realKey2} entityKey={realKey2} />
-              <ClearButton withText small onClick={this.onEntity2Cleared}>
-                <SearchIcon />
-                Search
-              </ClearButton>
             </div>
           ) : (
-            <EntitySearch onChange={this.onEntity2Selected} />
+            <EntitySearch
+              placeholder="Search another..."
+              onChange={this.onEntity2Selected}
+            />
           )}
         </EntityColumn>
-      </Header>
+      </Container>
     );
   }
 }

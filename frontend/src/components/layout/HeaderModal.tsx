@@ -9,31 +9,38 @@ interface ModalProps {
 const ModalContent = styled.div<ModalProps>`
   position: fixed;
   box-sizing: border-box;
-  width: calc(100% - ${props => props.theme.marginLR} - ${props =>
-  props.theme.marginLR});
+  width: calc(
+    100% - ${props => props.theme.marginLR} - ${props => props.theme.marginLR}
+  );
   max-width: 800px;
-  min-height: 400px;
-  max-height: calc(100vh - 110px);
+  min-height: 150px;
+  height: ${props => (props.fullyVisible ? "auto" : "150px")}
+  max-height: ${props => (props.fullyVisible ? "calc(100vh - 30px)" : "150px")}
   overflow-y: auto;
-  bottom: -300px;
+  top: calc(100vh - 150px);
   left: 50%;
   transition: transform 0.3s ease-out;
-  transform:
-   translateX(calc(-50% - ${props => props.theme.marginLR}))
-   translateY(${props =>
-     props.fullyVisible ? "calc(-100vh + 300px)" : "0px"});
+  transform: translateX(calc(-50% - ${props => props.theme.marginLR}))
+    translateY(${props =>
+      props.fullyVisible ? "calc(-100% + 150px)" : "0px"});
   z-index: 3000;
+
   padding: ${props => props.theme.blockPadding};
-  margin-bottom: ${props => props.theme.marginTB};
+  padding-bottom: ${props =>
+    props.fullyVisible ? props.theme.blockPadding : "0px"}
+  margin-bottom: 0px;
   margin-left: ${props => props.theme.marginLR};
   margin-right: ${props => props.theme.marginLR};
 
   background-color: ${props => props.theme.appBG};
-  // box-shadow: 0px 0px 28px 0px rgba(0, 0, 0, 0.5);
-  border-style: solid
-  border-color: ${props => props.theme.border};
-  border-width: ${props => props.theme.borderWidth};
-  border-radius: ${props => props.theme.radius};
+  // box-shadow: 0px 0px ${props => (props.fullyVisible ? "4px" : "0px")} 0px
+  //   rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: ${props => props.theme.strongBorderWidth};
+  border-color: ${props => props.theme.darkBG};
+  border-bottom: none;
+  border-radius: ${props => props.theme.radius} ${props => props.theme.radius}
+    0px 0px;
 `;
 
 const OptionalModalBackground = styled(ModalBackground)<ModalProps>`

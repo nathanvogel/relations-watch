@@ -5,8 +5,9 @@ import ModalBackground from "./ModalBackground";
 const ModalContent = styled.div`
   position: fixed;
   box-sizing: border-box;
-  width: calc(100% - ${props => props.theme.marginLR} - ${props =>
-  props.theme.marginLR});
+  width: calc(
+    100% - ${props => props.theme.marginLR} - ${props => props.theme.marginLR}
+  );
   max-width: 800px;
   min-height: 400px;
   max-height: calc(100vh - 110px);
@@ -22,7 +23,7 @@ const ModalContent = styled.div`
 
   background-color: ${props => props.theme.appBG};
   // box-shadow: 0px 0px 28px 0px rgba(0, 0, 0, 0.5);
-  border-style: solid
+  border-style: solid;
   border-color: ${props => props.theme.border};
   border-width: ${props => props.theme.borderWidth};
   border-radius: ${props => props.theme.radius};

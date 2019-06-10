@@ -9,7 +9,7 @@ const ModalBackground = styled.div`
   bottom: 0px;
   right: 0px;
   z-index: 2999;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.82);
 `;
 
 export default ModalBackground;

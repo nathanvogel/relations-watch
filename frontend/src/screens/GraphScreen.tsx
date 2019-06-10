@@ -64,12 +64,16 @@ const GraphScreen: React.FunctionComponent<Props> = props => {
               onClose={closeRelationDetail}
               header={
                 <RelationPreview
+                  fullyVisible={true}
                   entity1Key={props.match.params.entity1Key}
                   entity2Key={props.match.params.entity2Key}
                 />
               }
             >
-              <EdgesListContainer />
+              <EdgesListContainer
+                entity1Key={props.match.params.entity1Key}
+                entity2Key={props.match.params.entity2Key}
+              />
             </HeaderModal>
           )}
         />
@@ -80,13 +84,12 @@ const GraphScreen: React.FunctionComponent<Props> = props => {
               onClose={closeRelationDetail}
               header={
                 <RelationPreview
+                  fullyVisible={false}
                   entity1Key={entity1Key || hover.relationSourceKey}
                   entity2Key={hover.relationTargetKey || hover.entityKey}
                 />
               }
-            >
-              Only in hover mode, nothing to render
-            </HeaderModal>
+            />
           )}
         />
       </Switch>
