@@ -98,7 +98,10 @@ const History: React.FunctionComponent<Props> = props => {
         />
       </Switch>
       {props.entitySelection.length <= 0 ? (
-        <p>Empty</p>
+        <p>
+          You haven't explored yet, so there's nothing to display. If you're
+          lost, go to the <Link to="/">homepage</Link>.
+        </p>
       ) : (
         <List>
           {entities.map((_, index) => {

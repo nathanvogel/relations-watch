@@ -39,6 +39,10 @@ const LinksColumn = styled.div`
   flex-grow: 1;
 `;
 
+const ClickForFull = styled(MiniInfoText)`
+  text-align: center;
+`;
+
 type OwnProps = {
   entity1Key?: string;
   entity2Key?: string;
@@ -125,10 +129,12 @@ class RelationPreview extends React.Component<Props> {
                 entityKey={realKey1}
               />
             ) : (
-              <EntitySearch
-                placeholder="Search another..."
-                onChange={this.onEntity1Selected}
-              />
+              realKey2 && (
+                <EntitySearch
+                  placeholder="Search another..."
+                  onChange={this.onEntity1Selected}
+                />
+              )
             )}
           </EntityColumn>
           <LinksColumn>
@@ -143,17 +149,19 @@ class RelationPreview extends React.Component<Props> {
                 entityKey={realKey2}
               />
             ) : (
-              <EntitySearch
-                placeholder="Search another..."
-                onChange={this.onEntity2Selected}
-              />
+              realKey1 && (
+                <EntitySearch
+                  placeholder="Search another..."
+                  onChange={this.onEntity2Selected}
+                />
+              )
             )}
           </EntityColumn>
         </Container>
-        {!fullyVisible && realKey2 && (
-          <MiniInfoText>
+        {!fullyVisible && realKey1 && realKey2 && (
+          <ClickForFull>
             Click on the relation to show the full details.
-          </MiniInfoText>
+          </ClickForFull>
         )}
       </div>
     );
