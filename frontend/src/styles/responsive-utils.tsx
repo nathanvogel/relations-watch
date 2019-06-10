@@ -2,12 +2,44 @@ import { css, FlattenSimpleInterpolation } from "styled-components";
 import React from "react";
 import Responsive from "react-responsive";
 
+type Sizes = { [key: string]: number };
+const sizes: Sizes = {
+  desktop: 992,
+  tablet: 768,
+  mobile: 576,
+};
+
+//  ===============================
+//  STYLED-COMPONENTS other version
+//  ===============================
+// From: https://github.com/styled-components/styled-components/issues/2303#issuecomment-480047731
+const customMediaQuery = (maxWidth: number) =>
+  `@media (max-width: ${maxWidth}px)`;
+
+export const mediaq = {
+  custom: customMediaQuery,
+  desktop: customMediaQuery(sizes.desktop),
+  tablet: customMediaQuery(sizes.tablet),
+  mobile: customMediaQuery(sizes.mobile),
+};
+
+/* Now we have our methods on media and can use them instead of raw queries
+const Content = styled.div`
+  ${media.desktop} {
+    background: dodgerblue;
+  }
+  ${media.tablet} {
+    background: mediumseagreen;
+  }
+  ${media.phone} {
+    background: palevioletred;
+  }
+`;
+  */
+
 //  =================
 //  STYLED-COMPONENTS
 //  =================
-type Sizes = {
-  [key: string]: number;
-};
 
 type Acc = {
   [key: string]: (...args: any[]) => FlattenSimpleInterpolation;
@@ -17,12 +49,6 @@ type MediaQueryHelper = {
   desktop?: any;
   tablet?: any;
   mobile?: any;
-};
-
-const sizes: Sizes = {
-  desktop: 992,
-  tablet: 768,
-  mobile: 576,
 };
 
 // Iterate through the sizes and create a media template

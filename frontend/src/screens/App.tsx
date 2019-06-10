@@ -7,7 +7,6 @@ import EntityScreen from "./EntityScreen";
 import History from "../components/History";
 import RT from "../utils/ROUTES";
 import { CreateEntityScreen } from "./CreateEntityScreen";
-import { getRelationId } from "../utils/utils";
 import Importer from "../components/Importer";
 import { Entity } from "../utils/types";
 import styled from "styled-components";

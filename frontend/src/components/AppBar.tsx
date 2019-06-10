@@ -82,7 +82,7 @@ class AppBar extends React.Component<Props> {
 
   render() {
     return (
-      <Bar>
+      <Bar aria-label="Navigation bar">
         <BarContent>
           <Mobile>
             <AppBarButton onClick={this.props.onLeftMenuClick}>

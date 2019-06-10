@@ -9,7 +9,15 @@ const ModalBackground = styled.div`
   bottom: 0px;
   right: 0px;
   z-index: 2999;
-  background-color: rgba(255, 255, 255, 0.82);
+  // Don't use opacity, so that it can be animated by another component
+  // background-color: rgba(255, 255, 255, 0.9);
+
+  background: rgb(213, 208, 240);
+  background: radial-gradient(
+    circle,
+    rgba(213, 208, 240, 0.3393732492997199) 0%,
+    rgba(255, 255, 255, 1) 95%
+  );
 `;
 
 export default ModalBackground;

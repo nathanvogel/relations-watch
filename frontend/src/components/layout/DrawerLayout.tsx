@@ -69,7 +69,7 @@ const DrawerLayout: React.FunctionComponent<Props> = props => {
     <Content>
       {/* NAVBAR */}
       <AppBar onLeftMenuClick={() => setMobileOpen(!mobileOpen)} />
-      <nav className={"test"} aria-label="Graph Info">
+      <nav aria-label="Sidebar">
         <Mobile>
           <SwipeableDrawer
             variant="temporary"

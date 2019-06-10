@@ -43,6 +43,7 @@ const theme = {
   blockPadding: "12px",
   blockSpacingTB: "20px",
   navBarHeight: "54px",
+  hoverBoxHeight: "150px",
   appMaxWidth: "1024px",
   appSidebarWidth: "240px",
   appMiniSidebarWidth: "130px",

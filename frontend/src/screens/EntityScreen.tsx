@@ -12,20 +12,18 @@ import { Status, DatasetId, ErrorPayload, Entity } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import * as entitySelectionActions from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
-import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
-import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import CONSTS from "../utils/consts";
 import { withTranslation, WithTranslation } from "react-i18next";
 import R from "../strings/R";
-import History from "../components/History";
 import GraphLegend from "../components/graph/GraphLegend";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
-import DrawerLayout from "../components/layout/DrawerLayout";
-import EntityName from "../components/entity/EntityName";
 
 const Content = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(
+    100vh - ${props => props.theme.hoverBoxHeight} -
+      ${props => props.theme.navBarHeight}
+  );
 `;
 
 const StyledMeta = styled(Meta)`

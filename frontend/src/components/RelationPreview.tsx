@@ -16,6 +16,7 @@ import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
 
 const limitedContainerCSS = css`
+  height: 100%;
   max-height: 100%;
   overflow: hidden;
 `;

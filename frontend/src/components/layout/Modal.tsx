@@ -15,7 +15,7 @@ const ModalContent = styled.div`
   top: 70px;
   left: 50%;
   transform: translateX(calc(-50% - ${props => props.theme.marginLR}));
-  z-index: 3000;
+  z-index: 4000;
   padding: ${props => props.theme.blockPadding};
   margin-bottom: ${props => props.theme.marginTB};
   margin-left: ${props => props.theme.marginLR};
@@ -29,6 +29,10 @@ const ModalContent = styled.div`
   border-radius: ${props => props.theme.radius};
 `;
 
+const MyModalBackground = styled(ModalBackground)`
+  z-index: 3999;
+`;
+
 type Props = {
   onClose?: () => void;
 };
@@ -36,7 +40,7 @@ type Props = {
 const Modal: React.FunctionComponent<Props> = props => {
   return (
     <div>
-      <ModalBackground onClick={props.onClose} />
+      <MyModalBackground onClick={props.onClose} />
       <ModalContent>{props.children}</ModalContent>
     </div>
   );
