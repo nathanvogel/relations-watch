@@ -2,27 +2,39 @@ import { RootStore } from "../Store";
 import { createSelector } from "reselect";
 import { EntityPreview, EdgePreview, NodeRenderType } from "../utils/types";
 import { getAllLinks } from "./linksSelector";
+import { getEntityKeys, getEntityKey } from "./selectors/propsSelectors";
 
-export const getEntityPreviews = (state: RootStore) =>
+// === Store getters
+
+export const getAllEntityPreviews = (state: RootStore) =>
   state.entities.datapreview;
 
-interface Props {
-  entityKey: string;
-}
+// === Memoized selectors
 
-export const getEntityKey = (_: RootStore, props: Props) => props.entityKey;
+export const getSomeEntityPreviews = createSelector(
+  [getEntityKeys, getAllEntityPreviews],
+  (entityKeys, allEntityPreviews) => {
+    const entities: { [entityKey: string]: EntityPreview } = {};
+
+    // Extract entities
+    for (let key of entityKeys) {
+      const tmp = allEntityPreviews[key];
+      if (tmp) entities[key] = tmp;
+      else console.warn("No data for", key);
+    }
+    return entities;
+  }
+);
 
 export const getDefaultSpecialEntityFromMain = createSelector(
   [getEntityKey],
-  entityKey => {
-    return {
-      [entityKey]: {
-        x: 0.5,
-        y: 0.5,
-        type: NodeRenderType.Primary,
-      },
-    };
-  }
+  entityKey => ({
+    [entityKey]: {
+      x: 0.5,
+      y: 0.5,
+      type: NodeRenderType.Primary,
+    },
+  })
 );
 
 /**
@@ -34,7 +46,7 @@ export const getDefaultSpecialEntityFromMain = createSelector(
  * fairly large) becomes too big.
  */
 export const getConnectedEntities = createSelector(
-  [getEntityKey, getEntityPreviews, getAllLinks],
+  [getEntityKey, getAllEntityPreviews, getAllLinks],
   (entityKey, allEntityPreviews, allLinks) => {
     const entities: { [entityKey: string]: EntityPreview } = {};
     const edges: { [edgeKey: string]: EdgePreview } = {};

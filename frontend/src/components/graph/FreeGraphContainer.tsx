@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
 import { RootStore } from "../../Store";
-import { EdgePreview, EntityPreview } from "../../utils/types";
-import { getEntityPreviewFromState, objectFromArray } from "../../utils/utils";
 import GraphPreparator from "../GraphPreparator";
 import { getSelectedEntitiesObj } from "../../features/entitySelectionSelector";
+import { getSomeEntityPreviews } from "../../features/entitiesSelector";
+import { getConnectingEdges } from "../../features/linksSelector2";
 
 type OwnProps = {
   entityKeys: string[];
@@ -16,33 +16,12 @@ type OwnProps = {
 const defaultSpecialEntities = {};
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const { entityKeys } = props;
-  const entities: { [entityKey: string]: EntityPreview } = {};
-  const edges: { [edgeKey: string]: EdgePreview } = {};
-
-  // Extract entities
-  for (let key of entityKeys) {
-    const tmp = getEntityPreviewFromState(key, state);
-    if (tmp) entities[key] = tmp;
-    else console.warn("No data for", key);
-  }
-
-  // const edges: EdgePreview[] = Object.keys(state.links.data.all)
-  //   .map(key => state.links.data.all[key])
-  //   .filter(edge => entities[edge._from] && entities[edge._to]);
-
-  // Extract all links between all entities
-  const allLinks = state.links.data.all;
-  for (let edgeKey in allLinks) {
-    const edge = allLinks[edgeKey];
-    if (entities[edge._from] && entities[edge._to]) {
-      edges[edgeKey] = edge;
-    }
-  }
-
+  // If another component was to use any of the same selectors that gets a
+  // 'props' argument, it would need to be memoized in a factory like here:
+  // https://redux.js.org/recipes/computing-derived-data#sharing-selectors-across-multiple-components
   return {
-    entities,
-    edges,
+    entities: getSomeEntityPreviews(state, props),
+    edges: getConnectingEdges(state, props),
     selectedEntities: getSelectedEntitiesObj(state),
     specialEntities: defaultSpecialEntities,
     network: true,
