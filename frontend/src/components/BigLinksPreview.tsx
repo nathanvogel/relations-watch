@@ -29,6 +29,7 @@ const ExplainersWrapper = styled.div`
 type OwnProps = {
   sourceKey: string;
   targetKey: string;
+  className?: string;
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
@@ -37,9 +38,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     edges: getInbetweenEdges(state, props),
   };
 };
-
-const mapDispatchToProps = (_: any) => ({});
-
+const mapDispatchToProps = () => ({});
 type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>;
 
@@ -60,10 +59,10 @@ const BigLinksPreview: React.FunctionComponent<Props> = props => {
   // }
   // types.sort((a, b) => a - b);
 
-  // TODO : de-dup. Better presentation
+  // TODO : de-dup. Better presentation. Responsive
 
   return (
-    <ExplainersWrapper>
+    <ExplainersWrapper className={props.className}>
       {Object.keys(edges).map(key => {
         const edge = edges[key];
         const directed = isDirectedType(edge.type, edge.fType);

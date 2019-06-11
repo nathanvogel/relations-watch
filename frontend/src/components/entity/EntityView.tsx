@@ -18,13 +18,14 @@ const Container = styled(EntityViewContainer)`
   background-color: ${props => props.theme.inputBG};
   border-radius: ${props => props.theme.radius};
   text-align: left;
+  box-sizing: border-box;
 `;
 
 const EntityView: FunctionComponent<Props> = props => {
   const { entity } = props;
 
   return (
-    <Container>
+    <Container className="entityview">
       <EntityImage src={getEntitySAsset(entity.type)} />
       <div>
         <EntityName>{entity.name}</EntityName>

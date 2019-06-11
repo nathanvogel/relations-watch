@@ -15,6 +15,7 @@ import { loadRelation } from "../features/edgesLoadAC";
 import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
 import { MiniInfoText } from "./titles/MiniInfoText";
+import EntityActions from "./entity/EntityActions";
 
 const limitedContainerCSS = css`
   height: 100%;
@@ -27,20 +28,43 @@ interface ContainerProps {
 }
 const Container = styled.div<ContainerProps>`
   ${props => (props.fullyVisible ? "" : limitedContainerCSS)}
-
+`;
+const Grid = styled.div`
   display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+
   ${media.mobile`
-    display: block;
+  display: block;
   `}
 `;
 
-const EntityColumn = styled.div`
-  flex: 1;
+interface ColumnProps {
+  column: 1 | 2 | 3;
+}
+const StyledEntityDetails = styled(EntityDetails)<ColumnProps>`
+  grid-column: ${props => props.column}
+  grid-row: 1;
+  & .entityview {
+    height: 100%;
+  }
 `;
-const LinksColumn = styled.div`
-  flex: 1;
-  max-width: 33%;
-  ${media.mobile`max-width: 100%;`}
+const StyledEntityActions = styled(EntityActions)<ColumnProps>`
+  grid-column: ${props => props.column}
+  grid-row: 2;
+  color: red !important;
+`;
+const StyledEntitySearch = styled(EntitySearch)<ColumnProps>`
+  grid-column: ${props => props.column}
+  grid-row: 1;
+  justify-self: start;
+  align-self: start;
+`;
+const StyledBigLinksPreview = styled(BigLinksPreview)`
+  grid-column: 2
+  grid-row: 1;
+  align-self: center;
 `;
 
 const ClickForFull = styled(MiniInfoText)`
@@ -54,6 +78,7 @@ type OwnProps = {
   fullyVisible: boolean;
 };
 
+// TODO unconnect component
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { entity1Key, entity2Key, fullyVisible } = props;
   const realKey1 = emptyOrRealKey(entity1Key);
@@ -110,51 +135,58 @@ class RelationPreview extends React.Component<Props> {
     const { realKey1, realKey2, fullyVisible } = this.props;
 
     return (
-      <div>
-        <Container fullyVisible={fullyVisible}>
-          <EntityColumn>
-            {realKey1 ? (
-              <EntityDetails
-                expanded={fullyVisible}
+      <Container fullyVisible={fullyVisible}>
+        <Grid>
+          {realKey1 ? (
+            <React.Fragment>
+              <StyledEntityDetails
+                column={1}
+                loadFullEntity={fullyVisible}
                 key={realKey1}
                 entityKey={realKey1}
               />
-            ) : (
-              realKey2 && (
-                <EntitySearch
-                  placeholder="Search another..."
-                  onChange={this.onEntity1Selected}
-                />
-              )
-            )}
-          </EntityColumn>
-          <LinksColumn>
-            {/* PART links preview */}
-            <BigLinksPreview sourceKey={realKey1} targetKey={realKey2} />
-          </LinksColumn>
-          <EntityColumn>
-            {realKey2 ? (
-              <EntityDetails
-                expanded={fullyVisible}
+              {fullyVisible && (
+                <StyledEntityActions column={1} entityKey={realKey1} />
+              )}
+            </React.Fragment>
+          ) : (
+            realKey2 && (
+              <StyledEntitySearch
+                column={1}
+                placeholder="Search another..."
+                onChange={this.onEntity1Selected}
+              />
+            )
+          )}
+          <StyledBigLinksPreview sourceKey={realKey1} targetKey={realKey2} />
+          {realKey2 ? (
+            <React.Fragment>
+              <StyledEntityDetails
+                column={3}
+                loadFullEntity={fullyVisible}
                 key={realKey2}
                 entityKey={realKey2}
               />
-            ) : (
-              realKey1 && (
-                <EntitySearch
-                  placeholder="Search another..."
-                  onChange={this.onEntity2Selected}
-                />
-              )
-            )}
-          </EntityColumn>
-        </Container>
+              {fullyVisible && (
+                <StyledEntityActions column={3} entityKey={realKey2} />
+              )}
+            </React.Fragment>
+          ) : (
+            realKey1 && (
+              <StyledEntitySearch
+                column={3}
+                placeholder="Search another..."
+                onChange={this.onEntity2Selected}
+              />
+            )
+          )}
+        </Grid>
         {!fullyVisible && realKey1 && realKey2 && (
           <ClickForFull>
             Click on the relation to show the full details.
           </ClickForFull>
         )}
-      </div>
+      </Container>
     );
   }
 }
