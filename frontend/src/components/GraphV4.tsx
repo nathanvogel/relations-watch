@@ -41,6 +41,7 @@ const RAD_TO_DEG = 180 / Math.PI;
 // ===== NODE APPEARANCE
 const fontSizeS: number = parseInt(theme.fontSizeS);
 const fontSizeM: number = parseInt(theme.fontSizeM);
+const fontSizeL: number = parseInt(theme.fontSizeL);
 
 function size(d: V4NodeDatum): number {
   return fontSizeS;
@@ -81,7 +82,7 @@ function fontSize(d: V4NodeDatum): number {
     case NodeRenderType.Primary:
       return fontSizeM;
     case NodeRenderType.Secondary:
-      return fontSizeS;
+      return fontSizeM;
     case NodeRenderType.Tertiary:
       return fontSizeS - 2;
   }
@@ -396,6 +397,7 @@ class GraphV4 extends React.PureComponent<Props> {
     // D3 FORCES SETUP
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
     console.log("GRAPH INIT", nodeCount);
+    const r = fontSizeL / 15;
     const distScale = d3
       .scaleLinear()
       .domain([1, Math.max(maxProximity, 4)])
@@ -473,7 +475,11 @@ class GraphV4 extends React.PureComponent<Props> {
       // )
       .force(
         "collideR",
-        bboxCollide(bigGraph ? [[-10, -20], [80, 20]] : [[-10, -12], [140, 12]])
+        bboxCollide(
+          bigGraph
+            ? [[-10 * r, -20 * r], [80 * r, 20 * r]]
+            : [[-10 * r, -12 * r], [140 * r, 12 * r]]
+        )
           .strength(bigGraph ? 0.6 : 1)
           .iterations(1)
       )
@@ -481,10 +487,10 @@ class GraphV4 extends React.PureComponent<Props> {
       .force(
         "boundary",
         forceBoundary(
-          bigGraph ? 20 : 180,
-          40,
-          width - 180,
-          height - 20
+          bigGraph ? 20 * r : 180 * r,
+          40 * r,
+          width - 180 * r,
+          height - 20 * r
         ).strength(1.4)
       );
     if (!network) {
