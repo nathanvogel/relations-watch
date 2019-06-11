@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 
 import { RootStore } from "../Store";
 import ROUTES from "../utils/ROUTES";
-import { media } from "../styles/responsive-utils";
+import { mediaq } from "../styles/responsive-utils";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";
@@ -35,9 +35,9 @@ const Grid = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto auto;
 
-  ${media.mobile`
-  display: block;
-  `}
+  ${mediaq.mobile} {
+    display: block;
+  }
 `;
 
 interface ColumnProps {
@@ -53,7 +53,10 @@ const StyledEntityDetails = styled(EntityDetails)<ColumnProps>`
 const StyledEntityActions = styled(EntityActions)<ColumnProps>`
   grid-column: ${props => props.column}
   grid-row: 2;
-  color: red !important;
+  text-align: ${props => (props.column === 1 ? "left" : "right")};
+  ${mediaq.mobile} {
+    text-align: left;
+  }
 `;
 const StyledEntitySearch = styled(EntitySearch)<ColumnProps>`
   grid-column: ${props => props.column}

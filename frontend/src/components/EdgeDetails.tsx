@@ -21,13 +21,12 @@ const Content = styled.section`
   border-style: solid;
   border-radius: ${props => props.theme.radius};
 
-  transition: border-color 0.1s ease-in-out;
+  transition: border-color 0.15s ease-out;
 
   &:hover {
-    border-color: ${props => props.color}dd;
+    border-color: ${props => props.color};
   }
 
-  // background-color: #f4f4f4;
   padding: ${props => props.theme.blockPadding};
   margin-top: ${props => props.theme.blockSpacingTB};
   margin-bottom: ${props => props.theme.blockSpacingTB};
@@ -37,6 +36,10 @@ const EdgeMainText = styled.p`
   font-size: ${props => props.theme.fontSizeM};
   margin-top: 0.8em;
   margin-bottom: 20px;
+`;
+
+const EditIconButton = styled(IconButton)`
+  float: right;
 `;
 
 type OwnProps = {
@@ -89,30 +92,32 @@ const EdgeDetails: React.FunctionComponent<Props> = props => {
 
   return (
     <Content color={RELATION_COLORS[edge.type]}>
+      <EditIconButton
+        onClick={() =>
+          edge.ds ? setShowDatasetEditInfo(true) : setEditing(true)
+        }
+      >
+        <EditIcon />
+      </EditIconButton>
       {props.hasLoadedEntities && (
-        <EdgeSummary edge={edge} entityFrom={entityFrom} entityTo={entityTo} />
+        <EdgeSummary
+          alsoOther
+          edge={edge}
+          entityFrom={entityFrom}
+          entityTo={entityTo}
+        />
       )}
       <EdgeMainText>{edge.text}</EdgeMainText>
       {edge.sourceText && (!edge.sources || edge.sources.length === 0) && (
         <div>Previous source: {edge.sourceText}</div>
       )}
       <SourceList sources={edge.sources} />
-      {showDatasetEditInfo ? (
+      {showDatasetEditInfo && (
         <MiniInfoText>
           {edge.ds && edge.ds.wd
             ? "This information comes from Wikidata. You can modify it by going to the source link, making the changes on Wikidata and clicking 'Update from Wikidata' here on the relevant entity. This way, you'll be contributing to both relations.watch and Wikidata!"
             : "This information comes from an external source and can't be modified directly here."}
         </MiniInfoText>
-      ) : (
-        <ButtonBar buttonsAlign="right">
-          <IconButton
-            onClick={() =>
-              edge.ds ? setShowDatasetEditInfo(true) : setEditing(true)
-            }
-          >
-            <EditIcon />
-          </IconButton>
-        </ButtonBar>
       )}
     </Content>
   );

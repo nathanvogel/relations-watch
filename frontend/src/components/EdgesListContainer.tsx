@@ -14,28 +14,19 @@ import { loadRelation } from "../features/edgesLoadAC";
 import Meta from "../components/meta/Meta";
 import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
-import { EditorContainerCSS } from "../components/layout/EditorContainer";
 import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 import { MiniInfoText } from "./titles/MiniInfoText";
+import ButtonBar from "./buttons/ButtonBar";
 
 const RelationsColumn = styled.div`
   width: 100%;
 `;
 
 const AddButton = styled(IconButton)`
-  ${EditorContainerCSS}
-  width:100%;
-  display: block;
-  padding-top: ${props => props.theme.inputPaddingTB};
-  padding-bottom: ${props => props.theme.inputPaddingTB};
-  margin-bottom: 0px; // It's the last element
-  // font-size: 6px; // smaller than the icon so that it is centered
-  background-color: white;
+  line-height: 1.4;
 
   & > svg {
-    height: 18px;
-    width: 18px;
-    // margin-right: 10px;
+    transform: translateY(4px);
   }
 `;
 
@@ -139,9 +130,12 @@ class EdgesListContainer extends React.Component<Props> {
             dismiss={this.onCancelAddClick}
           />
         ) : (
-          <AddButton onClick={this.onAddClick}>
-            <AddIcon />
-          </AddButton>
+          <ButtonBar buttonsAlign="center">
+            <AddButton withText onClick={this.onAddClick}>
+              <AddIcon />
+              Add relation
+            </AddButton>
+          </ButtonBar>
         )}
         {/* PART edge list */}
         {relationsStatus !== Status.Ok ? (

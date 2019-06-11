@@ -9,6 +9,7 @@ const regularMapping: { [key: number]: string } = {
   [RT.IsControlled]: R.relationType_controlled,
   [RT.Love]: R.relationType_love,
   [RT.Opposition]: R.relationType_opposition,
+  [RT.Other]: R.relationType_other,
   // [RT.Friendship]: R.relationType_friends,
 };
 
@@ -50,8 +51,6 @@ export const getEdgeSummary = (
       else return I18n.t(R.relationType_traded_A, { ...names, amount });
     case RT.Family:
       return I18n.t(familyMapping[edge.fType as FamilialLink], names);
-    case RT.Other:
-      return ""; // the description should be the main text then
     default:
       return I18n.t(regularMapping[edge.type], names);
   }

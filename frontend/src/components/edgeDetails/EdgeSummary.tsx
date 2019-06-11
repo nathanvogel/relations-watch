@@ -8,11 +8,10 @@ import { RELATION_COLORS } from "../../styles/theme";
 const Span = styled.span`
   & {
     font-family: ${props => props.theme.mainFont};
-    font-size: ${props => props.theme.fontSizeM};
+    font-size: ${props => props.theme.fontSizeL};
     font-weight: bold;
     position: relative;
     z-index: 1;
-    transition: all 0.1s ease-in-out;
     margin-bottom: 3px;
   }
 
@@ -20,8 +19,8 @@ const Span = styled.span`
     content: "";
     position: absolute;
     z-index: -1;
-    top: calc(100% - 1px);
-    bottom: -4px;
+    top: calc(100% - 6px);
+    bottom: 2px;
     left: -0em;
     right: -0em;
     background-color: ${props => props.color};
@@ -51,9 +50,7 @@ const EdgeSummary: React.FunctionComponent<Props> = (props: Props) => {
   if (props.edge.type === RelationType.Other && !props.alsoOther) return null;
   return (
     <Span color={RELATION_COLORS[props.edge.type]}>
-      {props.edge.type === RelationType.Other && props.alsoOther
-        ? props.edge.text
-        : getEdgeSummary(props.edge, props.entityFrom, props.entityTo)}
+      {getEdgeSummary(props.edge, props.entityFrom, props.entityTo)}
     </Span>
   );
 };
