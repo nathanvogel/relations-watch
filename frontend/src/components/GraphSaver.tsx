@@ -4,7 +4,8 @@ import api from "../utils/api";
 import IconButton from "./buttons/IconButton";
 import Meta from "./meta/Meta";
 import ROUTES from "../utils/ROUTES";
-import BreakableA from "./buttons/BreakableA";
+import styled from "styled-components";
+import LinkSharer from "./LinkSharer";
 
 const saveGraph = async (selection: string[]): Promise<string | null> => {
   if (!selection || selection.length <= 0) {
@@ -74,15 +75,12 @@ class GraphSaver extends React.Component<Props> {
     return (
       <div>
         {status === Status.Ok && graphKey ? (
-          <React.Fragment>
-            <p>You can share this link to show this graph to others:</p>
-            <p>
-              <BreakableA href={link}>{link}</BreakableA>
-            </p>
-          </React.Fragment>
+          <LinkSharer link={link}>
+            Share this link to show this graph to anyone:
+          </LinkSharer>
         ) : (
           <IconButton withText onClick={this.onSaveClick}>
-            Share this graph
+            Share this network
           </IconButton>
         )}
       </div>

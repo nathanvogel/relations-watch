@@ -289,3 +289,7 @@ export function isDirectedFamilialType(t: FamilialLink | undefined) {
   if (t == null) return false;
   return DirectedFamilialLinks.indexOf(t) >= 0;
 }
+
+export function withoutHttps(url: string): string {
+  return url.replace(/^https?:\/\//, "");
+}
