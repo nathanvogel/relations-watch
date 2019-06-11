@@ -12,7 +12,7 @@ import { Entity } from "../utils/types";
 import styled from "styled-components";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import HistoryScreen from "./HistoryScreen";
-import GraphScreen from "./GraphScreen";
+import GraphScreenWrapper from "./GraphScreenWrapper";
 
 const PageContent = styled.div`
   ${PageWidthSizer}
@@ -27,20 +27,28 @@ class App extends Component {
           <Route
             path={`/${RT.entity}/:entityKey`}
             render={props => (
-              <GraphScreen
+              <GraphScreenWrapper
                 entity1Key={props.match.params.entityKey}
                 sidebarContent={<History editable={false} />}
               >
                 <EntityScreen entityKey={props.match.params.entityKey} />
-              </GraphScreen>
+              </GraphScreenWrapper>
             )}
           />
           <Route
             path={`/history`}
             render={props => (
-              <GraphScreen sidebarContent={<History editable={true} />}>
+              <GraphScreenWrapper sidebarContent={<History editable={true} />}>
                 <HistoryScreen />
-              </GraphScreen>
+              </GraphScreenWrapper>
+            )}
+          />
+          <Route
+            path={`/${RT.graph}/:graphKey`}
+            render={props => (
+              <GraphScreenWrapper sidebarContent={<h3>GRAPH</h3>}>
+                <HistoryScreen />
+              </GraphScreenWrapper>
             )}
           />
           <Redirect

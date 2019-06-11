@@ -42,7 +42,7 @@ type Props = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps> &
   RouteComponentProps;
 
-const GraphScreen: React.FunctionComponent<Props> = props => {
+const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
   const { hover, entity1Key } = props;
 
   const closeRelationDetail = () => {
@@ -102,5 +102,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(GraphScreen)
+  )(GraphScreenWrapper)
 );
