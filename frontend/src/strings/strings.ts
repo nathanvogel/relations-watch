@@ -43,6 +43,12 @@ export const FamilialLinkMapping: StringMapping = {
   [FamilialLink.other]: R.familial_link_type_other,
 };
 
+export const edgeTextResKey = (type: RelationType, fType?: FamilialLink) => {
+  if (type === RelationType.Family && fType != null)
+    return FamilialLinkMapping[fType];
+  return LegendRelationTypeMapping[type];
+};
+
 export const EntityTypeMapping: StringMapping = {
   [EntityType.Human]: R.entity_type_human,
   [EntityType.MoralPerson]: R.entity_type_moral_person,

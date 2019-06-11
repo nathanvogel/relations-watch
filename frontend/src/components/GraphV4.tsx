@@ -26,7 +26,7 @@ import {
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
-import theme, { RELATION_COLORS } from "../styles/theme";
+import theme, { RELATION_COLORS, edgeColor } from "../styles/theme";
 import "./GraphV4.css";
 import { createIndicatorDatum } from "../utils/utils";
 import { hoverEntity, hoverRelation } from "../features/hoverActions";
@@ -124,13 +124,10 @@ function collisionSize(d: V4NodeDatum): number {
 // ==== LINK APPEARANCE
 
 function linkColor(d: V4LinkDatum) {
-  if (
-    d.sortedTypes[0] === RelationType.Family &&
-    d.fTypes.length > 0 &&
-    d.fTypes[0] === FamilialLink.spouseOf
-  )
-    return RELATION_COLORS[RelationType.Love];
-  return RELATION_COLORS[d.sortedTypes[0]];
+  return edgeColor(
+    d.sortedTypes[0],
+    d.fTypes.length > 0 ? d.fTypes[0] : FamilialLink.other
+  );
 }
 
 function linkOpacity(d: V4LinkDatum) {

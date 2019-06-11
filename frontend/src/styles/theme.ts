@@ -1,4 +1,4 @@
-import { RelationType } from "../utils/types";
+import { RelationType, FamilialLink } from "../utils/types";
 // import { DefaultTheme } from "styled-components";
 
 const theme = {
@@ -65,6 +65,12 @@ export const RELATION_COLORS = {
   [RelationType.Attendance]: "#4DD0E1",
   [RelationType.GroupMember]: "#4DD0E1",
   [RelationType.Other]: "#1e272e",
+};
+
+export const edgeColor = (type: RelationType, fType?: FamilialLink) => {
+  if (type === RelationType.Family && fType === FamilialLink.spouseOf)
+    return RELATION_COLORS[RelationType.Love];
+  return RELATION_COLORS[type];
 };
 
 export default theme;

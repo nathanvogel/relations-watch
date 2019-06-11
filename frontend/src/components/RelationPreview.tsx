@@ -9,8 +9,8 @@ import { media } from "../styles/responsive-utils";
 import { connect } from "react-redux";
 import EntityDetails from "../components/EntityDetails";
 import EntitySearch from "../components/EntitySearch";
-import { emptyOrRealKey, keyForUrl, getRelationId } from "../utils/utils";
-import { Edge, EntitySelectOption } from "../utils/types";
+import { emptyOrRealKey, keyForUrl } from "../utils/utils";
+import { EntitySelectOption } from "../utils/types";
 import { loadRelation } from "../features/edgesLoadAC";
 import BigLinksPreview from "../components/BigLinksPreview";
 import { selectEntities } from "../features/entitySelectionActions";
@@ -29,17 +29,22 @@ const Container = styled.div<ContainerProps>`
   ${props => (props.fullyVisible ? "" : limitedContainerCSS)}
 
   display: flex;
-  ${media.mobile`display: block;`}
+  ${media.mobile`
+    display: block;
+  `}
 `;
 
 const EntityColumn = styled.div`
   flex: 1;
 `;
 const LinksColumn = styled.div`
-  flex-grow: 1;
+  flex: 1;
+  max-width: 33%;
+  ${media.mobile`max-width: 100%;`}
 `;
 
 const ClickForFull = styled(MiniInfoText)`
+  margin-top: ${props => props.theme.marginTB};
   text-align: center;
 `;
 
@@ -49,27 +54,14 @@ type OwnProps = {
   fullyVisible: boolean;
 };
 
-// For memoization
-const defaultRelations: Edge[] = [];
-
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { entity1Key, entity2Key, fullyVisible } = props;
   const realKey1 = emptyOrRealKey(entity1Key);
   const realKey2 = emptyOrRealKey(entity2Key);
-  const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
-  const relationId = getRelationId(realKey1, realKey2) as string;
-
-  // Get the relation from the Redux Store
-  const relations: Edge[] =
-    relationId && state.relations.data[relationId]
-      ? state.relations.data[relationId]
-      : defaultRelations;
 
   return {
     realKey1,
     realKey2,
-    relations,
-    hasBothSelection,
     fullyVisible,
   };
 };
@@ -116,7 +108,6 @@ class RelationPreview extends React.Component<Props> {
 
   render() {
     const { realKey1, realKey2, fullyVisible } = this.props;
-    const { relations } = this.props;
 
     return (
       <div>
@@ -139,7 +130,7 @@ class RelationPreview extends React.Component<Props> {
           </EntityColumn>
           <LinksColumn>
             {/* PART links preview */}
-            <BigLinksPreview relations={relations} />
+            <BigLinksPreview sourceKey={realKey1} targetKey={realKey2} />
           </LinksColumn>
           <EntityColumn>
             {realKey2 ? (
