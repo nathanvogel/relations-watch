@@ -14,6 +14,7 @@ import { EntityPreview } from "../utils/types";
 import SecondaryTitle from "./titles/SecondaryTitle";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
+import { IconButtonLink } from "./buttons/IconButton";
 
 const Content = styled.div`
   width: 100%;
@@ -25,7 +26,7 @@ const List = styled.ul`
 
   // Remove bullet
   list-style-type: none;
-  margin-block-start: ${props => props.theme.inputTBSpacing};
+  margin-block-start: ${props => props.theme.blockSpacingTB};
   margin-block-end: ${props => props.theme.blockSpacingTB};
   margin-inline-start: 0px;
   margin-inline-end: 0px;
@@ -94,7 +95,11 @@ const History: React.FunctionComponent<Props> = props => {
         <Route exact path={`/${ROUTES.history}`} render={_ => null} />
         <Route
           path="/:subpath"
-          render={_ => <Link to={`/${ROUTES.history}`}>Network graph</Link>}
+          render={_ => (
+            <IconButtonLink withText to={`/${ROUTES.history}`}>
+              Network graph
+            </IconButtonLink>
+          )}
         />
       </Switch>
       {props.entitySelection.length <= 0 ? (
