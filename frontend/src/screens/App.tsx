@@ -13,6 +13,7 @@ import styled from "styled-components";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import HistoryScreen from "./HistoryScreen";
 import GraphScreenWrapper from "./GraphScreenWrapper";
+import SavedGraphScreen from "./SavedGraphScreen";
 
 const PageContent = styled.div`
   ${PageWidthSizer}
@@ -47,7 +48,7 @@ class App extends Component {
             path={`/${RT.graph}/:graphKey`}
             render={props => (
               <GraphScreenWrapper sidebarContent={<h3>GRAPH</h3>}>
-                <HistoryScreen />
+                <SavedGraphScreen graphKey={props.match.params.graphKey} />
               </GraphScreenWrapper>
             )}
           />
