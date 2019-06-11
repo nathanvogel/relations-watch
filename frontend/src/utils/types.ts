@@ -655,3 +655,12 @@ export type DatasetDiffResponseData<T> = {
 };
 
 export type Modifier = (v: any) => any;
+
+export type SavedGraphEntity = {
+  entityKey: string;
+};
+
+export type SavedGraph = {
+  _key?: string;
+  entities: Array<SavedGraphEntity>;
+};

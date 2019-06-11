@@ -15,6 +15,7 @@ import SecondaryTitle from "./titles/SecondaryTitle";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
 import { IconButtonLink } from "./buttons/IconButton";
+import GraphSaver from "./GraphSaver";
 
 const Content = styled.div`
   width: 100%;
@@ -92,7 +93,15 @@ const History: React.FunctionComponent<Props> = props => {
       <SecondaryTitle>History</SecondaryTitle>
       {/* Only render the link if we aren't already at the history */}
       <Switch>
-        <Route exact path={`/${ROUTES.history}`} render={_ => null} />
+        <Route
+          exact
+          path={`/${ROUTES.history}`}
+          render={_ =>
+            props.entitySelection.length >= 2 && (
+              <GraphSaver selection={props.entitySelection} />
+            )
+          }
+        />
         <Route
           path="/:subpath"
           render={_ => (

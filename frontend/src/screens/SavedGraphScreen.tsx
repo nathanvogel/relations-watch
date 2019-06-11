@@ -2,27 +2,20 @@ import React from "react";
 
 import NetworkScreen from "./NetworkScreen";
 import api from "../utils/api";
-import { Status } from "../utils/types";
+import { Status, SavedGraph } from "../utils/types";
 import Meta from "../components/meta/Meta";
 
-type SavedGraphEntity = {
-  entityKey: string;
-};
-
 const getGraph = async (graphKey: string): Promise<string[]> => {
-  // No need to query the server too fast
   if (!graphKey) {
     console.error("No graphKey was provided.");
     return [];
-  } //[{ value: "1", label: "oawjeoifja awoiefj ", type: 1 }];
-  // Query our beautiful API
-  const response = await api.get("/graph/" + graphKey);
+  }
+  const response = await api.get("/graphs/" + graphKey);
   if (response.status === 200) {
-    // Convert the API data to react-select format.
     const selection: string[] = [];
-    const data = response.data as Array<SavedGraphEntity>;
-    for (var i = 0; i < data.length; i += 1) {
-      selection.push(data[i].entityKey);
+    const data = response.data as SavedGraph;
+    for (var i = 0; i < data.entities.length; i += 1) {
+      selection.push(data.entities[i].entityKey);
     }
     return selection;
   } else {
@@ -30,8 +23,8 @@ const getGraph = async (graphKey: string): Promise<string[]> => {
       "Error" + response.status + " while requesting graph " + graphKey
     );
     console.error(response);
-    return [];
   }
+  return [];
 };
 
 type Props = {
