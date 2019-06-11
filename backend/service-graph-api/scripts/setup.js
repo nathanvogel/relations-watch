@@ -14,5 +14,9 @@ if (!db._collection(CONST.souCollectionName)) {
   db._createDocumentCollection(CONST.souCollectionName);
 }
 
+if (!db._collection(CONST.graphCollectionName)) {
+  db._createDocumentCollection(CONST.graphCollectionName);
+}
+
 const entities = db._collection(CONST.entCollectionName);
 entities.ensureIndex({ type: "fulltext", fields: ["name"], minLength: 3 });

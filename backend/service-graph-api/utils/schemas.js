@@ -102,6 +102,20 @@ const relationWithSourceSchema = joi
     source: souSchema
   });
 
+const graphSchema = joi
+  .object()
+  .required()
+  .keys({
+    entities: joi
+      .array()
+      .required()
+      .items(
+        joi.object().keys({
+          entityKey: joi.string()
+        })
+      )
+  });
+
 // const relationKeyWithSourceSchema = joi
 //   .object()
 //   .required()
@@ -115,6 +129,7 @@ module.exports = {
   entSchema,
   relSchema,
   souSchema,
+  graphSchema,
   relationWithSourceSchema,
   // relationKeyWithSourceSchema,
   commentSchema,
