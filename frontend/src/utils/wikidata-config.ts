@@ -258,6 +258,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q188628", // board of directors (conseil d'administration)
     "Q938236", // comittee
     "Q5588651", // governing body
+    "Q988108", // club
   ],
   [EntityType.Media]: [
     "Q1110794",
