@@ -2,7 +2,6 @@ import React from "react";
 import { RouteComponentProps, withRouter, Route, Switch } from "react-router";
 import styled from "styled-components";
 
-import Meta from "../components/meta/Meta";
 import DrawerLayout from "../components/layout/DrawerLayout";
 import { RootStore } from "../Store";
 import { bindActionCreators, AnyAction, Dispatch } from "redux";
