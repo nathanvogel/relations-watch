@@ -6,14 +6,14 @@ const db = require("@arangodb").db;
 const apiFactory = require("../utils/apiFactory");
 const graphSchema = require("../utils/schemas").graphSchema;
 const CONST = require("../utils/const.js");
-const graphsColl = db._collection(CONST.graphsCollectionName);
+const graphColl = db._collection(CONST.graphCollectionName);
 
 const router = createRouter();
 module.exports = router;
 
 // POST a new graph
 router
-  .post("/", apiFactory.post.bind(this, graphsColl))
+  .post("/", apiFactory.post.bind(this, graphColl))
   .body(
     joi.alternatives().try(graphSchema, joi.array().items(graphSchema)),
     "Graph or graphs to store in the collection."
@@ -29,7 +29,7 @@ router
 
 // PATCH an graph
 router
-  .patch("/", apiFactory.patch.bind(this, graphsColl))
+  .patch("/", apiFactory.patch.bind(this, graphColl))
   .body(
     joi.alternatives().try(graphSchema, joi.array().items(graphSchema)),
     "Graph or graphs to patch in the collection."
@@ -47,7 +47,7 @@ router
 
 // GET an graph
 router
-  .get("/:key", apiFactory.get.bind(this, graphsColl))
+  .get("/:key", apiFactory.get.bind(this, graphColl))
   .pathParam("key", joi.string().required(), "Key of the graph.")
   .response(joi.object().required(), "Entry stored in the collection.")
   .summary("Retrieve an graph")
