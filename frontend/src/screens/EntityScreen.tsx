@@ -11,20 +11,8 @@ import Meta from "../components/meta/Meta";
 import { Status, DatasetId, ErrorPayload, Entity } from "../utils/types";
 import { loadEntityGraph } from "../features/linksLoadAC";
 import * as entitySelectionActions from "../features/entitySelectionActions";
-import IconButton from "../components/buttons/IconButton";
 import CONSTS from "../utils/consts";
-import { withTranslation, WithTranslation } from "react-i18next";
-import R from "../strings/R";
-import GraphLegend from "../components/graph/GraphLegend";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
-
-const Content = styled.div`
-  width: 100%;
-  height: calc(
-    100vh - ${props => props.theme.hoverBoxHeight} -
-      ${props => props.theme.navBarHeight}
-  );
-`;
 
 const StyledMeta = styled(Meta)`
   position: absolute;
@@ -32,48 +20,12 @@ const StyledMeta = styled(Meta)`
   transform: translateX(-50%) translateY(20vh);
 `;
 
-interface LegendProps {
-  hideColumn?: boolean;
-}
-
-const LegendColumn = styled.div<LegendProps>`
-  display: ${props => (props.hideColumn ? "none" : "block")}
-  position: absolute;
-  right: 16px;
-  left: unset;
-  top: unset;
-  bottom: 16px;
-  height: auto;
-  overflow-y: auto;
-  min-width: ${props => props.theme.appMiniSidebarWidth};
-  width: ${props => props.theme.appMiniSidebarWidth};
-  max-height: calc(100vh - ${props => props.theme.navBarHeight} - 20px);
-  padding: ${props => props.theme.blockPadding};
-  box-sizing: border-box;
-  // box-shadow: -15px 0px 15px 0px ${props => props.theme.sidebarBG};
-  // Space for the toggle button
-  padding-bottom: 44px;
-
-  background-color: ${props => props.theme.appBG};
-  opacity: 0.95;
-
-  transition: transform 0.18s ease-out;
-  transform: translateX(${props => (props.hideColumn ? "100" : "0")}%);
-`;
-
-const ToggleLegendButton = styled(IconButton)`
-  position: absolute;
-  bottom: 18px;
-  right: 18px;
-`;
-
 interface OwnProps extends RouteComponentProps {
   entityKey: string;
 }
 
 type Props = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps> &
-  WithTranslation;
+  ReturnType<typeof mapDispatchToProps>;
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const { entityKey } = props;
@@ -107,13 +59,11 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
 
 type State = {
   prevEntityKey: null | string;
-  showLegend: boolean;
 };
 
 class EntityScreen extends Component<Props> {
   readonly state: State = {
     prevEntityKey: null,
-    showLegend: false,
   };
 
   get isWikidataEntity() {
@@ -149,7 +99,7 @@ class EntityScreen extends Component<Props> {
     if (!status || status === Status.Error) this.props.loadEntity(entityKey);
     if (!linksStatus || linksStatus === Status.Error)
       this.props.loadEntityGraph(entityKey);
-    if (this.props.selectEntities) this.props.selectEntities([entityKey]);
+    this.props.selectEntities([entityKey]);
   };
 
   onEditEntity = () => {
@@ -177,44 +127,28 @@ class EntityScreen extends Component<Props> {
     else console.error("No wikidata field!");
   };
 
-  toggleLegend = () => {
-    this.setState({
-      showLegend: !this.state.showLegend,
-    });
-  };
-
   render() {
-    const { entity, status, error, entityKey, t } = this.props;
+    const { status, error, entityKey } = this.props;
 
-    // Always render the graph, even when the data isn't loaded,
+    // Always render the graph, even when the data isn't loaded.
+    // That means using the previous key if it's there.
+    // We do this to preserve displayed nodes and the simulation state.
     return (
-      <Content>
+      <React.Fragment>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
-
-        <LegendColumn hideColumn={!this.state.showLegend}>
-          <GraphLegend />
-        </LegendColumn>
-        <ToggleLegendButton small withText onClick={this.toggleLegend}>
-          {t(
-            this.state.showLegend ? R.button_hide_legend : R.button_show_legend
-          )}
-        </ToggleLegendButton>
-
         {status === Status.Ok ? (
           <EntityGraphContainer entityKey={entityKey} />
         ) : this.state.prevEntityKey ? (
           <EntityGraphContainer entityKey={this.state.prevEntityKey} />
         ) : null}
-      </Content>
+      </React.Fragment>
     );
   }
 }
 
-export default withTranslation()(
-  withRouter(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(EntityScreen)
-  )
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EntityScreen)
 );

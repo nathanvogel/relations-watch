@@ -73,7 +73,7 @@
   "label_select_create_wikidata_sub": "If you can't find something here, choose this to instantly search '{{userInput}}' on Wikidata",
   "label_no_element_found": "Nothing found",
   "home_trending": "Recent",
-  "button_show_legend": "Show legend",
+  "button_show_legend": "Legend",
   "button_hide_legend": "Hide",
   "button_show_more": "More info",
   "source_link_text": "open source"
