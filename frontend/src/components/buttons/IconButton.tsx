@@ -1,5 +1,7 @@
+import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import { swallowingStyled } from "../../styles/swallow-styled-props";
 
 type IconButtonProps = {
   small?: boolean;
@@ -61,7 +63,9 @@ export const IconButton = styled.button<IconButtonProps>`
   ${iconButtonCSS}
 `;
 
-export const IconButtonLink = styled(Link)<IconButtonProps>`
+export const IconButtonLink = styled(({ withText, small, ...rest }) => (
+  <Link {...rest} />
+))<IconButtonProps>`
   ${iconButtonCSS}
   // Prevent text breaking + allow parent (ButtonBar) to apply margin
   display: inline-block;
