@@ -24,7 +24,7 @@ export const loadEntityGraph = (entityKey: string) => async (
         return;
       }
       // Everything is fine, we got the data, send it!
-      dispatch(actionLLReceived(entityKey, res.data[0]));
+      dispatch(actionLLReceived(entityKey, res.data));
     })
     .catch((error: AxiosError) => {
       const errorPayload = checkError(error);

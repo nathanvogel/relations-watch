@@ -43,14 +43,16 @@ const ModalContent = styled.div<ModalProps>`
   margin-right: ${props => props.theme.marginLR};
 
   background-color: ${props => props.theme.appBG};
-  // box-shadow: 0px 0px ${props => (props.fullyVisible ? "4px" : "0px")} 0px
-  //   rgba(0, 0, 0, 0.2);
   border-style: solid solid none solid;
   border-width: ${props => props.theme.strongBorderWidth};
   border-color: ${props => props.theme.darkBG};
   border-bottom: none;
   border-radius: ${props => props.theme.radius} ${props => props.theme.radius}
     0px 0px;
+
+  // box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  // border-width: 0px;
+  // border-radius: 5px 5px 0px 0px;
 
 
   ${props => mediaq.custom(parseInt(props.theme.appSidebarWidth) + 900)} {

@@ -161,7 +161,7 @@ router
            )
            RETURN { edges: eResults, vertices: vResults}
         `);
-    res.send(relations);
+    res.send(relations.next());
   })
   .pathParam("key", joi.string().required(), "Key of the central entity")
   .response(
