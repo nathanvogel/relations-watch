@@ -13,6 +13,11 @@ const GlobalStyleCSS = css`
     font-size: ${props => props.theme.fontSizeM};
   }
 
+  #modals {
+    width: 100%;
+    height: 100%;
+  }
+
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
       monospace;

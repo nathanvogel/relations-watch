@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ModalBackground from "./ModalBackground";
+import ReactDOM from "react-dom";
 
 const ModalContent = styled.div`
   position: fixed;
@@ -38,12 +39,23 @@ type Props = {
 };
 
 const Modal: React.FunctionComponent<Props> = props => {
-  return (
+  const modals = document.getElementById("modals");
+  const modal = (
     <div>
       <MyModalBackground onClick={props.onClose} />
       <ModalContent>{props.children}</ModalContent>
     </div>
   );
+  // Avoid z-index or position:fixed with transform issues
+  if (modals) return ReactDOM.createPortal(modal, modals);
+  else {
+    console.warn(
+      "Warning: 'modals' could not be found. Rendering modal directly " +
+        "in nested DOM structure, this can lead to issues with " +
+        "position:fixed elements with a transform attribute for example"
+    );
+    return modal;
+  }
 };
 
 export default Modal;
