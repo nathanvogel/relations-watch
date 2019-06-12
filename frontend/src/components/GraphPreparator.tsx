@@ -27,6 +27,7 @@ import {
 } from "../utils/utils";
 import GraphV4 from "./GraphV4";
 import Measure from "react-measure";
+import { MIN_GRAPH_WIDTH, MIN_GRAPH_HEIGHT } from "../utils/consts";
 
 const Content = styled.div`
   width: 100%;
@@ -244,13 +245,19 @@ class GraphPreparator extends React.PureComponent<Props> {
             <GraphV4
               width={
                 contentRect.client
-                  ? Math.max(contentRect.client.width || 500, 500)
-                  : 800
+                  ? Math.max(
+                      contentRect.client.width || MIN_GRAPH_WIDTH,
+                      MIN_GRAPH_WIDTH
+                    )
+                  : MIN_GRAPH_WIDTH
               }
               height={
                 contentRect.client
-                  ? Math.max(contentRect.client.height || 500, 500)
-                  : 800
+                  ? Math.max(
+                      contentRect.client.height || MIN_GRAPH_HEIGHT,
+                      MIN_GRAPH_HEIGHT
+                    )
+                  : MIN_GRAPH_HEIGHT
               }
               rRelations={rRelations}
               rEntities={rEntities}

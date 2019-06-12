@@ -113,6 +113,9 @@ export const ERROR_CODES = {
   NOT_A_LINK: "NOT_A_LINK",
 };
 
+export const MIN_GRAPH_WIDTH = 600;
+export const MIN_GRAPH_HEIGHT = 400;
+
 const CONSTS = {
   relCollectionName: "relations",
   entCollectionName: "entities",
