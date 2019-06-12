@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 
 import { RootStore } from "../Store";
-import { loadEntity } from "../features/entitiesLoadAC";
-import { loadEntityGraph } from "../features/linksLoadAC";
+import { loadInbetweenData } from "../features/linksLoadAC";
 import { Status } from "../utils/types";
 import Meta from "../components/meta/Meta";
 import FreeGraphContainer from "../components/graph/FreeGraphContainer";
@@ -23,8 +22,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
   bindActionCreators(
     {
-      loadEntity,
-      loadEntityGraph,
+      loadInbetweenData,
     },
     dispatch
   );
@@ -35,12 +33,17 @@ const NetworkScreen: React.FunctionComponent<Props> = props => {
   const { entityKeys, allEntities, allLinks } = props;
   // Only load if the entityKeys props change
   useEffect(() => {
+    const keysToLoad: string[] = [];
     for (let key of entityKeys) {
-      if (!allEntities.status[key] || allEntities.status[key] === Status.Error)
-        props.loadEntity(key);
-      if (!allLinks.status[key] || allLinks.status[key] === Status.Error)
-        props.loadEntityGraph(key);
+      if (
+        !allEntities.status[key] ||
+        allEntities.status[key] === Status.Error ||
+        !allLinks.status[key] ||
+        allLinks.status[key] === Status.Error
+      )
+        keysToLoad.push(key);
     }
+    props.loadInbetweenData(keysToLoad);
   }, [entityKeys]);
 
   let loading = false;

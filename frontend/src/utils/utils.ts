@@ -181,6 +181,9 @@ function onlyUnique(value: any, index: number, self: any[]) {
   return self.indexOf(value) === index;
 }
 
+/**
+ * This should be a (memoized) selector instead.
+ */
 export function getEntityPreview(entity: Entity): EntityPreview {
   return {
     _key: entity._key as string,

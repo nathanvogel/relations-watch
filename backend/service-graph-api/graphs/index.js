@@ -78,13 +78,10 @@ router
     }
 
     const edges = db._query(aql`
-        LET eResults = (
            FOR e IN relations
                FILTER POSITION(${entityKeys}, e._from) AND
                       POSITION(${entityKeys}, e._to)
                RETURN KEEP(e, "_key", "_from", "_to", "type", "fType")
-              )
-            RETURN eResults
       `);
 
     res.send({ edges: edges.toArray(), vertices: vertices });

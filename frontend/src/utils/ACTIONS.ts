@@ -101,3 +101,7 @@ export const DI_ImportSuccess = "DI_ImportSuccess";
 export type DI_ImportSuccess = typeof DI_ImportSuccess;
 export const DI_Clear = "DI_Clear";
 export type DI_Clear = typeof DI_Clear;
+
+// ===== Inbetween entities load
+export const InbetweenLinksLoadSuccess = "InbetweenLinksLoadSuccess";
+export type InbetweenLinksLoadSuccess = typeof InbetweenLinksLoadSuccess;

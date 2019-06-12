@@ -11,6 +11,7 @@ import update from "immutability-helper";
 import { SouAuthorsChange } from "./sourceFormActions";
 import { getArray, getEntityPreview, getKeyObject } from "../utils/utils";
 import { AnyAction } from "redux";
+import { InbetweenAction } from "./inbetweenActions";
 
 const status: { [key: string]: Status } = {};
 const defaultState = { datapreview: {}, data: {}, status, errors: {} };
@@ -137,6 +138,22 @@ export default (state = defaultState, action: AnyAction) => {
       const entities = action.payload.vertices as EntityPreview[];
       const entitiesMap = getKeyObject(entities, "_key");
       return update(state, { datapreview: { $merge: entitiesMap } });
+    case TYPED_ACTIONS.InbetweenLinksLoadSuccess:
+      const a = action as InbetweenAction;
+      if (!a.entities) {
+        console.error("Invalid action: " + action.action);
+        return state;
+      }
+      // Build 2 objects from the server array
+      const entitiesMap2 = getKeyObject(a.entities, "_key");
+      const entityPreviewsMap2: { [entityKey: string]: EntityPreview } = {};
+      for (let e of a.entities) {
+        if (e._key) entityPreviewsMap2[e._key] = getEntityPreview(e);
+      }
+      return update(state, {
+        data: { $merge: entitiesMap2 },
+        datapreview: { $merge: entityPreviewsMap2 },
+      });
     default:
       return state;
   }

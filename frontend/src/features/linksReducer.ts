@@ -3,6 +3,8 @@ import { EdgePreview, Edge } from "../utils/types";
 import update from "immutability-helper";
 import { AnyAction } from "redux";
 import { getSimplifiedEdge, getEdgePreview } from "../utils/utils";
+import * as TYPED_ACTIONS from "../utils/ACTIONS";
+import { InbetweenAction } from "./inbetweenActions";
 
 interface SubState {
   data: {
@@ -62,6 +64,22 @@ export default (state = defaultState, action: AnyAction) => {
         },
         status: { [entityKey]: { $set: action.status } },
         errors: { [entityKey]: { $set: action.meta.error } },
+      });
+    case TYPED_ACTIONS.InbetweenLinksLoadSuccess:
+      const a = action as InbetweenAction;
+      if (!a.edges) {
+        console.error("Invalid action: " + action.action);
+        return state;
+      }
+      console.log(a);
+      // Build an object from the server array
+      const edgeList2: { [key: string]: EdgePreview } = {};
+      for (let e of a.edges) {
+        const edge = getSimplifiedEdge(e);
+        edgeList2[edge._key] = edge;
+      }
+      return update(state, {
+        data: { all: { $merge: edgeList2 } },
       });
     case ACTIONS.LinksLoadError:
       const key3 = action.meta.relationId as string;

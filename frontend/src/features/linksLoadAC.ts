@@ -5,6 +5,7 @@ import ACTIONS from "../utils/ACTIONS";
 import { Action, ErrorPayload } from "../utils/types";
 import { Status } from "../utils/types";
 import { AxiosError } from "axios";
+import { inbetweenSucessAction } from "./inbetweenActions";
 
 /**
  * Load all edges between 2 entities to
@@ -13,7 +14,6 @@ import { AxiosError } from "axios";
 export const loadEntityGraph = (entityKey: string) => async (
   dispatch: Dispatch
 ): Promise<void> => {
-  // Safe because 2 non-null args
   dispatch(actionLLRequest(entityKey));
   api
     .get(`/entities/${entityKey}/relations`)
@@ -57,3 +57,28 @@ function actionLLReceived(entityKey: string, payload: object): Action {
     meta: { entityKey },
   };
 }
+
+/**
+ * Load all EdgePreview between the given entities, + the given entities
+ */
+export const loadInbetweenData = (entityKeys: string[]) => async (
+  dispatch: Dispatch
+): Promise<void> => {
+  const dbEntityKeys = entityKeys.map(key => "entities/" + key);
+  api
+    .post(`/graphs/inbetween`, dbEntityKeys)
+    .then(res => {
+      const potentialError = checkResponse(res);
+      if (potentialError) {
+        // TODO : error handling
+        console.error(potentialError);
+        return;
+      }
+      // Everything is fine, we got the data, send it!
+      dispatch(inbetweenSucessAction(res.data.edges, res.data.vertices));
+    })
+    .catch((error: AxiosError) => {
+      const errorPayload = checkError(error);
+      console.error("Error getting links of ", entityKeys, errorPayload);
+    });
+};
