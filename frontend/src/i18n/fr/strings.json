@@ -2,7 +2,7 @@
   "faq_data_q": "D'où viennent les données ?",
   "faq_data_a": "Sur ce prototype, n'importe qui peut ajouter et éditer les données du site. Lorsque quelqu'un souhaite créer une entité, une recherche sur Wikidata est d'abord automatiquement proposée et l'entité recherchée pourra probablement être importée depuis Wikidata, ainsi que certaines de ses relations jusqu'au 3ème degrée. La <0>petite banque de données</0> du Monde diplomatique sur les médias français a aussi été importée.",
   "faq_about_q": "À propos",
-  "faq_about_a": "Ce projet a pour objectif de permettre à chacun de s’informer efficacement sur les conflits d’intérêts, lesquels souvent au coeur des problématiques démocratiques et environnementales. Il s’agit une plateforme collaborative de recensement des liens entres personnalités publiques, entreprises, médias, etc.",
+  "faq_about_a": "Ce projet a pour objectif de permettre à chacun de s’informer efficacement sur les conflits d’intérêts, lesquels souvent au coeur des problématiques démocratiques et environnementales. Il s’agit une plateforme collaborative de recensement des relations entres personnalités publiques, entreprises, médias, etc.",
   "home_trending": "Récent",
   "slogan": "La démocratie vit d'information."
 }

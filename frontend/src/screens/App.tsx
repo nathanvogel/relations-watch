@@ -14,6 +14,8 @@ import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import HistoryScreen from "./HistoryScreen";
 import GraphScreenWrapper from "./GraphScreenWrapper";
 import SavedGraphScreen from "./SavedGraphScreen";
+import SecondaryTitle from "../components/titles/SecondaryTitle";
+import LinkSharer from "../components/LinkSharer";
 
 const PageContent = styled.div`
   ${PageWidthSizer}
@@ -47,7 +49,21 @@ class App extends Component {
           <Route
             path={`/${RT.graph}/:graphKey`}
             render={props => (
-              <GraphScreenWrapper sidebarContent={<h3>GRAPH</h3>}>
+              <GraphScreenWrapper
+                sidebarContent={
+                  <div>
+                    <p>
+                      <strong>relations.</strong>watch is a collaborative
+                      platform to gather knowledge about relations between
+                      public figures, companies, medias, etc.
+                    </p>
+                    {/* <SecondaryTitle>Network</SecondaryTitle> */}
+                    <LinkSharer link={window.location.href}>
+                      Share this link to show this graph to anyone:
+                    </LinkSharer>
+                  </div>
+                }
+              >
                 <SavedGraphScreen graphKey={props.match.params.graphKey} />
               </GraphScreenWrapper>
             )}
