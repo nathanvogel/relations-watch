@@ -14,6 +14,7 @@ import IconButton from "../components/buttons/IconButton";
 import R from "../strings/R";
 import GraphLegend from "../components/graph/GraphLegend";
 import { useTranslation } from "react-i18next";
+import { mediaq } from "../styles/responsive-utils";
 
 const GraphWrapper = styled.div`
   width: 100%;
@@ -26,6 +27,10 @@ const GraphWrapper = styled.div`
 const DrawerPadder = styled.div`
   padding: ${props => props.theme.blockPadding};
   padding-top: 0.85em;
+
+  ${mediaq.desktop} {
+    margin-bottom: ${props => props.theme.hoverBoxHeight};
+  }
 `;
 
 const EdgeListWrapper = styled.div`
