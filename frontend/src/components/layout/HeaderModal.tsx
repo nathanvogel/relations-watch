@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import ModalBackground from "./ModalBackground";
 import { mediaq } from "../../styles/responsive-utils";
 
@@ -17,7 +17,7 @@ const ModalContent = styled.div<ModalProps>`
   max-height:
     ${props =>
       props.fullyVisible ? "calc(100vh - 42px)" : props.theme.hoverBoxHeight};
-  overflow-y: auto;
+  // overflow-y: auto;
   top: calc(100vh - ${props => props.theme.hoverBoxHeight});
 
   width: calc(

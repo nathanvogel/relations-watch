@@ -20,7 +20,7 @@ import EntityActions from "./entity/EntityActions";
 const limitedContainerCSS = css`
   height: 100%;
   max-height: 100%;
-  overflow: hidden;
+  // overflow: hidden;
 `;
 
 interface ContainerProps {
@@ -155,6 +155,7 @@ class RelationPreview extends React.Component<Props> {
           ) : (
             realKey2 && (
               <StyledEntitySearch
+                forceMenuOnTop={true}
                 column={1}
                 placeholder="Search another..."
                 onChange={this.onEntity1Selected}
@@ -177,6 +178,7 @@ class RelationPreview extends React.Component<Props> {
           ) : (
             realKey1 && (
               <StyledEntitySearch
+                forceMenuOnTop={true}
                 column={3}
                 placeholder="Search another..."
                 onChange={this.onEntity2Selected}

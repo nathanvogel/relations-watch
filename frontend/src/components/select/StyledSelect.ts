@@ -13,7 +13,11 @@ import Select from "react-select";
 //   </div>
 // </div>
 
-export const styledSelectCSS = css`
+export type StyledSelectProps = {
+  forceMenuOnTop?: boolean;
+};
+
+export const styledSelectCSS = css<StyledSelectProps>`
   display: inline-block;
   width: 100%;
 
@@ -98,11 +102,25 @@ export const styledSelectCSS = css`
       }
     }
   }
+
+  ${props =>
+    props.forceMenuOnTop &&
+    `
+    .rs__menu {
+      position: absolute !important;
+      top: auto !important;
+      bottom: calc(100% - 1px) !important;
+      border-bottom-left-radius: 0px !important;
+      border-bottom-right-radius: 0px !important;
+      border-top-left-radius: 5px !important;
+      border-top-right-radius: 5px !important;
+    }
+  `}
 `;
 
 const StyledSelect = styled(Select).attrs({
   classNamePrefix: "rs",
-})`
+})<StyledSelectProps>`
   ${styledSelectCSS}
 `;
 

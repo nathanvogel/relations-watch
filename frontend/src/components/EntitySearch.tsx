@@ -127,6 +127,7 @@ export interface Props {
   autoFocus?: boolean;
   isMulti?: boolean;
   placeholder?: string;
+  forceMenuOnTop?: boolean;
 }
 
 const defaultProps: Props = {
@@ -287,8 +288,9 @@ const EntitySearch: FunctionComponent<Props> = (
           t(R.label_select_create, { userInput: inputValue })
         )
       }
-      menuIsOpen={menuIsOpen}
+      menuIsOpen={true}
       onFocus={onFocus}
+      forceMenuOnTop={props.forceMenuOnTop}
       components={{ Option }}
     />
   );

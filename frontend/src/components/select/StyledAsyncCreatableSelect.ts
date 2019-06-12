@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import AsyncCreatable from "react-select/lib/AsyncCreatable";
 
-import { styledSelectCSS } from "./StyledSelect";
+import { styledSelectCSS, StyledSelectProps } from "./StyledSelect";
 
 const StyledAsyncCreatableSelect = styled(AsyncCreatable).attrs({
-  classNamePrefix: "rs"
-})`
+  classNamePrefix: "rs",
+})<StyledSelectProps>`
   ${styledSelectCSS}
 
   .rs__indicators {
