@@ -16,7 +16,18 @@ function getRootDomain(hostname) {
   }
 }
 
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+/**
+ * Filter out duplicate elements in an Array.
+ */
+function arrayWithoutDuplicates(array) {
+  return array.filter(onlyUnique);
+}
+
 module.exports = {
   prefixToFromWithCollectionName,
-  getRootDomain
+  getRootDomain,
+  arrayWithoutDuplicates
 };
