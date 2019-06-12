@@ -74,6 +74,7 @@ export const styledSelectCSS = css<StyledSelectProps>`
     border-bottom-left-radius: ${props => props.theme.radius};
     border-bottom-right-radius: ${props => props.theme.radius};
     z-index: 200;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
 
     .rs__menu-list {
       padding-top: 0px;
