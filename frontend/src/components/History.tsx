@@ -90,7 +90,7 @@ const History: React.FunctionComponent<Props> = props => {
   const entities = props.selectedEntities;
   return (
     <Content>
-      <SecondaryTitle>History</SecondaryTitle>
+      <SecondaryTitle>Recently seen</SecondaryTitle>
       {/* Only render the link if we aren't already at the history */}
       <Switch>
         <Route
