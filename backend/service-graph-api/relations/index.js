@@ -25,9 +25,11 @@ router
   .post("/", function(req, res) {
     const multiple = Array.isArray(req.body);
     const body = multiple ? req.body : [req.body];
+    const now = Date.now();
 
     let data = [];
     for (var doc of body) {
+      Object.assign(doc, { ts: now, tsc: now });
       utils.prefixToFromWithCollectionName(doc);
       const meta = relColl.save(doc);
       data.push(Object.assign(doc, meta));
@@ -129,9 +131,11 @@ router
   .patch("/", function(req, res) {
     const multiple = Array.isArray(req.body);
     const body = multiple ? req.body : [req.body];
+    const now = Date.now();
 
     let data = [];
     for (var doc of body) {
+      Object.assign(doc, { ts: now });
       utils.prefixToFromWithCollectionName(doc);
       const meta = relColl.update(doc, doc);
       const newDoc = relColl.document(meta);

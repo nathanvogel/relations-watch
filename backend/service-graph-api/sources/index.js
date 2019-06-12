@@ -38,10 +38,12 @@ function getRefType(fullRef) {
 function saveNewSources(sources) {
   const multiple = Array.isArray(sources);
   const body = multiple ? sources : [sources];
+  const now = Date.now();
 
   let data = [];
   for (var doc of body) {
     // TODO: search by ref if it exists.
+    Object.assign(doc, { ts: now, tsc: now });
     const meta = souColl.save(doc);
     data.push(Object.assign(doc, meta));
   }
@@ -92,7 +94,7 @@ router
   .summary("Retrieve a source")
   .description("Retrieves a source by key.");
 
-// GET a source
+// PATCH a source
 router
   .patch("/", apiFactory.patch.bind(this, souColl))
   .body(

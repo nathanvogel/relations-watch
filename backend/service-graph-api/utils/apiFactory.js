@@ -5,9 +5,11 @@ const DOC_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
 const post = function(coll, req, res) {
   const multiple = Array.isArray(req.body);
   const body = multiple ? req.body : [req.body];
+  const now = Date.now();
 
   let data = [];
   for (var doc of body) {
+    Object.assign(doc, { ts: now, tsc: now });
     const meta = coll.save(doc);
     data.push(Object.assign(doc, meta));
   }
@@ -17,9 +19,11 @@ const post = function(coll, req, res) {
 const patch = function(coll, req, res) {
   const multiple = Array.isArray(req.body);
   const body = multiple ? req.body : [req.body];
+  const now = Date.now();
 
   let data = [];
   for (var doc of body) {
+    Object.assign(doc, { ts: now });
     const meta = coll.update(doc._key, doc);
     data.push(Object.assign(doc, meta));
   }
