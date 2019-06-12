@@ -67,10 +67,12 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const selectedEntities: Array<
     undefined | EntityPreview
   > = entitySelection.map(key => state.entities.datapreview[key]);
+  const hover = state.hover;
   return {
     ...props,
     entitySelection,
     selectedEntities,
+    hover,
   };
 };
 
@@ -88,6 +90,7 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const History: React.FunctionComponent<Props> = props => {
   const entities = props.selectedEntities;
+  const hover = props.hover;
   return (
     <Content>
       <SecondaryTitle>Recently seen</SecondaryTitle>
@@ -129,7 +132,15 @@ const History: React.FunctionComponent<Props> = props => {
                   />
                 )}
                 <EntityImageM src={getEntitySAsset(e.type)} />
-                <ItemLink to={`/${ROUTES.entity}/${e._key}`}>{e.name}</ItemLink>
+                <ItemLink to={`/${ROUTES.entity}/${e._key}`}>
+                  {e._key === hover.entityKey ||
+                  e._key === hover.relationSourceKey ||
+                  e._key === hover.relationTargetKey ? (
+                    <strong>{e.name}</strong>
+                  ) : (
+                    e.name
+                  )}
+                </ItemLink>
               </ListItem>
             );
           })}
