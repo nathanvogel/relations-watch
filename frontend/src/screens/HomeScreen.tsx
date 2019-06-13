@@ -31,7 +31,7 @@ const Bar = styled.div`
   left: ${props => props.theme.appSidebarWidth};
   right: 0px;
 
-  background-color: ${props => props.theme.darkBG};
+  background-color: ${props => props.theme.appBarBG};
 `;
 
 const Header = styled.header`
@@ -79,8 +79,10 @@ const ItemsSection = styled.section`
 const ItemList = styled.div`
   & > * {
     display: block;
-    margin-top: ${props => props.theme.marginTB};
-    margin-bottom: ${props => props.theme.marginTB};
+    // margin-top: ${props => props.theme.marginTB};
+    // margin-bottom: ${props => props.theme.marginTB};
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 `;
 

@@ -2,14 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { ReactComponent as AppIcon } from "../../assets/ic_app_white.svg";
+import { ReactComponent as AppIcon } from "../../assets/ic_app.svg";
 
 const Container = styled.div`
   height: ${props => props.theme.navBarHeight};
   width: ${props => props.theme.appSidebarWidth};
-  background: ${props => props.theme.darkBG};
-  color: white;
+  background: ${props => props.theme.appBarBG};
+  color: ${props => props.theme.mainTextColor};
   font-size: 23px;
+  font-weight: 200;
   font-family: ${props => props.theme.brandFont};
   padding-left: ${props => props.theme.marginLR};
   box-sizing: border-box;

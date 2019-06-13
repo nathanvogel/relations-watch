@@ -1,7 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
-import { swallowingStyled } from "../../styles/swallow-styled-props";
 
 type IconButtonProps = {
   small?: boolean;
@@ -24,8 +23,8 @@ const iconButtonCSS = css<IconButtonProps>`
   box-sizing: border-box;
   padding: ${props => props.theme.inputPaddingTB}
     ${props => props.theme.inputPaddingLR};
-  background-color: ${props => props.theme.inputBG};
-  border-color: ${props => props.theme.inputBG};
+  background-color: ${props => props.theme.buttonBG};
+  border-color: ${props => props.theme.inputBorder};
   border-width: ${props => props.theme.borderWidth};
   border-style: solid;
   border-radius: ${props => props.theme.radius};
@@ -42,7 +41,7 @@ const iconButtonCSS = css<IconButtonProps>`
 
   &:not([disabled]):hover {
     background-color: ${props => props.theme.surfaceHover};
-    border-color: ${props => props.theme.surfaceHover};
+    border-color: ${props => props.theme.inputBorder};
   }
 
   &:not([disabled]):hover:focus,

@@ -112,6 +112,10 @@ const Option = (props: OptionProps<Suggestion>) => {
 const MySelect = styled(StyledAsyncCreatableSelect)`
   min-width: 150px;
   display: inline-block;
+
+  .rs__control {
+    background-color: transparent;
+  }
 `;
 
 const WikidataCreateSubtitle = styled.div`

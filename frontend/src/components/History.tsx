@@ -11,11 +11,11 @@ import {
 import ROUTES from "../utils/ROUTES";
 import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
 import { EntityPreview } from "../utils/types";
-import SecondaryTitle from "./titles/SecondaryTitle";
+import TertiaryTitle from "./titles/TertiaryTitle";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
-import { IconButtonLink } from "./buttons/IconButton";
 import GraphSaver from "./GraphSaver";
+import EntityName from "./entity/EntityName";
 
 const Content = styled.div`
   width: 100%;
@@ -38,6 +38,12 @@ const ListItem = styled.li`
   // Align items
   display: flex;
   align-items: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
+const Name = styled(EntityName)`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -93,58 +99,62 @@ const History: React.FunctionComponent<Props> = props => {
   const hover = props.hover;
   return (
     <Content>
-      <SecondaryTitle>Recently seen</SecondaryTitle>
-      {/* Only render the link if we aren't already at the history */}
-      <Switch>
-        <Route
-          exact
-          path={`/${ROUTES.history}`}
-          render={_ =>
-            props.entitySelection.length >= 2 && (
+      <Route
+        exact
+        path={`/${ROUTES.history}`}
+        render={_ =>
+          props.entitySelection.length >= 2 && (
+            <React.Fragment>
               <GraphSaver selection={props.entitySelection} />
-            )
-          }
-        />
-        <Route
-          path="/:subpath"
-          render={_ => (
-            <IconButtonLink withText to={`/${ROUTES.history}`}>
-              Network graph
-            </IconButtonLink>
-          )}
-        />
-      </Switch>
+              <br />
+            </React.Fragment>
+          )
+        }
+      />
+      <TertiaryTitle>Recently seen</TertiaryTitle>
+      {/* Only render the link if we aren't already at the history */}
+      <Switch />
       {props.entitySelection.length <= 0 ? (
         <p>
           You haven't explored yet, so there's nothing to display. If you're
           lost, go to the <Link to="/">homepage</Link>.
         </p>
       ) : (
-        <List>
-          {entities.map((_, index) => {
-            const e = entities[entities.length - 1 - index];
-            if (!e) return null;
-            return (
-              <ListItem key={e._key}>
-                {props.editable && (
-                  <ClearButton
-                    onClick={() => props.deselectEntities([e._key])}
-                  />
-                )}
-                <EntityImageM src={getEntitySAsset(e.type)} />
-                <ItemLink to={`/${ROUTES.entity}/${e._key}`}>
-                  {e._key === hover.entityKey ||
-                  e._key === hover.relationSourceKey ||
-                  e._key === hover.relationTargetKey ? (
-                    <strong>{e.name}</strong>
-                  ) : (
-                    e.name
+        <React.Fragment>
+          <List>
+            {entities.map((_, index) => {
+              const e = entities[entities.length - 1 - index];
+              if (!e) return null;
+              return (
+                <ListItem key={e._key}>
+                  {props.editable && (
+                    <ClearButton
+                      onClick={() => props.deselectEntities([e._key])}
+                    />
                   )}
-                </ItemLink>
-              </ListItem>
-            );
-          })}
-        </List>
+                  <EntityImageM src={getEntitySAsset(e.type)} />
+                  <ItemLink to={`/${ROUTES.entity}/${e._key}`}>
+                    <Name>
+                      {e._key === hover.entityKey ||
+                      e._key === hover.relationSourceKey ||
+                      e._key === hover.relationTargetKey ? (
+                        <strong>{e.name}</strong>
+                      ) : (
+                        e.name
+                      )}
+                    </Name>
+                  </ItemLink>
+                </ListItem>
+              );
+            })}
+          </List>
+          <Route
+            path={`/${ROUTES.entity}`}
+            render={_ => (
+              <Link to={`/${ROUTES.history}`}>'Recently seen' graph</Link>
+            )}
+          />
+        </React.Fragment>
       )}
     </Content>
   );

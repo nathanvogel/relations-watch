@@ -36,7 +36,7 @@ export const styledSelectCSS = css<StyledSelectProps>`
     padding: 0px;
     background-color: ${props => props.theme.inputBG};
     border-radius: ${props => props.theme.radius};
-    border-color: ${props => props.theme.inputBG};
+    border-color: ${props => props.theme.inputBorder};
     border-width: ${props => props.theme.borderWidth};
     border-style: solid;
   }

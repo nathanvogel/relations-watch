@@ -12,8 +12,9 @@ import { Mobile } from "../styles/responsive-utils";
 const Bar = styled.nav`
   display: block;
   height: ${props => props.theme.navBarHeight};
-  background: ${props => props.theme.lightBG};
-  border-bottom: solid 1px ${props => props.theme.darkBG};
+  background: ${props => props.theme.appBarBG};
+  border-bottom: solid ${props => props.theme.strongBorderWidth}
+    ${props => props.theme.strongBorder};
   box-sizing: border-box;
 `;
 

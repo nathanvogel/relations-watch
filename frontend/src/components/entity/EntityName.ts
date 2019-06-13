@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const EntityName = styled.div`
-  font-weight: bold;
+  font-weight: 200;
   font-size: ${props => props.theme.fontSizeM};
   font-family: ${props => props.theme.mainFont};
 `;

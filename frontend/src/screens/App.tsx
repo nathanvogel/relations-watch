@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
+import "./App.css";
 import AppBar from "../components/AppBar";
 import HomeScreen from "./HomeScreen";
 import EntityScreen from "./EntityScreen";

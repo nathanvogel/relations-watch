@@ -4,10 +4,10 @@ svg .nodes text {
   text-decoration: none;
   paint-order: stroke;
   stroke: white;
-  stroke-width: 3px;
-  stroke-opacity: 0.8;
-  stroke-linecap: butt;
-  stroke-linejoin: miter;
+  stroke-width: 0.2em;
+  stroke-opacity: 0.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 text:hover {
@@ -18,9 +18,14 @@ svg .interaction {
   cursor: pointer;
 }
 
+svg .nodes g text {
+  /* text-decoration: underline; */
+  font-weight: 400;
+}
+
 svg .nodes g:hover text {
   /* text-decoration: underline; */
-  font-weight: bold;
+  font-weight: 700;
 }
 
 svg g.node {

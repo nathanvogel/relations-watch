@@ -15,7 +15,11 @@ const Container = styled(EntityViewContainer)`
   padding: ${props => props.theme.inputPaddingTB}
     ${props => props.theme.inputPaddingLR};
   font-size: ${props => props.theme.fontSizeS};
-  background-color: ${props => props.theme.inputBG};
+  // background-color: ${props => props.theme.lightBG};
+  // border-color: ${props => props.theme.lightBG};
+  // border-style: solid;
+  // border-width: ${props => props.theme.borderWidth};
+  box-shadow: 0px 4px 8px 6px rgba(0, 0, 0, 0.06);
   border-radius: ${props => props.theme.radius};
   text-align: left;
   box-sizing: border-box;

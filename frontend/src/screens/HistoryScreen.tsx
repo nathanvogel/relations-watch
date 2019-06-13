@@ -3,10 +3,12 @@ import { connect } from "react-redux";
 
 import { RootStore } from "../Store";
 import NetworkScreen from "./NetworkScreen";
+import graphSelections from "../utils/some-graph-selections";
+import { arrayWithoutDuplicates } from "../utils/utils";
 
 const mapStateToProps = (state: RootStore) => {
-  const entitySelection = state.entitySelection;
-  // const entitySelection =  graphSelections.benalla2;
+  // const entitySelection = state.entitySelection;
+  const entitySelection = graphSelections.trumpfamily;
   return {
     entitySelection,
   };

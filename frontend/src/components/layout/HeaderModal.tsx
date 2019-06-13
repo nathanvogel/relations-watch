@@ -42,7 +42,11 @@ const ModalContent = styled.div<ModalProps>`
   props.theme.appSidebarWidth} * 0.5);
   margin-right: ${props => props.theme.marginLR};
 
-  background-color: ${props => props.theme.appBG};
+  // background-color: ${props => props.theme.modalBG};
+  background-color: ${props =>
+    props.fullyVisible ? props.theme.modalBG : props.theme.modalPreviewBG};
+
+
   border-style: solid solid none solid;
   border-width: ${props => props.theme.strongBorderWidth};
   border-color: ${props => props.theme.darkBG};
@@ -50,7 +54,7 @@ const ModalContent = styled.div<ModalProps>`
   border-radius: ${props => props.theme.radius} ${props => props.theme.radius}
     0px 0px;
 
-  // box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  // box-shadow: 0px 3px 10px 10px rgba(0, 0, 0, 0.05);
   // border-width: 0px;
   // border-radius: 5px 5px 0px 0px;
 
@@ -77,6 +81,8 @@ const OptionalModalBackground = styled(ModalBackground)<ModalProps>`
   opacity: ${props => (props.fullyVisible ? 1 : 0)};
   transition: opacity 0.5s ease-out;
 `;
+
+const ModalWrapper = styled.div<ModalProps>``;
 
 type Props = {
   onClose?: () => void;

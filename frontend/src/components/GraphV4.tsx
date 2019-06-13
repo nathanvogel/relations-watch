@@ -65,17 +65,6 @@ function nodeTranslate(d: V4NodeDatum): string {
     ${d.y - height / 2})`;
 }
 
-function fontWeight(d: V4NodeDatum): string {
-  switch (d.type) {
-    case NodeRenderType.Primary:
-      return "bold";
-    case NodeRenderType.Secondary:
-      return "500";
-    case NodeRenderType.Tertiary:
-      return "500";
-  }
-}
-
 function fontSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
@@ -644,7 +633,6 @@ class GraphV4 extends React.PureComponent<Props> {
     var labels = nodes2
       .select("text")
       .attr("font-size", fontSize)
-      .attr("font-weight", fontWeight)
       .attr("dy", d => iconSize(d) * 0.8)
       .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor));
     // .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);

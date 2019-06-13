@@ -45,8 +45,6 @@ const DrawerContent = styled.div`
   box-sizing: border-box;
   max-height: calc(100vh - ${props => props.theme.navBarHeight});
   overflow-y: auto;
-  // Color
-  background-color: ${props => props.theme.sidebarBG};
 `;
 
 type Props = {
