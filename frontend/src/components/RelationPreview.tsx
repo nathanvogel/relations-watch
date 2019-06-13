@@ -68,6 +68,7 @@ const StyledBigLinksPreview = styled(BigLinksPreview)`
   grid-column: 2
   grid-row: 1;
   align-self: center;
+  z-index: -1;
 `;
 
 const ClickForFull = styled(MiniInfoText)`

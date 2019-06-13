@@ -15,6 +15,7 @@ import R from "../strings/R";
 import GraphLegend from "../components/graph/GraphLegend";
 import { useTranslation } from "react-i18next";
 import { mediaq } from "../styles/responsive-utils";
+import GraphExporter from "../components/GraphExporter";
 
 const GraphWrapper = styled.div`
   width: 100%;
@@ -109,7 +110,12 @@ const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
 
   return (
     <DrawerLayout
-      drawerContent={<DrawerPadder>{props.sidebarContent}</DrawerPadder>}
+      drawerContent={
+        <DrawerPadder>
+          {props.sidebarContent}
+          <GraphExporter />
+        </DrawerPadder>
+      }
     >
       {/* The GRAPH */}
       <GraphWrapper>{props.children}</GraphWrapper>

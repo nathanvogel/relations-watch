@@ -761,6 +761,7 @@ class GraphV4 extends React.PureComponent<Props> {
         viewBox={`0 0 ${width} ${height}`}
         xmlns="http://www.w3.org/2000/svg"
         ref={this.svgEl}
+        className="main-graph"
       >
         <g className="links" ref={this.gLinks} />
         <g className="indicators" ref={this.gIndicators} />
