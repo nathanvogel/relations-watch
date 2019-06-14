@@ -13,16 +13,7 @@ type Props = {
 };
 
 const Container = styled(EntityViewContainer)`
-  // padding: ${props => props.theme.inputPaddingTB}
-  //   ${props => props.theme.inputPaddingLR};
-  font-size: ${props => props.theme.fontSizeS};
   background-color: ${props => props.theme.appBG};
-  align-items: center;
-
-  & > img {
-    // width: 24px;
-    // height: 24px;
-  }
 `;
 
 const SearchResultPreview: FunctionComponent<Props> = props => {

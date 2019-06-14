@@ -5,6 +5,10 @@ const EntityPreviewContainer = styled.div`
   flex-direction: row;
   align-items: start;
 
+  & > img {
+    margin-top: 4px;
+  }
+
   & > div {
     max-width: 100%;
 
