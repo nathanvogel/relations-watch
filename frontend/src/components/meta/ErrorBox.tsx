@@ -11,7 +11,7 @@ type Props = {
 const Box = styled.div`
   padding: ${props => props.theme.blockPadding};
   background-color: ${props => props.theme.errorBG};
-  border-radius: ${props => props.theme.radius};
+  border-radius: ${props => props.theme.bigRadius};
 `;
 
 export default function ErrorBox(props: Props) {

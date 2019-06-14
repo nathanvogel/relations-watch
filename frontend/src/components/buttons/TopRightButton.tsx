@@ -7,8 +7,8 @@ const StyledButton = styled(IconButton)`
   position: absolute;
   padding: 0px; // there's still the border
   height: auto; // override the other height
-  border-radius: 0px ${props => props.theme.radius} 0px
-    ${props => props.theme.radius};
+  border-radius: 0px ${props => props.theme.bigRadius} 0px
+    ${props => props.theme.bigRadius};
   top: -${props => props.theme.borderWidth};
   right: -${props => props.theme.borderWidth};
 `;

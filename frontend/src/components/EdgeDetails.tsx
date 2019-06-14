@@ -19,7 +19,7 @@ const Content = styled.section`
   border-color: ${props => props.theme.inputBG};
   border-width: ${props => props.theme.borderWidth};
   border-style: solid;
-  border-radius: ${props => props.theme.radius};
+  border-radius: ${props => props.theme.bigRadius};
 
   transition: border-color 0.15s ease-out;
 

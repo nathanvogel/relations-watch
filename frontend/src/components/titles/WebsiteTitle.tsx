@@ -2,24 +2,39 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { ReactComponent as AppIcon } from "../../assets/ic_app.svg";
+import { ReactComponent as AppIcon } from "../../assets/ic_app_white.svg";
 
 const Container = styled.div`
   height: ${props => props.theme.navBarHeight};
   width: ${props => props.theme.appSidebarWidth};
-  background: ${props => props.theme.appBarBG};
-  color: ${props => props.theme.mainTextColor};
-  font-size: 23px;
+  box-sizing: border-box;
+  padding: 0px;
+
+  font-size: 21px;
   font-weight: 200;
   font-family: ${props => props.theme.brandFont};
+
+  strong {
+    font-weight: 700;
+  }
+`;
+
+const LogoWrapper = styled.div`
+  background: ${props => props.theme.mainTextColor};
+  color: ${props => props.theme.lightTextColor};
   padding-left: ${props => props.theme.marginLR};
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
   box-sizing: border-box;
+
   display: flex;
   align-items: center;
-
   // Adjust towards the top
   & > span {
-    padding-bottom: 3px;
+    padding-bottom: 1px;
   }
   & > span,
   & > svg {
@@ -54,10 +69,12 @@ const WebsiteTitle: React.FunctionComponent = props => (
   <div>
     <HomeLink to="/">
       <Container>
-        <StyledAppIcon />
-        <span>
-          <strong>relations.</strong>watch
-        </span>
+        <LogoWrapper>
+          <StyledAppIcon />
+          <span>
+            <strong>relations.</strong>watch
+          </span>
+        </LogoWrapper>
       </Container>
     </HomeLink>
   </div>

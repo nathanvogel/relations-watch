@@ -18,7 +18,7 @@ const ModalBackground = styled.div`
     rgba(240, 239, 253, 0.6) 0%,
     rgba(255, 255, 255, 1) 95%
   );
-  background: ${props => props.theme.appBarBG};
+  background: ${props => props.theme.sidebarBG};
 `;
 
 export default ModalBackground;

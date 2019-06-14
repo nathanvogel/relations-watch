@@ -33,9 +33,6 @@ const Content = styled.div`
   width: 100%;
   min-height: 100%;
   height: 100%;
-  // No max, as the content should be scrollable on mobile, etc.
-  // max-width: 100vw;
-  // max-height: 100%; //calc(100vh - ${props => props.theme.navBarHeight});
   overflow: auto;
 `;
 

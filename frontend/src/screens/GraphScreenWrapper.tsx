@@ -37,7 +37,7 @@ const DrawerPadder = styled.div`
 const EdgeListWrapper = styled.div`
   padding-top: 2em;
   padding-bottom: 2em;
-  min-height: 30vh;
+  min-height: 50vh;
 `;
 
 interface LegendProps {
@@ -119,7 +119,7 @@ const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
     >
       {/* The GRAPH */}
       <GraphWrapper>{props.children}</GraphWrapper>
-      {/* The LEGEND */}
+      {/* The LEGEND TODO: Put in AppBar */}
       <LegendColumn hideColumn={!showLegend}>
         <GraphLegend />
       </LegendColumn>

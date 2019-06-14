@@ -15,7 +15,7 @@ import UpdateList from "../components/dataimport/UpdateList";
 const Loading = styled.div`
   background: ${props => props.theme.inputBG};
   padding: 8px;
-  border-radius: ${props => props.theme.radius};
+  border-radius: ${props => props.theme.smallRadius};
 `;
 const Success = styled(Loading)`
   background: ${props => props.theme.successBG};

@@ -10,7 +10,7 @@ const SourceListItemContainerCSS = css<Props>`
       ? props.theme.refutingBackgroundColor
       : props.theme.lightBG};
   padding: ${props => props.theme.blockPadding};
-  border-radius: ${props => props.theme.radius};
+  border-radius: ${props => props.theme.smallRadius};
   margin-top: ${props => props.theme.blockSpacingTB};
   margin-bottom: ${props => props.theme.blockSpacingTB};
 `;

@@ -35,7 +35,7 @@ export const styledSelectCSS = css<StyledSelectProps>`
     min-height: 20px;
     padding: 0px;
     background-color: ${props => props.theme.inputBG};
-    border-radius: ${props => props.theme.radius};
+    border-radius: ${props => props.theme.smallRadius};
     border-color: ${props => props.theme.inputBorder};
     border-width: ${props => props.theme.borderWidth};
     border-style: solid;
@@ -46,7 +46,7 @@ export const styledSelectCSS = css<StyledSelectProps>`
   .rs__control--is-focused,
   .rs__control--is-focused:hover {
     border-color: ${props => props.theme.focusColor};
-    border-radius: ${props => props.theme.radius};
+    border-radius: ${props => props.theme.smallRadius};
     outline: none;
     box-shadow: none;
   }
@@ -71,8 +71,8 @@ export const styledSelectCSS = css<StyledSelectProps>`
     margin-bottom: 0px;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
-    border-bottom-left-radius: ${props => props.theme.radius};
-    border-bottom-right-radius: ${props => props.theme.radius};
+    border-bottom-left-radius: ${props => props.theme.smallRadius};
+    border-bottom-right-radius: ${props => props.theme.smallRadius};
     z-index: 200;
     box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
 
@@ -94,7 +94,7 @@ export const styledSelectCSS = css<StyledSelectProps>`
 
       .rs__option--is-focused {
         border-color: ${props => props.theme.borderHover};
-        border-radius: ${props => props.theme.radius};
+        border-radius: ${props => props.theme.smallRadius};
       }
 
       .rs__option--is-selected {

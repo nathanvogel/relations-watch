@@ -15,7 +15,7 @@ export const EditorContainerCSS = css`
   border-style: solid;
   border-width: ${props => props.theme.borderWidth};
   border-color: ${props => props.theme.border};
-  border-radius: ${props => props.theme.radius};
+  border-radius: ${props => props.theme.bigRadius};
   padding: ${props => props.theme.blockPadding};
   margin-top: ${props => props.theme.blockSpacingTB};
   margin-bottom: ${props => props.theme.blockSpacingTB};

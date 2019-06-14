@@ -51,7 +51,8 @@ const ModalContent = styled.div<ModalProps>`
   border-width: ${props => props.theme.strongBorderWidth};
   border-color: ${props => props.theme.darkBG};
   border-bottom: none;
-  border-radius: ${props => props.theme.radius} ${props => props.theme.radius}
+  border-radius: ${props => props.theme.bigRadius} ${props =>
+  props.theme.bigRadius}
     0px 0px;
 
   // box-shadow: 0px 3px 10px 10px rgba(0, 0, 0, 0.05);
@@ -70,7 +71,8 @@ const ModalContent = styled.div<ModalProps>`
     max-width: 100vw;
     margin-left: ${props => props.theme.marginLR};
     border-style: solid solid none solid;
-    border-radius: ${props => props.theme.radius} ${props => props.theme.radius}
+    border-radius: ${props => props.theme.bigRadius} ${props =>
+  props.theme.bigRadius}
       0px 0px;
   }
 

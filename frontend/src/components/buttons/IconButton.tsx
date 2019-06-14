@@ -27,7 +27,7 @@ const iconButtonCSS = css<IconButtonProps>`
   border-color: ${props => props.theme.inputBorder};
   border-width: ${props => props.theme.borderWidth};
   border-style: solid;
-  border-radius: ${props => props.theme.radius};
+  border-radius: ${props => props.theme.smallRadius};
 
   & > svg {
     height: ${props => (props.small ? "12px" : "20px")}

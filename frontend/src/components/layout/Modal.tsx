@@ -27,7 +27,7 @@ const ModalContent = styled.div`
   border-style: solid;
   border-color: ${props => props.theme.border};
   border-width: ${props => props.theme.borderWidth};
-  border-radius: ${props => props.theme.radius};
+  border-radius: ${props => props.theme.bigRadius};
 `;
 
 const MyModalBackground = styled(ModalBackground)`
