@@ -27,6 +27,7 @@ const theme = {
   appBarBG: "#FFFFFF",
   modalBG: "#FFFFFF",
   modalPreviewBG: "#FFFFFF",
+  modalOverlayBG: "#3520086b",
   darkBG: "rgba(0, 0, 0, 0.84)",
   lightBG: "#44000014",
   inputBG: "#44000014",
