@@ -15,7 +15,7 @@ import { MiniInfoText } from "./titles/MiniInfoText";
 
 const Content = styled.section`
   box-sizing: border-box;
-  border-color: ${props => props.theme.inputBG};
+  border-color: ${props => props.theme.inputBorder};
   border-width: ${props => props.theme.borderWidth};
   border-style: solid;
   border-radius: ${props => props.theme.bigRadius};

@@ -115,6 +115,13 @@ const MySelect = styled(StyledAsyncCreatableSelect)`
 
   .rs__control {
     background-color: transparent;
+    border-color: transparent;
+  }
+
+  .rs__control--is-focused,
+  .rs__control--is-focused:hover {
+    // Restore the original styles, otherwise overriden by the above
+    border-color: ${props => props.theme.focusColor};
   }
 `;
 
