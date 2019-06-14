@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { RouteComponentProps, withRouter, Route, Switch } from "react-router";
+import { useLastLocation } from "react-router-last-location";
 import styled from "styled-components";
 import Info from "@material-ui/icons/Info";
 
@@ -12,9 +13,7 @@ import EdgesListContainer from "../components/EdgesListContainer";
 import HeaderModal from "../components/layout/HeaderModal";
 import ROUTES from "../utils/ROUTES";
 import IconButton from "../components/buttons/IconButton";
-import R from "../strings/R";
 import GraphLegend from "../components/graph/GraphLegend";
-import { useTranslation } from "react-i18next";
 import { mediaq } from "../styles/responsive-utils";
 import GraphExporter from "../components/GraphExporter";
 
@@ -97,8 +96,13 @@ const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
   const { hover, entity1Key } = props;
   const [showLegend, setShowLegend] = useState(false);
   const toggleLegend = () => setShowLegend(!showLegend);
+  const lastLocation = useLastLocation();
+
   const closeRelationDetail = () => {
-    props.history.push(props.match.url);
+    // Don't leave the relation details in the history stack if the previous
+    // location was within our website.
+    if (lastLocation) props.history.goBack();
+    else props.history.push(props.match.url);
   };
 
   return (

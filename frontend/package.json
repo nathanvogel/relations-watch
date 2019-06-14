@@ -44,6 +44,7 @@
     "react-redux": "^6.0.1",
     "react-responsive": "^7.0.0",
     "react-router-dom": "^5.0.0",
+    "react-router-last-location": "^2.0.0-beta.3",
     "react-scripts": "2.1.8",
     "react-select": "^2.4.2",
     "redux": "^4.0.1",

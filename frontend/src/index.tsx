@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { ThemeProvider } from "styled-components";
 // Routing
 import { BrowserRouter as Router } from "react-router-dom";
+import { LastLocationProvider } from "react-router-last-location";
 // Data
 import { Provider } from "react-redux";
 import Store from "./Store"; // Use a Maj to let CRA's typescript find it.
@@ -26,8 +27,10 @@ ReactDOM.render(
   <ThemeProvider theme={theme}>
     <Provider store={Store}>
       <Router>
-        <GlobalStyle />
-        <App />
+        <LastLocationProvider>
+          <GlobalStyle />
+          <App />
+        </LastLocationProvider>
       </Router>
     </Provider>
   </ThemeProvider>,

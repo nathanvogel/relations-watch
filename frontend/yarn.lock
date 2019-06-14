@@ -9346,6 +9346,11 @@ react-router-dom@^5.0.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
+react-router-last-location@^2.0.0-beta.3:
+  version "2.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/react-router-last-location/-/react-router-last-location-2.0.0-beta.3.tgz#0d67643fdddf0e21afcf5c765ccd71eba03c8b05"
+  integrity sha512-ce0fMfVNW96mB/fnk6D93T4BEkLGBAN7Mk8/ImRx3PvnbDaX8STbiSdi4sc7kEkcdGvInsyJmegbmkYxndW7HA==
+
 react-router@5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-5.0.0.tgz#349863f769ffc2fa10ee7331a4296e86bc12879d"

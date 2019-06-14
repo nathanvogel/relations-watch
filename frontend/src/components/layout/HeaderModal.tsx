@@ -87,8 +87,6 @@ const OptionalModalBackground = styled(ModalBackground)<ModalProps>`
   transition: opacity ${props => props.theme.longAnim} ease-out;
 `;
 
-const ModalWrapper = styled.div<ModalProps>``;
-
 type Props = {
   onClose?: () => void;
   header?: React.ReactNode;
