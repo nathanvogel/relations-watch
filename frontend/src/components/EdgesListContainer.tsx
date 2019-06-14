@@ -133,7 +133,7 @@ class EdgesListContainer extends React.Component<Props> {
           <ButtonBar buttonsAlign="center">
             <AddButton withText onClick={this.onAddClick}>
               <AddIcon />
-              Add relation
+              Add a relation
             </AddButton>
           </ButtonBar>
         )}

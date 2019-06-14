@@ -520,8 +520,6 @@ class GraphV4 extends React.PureComponent<Props> {
           .attr("opacity", 1)
           .attr("stroke-width", Math.max(11, linkStrokeWidth(d)));
         // .attr("stroke", "#000000");
-        // TODO: Debounce
-
         hoverRelation(d.sourceKey, d.targetKey);
       })
       .on("mouseout", function(d) {
