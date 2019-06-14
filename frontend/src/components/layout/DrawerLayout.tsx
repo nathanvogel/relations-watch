@@ -49,6 +49,7 @@ const DrawerContent = styled.div`
 
 type Props = {
   drawerContent?: React.ReactNode;
+  appBarContent?: React.ReactNode;
   // appBarContent?: React.ReactNode; // no customization needed for now
   // mainContent?: React.ReactNode; // use props.children instead
 };
@@ -66,7 +67,9 @@ const DrawerLayout: React.FunctionComponent<Props> = props => {
   return (
     <Content>
       {/* NAVBAR */}
-      <AppBar onLeftMenuClick={() => setMobileOpen(!mobileOpen)} />
+      <AppBar onLeftMenuClick={() => setMobileOpen(!mobileOpen)}>
+        {props.appBarContent}
+      </AppBar>
       <nav aria-label="Sidebar">
         <Mobile>
           <SwipeableDrawer

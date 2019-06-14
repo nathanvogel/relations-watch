@@ -1,12 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { withRouter, RouteComponentProps, Link } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import MenuIcon from "@material-ui/icons/Menu";
 
 import EntitySearch from "./EntitySearch";
 import ROUTES from "../utils/ROUTES";
 import { EntitySelectOption } from "../utils/types";
 import IconButton from "./buttons/IconButton";
-import { ReactComponent as MenuIcon } from "../assets/ic_main_menu.svg";
+// import { ReactComponent as MenuIcon } from "../assets/ic_main_menu.svg";
 import { Mobile } from "../styles/responsive-utils";
 
 const Bar = styled.nav`
@@ -32,16 +33,18 @@ const BarContent = styled.div`
   & > *:first-child {
     margin-left: 0px;
   }
-`;
+  & > *:last-child {
+    margin-right: 0px;
+  }
 
-const AppBarButton = styled(IconButton)`
-  height: 100%;
-  max-height: 100%;
-  margin-left: ${props => props.theme.marginLR};
-  margin-right: ${props => props.theme.marginLR};
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
+  button,
+  a {
+    height: 100%;
+    max-height: 100%;
+    margin-left: ${props => props.theme.marginLR};
+    margin-right: ${props => props.theme.marginLR};
+    box-sizing: border-box;
+  }
 `;
 
 const StyledSearch = styled(EntitySearch)`
@@ -86,9 +89,9 @@ class AppBar extends React.Component<Props> {
       <Bar aria-label="Navigation bar">
         <BarContent>
           <Mobile>
-            <AppBarButton onClick={this.props.onLeftMenuClick}>
+            <IconButton onClick={this.props.onLeftMenuClick}>
               <MenuIcon />
-            </AppBarButton>
+            </IconButton>
           </Mobile>
           {this.props.location.pathname !== "/" && (
             <StyledSearch
@@ -98,6 +101,7 @@ class AppBar extends React.Component<Props> {
               selection={null}
             />
           )}
+          {this.props.children}
         </BarContent>
       </Bar>
     );

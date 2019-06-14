@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { RouteComponentProps, withRouter, Route, Switch } from "react-router";
 import styled from "styled-components";
+import Info from "@material-ui/icons/Info";
 
 import DrawerLayout from "../components/layout/DrawerLayout";
 import { RootStore } from "../Store";
@@ -47,10 +48,10 @@ interface LegendProps {
 const LegendColumn = styled.div<LegendProps>`
   display: ${props => (props.hideColumn ? "none" : "block")}
   position: absolute;
-  right: 16px;
+  right: ${props => props.theme.marginLR};
   left: unset;
-  top: unset;
-  bottom: 16px;
+  top: ${props => props.theme.navBarHeight};
+  bottom: unset;
   height: auto;
   overflow-y: auto;
   min-width: ${props => props.theme.appMiniSidebarWidth};
@@ -71,12 +72,6 @@ const LegendColumn = styled.div<LegendProps>`
 
   transition: transform 0.18s ease-out;
   transform: translateX(${props => (props.hideColumn ? "100" : "0")}%);
-`;
-
-const ToggleLegendButton = styled(IconButton)`
-  position: absolute;
-  bottom: 18px;
-  right: 18px;
 `;
 
 interface OwnProps {
@@ -101,7 +96,6 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
   const { hover, entity1Key } = props;
-  const { t } = useTranslation();
   const [showLegend, setShowLegend] = useState(false);
   const toggleLegend = () => setShowLegend(!showLegend);
   const closeRelationDetail = () => {
@@ -116,16 +110,18 @@ const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
           <GraphExporter />
         </DrawerPadder>
       }
+      appBarContent={
+        <IconButton onClick={toggleLegend}>
+          <Info />
+        </IconButton>
+      }
     >
       {/* The GRAPH */}
       <GraphWrapper>{props.children}</GraphWrapper>
-      {/* The LEGEND TODO: Put in AppBar */}
+      {/* The LEGEND */}
       <LegendColumn hideColumn={!showLegend}>
         <GraphLegend />
       </LegendColumn>
-      <ToggleLegendButton small withText onClick={toggleLegend}>
-        {t(showLegend ? R.button_hide_legend : R.button_show_legend)}
-      </ToggleLegendButton>
       {/* The RELATION PREVIEW */}
       <Switch>
         <Route

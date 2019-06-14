@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.0.2",
+    "@material-ui/icons": "^4.2.0",
     "@types/d3": "^5.7.2",
     "@types/d3-force": "^1.2.1",
     "@types/jest": "24.0.11",
