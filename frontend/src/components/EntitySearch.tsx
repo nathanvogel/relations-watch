@@ -6,6 +6,7 @@ import { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import wd from "wikidata-sdk";
+import SearchIcon from "@material-ui/icons/Search";
 
 import api from "../utils/api";
 import EntityEditor from "./EntityEditor";
@@ -129,6 +130,24 @@ const WikidataCreateSubtitle = styled.div`
   font-size: ${props => props.theme.fontSizeS};
 `;
 
+const SearchIconWrapper = styled.span`
+  display: inline-block;
+  // From a certain size, it starts to offset the following placeholder
+  // so I just set it rather small and scale up the svg afterwards
+  // ¯\_(ツ)_/¯
+  height: 20px;
+  width: 20px;
+  margin-right: 8px;
+  svg {
+    transform: scale(1.2) translateY(3px);
+    width: 100%;
+    height: 100%;
+  }
+  .rs__control--is-focused & {
+    display: none;
+  }
+`;
+
 export interface Props {
   selection?: any;
   onChange?: (value: EntitySelectOption) => void;
@@ -139,6 +158,7 @@ export interface Props {
   isMulti?: boolean;
   placeholder?: string;
   forceMenuOnTop?: boolean;
+  withSearchIcon?: boolean;
 }
 
 const defaultProps: Props = {
@@ -280,7 +300,16 @@ const EntitySearch: FunctionComponent<Props> = (
           : null;
       }}
       placeholder={
-        props.placeholder == null ? t(R.placeholder_search) : props.placeholder
+        <React.Fragment>
+          {props.withSearchIcon && (
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+          )}
+          {props.placeholder == null
+            ? t(R.placeholder_search)
+            : props.placeholder}
+        </React.Fragment>
       }
       loadOptions={
         mode === "searchWd" ? promiseWikidataAutocomplete : promiseAutocomplete

@@ -95,6 +95,7 @@ class AppBar extends React.Component<Props> {
           </Mobile>
           {this.props.location.pathname !== "/" && (
             <StyledSearch
+              withSearchIcon
               onChange={this.onSearch}
               onInputChange={this.onInputChange}
               inputValue={this.state.searchValue}

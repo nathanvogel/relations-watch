@@ -103,6 +103,7 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
         <Header>
           {/* <CentralTitle>Explore the relation graph</CentralTitle> */}
           <CentralSearch
+            withSearchIcon
             autoFocus
             onChange={onSearch}
             placeholder={t(R.placeholder_explicit_search)}
@@ -112,8 +113,8 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
           <ItemsSection>
             <SecondaryTitle>{t(R.home_trending)}</SecondaryTitle>
             <ItemList>
-              <EntityDetails entityKey={"1539778"} />
               <EntityDetails entityKey={"1589920"} />
+              <EntityDetails entityKey={"1539778"} />
               <EntityDetails entityKey={"222110"} />
               {/* <EntityDetails entityKey={"1701669"} /> */}
             </ItemList>
