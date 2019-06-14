@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
+import ClickableIcon from "../buttons/ClickableIcon";
 
 const Background = styled.div`
   position: fixed;
@@ -24,35 +25,25 @@ const Background = styled.div`
   background: ${props => props.theme.modalOverlayBG};
 `;
 
-const Cross = styled.div`
+const Cross = styled(ClickableIcon)`
   position: absolute;
   top: 6px;
-  right: 50px;
-  width: 32px;
-  height: 32px;
-  color: white;
-  transition: color ${props => props.theme.shortAnim} ease-out;
-
-  &:hover {
-    color: ${props => props.theme.lightFocusColor};
-  }
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
+  right: 12px;
 `;
 
 type Props = {
   onClick?: () => void;
   className?: string;
+  withCross?: boolean;
 };
 
 const ModalBackground: React.FunctionComponent<Props> = props => (
   <Background {...props}>
-    <Cross>
-      <CloseIcon />
-    </Cross>
+    {props.withCross && (
+      <Cross>
+        <CloseIcon />
+      </Cross>
+    )}
   </Background>
 );
 

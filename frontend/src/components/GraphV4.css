@@ -4,8 +4,8 @@ svg .nodes text {
   text-decoration: none;
   paint-order: stroke;
   stroke: white;
-  stroke-width: 0.2em;
-  stroke-opacity: 0.5;
+  stroke-width: 0.18em;
+  stroke-opacity: 0.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }

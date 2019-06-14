@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import SwapIcon from "@material-ui/icons/SwapHorizontalCircle";
+import SwapIcon from "@material-ui/icons/SwapHoriz";
 import CloseIcon from "@material-ui/icons/Close";
 
 import EntityName from "./EntityName";

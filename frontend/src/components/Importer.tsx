@@ -112,6 +112,7 @@ const Importer: FunctionComponent<Props> = props => {
       const buttons = (
         <ButtonBar buttonsAlign="right">
           <IconButton
+            primary
             withText
             onClick={() => props.patchSimilarEntities(namespace)}
           >
@@ -148,7 +149,11 @@ const Importer: FunctionComponent<Props> = props => {
     case ImportStage.WaitingForDiffConfirmation:
       const buttons2 = (
         <ButtonBar buttonsAlign="right">
-          <IconButton withText onClick={() => props.confirmImport(namespace)}>
+          <IconButton
+            primary
+            withText
+            onClick={() => props.confirmImport(namespace)}
+          >
             Import all
           </IconButton>
         </ButtonBar>
@@ -184,6 +189,7 @@ const Importer: FunctionComponent<Props> = props => {
             {props.onDone && (
               <IconButton
                 withText
+                primary
                 onClick={() =>
                   props.onDone
                     ? props.onDone(

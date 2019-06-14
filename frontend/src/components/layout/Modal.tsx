@@ -9,7 +9,7 @@ const ModalContent = styled.div`
   width: calc(
     100% - ${props => props.theme.marginLR} - ${props => props.theme.marginLR}
   );
-  max-width: 800px;
+  max-width: 900px;
   min-height: 400px;
   max-height: calc(100vh - 110px);
   overflow-y: auto;
@@ -42,7 +42,7 @@ const Modal: React.FunctionComponent<Props> = props => {
   const modals = document.getElementById("modals");
   const modal = (
     <div>
-      <MyModalBackground onClick={props.onClose} />
+      <MyModalBackground onClick={props.onClose} withCross />
       <ModalContent>{props.children}</ModalContent>
     </div>
   );

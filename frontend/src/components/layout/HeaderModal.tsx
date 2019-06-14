@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import CloseIcon from "@material-ui/icons/Close";
 import ModalBackground from "./ModalBackground";
 import { mediaq } from "../../styles/responsive-utils";
+import ClickableIcon from "../buttons/ClickableIcon";
 
 interface ModalProps {
   fullyVisible: boolean;
@@ -19,7 +21,7 @@ const ModalContent = styled.div<ModalProps>`
     ${props => (props.fullyVisible ? "auto" : props.theme.hoverBoxHeight)}
   max-height:
     ${props =>
-      props.fullyVisible ? "calc(100vh - 42px)" : props.theme.hoverBoxHeight};
+      props.fullyVisible ? "calc(100vh - 50px)" : props.theme.hoverBoxHeight};
   // overflow-y: auto;
   top: calc(100vh - ${props => props.theme.hoverBoxHeight});
 
@@ -87,6 +89,12 @@ const OptionalModalBackground = styled(ModalBackground)<ModalProps>`
   transition: opacity ${props => props.theme.longAnim} ease-out;
 `;
 
+const PositionedClickableIcon = styled(ClickableIcon)`
+  position: absolute;
+  top: -32px;
+  left: calc(50% - 11px);
+`;
+
 type Props = {
   onClose?: () => void;
   header?: React.ReactNode;
@@ -101,6 +109,11 @@ const HeaderModal: React.FunctionComponent<Props> = props => {
         onClick={props.onClose}
       />
       <ModalContent fullyVisible={props.fullyVisible}>
+        {props.fullyVisible && (
+          <PositionedClickableIcon onClick={props.onClose}>
+            <CloseIcon />
+          </PositionedClickableIcon>
+        )}
         {props.header}
         {props.children}
       </ModalContent>

@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import styled from "styled-components";
 import cuid from "cuid";
-import AddIcon from "@material-ui/icons/AddCircle";
+import AddIcon from "@material-ui/icons/AddCircleOutline";
 
 import { RootStore } from "../Store";
 import { connect } from "react-redux";
