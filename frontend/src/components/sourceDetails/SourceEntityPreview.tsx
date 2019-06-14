@@ -28,7 +28,7 @@ const Content = styled.span`
   // border-color: #fff;
   // border-width: ${props => props.theme.borderWidth};
   &:hover {
-    background-color: ${props => props.theme.surfaceHover};
+    background-color: ${props => props.theme.buttonHoverBG};
   }
 `;
 
@@ -66,7 +66,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const entity = state.entities.datapreview[entityKey];
   return {
     entity,
-    entityKey
+    entityKey,
   };
 };
 

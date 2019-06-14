@@ -150,6 +150,7 @@ class EntityForm extends React.Component<Props> {
         <ButtonBar>
           <IconButton
             withText
+            primary
             disabled={this.props.disabled}
             onClick={this.onSubmit}
           >

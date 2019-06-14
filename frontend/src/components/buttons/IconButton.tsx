@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 type IconButtonProps = {
   small?: boolean;
   withText?: boolean;
+  primary?: boolean;
 };
 
 const withTextCSS = css<IconButtonProps>`
@@ -19,45 +20,63 @@ const iconButtonCSS = css<IconButtonProps>`
   min-width: ${props => (props.small ? "16px" : "32px")};
   text-align: center;
   font-size: ${props => (props.small ? props.theme.fontSizeS : "inherit")}
+  font-weight: ${props => (props.primary ? "bold" : "normal")};
   // Necessary to put line-height to override normalize.css for consistency
   // between <Link> and <button>
   line-height: ${props => props.theme.lineHeight}
   box-sizing: border-box;
   padding: ${props => props.theme.inputPaddingTB}
-    ${props => props.theme.inputPaddingLR};
-  background-color: ${props => props.theme.buttonBG};
+    ${props =>
+      props.withText ? props.theme.inputPaddingLR : props.theme.inputPaddingTB};
+  background-color: ${props =>
+    props.primary ? props.theme.primaryButtonBG : props.theme.buttonBG};
   border-color: ${props =>
-    props.withText ? props.theme.buttonBorder : "transparent"};
+    props.withText && !props.primary
+      ? props.theme.buttonBorder
+      : "transparent"};
   border-width: ${props => props.theme.borderWidth};
   border-style: solid;
   border-radius: ${props => props.theme.smallRadius};
+  box-shadow: ${props => props.theme.absentShadow};
 
   & > svg {
-    height: ${props => (props.small ? "12px" : "20px")}
-    width: ${props => (props.small ? "12px" : "20px")}
+    height: ${props => (props.small ? "12px" : "22px")}
+    width: ${props => (props.small ? "12px" : "22px")}
     // Vertically center the icon
     transform: translateY(2px);
   }
 
   cursor: pointer;
-  color: ${props => props.theme.mainTextColor};
+  color: ${props =>
+    props.primary ? props.theme.lightTextColor : props.theme.mainTextColor};
 
   &:not([disabled]):hover {
-    background-color: ${props => props.theme.surfaceHover};
+    background-color: ${props =>
+      props.primary
+        ? props.theme.primaryButtonHoverBG
+        : props.theme.buttonHoverBG};
     border-color: ${props =>
-      props.withText ? props.theme.buttonBorder : "transparent"};
+      props.withText && !props.primary
+        ? props.theme.buttonBorder
+        : "transparent"};
   }
 
-  &:not([disabled]):hover:focus,
-  &:focus {
+  &:focus,
+  &:not([disabled]):hover:focus {
+    color: ${props =>
+      props.primary ? props.theme.lightFocusColor : props.theme.focusColor};
     border-color: ${props => props.theme.focusColor};
+    box-shadow: ${props => props.theme.focusShadow};
     outline: none;
   }
 
   &:disabled {
+    background-color: ${props => props.theme.buttonBG};
     color: ${props => props.theme.disabledTextColor};
     cursor: not-allowed;
   }
+
+  transition: all 0.18s ease-out;
 
   ${props => props.withText && withTextCSS}
 `;

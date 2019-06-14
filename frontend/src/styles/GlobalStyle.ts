@@ -42,6 +42,15 @@ const GlobalStyleCSS = css`
   a:active {
     color: ${props => props.theme.linkTextColor};
   }
+
+  a:focus,
+  a:not([disabled]):hover:focus {
+    color: ${props => props.theme.focusColor};
+    border-color: ${props => props.theme.focusColor};
+    border-radius: ${props => props.theme.smallRadius}
+    box-shadow: ${props => props.theme.focusShadow};
+    outline: none;
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`

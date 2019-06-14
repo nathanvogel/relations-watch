@@ -19,7 +19,7 @@ const Container = styled(EntityViewContainer)`
   // border-color: ${props => props.theme.lightBG};
   // border-style: solid;
   // border-width: ${props => props.theme.borderWidth};
-  box-shadow: 0px 4px 8px 6px rgba(0, 0, 0, 0.06);
+  box-shadow: ${props => props.theme.entityViewShadow};
   border-radius: ${props => props.theme.bigRadius};
   text-align: left;
   box-sizing: border-box;

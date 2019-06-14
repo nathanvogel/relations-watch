@@ -247,7 +247,6 @@ class EdgeForm extends React.Component<Props> {
     // One day, loadSources will handle not re-requesting sources.
     if (sourceKey) this.props.loadSources([sourceKey], true);
     if (this.ref_saveButton.current) {
-      console.log("focus");
       this.ref_saveButton.current.disabled = false;
       this.ref_saveButton.current.focus();
     }
@@ -520,6 +519,7 @@ class EdgeForm extends React.Component<Props> {
             )}
             <IconButton
               withText
+              primary
               disabled={this.isNew && !hasSource}
               type="submit"
               ref={this.ref_saveButton}

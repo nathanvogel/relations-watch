@@ -160,7 +160,7 @@ class SourceForm extends React.Component<Props> {
         />
         <ButtonBar buttonsAlign="right">
           {this.props.onSaveClick && (
-            <IconButton withText onClick={this.props.onSaveClick}>
+            <IconButton primary withText onClick={this.props.onSaveClick}>
               Save
             </IconButton>
           )}
