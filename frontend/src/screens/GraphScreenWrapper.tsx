@@ -46,7 +46,6 @@ interface LegendProps {
 }
 
 const LegendColumn = styled.div<LegendProps>`
-  display: ${props => (props.hideColumn ? "none" : "block")}
   position: absolute;
   right: ${props => props.theme.marginLR};
   left: unset;
@@ -118,8 +117,12 @@ const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
     >
       {/* The GRAPH */}
       <GraphWrapper>{props.children}</GraphWrapper>
-      {/* The LEGEND */}
-      <LegendColumn hideColumn={!showLegend}>
+      {/* The LEGEND with id and data-hidden for the PDF export */}
+      <LegendColumn
+        id="graph-legend"
+        data-hidden={!showLegend}
+        hideColumn={!showLegend}
+      >
         <GraphLegend />
       </LegendColumn>
       {/* The RELATION PREVIEW */}

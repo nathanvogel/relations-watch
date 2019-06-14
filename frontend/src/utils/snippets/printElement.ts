@@ -1,13 +1,12 @@
-function printElement(element: Element) {
-  const { height, width } = element.getBoundingClientRect();
+function printElements(elements: Element[]) {
+  if (elements.length <= 0) {
+    console.log("No given elements. Aborting print.");
+    return;
+  }
+  const { height, width } = elements[0].getBoundingClientRect();
   var mywindow = window.open("", "PRINT", `height=${height},width=${width}`);
   if (mywindow == null) {
     console.error("Coulnd't create window");
-    return;
-  }
-  const parentNode = element.parentElement;
-  if (parentNode == null) {
-    console.error("Coulnd't get parentNode");
     return;
   }
   var headtxt = "";
@@ -16,7 +15,9 @@ function printElement(element: Element) {
   mywindow.document.write(headtxt);
   mywindow.document.write("</head><body>");
   // mywindow.document.write("<h2>" + document.title + "</h2>");
-  mywindow.document.write(parentNode.innerHTML);
+  for (let element of elements) {
+    mywindow.document.write(element.outerHTML);
+  }
   mywindow.document.write("</body></html>");
 
   mywindow.document.close(); // necessary for IE >= 10
@@ -28,4 +29,4 @@ function printElement(element: Element) {
   return true;
 }
 
-export default printElement;
+export default printElements;

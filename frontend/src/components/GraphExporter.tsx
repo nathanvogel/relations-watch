@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import IconButton from "./buttons/IconButton";
 import exportStyledSVG from "../utils/snippets/export-svg";
-import printElement from "../utils/snippets/printElement";
+import printElements from "../utils/snippets/printElement";
 import ButtonBar from "./buttons/ButtonBar";
 
 const Content = styled.div`
@@ -22,8 +22,16 @@ class GraphExporter extends React.Component<Props> {
   };
 
   onExportPDF = () => {
-    const element = document.getElementsByClassName("main-graph")[0];
-    printElement(element);
+    const graph = document.getElementsByClassName("main-graph")[0];
+    const legend = document.getElementById("graph-legend");
+    const elements: Element[] = [graph];
+    if (legend) console.log(legend, legend.dataset, legend.dataset.hidden);
+    if (legend && legend.dataset.hidden == "false") {
+      console.log("HIDDEN data!");
+      elements.push(legend);
+    }
+
+    printElements(elements);
   };
 
   render() {
