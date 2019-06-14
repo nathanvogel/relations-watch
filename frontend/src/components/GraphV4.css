@@ -20,12 +20,12 @@ svg .interaction {
 
 svg .nodes g text {
   /* text-decoration: underline; */
-  font-weight: 400;
+  font-weight: normal;
 }
 
 svg .nodes g:hover text {
   /* text-decoration: underline; */
-  font-weight: 700;
+  font-weight: bold;
 }
 
 svg g.node {

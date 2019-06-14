@@ -8,7 +8,7 @@ type Props = {
 };
 
 const style = css`
-  font-weight: 700;
+  font-weight: bold;
   cursor: pointer;
   text-decoration: none;
 

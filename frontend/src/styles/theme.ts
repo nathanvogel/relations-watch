@@ -3,10 +3,10 @@ import { RelationType, FamilialLink } from "../utils/types";
 
 const theme = {
   mainFont:
-    '"Simplon Norm", "Proxima Nova", proxima-nova, "IBM Plex Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
-  // brandFont: '"SangBleu Republic", "Calluna", "Lapture", serif',
+    '"simplon-norm", "IBM Plex Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
+  // brandFont: '"Rigid Square", "PoynterGothicText", "Officina Sans ITC Pro", "Proxima Nova", proxima-nova, "SangBleu Republic", "Calluna", "Lapture", serif',
   brandFont:
-    '"Simplon Norm", "Rigid Square", "PoynterGothicText", "Officina Sans ITC Pro", "Proxima Nova", proxima-nova, "IBM Plex Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
+    '"simplon-norm", "IBM Plex Sans", "Helvetica Neue", Helvetica, "Droid Sans", sans-serif',
   fontSizeS: "15px",
   fontSizeM: "20px",
   fontSizeL: "24px",

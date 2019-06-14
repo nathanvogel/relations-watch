@@ -5,7 +5,7 @@ const Label = styled.label`
   color: ${props => props.theme.secondaryTextColor};
   font-family: ${props => props.theme.brandFont};
   font-size: ${props => props.theme.fontSizeS};
-  font-weight: 200;
+  font-weight: 300;
   text-transform: uppercase;
   margin: ${props => props.theme.marginTB} 0px;
   margin-bottom: ${props => props.theme.inputTBSpacing};

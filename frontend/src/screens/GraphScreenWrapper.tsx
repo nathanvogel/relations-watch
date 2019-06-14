@@ -69,7 +69,8 @@ const LegendColumn = styled.div<LegendProps>`
   opacity: 0.95;
 
   transition: transform ${props => props.theme.shortAnim} ease-out;
-  transform: translateX(${props => (props.hideColumn ? "100" : "0")}%);
+  // A bit more than 100% for the margin/position of the legend
+  transform: translateX(${props => (props.hideColumn ? "130" : "0")}%);
 `;
 
 interface OwnProps {

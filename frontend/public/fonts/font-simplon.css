@@ -1,0 +1,48 @@
+@font-face {
+  font-family: "simplon-norm";
+  src: url("SimplonNorm-Regular-WebS.eot");
+  src: url("SimplonNorm-Regular-WebS.eot?#iefix") format("embedded-opentype"),
+    url("SimplonNorm-Regular-WebS.woff2") format("woff2"),
+    url("SimplonNorm-Regular-WebS.woff") format("woff"),
+    url("SimplonNorm-Regular-WebS.ttf") format("truetype"),
+    url("SimplonNorm-Regular-WebS.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "simplon-norm";
+  src: url("SimplonNorm-RegularItalic-WebS.eot");
+  src: url("SimplonNorm-RegularItalic-WebS.eot?#iefix")
+      format("embedded-opentype"),
+    url("SimplonNorm-RegularItalic-WebS.woff2") format("woff2"),
+    url("SimplonNorm-RegularItalic-WebS.woff") format("woff"),
+    url("SimplonNorm-RegularItalic-WebS.ttf") format("truetype"),
+    url("SimplonNorm-RegularItalic-WebS.svg") format("svg");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "simplon-norm";
+  src: url("SimplonNorm-Medium-WebS.eot");
+  src: url("SimplonNorm-Medium-WebS.eot?#iefix") format("embedded-opentype"),
+    url("SimplonNorm-Medium-WebS.woff2") format("woff2"),
+    url("SimplonNorm-Medium-WebS.woff") format("woff"),
+    url("SimplonNorm-Medium-WebS.ttf") format("truetype"),
+    url("SimplonNorm-Medium-WebS.svg") format("svg");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "simplon-norm";
+  src: url("SimplonNorm-Light-WebS.eot");
+  src: url("SimplonNorm-Light-WebS.eot?#iefix") format("embedded-opentype"),
+    url("SimplonNorm-Light-WebS.woff2") format("woff2"),
+    url("SimplonNorm-Light-WebS.woff") format("woff"),
+    url("SimplonNorm-Light-WebS.ttf") format("truetype"),
+    url("SimplonNorm-Light-WebS.svg") format("svg");
+  font-weight: 300;
+  font-style: normal;
+}

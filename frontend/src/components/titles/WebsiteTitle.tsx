@@ -11,11 +11,11 @@ const Container = styled.div`
   padding: 0px;
 
   font-size: 24px;
-  font-weight: 200;
+  font-weight: 300;
   font-family: ${props => props.theme.brandFont};
 
   strong {
-    font-weight: 700;
+    font-weight: bold;
   }
 `;
 
