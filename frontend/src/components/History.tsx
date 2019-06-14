@@ -4,6 +4,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { Link, Switch, Route } from "react-router-dom";
 import CloseIcon from "@material-ui/icons/Close";
+import GraphIcon from "@material-ui/icons/DeviceHub";
 import { RootStore } from "../Store";
 import {
   selectEntities,
@@ -16,7 +17,8 @@ import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
 import GraphSaver from "./GraphSaver";
 import EntityName from "./entity/EntityName";
-import IconButton from "./buttons/IconButton";
+import IconButton, { IconButtonLink } from "./buttons/IconButton";
+import ButtonBar from "./buttons/ButtonBar";
 
 const Content = styled.div`
   width: 100%;
@@ -158,7 +160,12 @@ const History: React.FunctionComponent<Props> = props => {
           <Route
             path={`/${ROUTES.entity}`}
             render={_ => (
-              <Link to={`/${ROUTES.history}`}>'Recently seen' graph</Link>
+              <ButtonBar>
+                <IconButtonLink withText to={`/${ROUTES.history}`}>
+                  <GraphIcon />
+                  Recently seen
+                </IconButtonLink>
+              </ButtonBar>
             )}
           />
         </React.Fragment>

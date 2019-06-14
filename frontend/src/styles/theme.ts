@@ -55,6 +55,7 @@ const theme = {
   appPaddingLR: "24px",
   appPaddingTB: "12px",
   longFieldHeight: "3em",
+  lineHeight: "1.4",
   smallRadius: "3px",
   bigRadius: "5px",
 };

@@ -8,7 +8,7 @@ const GlobalStyleCSS = css`
     font-family: ${props => props.theme.mainFont};
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.4;
+    line-height: ${props => props.theme.lineHeight}
     color: ${props => props.theme.mainTextColor};
     font-size: ${props => props.theme.fontSizeM};
   }

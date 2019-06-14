@@ -1,14 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import SaveIcon from "@material-ui/icons/SaveAlt";
 import IconButton from "./buttons/IconButton";
 import exportStyledSVG from "../utils/snippets/export-svg";
 import printElements from "../utils/snippets/printElement";
 import ButtonBar from "./buttons/ButtonBar";
-
-const Content = styled.div`
-  margin-top: 24px;
-`;
 
 type Props = {};
 
@@ -37,17 +32,15 @@ class GraphExporter extends React.Component<Props> {
 
   render() {
     return (
-      <Content>
-        <ButtonBar>
-          {/* <IconButton withText onClick={this.onExportSVG}>
+      <ButtonBar>
+        {/* <IconButton withText onClick={this.onExportSVG}>
             Save SVG
           </IconButton> */}
-          <IconButton withText onClick={this.onExportPDF}>
-            <SaveIcon />
-            Save PDF
-          </IconButton>
-        </ButtonBar>
-      </Content>
+        <IconButton withText onClick={this.onExportPDF}>
+          <SaveIcon />
+          Save PDF
+        </IconButton>
+      </ButtonBar>
     );
   }
 }
