@@ -9,6 +9,7 @@ import EntityViewContainer from "./EntityViewContainer";
 
 type Props = {
   entity: Entity | EntityPreview;
+  big?: boolean;
 };
 
 const Container = styled(EntityViewContainer)`
@@ -26,13 +27,13 @@ const Container = styled(EntityViewContainer)`
 `;
 
 const EntityView: FunctionComponent<Props> = props => {
-  const { entity } = props;
+  const { entity, big } = props;
 
   return (
     <Container className="entityview">
       <EntityImage src={getEntitySAsset(entity.type)} />
       <div>
-        <EntityName>{entity.name}</EntityName>
+        <EntityName big={big}>{entity.name}</EntityName>
         {entity.text && <EntityDescription>{entity.text}</EntityDescription>}
       </div>
     </Container>

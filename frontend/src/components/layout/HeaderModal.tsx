@@ -28,7 +28,7 @@ const ModalContent = styled.div<ModalProps>`
   );
   max-width: 900px;
   left: 50%;
-  transition: transform 0.3s ease-out;
+  transition: transform ${props => props.theme.longAnim} ease-out;
   transform:
     translateX(calc(-50% - ${props => props.theme.marginLR}))
     translateY(${props =>
@@ -84,7 +84,7 @@ const ModalContent = styled.div<ModalProps>`
 const OptionalModalBackground = styled(ModalBackground)<ModalProps>`
   ${props => (props.fullyVisible ? "" : "pointer-events: none;")}
   opacity: ${props => (props.fullyVisible ? 1 : 0)};
-  transition: opacity 0.5s ease-out;
+  transition: opacity ${props => props.theme.longAnim} ease-out;
 `;
 
 const ModalWrapper = styled.div<ModalProps>``;

@@ -69,7 +69,7 @@ const LegendColumn = styled.div<LegendProps>`
   background-color: ${props => props.theme.appBG};
   opacity: 0.95;
 
-  transition: transform 0.18s ease-out;
+  transition: transform ${props => props.theme.shortAnim} ease-out;
   transform: translateX(${props => (props.hideColumn ? "100" : "0")}%);
 `;
 

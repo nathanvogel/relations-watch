@@ -7,8 +7,8 @@ import graphSelections from "../utils/some-graph-selections";
 import { arrayWithoutDuplicates } from "../utils/utils";
 
 const mapStateToProps = (state: RootStore) => {
-  // const entitySelection = state.entitySelection;
-  const entitySelection = graphSelections.trumpfamily;
+  const entitySelection = state.entitySelection;
+  // const entitySelection = graphSelections.trumpfamily;
   return {
     entitySelection,
   };

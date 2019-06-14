@@ -107,7 +107,6 @@ const History: React.FunctionComponent<Props> = props => {
   return (
     <Content>
       <Route
-        exact
         path={`/${ROUTES.history}`}
         render={_ =>
           props.entitySelection.length >= 2 && (

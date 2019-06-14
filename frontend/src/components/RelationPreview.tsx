@@ -146,6 +146,7 @@ class RelationPreview extends React.Component<Props> {
               <StyledEntityDetails
                 column={1}
                 loadFullEntity={fullyVisible}
+                big={fullyVisible}
                 key={realKey1}
                 entityKey={realKey1}
               />
@@ -169,6 +170,7 @@ class RelationPreview extends React.Component<Props> {
               <StyledEntityDetails
                 column={3}
                 loadFullEntity={fullyVisible}
+                big={fullyVisible}
                 key={realKey2}
                 entityKey={realKey2}
               />

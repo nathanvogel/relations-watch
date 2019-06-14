@@ -20,7 +20,7 @@ const Content = styled.section`
   border-style: solid;
   border-radius: ${props => props.theme.bigRadius};
 
-  transition: border-color 0.15s ease-out;
+  transition: border-color ${props => props.theme.shortAnim} ease-out;
 
   &:hover {
     border-color: ${props => props.color};

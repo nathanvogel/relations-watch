@@ -14,7 +14,7 @@ const EdgeLegend = styled.div`
     width: fit-content;
     position: relative;
     z-index: 1;
-    transition: all 0.1s ease-in-out;
+    transition: all ${props => props.theme.shortAnim} ease-in-out;
     margin-bottom: 4px;
     line-height: 1.6;
   }
@@ -30,7 +30,7 @@ const EdgeLegend = styled.div`
     background-color: ${props => props.color};
     transform-origin: bottom center;
     // transform: scaleY(0.3);
-    transition: all 0.1s ease-in-out;
+    transition: all ${props => props.theme.shortAnim} ease-in-out;
     opacity: 1;
   }
 

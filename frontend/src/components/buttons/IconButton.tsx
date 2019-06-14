@@ -76,7 +76,7 @@ const iconButtonCSS = css<IconButtonProps>`
     cursor: not-allowed;
   }
 
-  transition: all 0.18s ease-out;
+  transition: all ${props => props.theme.shortAnim} ease-out;
 
   ${props => props.withText && withTextCSS}
 `;

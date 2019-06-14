@@ -12,11 +12,12 @@ import EntityView from "./entity/EntityView";
 type OwnProps = {
   entityKey: string;
   loadFullEntity?: boolean;
+  big?: boolean;
   className?: string;
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const { entityKey, loadFullEntity, className } = props;
+  const { entityKey, loadFullEntity, className, big } = props;
   // Get the entity from the Redux Store
   const entityPreview = state.entities.datapreview[entityKey] as
     | EntityPreview
@@ -28,6 +29,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   return {
     entityKey,
     loadFullEntity,
+    big,
     entityPreview,
     entity,
     status,
@@ -50,7 +52,7 @@ class EntityDetails extends Component<Props> {
   }
 
   render() {
-    const { entity, status, error } = this.props;
+    const { entity, status, error, big } = this.props;
     const { entityPreview, loadFullEntity, className } = this.props;
 
     // If we don't need the full entity data, we can directly use the
@@ -58,7 +60,7 @@ class EntityDetails extends Component<Props> {
     if (!loadFullEntity && entityPreview)
       return (
         <Link className={className} to={`/e/${this.props.entityKey}`}>
-          <EntityView entity={entityPreview} />
+          <EntityView big={big} entity={entityPreview} />
         </Link>
       );
 
@@ -72,7 +74,7 @@ class EntityDetails extends Component<Props> {
 
     return (
       <Link className={className} to={`/e/${this.props.entityKey}`}>
-        <EntityView entity={entity} />
+        <EntityView big={big} entity={entity} />
       </Link>
     );
   }

@@ -283,6 +283,8 @@ class GraphV4 extends React.PureComponent<Props> {
 
   updateGraph() {
     const { network } = this.props;
+    console.log(this.props.match.path);
+    const styleVisited = this.props.match.path !== `/${ROUTES.history}`;
     const hoverEntity = debounce(this.props.hoverEntity, 100);
     const hoverRelation = debounce(this.props.hoverRelation, 100);
 
@@ -634,7 +636,11 @@ class GraphV4 extends React.PureComponent<Props> {
       .select("text")
       .attr("font-size", fontSize)
       .attr("dy", d => iconSize(d) * 0.8)
-      .attr("fill", d => (d.visited ? "#611E78" : theme.mainTextColor));
+      .attr("fill", d =>
+        styleVisited && d.visited
+          ? theme.visitedLinkTextColor
+          : theme.mainTextColor
+      );
     // .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")

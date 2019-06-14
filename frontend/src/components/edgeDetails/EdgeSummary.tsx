@@ -7,7 +7,7 @@ import { RELATION_COLORS } from "../../styles/theme";
 
 const Span = styled.span`
   & {
-    font-family:   ${props => props.theme.mainFont};
+    font-family: ${props => props.theme.mainFont};
     font-size: ${props => props.theme.fontSizeL};
     font-weight: bold;
     position: relative;
@@ -26,7 +26,7 @@ const Span = styled.span`
     background-color: ${props => props.color};
     transform-origin: bottom center;
     // transform: scaleY(0.3);
-    transition: all 0.1s ease-in-out;
+    transition: all ${props => props.theme.shortAnim} ease-in-out;
     opacity: 1;
   }
 
