@@ -26,7 +26,8 @@ const iconButtonCSS = css<IconButtonProps>`
   padding: ${props => props.theme.inputPaddingTB}
     ${props => props.theme.inputPaddingLR};
   background-color: ${props => props.theme.buttonBG};
-  border-color: ${props => props.theme.inputBorder};
+  border-color: ${props =>
+    props.withText ? props.theme.buttonBorder : "transparent"};
   border-width: ${props => props.theme.borderWidth};
   border-style: solid;
   border-radius: ${props => props.theme.smallRadius};
@@ -43,7 +44,8 @@ const iconButtonCSS = css<IconButtonProps>`
 
   &:not([disabled]):hover {
     background-color: ${props => props.theme.surfaceHover};
-    border-color: ${props => props.theme.inputBorder};
+    border-color: ${props =>
+      props.withText ? props.theme.buttonBorder : "transparent"};
   }
 
   &:not([disabled]):hover:focus,
@@ -53,7 +55,7 @@ const iconButtonCSS = css<IconButtonProps>`
   }
 
   &:disabled {
-    color: ${props => props.theme.secondaryTextColor};
+    color: ${props => props.theme.disabledTextColor};
     cursor: not-allowed;
   }
 

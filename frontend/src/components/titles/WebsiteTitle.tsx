@@ -10,7 +10,7 @@ const Container = styled.div`
   box-sizing: border-box;
   padding: 0px;
 
-  font-size: 21px;
+  font-size: 24px;
   font-weight: 200;
   font-family: ${props => props.theme.brandFont};
 

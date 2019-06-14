@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { AnyAction, bindActionCreators, Dispatch } from "redux";
+import EditIcon from "@material-ui/icons/Edit";
 
 import { RootStore } from "../Store";
 import { SourceLink, Status, SourceType, SourceLinkType } from "../utils/types";
@@ -125,8 +126,8 @@ class SourceDetails extends React.Component<Props> {
       >
         {this.props.editable && (
           <Actions>
-            <IconButton withText onClick={this.toggleClick}>
-              Edit
+            <IconButton onClick={this.toggleClick}>
+              <EditIcon />
             </IconButton>
           </Actions>
         )}
