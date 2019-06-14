@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import SwapIcon from "@material-ui/icons/SwapHorizontalCircle";
+import CloseIcon from "@material-ui/icons/Close";
 
 import EntityName from "./EntityName";
 import {
@@ -27,8 +29,6 @@ import SourceDetails from "../SourceDetails";
 import TextArea from "../inputs/TextArea";
 import Label from "../inputs/Label";
 import StyledSelect from "../select/StyledSelect";
-import { ReactComponent as SwapIcon } from "../../assets/ic_swap.svg";
-import { ReactComponent as CloseIcon } from "../../assets/ic_close.svg";
 import IconButton from "../buttons/IconButton";
 import ButtonBar from "../buttons/ButtonBar";
 import CONSTS, {

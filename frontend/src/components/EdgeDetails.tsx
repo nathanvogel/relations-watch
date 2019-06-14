@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import EditIcon from "@material-ui/icons/Edit";
 
 import { Edge, Status } from "../utils/types";
 import EdgeEditor from "./EdgeEditor";
@@ -8,10 +9,8 @@ import EdgeSummary from "./edgeDetails/EdgeSummary";
 import { RootStore } from "../Store";
 import { Dispatch, AnyAction, bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { ReactComponent as EditIcon } from "../assets/ic_edit.svg";
 import IconButton from "./buttons/IconButton";
 import SourceList from "./edgeDetails/SourceList";
-import ButtonBar from "./buttons/ButtonBar";
 import { MiniInfoText } from "./titles/MiniInfoText";
 
 const Content = styled.section`

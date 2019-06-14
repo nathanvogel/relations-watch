@@ -19,7 +19,7 @@ const iconButtonCSS = css<IconButtonProps>`
   min-width: ${props => (props.small ? "16px" : "32px")};
   text-align: center;
   font-size: ${props => (props.small ? props.theme.fontSizeS : "inherit")}
-  line-height: 1;
+  // line-height: 1;
   box-sizing: border-box;
   padding: ${props => props.theme.inputPaddingTB}
     ${props => props.theme.inputPaddingLR};

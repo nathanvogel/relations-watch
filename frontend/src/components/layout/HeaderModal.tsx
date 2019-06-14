@@ -10,6 +10,9 @@ interface ModalProps {
 const ModalContent = styled.div<ModalProps>`
   position: fixed;
   box-sizing: border-box;
+  // Prevent the search results from showing up if enabled.
+  // TODO: find a hack to disable the overflow when the search has focus
+  // overflow: auto;
 
   min-height: ${props => props.theme.hoverBoxHeight};
   height:

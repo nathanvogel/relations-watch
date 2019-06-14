@@ -3,19 +3,20 @@ import styled from "styled-components";
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { Link, Switch, Route } from "react-router-dom";
+import CloseIcon from "@material-ui/icons/Close";
 import { RootStore } from "../Store";
 import {
   selectEntities,
   deselectEntities,
 } from "../features/entitySelectionActions";
 import ROUTES from "../utils/ROUTES";
-import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
 import { EntityPreview } from "../utils/types";
 import TertiaryTitle from "./titles/TertiaryTitle";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
 import GraphSaver from "./GraphSaver";
 import EntityName from "./entity/EntityName";
+import IconButton from "./buttons/IconButton";
 
 const Content = styled.div`
   width: 100%;
@@ -53,15 +54,19 @@ const ItemLink = styled(Link)`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  flex-grow: 1;
   // Necessary inside flex.
   // Source: https://css-tricks.com/flexbox-truncated-text/
   min-width: 0px;
 `;
 
-const ClearButton = styled(CloseIcon)`
-  min-width: 12px;
-  cursor: pointer;
-  margin-right: ${props => props.theme.inputLRSpacing};
+const CloseButton = styled(IconButton)`
+  // min-width: 12px;
+  // cursor: pointer;
+  // margin-right: ${props => props.theme.inputLRSpacing};
+  flex-shrink: 1;
+  align-self: flex-end;
+  min-width: 38px;
 `;
 
 type OwnProps = {
@@ -127,11 +132,6 @@ const History: React.FunctionComponent<Props> = props => {
               if (!e) return null;
               return (
                 <ListItem key={e._key}>
-                  {props.editable && (
-                    <ClearButton
-                      onClick={() => props.deselectEntities([e._key])}
-                    />
-                  )}
                   <EntityImageM src={getEntitySAsset(e.type)} />
                   <ItemLink to={`/${ROUTES.entity}/${e._key}`}>
                     <Name>
@@ -144,6 +144,13 @@ const History: React.FunctionComponent<Props> = props => {
                       )}
                     </Name>
                   </ItemLink>
+                  {props.editable && (
+                    <CloseButton
+                      onClick={() => props.deselectEntities([e._key])}
+                    >
+                      <CloseIcon />
+                    </CloseButton>
+                  )}
                 </ListItem>
               );
             })}

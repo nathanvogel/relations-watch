@@ -2,6 +2,7 @@ import React from "react";
 import { Dispatch, bindActionCreators, AnyAction } from "redux";
 import { connect } from "react-redux";
 import { ValueType } from "react-select/lib/types";
+import CloseIcon from "@material-ui/icons/Close";
 
 import {
   Source,
@@ -10,7 +11,6 @@ import {
   EntityPreview,
   EntityType,
 } from "../utils/types";
-import { ReactComponent as CloseIcon } from "../assets/ic_close.svg";
 import EntitySearch from "./EntitySearch";
 import { RootStore } from "../Store";
 import * as sourceFormActions from "../features/sourceFormActions";

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import SaveIcon from "@material-ui/icons/SaveAlt";
 import IconButton from "./buttons/IconButton";
 import exportStyledSVG from "../utils/snippets/export-svg";
 import printElements from "../utils/snippets/printElement";
@@ -42,6 +43,7 @@ class GraphExporter extends React.Component<Props> {
             Save SVG
           </IconButton> */}
           <IconButton withText onClick={this.onExportPDF}>
+            <SaveIcon />
             Save PDF
           </IconButton>
         </ButtonBar>

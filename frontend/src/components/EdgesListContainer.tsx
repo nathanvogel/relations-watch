@@ -3,6 +3,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
 import styled from "styled-components";
 import cuid from "cuid";
+import AddIcon from "@material-ui/icons/AddCircle";
 
 import { RootStore } from "../Store";
 import { connect } from "react-redux";
@@ -14,7 +15,6 @@ import { loadRelation } from "../features/edgesLoadAC";
 import Meta from "../components/meta/Meta";
 import { selectEntities } from "../features/entitySelectionActions";
 import IconButton from "../components/buttons/IconButton";
-import { ReactComponent as AddIcon } from "../assets/ic_add.svg";
 import { MiniInfoText } from "./titles/MiniInfoText";
 import ButtonBar from "./buttons/ButtonBar";
 

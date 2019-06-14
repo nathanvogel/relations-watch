@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
+import EditIcon from "@material-ui/icons/Edit";
 
 import { Entity, DatasetId } from "../../utils/types";
 import { IconButtonLink } from ".././buttons/IconButton";
-import { ReactComponent as EditIcon } from "../../assets/ic_edit.svg";
 import ROUTES from "../../utils/ROUTES";
 import SmallA, { SmallLink } from ".././buttons/SmallA";
 import ButtonBar from ".././buttons/ButtonBar";
