@@ -19,8 +19,8 @@ const Span = styled.span`
     content: "";
     position: absolute;
     z-index: -1;
-    top: calc(100% - 6px);
-    bottom: 2px;
+    top: calc(100% - 4px);
+    bottom: -2px;
     left: -0em;
     right: -0em;
     background-color: ${props => props.color};

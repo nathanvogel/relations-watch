@@ -5,7 +5,7 @@ const TertiaryTitle = styled.h4`
   margin-bottom: 2px;
   color: ${props => props.theme.secondaryTextColor};
   font-family: ${props => props.theme.brandFont};
-  font-size: ${props => props.theme.fontSizeS};
+  font-size: ${props => props.theme.fontSizeM};
   font-weight: 300;
   text-transform: uppercase;
 `;
