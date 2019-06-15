@@ -87,6 +87,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q7270",
     "Q35657", // state of the United States
     "Q15063611", // city (N.Y)
+    "Q484170", // commune de France
   ],
   [EntityType.MoralPerson]: [
     "Q4830453",
@@ -210,6 +211,11 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q166280", // société anonyme
     "Q19973770", // Ministry of culture
     "Q4481741", // federal ministry (Russian federation)
+    "Q2824642", // administration publique française
+    "Q18087867", // direction minitérielle (type d'administration française)
+    "Q2088231", // military reserve
+    "Q1807108", // shipping line
+    "Q1144170", // ministère publique en France
   ],
   [EntityType.Group]: [
     "Q7278",
