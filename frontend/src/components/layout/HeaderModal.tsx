@@ -38,7 +38,12 @@ const ModalContent = styled.div<ModalProps>`
       props.fullyVisible
         ? `calc(-100% + ${props.theme.hoverBoxHeight})`
         : "0px"});
+  // Above the drawer on desktop
   z-index: 3000;
+  ${mediaq.mobile} {
+    // Below the drawer on mobile
+    z-index: 1000;
+  }
 
   padding: 0px;
   margin-bottom: 0px;

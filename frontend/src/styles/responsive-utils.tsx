@@ -15,12 +15,17 @@ const sizes: Sizes = {
 // From: https://github.com/styled-components/styled-components/issues/2303#issuecomment-480047731
 const customMediaQuery = (maxWidth: number) =>
   `@media (max-width: ${maxWidth}px)`;
+const customInverseMediaQuery = (maxWidth: number) =>
+  `@media (min-width: ${maxWidth}px)`;
 
 export const mediaq = {
   custom: customMediaQuery,
   desktop: customMediaQuery(sizes.desktop),
   tablet: customMediaQuery(sizes.tablet),
   mobile: customMediaQuery(sizes.mobile),
+  notMobile: customInverseMediaQuery(sizes.mobile),
+  notDesktop: customMediaQuery(sizes.desktop),
+  notTablet: customMediaQuery(sizes.tablet),
 };
 
 /* Now we have our methods on media and can use them instead of raw queries
