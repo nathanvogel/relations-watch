@@ -3,10 +3,15 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import { ReactComponent as AppIcon } from "../../assets/ic_app_white.svg";
+import { mediaq } from "../../styles/responsive-utils";
 
 const Container = styled.div`
   height: ${props => props.theme.navBarHeight};
   width: ${props => props.theme.appSidebarWidth};
+  // Avoid weird scaling on very small mobiles
+  ${mediaq.mobile} {
+    width: auto;
+  }
   box-sizing: border-box;
   padding: 0px;
 

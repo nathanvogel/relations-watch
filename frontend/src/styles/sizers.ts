@@ -1,10 +1,7 @@
 import { css } from "styled-components";
 
 export const PageWidthSizer = css`
-  width: calc(
-    100% - ${props => props.theme.appPaddingLR}; -
-      ${props => props.theme.appPaddingLR};
-  );
+  width: 100%;
   max-width: ${props => props.theme.appMaxWidth};
   margin: 0 auto;
 `;

@@ -64,12 +64,17 @@ const CentralSearch = styled(EntitySearch)`
 `;
 
 const ItemsSection = styled.section`
-  min-width: 300px;
+  min-width: 250px;
   width: 300px;
   max-width: 40%;
   // margin-top: 2em;
   margin-left: 2.5em;
+  // Visual compensation for the drop-shadow
+  margin-right: 5px;
+  flex-grow: 1;
+
   ${media.tablet`
+    min-width: 100%;
     margin-left: 0;
     width: 100%;
     max-width: 100%;
