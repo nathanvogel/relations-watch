@@ -107,6 +107,8 @@ export default (state = defaultState, action: AnyAction) => {
       });
     case TYPED_ACTIONS.SOU_AUTHORS_CHANGE:
       const authorsAction = action as SouAuthorsChange;
+      // Controls wether we need to create a new object
+      let needToUpdate = false;
       // Selection could be empty, no need to react here.
       if (!authorsAction.selection) return state;
       // Make sure we're working with an array.
@@ -114,20 +116,26 @@ export default (state = defaultState, action: AnyAction) => {
       // Push the entity previews to the state.
       const newEntityPreviews: { [key: string]: EntityPreview } = {};
       for (let option of selectionArray) {
-        if (typeof option.type !== "number")
-          throw new Error(
+        if (typeof option.type !== "number") {
+          console.error(
             "Missing entity type in source selection " + option.value
           );
+          continue;
+        }
         newEntityPreviews[option.value] = {
           _key: option.value,
           name: option.label,
           type: option.type,
           text: option.text,
         };
+        needToUpdate = true;
       }
-      return update(state, {
-        datapreview: { $merge: newEntityPreviews },
-      });
+
+      return needToUpdate
+        ? update(state, {
+            datapreview: { $merge: newEntityPreviews },
+          })
+        : state;
     case ACTIONS.LinksLoadSuccess:
       if (!action.payload || !action.payload.vertices) {
         console.error(

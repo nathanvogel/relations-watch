@@ -240,7 +240,11 @@ const EntitySearch: FunctionComponent<Props> = (
 
     // TODO : change value
     if (newEntity && newEntity._key) {
-      const newValue = { value: newEntity._key, label: newEntity.name };
+      const newValue: EntitySelectOption = {
+        ...newEntity,
+        value: newEntity._key,
+        label: newEntity.name,
+      };
       onChange(
         props.isMulti
           ? update(props.selection || [], { $push: [newValue] })
