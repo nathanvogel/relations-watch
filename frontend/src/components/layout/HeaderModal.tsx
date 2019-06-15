@@ -40,9 +40,7 @@ const ModalContent = styled.div<ModalProps>`
         : "0px"});
   z-index: 3000;
 
-  padding: ${props => props.theme.blockPadding};
-  padding-bottom: ${props =>
-    props.fullyVisible ? props.theme.blockPadding : "0px"}
+  padding: 0px;
   margin-bottom: 0px;
   margin-left: calc(${props => props.theme.marginLR} + ${props =>
   props.theme.appSidebarWidth} * 0.5);
@@ -81,6 +79,9 @@ const ModalContent = styled.div<ModalProps>`
   props.theme.bigRadius}
       0px 0px;
   }
+
+  display: flex;
+  flex-direction: column;
 `;
 
 const OptionalModalBackground = styled(ModalBackground)<ModalProps>`
@@ -96,9 +97,9 @@ const PositionedClickableIcon = styled(ClickableIcon)`
 `;
 
 const ContentWrapper = styled.div`
-  height: 100%;
-  max-height: 100%;
+  flex-grow: 1;
   overflow-y: auto;
+  padding: ${props => props.theme.blockPadding};
 `;
 
 type Props = {
@@ -121,7 +122,10 @@ const HeaderModal: React.FunctionComponent<Props> = props => {
           </PositionedClickableIcon>
         )}
         {props.header}
-        <ContentWrapper>{props.children}</ContentWrapper>
+
+        {props.fullyVisible && (
+          <ContentWrapper>{props.children}</ContentWrapper>
+        )}
       </ModalContent>
     </div>
   );

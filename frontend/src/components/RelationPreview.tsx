@@ -28,7 +28,12 @@ interface ContainerProps {
 }
 const Container = styled.div<ContainerProps>`
   ${props => (props.fullyVisible ? "" : limitedContainerCSS)}
+
+  padding: ${props => props.theme.blockPadding};
+  box-sizing: border-box;
 `;
+// padding-bottom: ${props => props.fullyVisible ? props.theme.blockPadding : "0px"}
+
 const Grid = styled.div`
   display: flex;
   display: grid;
@@ -189,7 +194,7 @@ class RelationPreview extends React.Component<Props> {
             )
           )}
         </Grid>
-        {!fullyVisible && realKey1 && realKey2 && (
+        {!fullyVisible && realKey1 && realKey2 && false && (
           <ClickForFull>
             Click on the relation to show the full details.
           </ClickForFull>

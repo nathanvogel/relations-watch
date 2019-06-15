@@ -330,9 +330,9 @@ const EntitySearch: FunctionComponent<Props> = (
           t(R.label_select_create, { userInput: inputValue })
         )
       }
-      menuIsOpen={menuIsOpen || true}
+      menuIsOpen={menuIsOpen}
       onFocus={onFocus}
-      forceMenuOnTop={true}
+      forceMenuOnTop={props.forceMenuOnTop}
       components={{ Option }}
       menuPortalTarget={document.getElementById(
         props.forceMenuOnTop

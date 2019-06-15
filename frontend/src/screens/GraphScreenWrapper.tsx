@@ -15,7 +15,6 @@ import ROUTES from "../utils/ROUTES";
 import IconButton from "../components/buttons/IconButton";
 import GraphLegend from "../components/graph/GraphLegend";
 import { mediaq } from "../styles/responsive-utils";
-import GraphExporter from "../components/GraphExporter";
 
 const GraphWrapper = styled.div`
   width: 100%;
@@ -34,10 +33,11 @@ const DrawerPadder = styled.div`
   }
 `;
 
-const EdgeListWrapper = styled.div`
+const EdgesListWrapper = styled.div`
   padding-top: 2em;
   padding-bottom: 2em;
   min-height: 50vh;
+  box-sizing: border-box;
 `;
 
 interface LegendProps {
@@ -141,12 +141,12 @@ const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
                 />
               }
             >
-              <EdgeListWrapper>
+              <EdgesListWrapper>
                 <EdgesListContainer
                   entity1Key={props.match.params.entity1Key}
                   entity2Key={props.match.params.entity2Key}
                 />
-              </EdgeListWrapper>
+              </EdgesListWrapper>
             </HeaderModal>
           )}
         />

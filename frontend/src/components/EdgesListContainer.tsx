@@ -21,7 +21,7 @@ import ButtonBar from "./buttons/ButtonBar";
 const RelationsColumn = styled.div`
   width: 100%;
   // Need to set a height for the parent to be able to scroll
-  height: 200px;
+  // height: 200px;
 `;
 
 const AddButton = styled(IconButton)`
