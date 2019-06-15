@@ -498,14 +498,50 @@ class GraphV4 extends React.PureComponent<Props> {
       // Key function to preserve the relation between DOM and rRelations
       (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
+
+    const animated = { it: 0, factor: 0.31 };
+    setInterval(() => {
+      // animated.it += 0.01;
+      animated.factor = Math.sin(Date.now() / 1000) + 1.2;
+    }, 8);
+
+    const linkArc = (d: V4LinkDatum) => {
+      if (
+        !d.target ||
+        typeof d.target === "string" ||
+        !d.source ||
+        typeof d.source === "string"
+      )
+        return "";
+      var dx = d.target.x - d.source.x,
+        dy = d.target.y - d.source.y,
+        dr = Math.sqrt(dx * dx + dy * dy) * animated.factor;
+      return (
+        "M" +
+        d.source.x +
+        "," +
+        d.source.y +
+        "A" +
+        dr +
+        "," +
+        dr +
+        " 0 0,1 " +
+        d.target.x +
+        "," +
+        d.target.y
+      );
+    };
     var allLinks = links
       .enter()
       .append("g")
       .attr("class", "relation")
-      .append("line")
+
+      .append("path")
       .classed("visual", true)
       .attr("stroke-width", linkStrokeWidth)
       .attr("stroke", linkColor)
+      .attr("fill", "none")
+      .attr("d", linkArc)
       .select(goToParent)
       .append("line")
       .classed("interaction", true)
@@ -536,7 +572,7 @@ class GraphV4 extends React.PureComponent<Props> {
       .merge(links as any);
     // Attributes that should be update at every prop change
     var linksVisual = allLinks
-      .select("line.visual")
+      .select("path.visual")
       .attr("opacity", linkOpacity);
     var linksInteraction = allLinks
       .select("line.interaction")
@@ -565,7 +601,7 @@ class GraphV4 extends React.PureComponent<Props> {
       .attr("fill", d => RELATION_COLORS[d.type])
       // .attr("stroke-width", 1)
       // .attr("stroke", "white")
-      .attr("opacity", d => linkOpacity(this.linksData[d.relationId]))
+      .attr("opacity", 0)
       .merge(indicators as any);
     indicators.exit().remove();
 
@@ -701,11 +737,11 @@ class GraphV4 extends React.PureComponent<Props> {
         rEntity.isLabelOnTheLeft = isLabelOnTheLeft(rEntity);
       }
 
-      linksVisual
-        .attr("x1", d => linkPositions[d.relationId].x1)
-        .attr("y1", d => linkPositions[d.relationId].y1)
-        .attr("x2", d => linkPositions[d.relationId].x2)
-        .attr("y2", d => linkPositions[d.relationId].y2);
+      linksVisual.attr("d", linkArc);
+      // .attr("x1", d => linkPositions[d.relationId].x1)
+      // .attr("y1", d => linkPositions[d.relationId].y1)
+      // .attr("x2", d => linkPositions[d.relationId].x2)
+      // .attr("y2", d => linkPositions[d.relationId].y2);
       linksInteraction
         .attr("x1", d => linkPositions[d.relationId].x1)
         .attr("y1", d => linkPositions[d.relationId].y1)
