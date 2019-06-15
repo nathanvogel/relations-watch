@@ -7,6 +7,7 @@ import ClickableIcon from "../buttons/ClickableIcon";
 
 interface ModalProps {
   fullyVisible: boolean;
+  allowOverflow?: boolean;
 }
 
 const ModalContent = styled.div<ModalProps>`
@@ -14,7 +15,7 @@ const ModalContent = styled.div<ModalProps>`
   box-sizing: border-box;
   // Prevent the search results from showing up if enabled.
   // TODO: find a hack to disable the overflow when the search has focus
-  // overflow: auto;
+  // overflow: ${props => (props.allowOverflow ? "initial" : "auto")};
 
   min-height: ${props => props.theme.hoverBoxHeight};
   height:
@@ -80,7 +81,6 @@ const ModalContent = styled.div<ModalProps>`
   props.theme.bigRadius}
       0px 0px;
   }
-
 `;
 
 const OptionalModalBackground = styled(ModalBackground)<ModalProps>`
@@ -93,6 +93,12 @@ const PositionedClickableIcon = styled(ClickableIcon)`
   position: absolute;
   top: -32px;
   left: calc(50% - 11px);
+`;
+
+const ContentWrapper = styled.div`
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
 `;
 
 type Props = {
@@ -115,7 +121,7 @@ const HeaderModal: React.FunctionComponent<Props> = props => {
           </PositionedClickableIcon>
         )}
         {props.header}
-        {props.children}
+        <ContentWrapper>{props.children}</ContentWrapper>
       </ModalContent>
     </div>
   );

@@ -32,12 +32,39 @@
       type="text/css"
       href="%PUBLIC_URL%/fonts/font-simplon.css"
     />
+    <style>
+      #modals {
+        max-width: 100vw;
+        max-height: 100vh;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      #modals > #react-select-ontop-portal div,
+      #modals > #react-select-portal div {
+        z-index: 6000;
+      }
+
+      #react-select-ontop-portal .rs__menu {
+        transform: translateY(calc(-100% - 50px));
+        border-bottom-left-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
+        border-top-left-radius: 5px !important;
+        border-top-right-radius: 5px !important;
+      }
+    </style>
     <title>relations.watch</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <div id="modals"></div>
+    <div id="modals">
+      <div id="react-select-portal"></div>
+      <div id="react-select-ontop-portal"></div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

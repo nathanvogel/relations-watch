@@ -20,6 +20,8 @@ import ButtonBar from "./buttons/ButtonBar";
 
 const RelationsColumn = styled.div`
   width: 100%;
+  // Need to set a height for the parent to be able to scroll
+  height: 200px;
 `;
 
 const AddButton = styled(IconButton)`
@@ -33,13 +35,14 @@ const AddButton = styled(IconButton)`
 type OwnProps = {
   entity1Key?: string;
   entity2Key?: string;
+  className?: string;
 };
 
 // For memoization
 const defaultRelations: Edge[] = [];
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const { entity1Key, entity2Key } = props;
+  const { entity1Key, entity2Key, className } = props;
   const realKey1 = emptyOrRealKey(entity1Key);
   const realKey2 = emptyOrRealKey(entity2Key);
   const hasBothSelection = Boolean(realKey1) && Boolean(realKey2);
@@ -56,6 +59,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
   const relationsError = relationId ? state.relations.errors[relationId] : null;
 
   return {
+    className,
     entity1Key,
     entity2Key,
     realKey1,
@@ -111,7 +115,7 @@ class EdgesListContainer extends React.Component<Props> {
 
     if (!hasBothSelection) {
       return (
-        <RelationsColumn>
+        <RelationsColumn className={this.props.className}>
           <MiniInfoText>
             Select two entities to display their relations.
           </MiniInfoText>
@@ -120,7 +124,7 @@ class EdgesListContainer extends React.Component<Props> {
     }
 
     return (
-      <RelationsColumn>
+      <RelationsColumn className={this.props.className}>
         {/* PART adding */}
         {this.state.adding ? (
           <EdgeEditor

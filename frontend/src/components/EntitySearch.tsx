@@ -154,6 +154,7 @@ export interface Props {
   inputValue?: string;
   onInputChange?: (value: string) => void;
   className?: string;
+  id?: string;
   autoFocus?: boolean;
   isMulti?: boolean;
   placeholder?: string;
@@ -272,6 +273,7 @@ const EntitySearch: FunctionComponent<Props> = (
     // force a reload of the options.
     <MySelect
       key={mode}
+      id={props.id}
       className={props.className}
       cacheOptions={true}
       defaultOptions
@@ -328,10 +330,15 @@ const EntitySearch: FunctionComponent<Props> = (
           t(R.label_select_create, { userInput: inputValue })
         )
       }
-      menuIsOpen={menuIsOpen}
+      menuIsOpen={menuIsOpen || true}
       onFocus={onFocus}
-      forceMenuOnTop={props.forceMenuOnTop}
+      forceMenuOnTop={true}
       components={{ Option }}
+      menuPortalTarget={document.getElementById(
+        props.forceMenuOnTop
+          ? "react-select-ontop-portal"
+          : "react-select-portal"
+      )}
     />
   );
 };

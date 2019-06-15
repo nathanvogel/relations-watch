@@ -20,7 +20,7 @@ import EntityActions from "./entity/EntityActions";
 const limitedContainerCSS = css`
   height: 100%;
   max-height: 100%;
-  // overflow: hidden;
+  overflow-y: auto;
 `;
 
 interface ContainerProps {

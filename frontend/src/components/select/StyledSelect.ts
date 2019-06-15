@@ -66,57 +66,9 @@ export const styledSelectCSS = css<StyledSelectProps>`
     min-width: 5em;
   }
 
-  .rs__menu {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-left-radius: ${props => props.theme.smallRadius};
-    border-bottom-right-radius: ${props => props.theme.smallRadius};
-    z-index: 200;
-    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
-
-    .rs__menu-list {
-      padding-top: 0px;
-      padding-bottom: 0px;
-
-      .rs__option {
-        box-sizing: border-box;
-        background-color: ${props => props.theme.appBG};
-        border-color: ${props => props.theme.appBG};
-        border-width: ${props => props.theme.borderWidth};
-        border-style: solid;
-        border-radius: 0px;
-        padding-top: ${props => props.theme.inputPaddingTB};
-        padding-bottom: ${props => props.theme.inputPaddingTB};
-        color: ${props => props.theme.mainTextColor};
-      }
-
-      .rs__option--is-focused {
-        border-color: ${props => props.theme.borderHover};
-        border-radius: ${props => props.theme.smallRadius};
-      }
-
-      .rs__option--is-selected {
-        color: ${props => props.theme.mainTextColor};
-        background-color: ${props => props.theme.inputBG};
-      }
-    }
-  }
-
-  ${props =>
-    props.forceMenuOnTop &&
-    `
-    .rs__menu {
-      position: absolute !important;
-      top: auto !important;
-      bottom: calc(100% - 1px) !important;
-      border-bottom-left-radius: 0px !important;
-      border-bottom-right-radius: 0px !important;
-      border-top-left-radius: 5px !important;
-      border-top-right-radius: 5px !important;
-    }
-  `}
+  // ===========================================================
+  // THE REST IS IN GlobalStyle TO APPLY IT ALSO ON PORTAL NODES
+  // ===========================================================
 `;
 
 const StyledSelect = styled(Select).attrs({
