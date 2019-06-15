@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import styled from "styled-components";
+import GraphIcon from "@material-ui/icons/DeviceHub";
 
 import "./App.css";
 import AppBar from "../components/AppBar";
@@ -10,13 +12,16 @@ import RT from "../utils/ROUTES";
 import { CreateEntityScreen } from "./CreateEntityScreen";
 import Importer from "../components/Importer";
 import { Entity } from "../utils/types";
-import styled from "styled-components";
 import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import HistoryScreen from "./HistoryScreen";
 import GraphScreenWrapper from "./GraphScreenWrapper";
 import SavedGraphScreen from "./SavedGraphScreen";
 import SecondaryTitle from "../components/titles/SecondaryTitle";
 import LinkSharer from "../components/LinkSharer";
+import { IconButtonLink } from "../components/buttons/IconButton";
+import ButtonBar from "../components/buttons/ButtonBar";
+import GraphExporter from "../components/GraphExporter";
+import GraphSaver from "../components/GraphSaver";
 
 const PageContent = styled.div`
   ${PageWidthSizer}
@@ -33,7 +38,18 @@ class App extends Component {
             render={props => (
               <GraphScreenWrapper
                 entity1Key={props.match.params.entityKey}
-                sidebarContent={<History editable={false} />}
+                sidebarContent={
+                  <React.Fragment>
+                    <ButtonBar>
+                      <IconButtonLink withText to={`/${RT.history}`}>
+                        <GraphIcon />
+                        Recently seen
+                      </IconButtonLink>
+                      <GraphExporter />
+                    </ButtonBar>
+                    <History editable={false} />
+                  </React.Fragment>
+                }
               >
                 <EntityScreen entityKey={props.match.params.entityKey} />
               </GraphScreenWrapper>
@@ -42,7 +58,17 @@ class App extends Component {
           <Route
             path={`/history`}
             render={props => (
-              <GraphScreenWrapper sidebarContent={<History editable={true} />}>
+              <GraphScreenWrapper
+                sidebarContent={
+                  <React.Fragment>
+                    <ButtonBar>
+                      <GraphSaver />
+                      <GraphExporter />
+                    </ButtonBar>
+                    <History editable={true} />
+                  </React.Fragment>
+                }
+              >
                 <HistoryScreen />
               </GraphScreenWrapper>
             )}
@@ -52,7 +78,7 @@ class App extends Component {
             render={props => (
               <GraphScreenWrapper
                 sidebarContent={
-                  <div>
+                  <React.Fragment>
                     <p>
                       <strong>relations.</strong>watch is a collaborative
                       platform to gather knowledge about relations between
@@ -62,7 +88,9 @@ class App extends Component {
                     <LinkSharer link={window.location.href}>
                       Share this link to show this graph to anyone:
                     </LinkSharer>
-                  </div>
+                    <GraphExporter />
+                    <History editable={false} />
+                  </React.Fragment>
                 }
               >
                 <SavedGraphScreen graphKey={props.match.params.graphKey} />

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import CopyIcon from "@material-ui/icons/FileCopy";
 
 import BreakableA from "./buttons/BreakableA";
 import copyTextToClipboard from "../utils/snippets/clipboard";
@@ -35,14 +36,13 @@ class LinkSharer extends React.PureComponent<Props> {
           <P>Copied!</P>
         ) : (
           <IconButton
-            small
-            withText
             onClick={() => {
               copyTextToClipboard(link);
               this.setState({ copied: true });
+              setTimeout(() => this.setState({ copied: false }), 1000);
             }}
           >
-            Copy link
+            <CopyIcon />
           </IconButton>
         )}
       </React.Fragment>

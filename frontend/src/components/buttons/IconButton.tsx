@@ -25,9 +25,8 @@ const iconButtonCSS = css<IconButtonProps>`
   // between <Link> and <button>
   line-height: ${props => props.theme.lineHeight}
   box-sizing: border-box;
-  padding: ${props => props.theme.inputPaddingTB}
-    ${props =>
-      props.withText ? props.theme.inputPaddingLR : props.theme.inputPaddingTB};
+  padding: 2px
+    ${props => (props.withText ? props.theme.inputPaddingLR : "2px")};
   background-color: ${props =>
     props.primary ? props.theme.primaryButtonBG : props.theme.buttonBG};
   border-color: ${props =>

@@ -2,9 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
-import { Link, Switch, Route } from "react-router-dom";
+import { Link, Switch } from "react-router-dom";
 import CloseIcon from "@material-ui/icons/Close";
-import GraphIcon from "@material-ui/icons/DeviceHub";
 import { RootStore } from "../Store";
 import {
   selectEntities,
@@ -17,21 +16,21 @@ import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
 import GraphSaver from "./GraphSaver";
 import EntityName from "./entity/EntityName";
-import IconButton, { IconButtonLink } from "./buttons/IconButton";
-import ButtonBar from "./buttons/ButtonBar";
+import IconButton from "./buttons/IconButton";
 
 const Content = styled.div`
   width: 100%;
+  margin-top: 32px;
 `;
 
 const List = styled.ul`
   font-size: ${props => props.theme.fontSizeM};
-  margin-top: ${props => props.theme.blockSpacingTB};
+  margin-top: 8px;
 
   // Remove bullet
   list-style-type: none;
-  margin-block-start: ${props => props.theme.blockSpacingTB};
-  margin-block-end: ${props => props.theme.blockSpacingTB};
+  // margin-block-start: ${props => props.theme.blockSpacingTB};
+  // margin-block-end: ${props => props.theme.blockSpacingTB};
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   padding-inline-start: 0px;
@@ -69,6 +68,9 @@ const CloseButton = styled(IconButton)`
   flex-shrink: 1;
   align-self: flex-end;
   min-width: 38px;
+  line-height: 1;
+  padding: 2px;
+  min-height: 0px;
 `;
 
 type OwnProps = {
@@ -106,17 +108,6 @@ const History: React.FunctionComponent<Props> = props => {
   const hover = props.hover;
   return (
     <Content>
-      <Route
-        path={`/${ROUTES.history}`}
-        render={_ =>
-          props.entitySelection.length >= 2 && (
-            <React.Fragment>
-              <GraphSaver selection={props.entitySelection} />
-              <br />
-            </React.Fragment>
-          )
-        }
-      />
       <TertiaryTitle>Recently seen</TertiaryTitle>
       {/* Only render the link if we aren't already at the history */}
       <Switch />
@@ -126,48 +117,33 @@ const History: React.FunctionComponent<Props> = props => {
           lost, go to the <Link to="/">homepage</Link>.
         </p>
       ) : (
-        <React.Fragment>
-          <List>
-            {entities.map((_, index) => {
-              const e = entities[entities.length - 1 - index];
-              if (!e) return null;
-              return (
-                <ListItem key={e._key}>
-                  <EntityImageM src={getEntitySAsset(e.type)} />
-                  <ItemLink to={`/${ROUTES.entity}/${e._key}`}>
-                    <Name>
-                      {e._key === hover.entityKey ||
-                      e._key === hover.relationSourceKey ||
-                      e._key === hover.relationTargetKey ? (
-                        <strong>{e.name}</strong>
-                      ) : (
-                        e.name
-                      )}
-                    </Name>
-                  </ItemLink>
-                  {props.editable && (
-                    <CloseButton
-                      onClick={() => props.deselectEntities([e._key])}
-                    >
-                      <CloseIcon />
-                    </CloseButton>
-                  )}
-                </ListItem>
-              );
-            })}
-          </List>
-          <Route
-            path={`/${ROUTES.entity}`}
-            render={_ => (
-              <ButtonBar>
-                <IconButtonLink withText to={`/${ROUTES.history}`}>
-                  <GraphIcon />
-                  Recently seen
-                </IconButtonLink>
-              </ButtonBar>
-            )}
-          />
-        </React.Fragment>
+        <List>
+          {entities.map((_, index) => {
+            const e = entities[entities.length - 1 - index];
+            if (!e) return null;
+            return (
+              <ListItem key={e._key}>
+                <EntityImageM src={getEntitySAsset(e.type)} />
+                <ItemLink to={`/${ROUTES.entity}/${e._key}`}>
+                  <Name>
+                    {e._key === hover.entityKey ||
+                    e._key === hover.relationSourceKey ||
+                    e._key === hover.relationTargetKey ? (
+                      <strong>{e.name}</strong>
+                    ) : (
+                      e.name
+                    )}
+                  </Name>
+                </ItemLink>
+                {props.editable && (
+                  <CloseButton onClick={() => props.deselectEntities([e._key])}>
+                    <CloseIcon />
+                  </CloseButton>
+                )}
+              </ListItem>
+            );
+          })}
+        </List>
       )}
     </Content>
   );

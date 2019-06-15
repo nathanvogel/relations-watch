@@ -108,12 +108,7 @@ const GraphScreenWrapper: React.FunctionComponent<Props> = props => {
 
   return (
     <DrawerLayout
-      drawerContent={
-        <DrawerPadder>
-          {props.sidebarContent}
-          <GraphExporter />
-        </DrawerPadder>
-      }
+      drawerContent={<DrawerPadder>{props.sidebarContent}</DrawerPadder>}
       appBarContent={
         <IconButton onClick={toggleLegend}>
           <Info />

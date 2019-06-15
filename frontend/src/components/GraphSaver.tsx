@@ -1,11 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
+import LinkIcon from "@material-ui/icons/Link";
 import { Status, SavedGraphEntity, SavedGraph } from "../utils/types";
 import api from "../utils/api";
 import IconButton from "./buttons/IconButton";
 import Meta from "./meta/Meta";
 import ROUTES from "../utils/ROUTES";
-import styled from "styled-components";
 import LinkSharer from "./LinkSharer";
+import { RootStore } from "../Store";
 
 const saveGraph = async (selection: string[]): Promise<string | null> => {
   if (!selection || selection.length <= 0) {
@@ -27,6 +29,11 @@ const saveGraph = async (selection: string[]): Promise<string | null> => {
     return null;
   }
 };
+
+const mapStateToProps = (state: RootStore) => ({
+  selection: state.entitySelection,
+});
+const mapDispatchToProps = () => ({});
 
 type Props = {
   selection: string[];
@@ -65,10 +72,13 @@ class GraphSaver extends React.Component<Props> {
 
   render() {
     const { status, error, graphKey } = this.state;
+    const { selection } = this.props;
 
     if (status === Status.Error || status === Status.Requested) {
       return <Meta status={status} error={error} />;
     }
+
+    if (!selection || selection.length <= 0) return null;
 
     const link = `${window.location.origin}/${ROUTES.graph}/${graphKey}`;
 
@@ -80,7 +90,8 @@ class GraphSaver extends React.Component<Props> {
           </LinkSharer>
         ) : (
           <IconButton withText onClick={this.onSaveClick}>
-            Share this network
+            <LinkIcon />
+            Share network
           </IconButton>
         )}
       </div>
@@ -88,4 +99,7 @@ class GraphSaver extends React.Component<Props> {
   }
 }
 
-export default GraphSaver;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GraphSaver);
