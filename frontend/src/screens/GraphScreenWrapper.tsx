@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RouteComponentProps, withRouter, Route, Switch } from "react-router";
 import { useLastLocation } from "react-router-last-location";
 import styled from "styled-components";
-import Info from "@material-ui/icons/HelpOutline";
+import Info from "@material-ui/icons/InfoOutlined";
 
 import DrawerLayout from "../components/layout/DrawerLayout";
 import { RootStore } from "../Store";
