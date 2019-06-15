@@ -93,6 +93,27 @@ const GlobalStyleCSS = css`
     }
   }
 
+
+  ::-webkit-scrollbar {
+      background-color: ${props => props.theme.appBG};
+      width: 14px;
+      height: 14px;
+  }
+  ::-webkit-scrollbar-button {
+      display: none;
+      background-color: ${props => props.theme.appBG};
+  }
+  ::-webkit-scrollbar-thumb {
+      background-color: #c8c8c8;
+      border-radius: 10px;
+      border: 3px solid ${props => props.theme.appBG};
+  }
+  ::-webkit-scrollbar-thumb:hover {
+      background-color: #868686
+  }
+  ::-webkit-scrollbar-track {
+      background-color: ${props => props.theme.appBG};
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
