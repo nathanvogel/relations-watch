@@ -121,7 +121,7 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
             <SecondaryTitle>{t(R.home_trending)}</SecondaryTitle>
             <ItemList>
               <EntityDetails entityKey={"1589920"} />
-              <EntityDetails entityKey={"1539778"} />
+              <EntityDetails entityKey={"1189326"} />
               <EntityDetails entityKey={"222110"} />
               {/* <EntityDetails entityKey={"1701669"} /> */}
             </ItemList>
