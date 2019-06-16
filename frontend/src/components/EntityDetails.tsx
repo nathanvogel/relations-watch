@@ -8,16 +8,18 @@ import { loadEntity } from "../features/entitiesLoadAC";
 import Meta from "../components/meta/Meta";
 import { Status, EntityPreview, Entity } from "../utils/types";
 import EntityView from "./entity/EntityView";
+import EntityName from "./entity/EntityName";
 
 type OwnProps = {
   entityKey: string;
   loadFullEntity?: boolean;
   big?: boolean;
+  nameOnly?: boolean;
   className?: string;
 };
 
 const mapStateToProps = (state: RootStore, props: OwnProps) => {
-  const { entityKey, loadFullEntity, className, big } = props;
+  const { entityKey, loadFullEntity, className, big, nameOnly } = props;
   // Get the entity from the Redux Store
   const entityPreview = state.entities.datapreview[entityKey] as
     | EntityPreview
@@ -30,6 +32,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
     entityKey,
     loadFullEntity,
     big,
+    nameOnly,
     entityPreview,
     entity,
     status,
@@ -52,13 +55,15 @@ class EntityDetails extends Component<Props> {
   }
 
   render() {
-    const { entity, status, error, big } = this.props;
+    const { entity, status, error, big, nameOnly } = this.props;
     const { entityPreview, loadFullEntity, className } = this.props;
 
     // If we don't need the full entity data, we can directly use the
     // EntityPreview if available
     if (!loadFullEntity && entityPreview)
-      return (
+      return nameOnly ? (
+        <EntityName className={className}>{entityPreview.name}</EntityName>
+      ) : (
         <Link className={className} to={`/e/${this.props.entityKey}`}>
           <EntityView big={big} entity={entityPreview} />
         </Link>
@@ -72,7 +77,9 @@ class EntityDetails extends Component<Props> {
     // a problem
     if (!entity) return <div className={className}>Error</div>;
 
-    return (
+    return nameOnly ? (
+      <EntityName className={className}>{entity.name}</EntityName>
+    ) : (
       <Link className={className} to={`/e/${this.props.entityKey}`}>
         <EntityView big={big} entity={entity} />
       </Link>

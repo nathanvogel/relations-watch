@@ -19,6 +19,7 @@ import LinkSharer from "../components/LinkSharer";
 import ButtonBar from "../components/buttons/ButtonBar";
 import GraphExporter from "../components/GraphExporter";
 import GraphSaver from "../components/GraphSaver";
+import EntityDetails from "../components/EntityDetails";
 
 const PageContent = styled.div`
   ${PageWidthSizer}
@@ -37,6 +38,10 @@ class App extends Component {
                 entity1Key={props.match.params.entityKey}
                 sidebarContent={
                   <React.Fragment>
+                    <EntityDetails
+                      nameOnly
+                      entityKey={props.match.params.entityKey}
+                    />
                     <ButtonBar>
                       <GraphExporter />
                     </ButtonBar>
