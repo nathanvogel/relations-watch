@@ -4,6 +4,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { Link, Route, Switch } from "react-router-dom";
 import CloseIcon from "@material-ui/icons/Close";
+import GraphIcon from "@material-ui/icons/DeviceHub";
 import { RootStore } from "../Store";
 import {
   selectEntities,
@@ -15,7 +16,7 @@ import TertiaryTitle from "./titles/TertiaryTitle";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
 import EntityName from "./entity/EntityName";
-import IconButton from "./buttons/IconButton";
+import IconButton, { IconButtonLink } from "./buttons/IconButton";
 import HistoryAdder from "./history/HistoryAdder";
 import ButtonBar from "./buttons/ButtonBar";
 import SecondaryTitle from "./titles/SecondaryTitle";
@@ -107,6 +108,7 @@ type Props = ReturnType<typeof mapStateToProps> &
 
 const History: React.FunctionComponent<Props> = props => {
   const entities = props.selectedEntities;
+  const { entitySelection } = props;
   const hover = props.hover;
   return (
     <Content>
@@ -120,6 +122,12 @@ const History: React.FunctionComponent<Props> = props => {
             <React.Fragment>
               <TertiaryTitle>Recently seen</TertiaryTitle>
               <ButtonBar>
+                {entitySelection.length > 1 && (
+                  <IconButtonLink withText to={`/${ROUTES.history}`}>
+                    <GraphIcon />
+                    Go to the graph
+                  </IconButtonLink>
+                )}
                 <HistoryAdder />
               </ButtonBar>
             </React.Fragment>

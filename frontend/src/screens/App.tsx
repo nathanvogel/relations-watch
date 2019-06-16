@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import styled from "styled-components";
-import GraphIcon from "@material-ui/icons/DeviceHub";
 
 import "./App.css";
 import AppBar from "../components/AppBar";
@@ -16,9 +15,7 @@ import { PageWidthSizer, PagePadder } from "../styles/sizers";
 import HistoryScreen from "./HistoryScreen";
 import GraphScreenWrapper from "./GraphScreenWrapper";
 import SavedGraphScreen from "./SavedGraphScreen";
-import SecondaryTitle from "../components/titles/SecondaryTitle";
 import LinkSharer from "../components/LinkSharer";
-import { IconButtonLink } from "../components/buttons/IconButton";
 import ButtonBar from "../components/buttons/ButtonBar";
 import GraphExporter from "../components/GraphExporter";
 import GraphSaver from "../components/GraphSaver";
@@ -41,10 +38,6 @@ class App extends Component {
                 sidebarContent={
                   <React.Fragment>
                     <ButtonBar>
-                      <IconButtonLink withText to={`/${RT.history}`}>
-                        <GraphIcon />
-                        Recently seen
-                      </IconButtonLink>
                       <GraphExporter />
                     </ButtonBar>
                     <History editable={false} />
