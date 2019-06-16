@@ -1,7 +1,6 @@
 import "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
-
 import { RootStore } from "../../Store";
 import GraphPreparator from "../GraphPreparator";
 import {
@@ -10,6 +9,7 @@ import {
 } from "../../features/entitiesSelector";
 import { getConnectedEdges } from "../../features/linksSelector2";
 import { getSelectedEntitiesObj } from "../../features/entitySelectionSelector";
+import { displayedEntities } from "../../features/displayedEntitiesActions";
 
 type OwnProps = {
   entityKey: string;
@@ -26,7 +26,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({}, dispatch);
+  bindActionCreators({ displayedEntities }, dispatch);
 
 const EntityGraphContainer = connect(
   mapStateToProps,

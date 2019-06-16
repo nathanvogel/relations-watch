@@ -1,12 +1,12 @@
 import "react";
 import { connect } from "react-redux";
 import { bindActionCreators, Dispatch, AnyAction } from "redux";
-
 import { RootStore } from "../../Store";
 import GraphPreparator from "../GraphPreparator";
 import { getSelectedEntitiesObj } from "../../features/entitySelectionSelector";
 import { getSomeEntityPreviews } from "../../features/entitiesSelector";
 import { getConnectingEdges } from "../../features/linksSelector2";
+import { displayedEntities } from "../../features/displayedEntitiesActions";
 
 type OwnProps = {
   entityKeys: string[];
@@ -29,7 +29,7 @@ const mapStateToProps = (state: RootStore, props: OwnProps) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
-  bindActionCreators({}, dispatch);
+  bindActionCreators({ displayedEntities }, dispatch);
 
 const FreeGraphContainer = connect(
   mapStateToProps,

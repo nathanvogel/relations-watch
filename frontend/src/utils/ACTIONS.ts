@@ -68,6 +68,10 @@ export type SelectEntities = typeof SelectEntities;
 export const DeselectEntities = "DeselectEntities";
 export type DeselectEntities = typeof DeselectEntities;
 
+// ===== Entity Selection
+export const DisplayedEntitiesAction = "DisplayedEntitiesAction";
+export type DisplayedEntitiesAction = typeof DisplayedEntitiesAction;
+
 // ===== Hover
 export const HoverEntity = "HoverEntity";
 export type HoverEntity = typeof HoverEntity;

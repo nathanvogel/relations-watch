@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
-import { Link, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import CloseIcon from "@material-ui/icons/Close";
 import { RootStore } from "../Store";
 import {
@@ -14,9 +14,11 @@ import { EntityPreview } from "../utils/types";
 import TertiaryTitle from "./titles/TertiaryTitle";
 import { getEntitySAsset } from "../assets/EntityIcons";
 import EntityImageM from "./entity/EntityImageM";
-import GraphSaver from "./GraphSaver";
 import EntityName from "./entity/EntityName";
 import IconButton from "./buttons/IconButton";
+import HistoryAdder from "./history/HistoryAdder";
+import ButtonBar from "./buttons/ButtonBar";
+import SecondaryTitle from "./titles/SecondaryTitle";
 
 const Content = styled.div`
   width: 100%;
@@ -108,9 +110,22 @@ const History: React.FunctionComponent<Props> = props => {
   const hover = props.hover;
   return (
     <Content>
-      <TertiaryTitle>Recently seen</TertiaryTitle>
-      {/* Only render the link if we aren't already at the history */}
-      <Switch />
+      <Switch>
+        <Route
+          path={`/${ROUTES.history}`}
+          render={props => <SecondaryTitle>Recently seen</SecondaryTitle>}
+        />
+        <Route
+          render={props => (
+            <React.Fragment>
+              <TertiaryTitle>Recently seen</TertiaryTitle>
+              <ButtonBar>
+                <HistoryAdder />
+              </ButtonBar>
+            </React.Fragment>
+          )}
+        />
+      </Switch>
       {props.entitySelection.length <= 0 ? (
         <p>
           You haven't explored yet, so there's nothing to display. If you're

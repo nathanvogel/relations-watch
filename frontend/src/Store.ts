@@ -76,6 +76,7 @@ export interface RootStore {
   };
   sourceForms: { [key: string]: Source };
   entitySelection: EntitySelectionState;
+  displayedEntities: DisplayedEntitiesState;
   dataimport: {
     [entryPoint: string]: DataImportState;
   };
@@ -89,6 +90,7 @@ export type HoverState = {
 };
 
 export type EntitySelectionState = string[];
+export type DisplayedEntitiesState = { [entityKey: string]: boolean };
 
 export interface DataImportState {
   dsEdges: Dictionary<Edge>;

@@ -56,7 +56,7 @@ class App extends Component {
             )}
           />
           <Route
-            path={`/history`}
+            path={`/${RT.history}`}
             render={props => (
               <GraphScreenWrapper
                 sidebarContent={

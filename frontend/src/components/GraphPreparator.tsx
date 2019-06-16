@@ -28,6 +28,7 @@ import {
 import GraphV4 from "./GraphV4";
 import Measure from "react-measure";
 import { MIN_GRAPH_WIDTH, MIN_GRAPH_HEIGHT } from "../utils/consts";
+import { DisplayedEntitiesState } from "../Store";
 
 const Content = styled.div`
   width: 100%;
@@ -54,10 +55,27 @@ type Props = {
     };
   };
   network: boolean;
+  displayedEntities?: (list: DisplayedEntitiesState) => void;
 };
 
 class GraphPreparator extends React.PureComponent<Props> {
   static whyDidYouRender = true;
+
+  componentDidMount() {
+    this.updateDisplayedEntities();
+  }
+  componentDidUpdate() {
+    this.updateDisplayedEntities();
+  }
+
+  updateDisplayedEntities() {
+    if (!this.props.displayedEntities) return;
+
+    const { entities } = this.props;
+    let list: DisplayedEntitiesState = {};
+    for (let key in entities) list[key] = true;
+    this.props.displayedEntities(list);
+  }
 
   render() {
     const { entities, edges, selectedEntities, specialEntities } = this.props;
@@ -103,7 +121,7 @@ class GraphPreparator extends React.PureComponent<Props> {
         goalStrength: 0,
         radius: 40,
         entityKey: key,
-        visited: selectedEntities[key],
+        visited: Boolean(selectedEntities[key]),
         type: specialEntities[key]
           ? specialEntities[key].type
           : NodeRenderType.Secondary,
