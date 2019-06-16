@@ -126,7 +126,7 @@ function linkOpacity(d: V4LinkDatum) {
 }
 
 function linkStrokeWidth(d: V4LinkDatum) {
-  return Math.min(Math.max(d.proximity, 1), 4);
+  return Math.min(Math.max(d.proximity / 1.5, 0.5), 3);
   // return 1;
 }
 

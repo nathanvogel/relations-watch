@@ -114,7 +114,7 @@ const EdgeDetails: React.FunctionComponent<Props> = props => {
       {showDatasetEditInfo && (
         <MiniInfoText>
           {edge.ds && edge.ds.wd
-            ? "This information comes from Wikidata. You can modify it by going to the source link, making the changes on Wikidata and clicking 'Update from Wikidata' here on the relevant entity. This way, you'll be contributing to both relations.watch and Wikidata!"
+            ? "This information comes from Wikidata. You can modify it by going to the source link, making the changes on Wikidata and clicking 'Update from Wikidata' here on the relevant entity. This way, you'll be contributing to both Relations.watch and Wikidata!"
             : "This information comes from an external source and can't be modified directly here."}
         </MiniInfoText>
       )}

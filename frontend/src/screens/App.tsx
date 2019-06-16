@@ -80,7 +80,7 @@ class App extends Component {
                 sidebarContent={
                   <React.Fragment>
                     <p>
-                      <strong>relations.</strong>watch is a collaborative
+                      <strong>Relations.</strong>watch is a collaborative
                       platform to gather knowledge about relations between
                       public figures, companies, medias, etc.
                     </p>

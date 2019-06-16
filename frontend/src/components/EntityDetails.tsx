@@ -62,7 +62,9 @@ class EntityDetails extends Component<Props> {
     // EntityPreview if available
     if (!loadFullEntity && entityPreview)
       return nameOnly ? (
-        <EntityName className={className}>{entityPreview.name}</EntityName>
+        <EntityName big className={className}>
+          {entityPreview.name}
+        </EntityName>
       ) : (
         <Link className={className} to={`/e/${this.props.entityKey}`}>
           <EntityView big={big} entity={entityPreview} />
@@ -78,7 +80,9 @@ class EntityDetails extends Component<Props> {
     if (!entity) return <div className={className}>Error</div>;
 
     return nameOnly ? (
-      <EntityName className={className}>{entity.name}</EntityName>
+      <EntityName big className={className}>
+        {entity.name}
+      </EntityName>
     ) : (
       <Link className={className} to={`/e/${this.props.entityKey}`}>
         <EntityView big={big} entity={entity} />

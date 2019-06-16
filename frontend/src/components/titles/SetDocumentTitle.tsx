@@ -5,8 +5,8 @@ type Props = {
 };
 
 const SetDocumentTitle: React.FunctionComponent<Props> = props => {
-  let title = "relations.watch";
-  if (props.children) title = props.children + " - relations.watch";
+  let title = "Relations.watch";
+  if (props.children) title = props.children + " - Relations.watch";
   document.title = title;
   return null;
 };
