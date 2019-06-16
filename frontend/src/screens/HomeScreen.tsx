@@ -12,6 +12,7 @@ import EntityDetails from "../components/EntityDetails";
 import { media } from "../styles/responsive-utils";
 import WebsiteTitle from "../components/titles/WebsiteTitle";
 import SecondaryTitle from "../components/titles/SecondaryTitle";
+import SetDocumentTitle from "../components/titles/SetDocumentTitle";
 
 const Content = styled.main`
   ${PageWidthSizer}
@@ -103,6 +104,7 @@ const HomeScreen: FunctionComponent<RouterProps> = props => {
   return (
     <React.Fragment>
       <WebsiteTitle />
+      <SetDocumentTitle />
       <Bar />
       <Content>
         <Header>

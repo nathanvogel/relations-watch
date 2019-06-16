@@ -20,6 +20,7 @@ import ButtonBar from "../components/buttons/ButtonBar";
 import GraphExporter from "../components/GraphExporter";
 import GraphSaver from "../components/GraphSaver";
 import EntityDetails from "../components/EntityDetails";
+import SetDocumentTitle from "../components/titles/SetDocumentTitle";
 
 const PageContent = styled.div`
   ${PageWidthSizer}
@@ -67,6 +68,7 @@ class App extends Component {
                   </React.Fragment>
                 }
               >
+                <SetDocumentTitle>Recently seen</SetDocumentTitle>
                 <HistoryScreen />
               </GraphScreenWrapper>
             )}
@@ -91,6 +93,7 @@ class App extends Component {
                   </React.Fragment>
                 }
               >
+                <SetDocumentTitle>Graph</SetDocumentTitle>
                 <SavedGraphScreen graphKey={props.match.params.graphKey} />
               </GraphScreenWrapper>
             )}
@@ -108,6 +111,7 @@ class App extends Component {
               return (
                 <React.Fragment>
                   <AppBar />
+                  <SetDocumentTitle>Import</SetDocumentTitle>
                   <PageContent>
                     <Importer
                       key={datasetId + ":" + entityDatasetId}

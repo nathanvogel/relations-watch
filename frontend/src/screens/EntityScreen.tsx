@@ -13,6 +13,7 @@ import { loadEntityGraph } from "../features/linksLoadAC";
 import * as entitySelectionActions from "../features/entitySelectionActions";
 import CONSTS from "../utils/consts";
 import EntityGraphContainer from "../components/graph/EntityGraphContainer";
+import SetDocumentTitle from "../components/titles/SetDocumentTitle";
 
 const StyledMeta = styled(Meta)`
   position: absolute;
@@ -128,13 +129,14 @@ class EntityScreen extends Component<Props> {
   };
 
   render() {
-    const { status, error, entityKey } = this.props;
+    const { status, error, entityKey, entity } = this.props;
 
     // Always render the graph, even when the data isn't loaded.
     // That means using the previous key if it's there.
     // We do this to preserve displayed nodes and the simulation state.
     return (
       <React.Fragment>
+        <SetDocumentTitle>{entity ? entity.name : undefined}</SetDocumentTitle>
         {status !== Status.Ok && <StyledMeta status={status} error={error} />}
         {status === Status.Ok ? (
           <EntityGraphContainer entityKey={entityKey} />
