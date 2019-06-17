@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import CloseIcon from "@material-ui/icons/Close";
 import ClickableIcon from "../buttons/ClickableIcon";
+import { mediaq } from "../../styles/responsive-utils";
 
 const Background = styled.div`
   position: fixed;
@@ -11,7 +12,12 @@ const Background = styled.div`
   left: 0px;
   bottom: 0px;
   right: 0px;
+  // Above the drawer on desktop
   z-index: 2999;
+  ${mediaq.mobile} {
+    // Below the drawer on mobile
+    z-index: 999;
+  }
   cursor: pointer;
   // Don't use opacity, so that it can be animated by another component
   // background-color: rgba(255, 255, 255, 0.9);
