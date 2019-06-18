@@ -67,7 +67,7 @@ const theme = {
   lineHeight: "1.4",
   smallRadius: "3px",
   bigRadius: "5px",
-  longAnim: "0.4s",
+  longAnim: "0.23s",
   shortAnim: "0.18s",
 };
 
