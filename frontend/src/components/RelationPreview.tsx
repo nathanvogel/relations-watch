@@ -78,6 +78,10 @@ const StyledBigLinksPreview = styled(BigLinksPreview)`
 
 const ClickForFull = styled(MiniInfoText)`
   margin-top: ${props => props.theme.marginTB};
+  // position: absolute;
+  // bottom: 0px;
+  // left: 0px;
+  // width: 100%;
   text-align: center;
 `;
 
@@ -164,7 +168,7 @@ class RelationPreview extends React.Component<Props> {
               <StyledEntitySearch
                 forceMenuOnTop={true}
                 column={1}
-                placeholder="Search another..."
+                placeholder="Add a new relation..."
                 onChange={this.onEntity1Selected}
               />
             )
@@ -188,13 +192,13 @@ class RelationPreview extends React.Component<Props> {
               <StyledEntitySearch
                 forceMenuOnTop={true}
                 column={3}
-                placeholder="Search another..."
+                placeholder="Add a new relation..."
                 onChange={this.onEntity2Selected}
               />
             )
           )}
         </Grid>
-        {!fullyVisible && realKey1 && realKey2 && false && (
+        {!fullyVisible && realKey1 && realKey2 && (
           <ClickForFull>
             Click on the relation to show the full details.
           </ClickForFull>
