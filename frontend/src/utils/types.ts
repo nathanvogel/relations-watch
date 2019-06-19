@@ -156,46 +156,11 @@ export type EdgePreview = {
 
 export type CommonEdge = Edge | EdgePreview;
 
-export type RelationRenderData = {
-  bx1: number;
-  by1: number;
-  bx2: number;
-  by2: number;
-  from: string;
-  to: string;
-  source: string | SimulationNodeDatum;
-  target: string | SimulationNodeDatum;
-  relationId: string;
-  types: RelationType[];
-  withType: NodeRenderType;
-  visited: boolean;
-};
-
 export enum NodeRenderType {
   Primary,
   Secondary,
   Tertiary,
 }
-
-export type NodeRenderData = {
-  bx: number;
-  by: number;
-  type: NodeRenderType;
-  visited: boolean;
-  entityKey: string;
-  entity: EntityPreview;
-  // From d3-force:
-  // Each node must be an object. The following properties are assigned by the simulation:
-  index?: number; // the node’s zero-based index into nodes
-  x?: number; // the node’s current x-position
-  y?: number; // the node’s current y-position
-  vx?: number; // the node’s current x-velocity
-  vy?: number; // the node’s current y-velocity
-  fx?: number; // the node’s fixed position
-  fy?: number; // the node’s fixe position
-  // Text sizing
-  bb?: DOMRect;
-};
 
 // Zones
 export enum RelZone {
@@ -434,6 +399,14 @@ export type V4NodeDatum = {
    * the d3-force simulation
    */
   y: number;
+  /**
+   * Displayed position, decoupled from the physics position
+   */
+  displayX: number;
+  displayY: number;
+  /**
+   * Goal attraction force
+   */
   goalX: number;
   goalY: number;
   goalStrength: number;

@@ -94,6 +94,8 @@ class GraphPreparator extends React.PureComponent<Props> {
       // TODO: Check
       delete e.x;
       delete e.y;
+      delete e.displayX;
+      delete e.displayY;
       rEntities.push(e);
       rEntitiesByKey[e.entityKey] = e;
     };
@@ -116,6 +118,8 @@ class GraphPreparator extends React.PureComponent<Props> {
       const rNode: V4NodeDatum = {
         x: Math.random() * 500,
         y: Math.random() * 500,
+        displayX: 0,
+        displayY: 0,
         goalX: 0,
         goalY: 0,
         goalStrength: 0,

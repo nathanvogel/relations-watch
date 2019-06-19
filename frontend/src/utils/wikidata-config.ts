@@ -366,6 +366,7 @@ export const propertiesMap: Dictionary<PropertyMapping> = {
   }, // head of state
   P488: { type: RT.IsControlled, text: "$to is chairman of $from." }, // chairman
   P3320: { type: RT.IsControlled, text: "$to is a board member of $from." }, // board member
+  P5769: { type: RT.IsControlled, text: "$to is editor-in-chief of $from." }, // editor-in-chief
   P5052: {
     type: RT.IsControlled,
     text: "$to is supervisory board member of $from.",

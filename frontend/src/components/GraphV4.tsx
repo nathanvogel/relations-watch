@@ -23,6 +23,7 @@ import {
   RelationTypeValues,
   V4LinkPosDatum,
   FamilialLink,
+  V4GenericLinkDatum,
 } from "../utils/types";
 import ROUTES from "../utils/ROUTES";
 import { getEntitySAsset } from "../assets/EntityIcons";
@@ -61,8 +62,8 @@ function sizeT(type: NodeRenderType): number {
 function nodeTranslate(d: V4NodeDatum): string {
   let height = d.bb ? d.bb.height : iconSize(d);
   return `translate(
-    ${d.x - iconSize(d) / 2},
-    ${d.y - height / 2})`;
+    ${d.displayX - iconSize(d) / 2},
+    ${d.displayY - height / 2})`;
 }
 
 function fontSize(d: V4NodeDatum): number {
@@ -153,10 +154,10 @@ function computeLinkPosition(p: V4LinkPosDatum, rel: V4LinkDatum) {
     rel.direction === LinkDir.Normal || rel.direction === LinkDir.Both;
   const dist1 = hasBeginIndic ? indicatorDist : 0; // size(e1) / 2 - 2;
   const dist2 = hasEndIndic ? indicatorDist : 0; // size(e2) / 2 - 2;
-  p.x1 = e1.x;
-  p.y1 = e1.y - 2;
-  p.x2 = e2.x;
-  p.y2 = e2.y - 2;
+  p.x1 = e1.displayX;
+  p.y1 = e1.displayY - 2;
+  p.x2 = e2.displayX;
+  p.y2 = e2.displayY - 2;
   p.angle = Math.atan2(p.y2 - p.y1, p.x2 - p.x1);
   p.degAngle = p.angle * RAD_TO_DEG;
   p.x1 += Math.cos(p.angle) * dist1;
@@ -259,9 +260,51 @@ class GraphV4 extends React.PureComponent<Props> {
   private gNodes: React.RefObject<SVGGElement>;
   private gIndicators: React.RefObject<SVGGElement>;
   private simulation: d3.Simulation<V4NodeDatum, V4LinkDatum>;
+  private running: boolean = false;
   private nodesData: { [entityKey: string]: V4NodeDatum } = {};
   private linksData: { [relationId: string]: V4LinkDatum } = {};
   // private dotsData: { [key: string]: V4IndicatorDatum } = {};
+  //
+  private rEntities: V4NodeDatum[] = [];
+  private rRelations: V4LinkDatum[] = [];
+  private linkPositions: { [relationId: string]: V4LinkPosDatum } = {};
+  private d3_nodes: d3.Selection<
+    d3.BaseType,
+    V4NodeDatum,
+    SVGGElement | null,
+    {}
+  >;
+  private d3_nodes2: d3.Selection<
+    d3.BaseType,
+    V4NodeDatum,
+    SVGGElement | null,
+    {}
+  >;
+  private d3_labels: d3.Selection<
+    d3.BaseType,
+    V4NodeDatum,
+    SVGGElement | null,
+    {}
+  >;
+  private d3_linksVisual: d3.Selection<
+    d3.BaseType,
+    V4GenericLinkDatum<V4NodeDatum>,
+    SVGGElement | null,
+    {}
+  >;
+  private d3_linksInteraction: d3.Selection<
+    d3.BaseType,
+    V4GenericLinkDatum<V4NodeDatum>,
+    SVGGElement | null,
+    {}
+  >;
+  private d3_allIndicators: d3.Selection<
+    SVGPathElement,
+    V4IndicatorDatum,
+    SVGGElement | null,
+    {}
+  >;
+  private isLabelOnTheLeft: (d: V4NodeDatum) => boolean;
 
   constructor(props: Readonly<Props>) {
     super(props);
@@ -271,10 +314,18 @@ class GraphV4 extends React.PureComponent<Props> {
     this.gIndicators = React.createRef();
 
     this.simulation = d3.forceSimulation();
+    this.d3_nodes = null as any;
+    this.d3_nodes2 = null as any;
+    this.d3_labels = null as any;
+    this.d3_linksVisual = null as any;
+    this.d3_linksInteraction = null as any;
+    this.d3_allIndicators = null as any;
+    this.isLabelOnTheLeft = () => false;
   }
 
   componentDidMount() {
     this.updateGraph();
+    // this.onFrame();
   }
 
   componentDidUpdate() {
@@ -286,6 +337,8 @@ class GraphV4 extends React.PureComponent<Props> {
     const styleVisited = this.props.match.path !== `/${ROUTES.history}`;
     const hoverEntity = debounce(this.props.hoverEntity, 100);
     const hoverRelation = debounce(this.props.hoverRelation, 100);
+    const width = this.props.width;
+    const height = this.props.height;
 
     // D3 RELATIONS DATA
     const { rEntitiesByKey, rRelationsByKey } = this.props;
@@ -352,13 +405,18 @@ class GraphV4 extends React.PureComponent<Props> {
       this.nodesData[key] = this.nodesData[key]
         ? Object.assign({}, this.nodesData[key], rEntitiesByKey[key])
         : Object.assign({}, rEntitiesByKey[key]);
+      // === 0 should in all likelyhood only happen on init
+      const node = this.nodesData[key];
+      if (node.displayX === 0 || typeof node.x !== "number")
+        node.displayX = width / 2;
+      if (node.displayY === 0 || typeof node.x !== "number")
+        node.displayY = height / 2;
       rEntities.push(this.nodesData[key]);
     }
 
     const nodeCount = rEntities.length;
     const bigGraph = nodeCount > 70;
-    const width = bigGraph ? this.props.width : this.props.width;
-    const height = bigGraph ? this.props.height : this.props.height;
+    console.log("GRAPH INIT", nodeCount);
 
     // INITIAL node positions + clustering;
     // TODO : calculate relative to origin
@@ -385,7 +443,6 @@ class GraphV4 extends React.PureComponent<Props> {
 
     // D3 FORCES SETUP
     const maxProximity = d3.max(rRelations, d => d.proximity) || 1;
-    console.log("GRAPH INIT", nodeCount);
     const distScale = d3
       .scaleLinear()
       .domain([1, Math.max(maxProximity, 4)])
@@ -399,6 +456,17 @@ class GraphV4 extends React.PureComponent<Props> {
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
       .velocityDecay(network ? 0.5 : 0.9) // Akin to atmosphere friction (velocity multiplier)
       .alphaTarget(-0.03) // Stop mini-pixel-step-motion early
+      // The alpha decay rate determines how quickly the current alpha
+      // interpolates towards the desired target alpha; since the default
+      // target alpha is zero, by default this controls how quickly the
+      // simulation cools. Higher decay rates cause the simulation to
+      // stabilize more quickly, but risk getting stuck in a local minimum;
+      // lower values cause the simulation to take longer to run, but typically
+      // converge on a better layout. To have the simulation run forever at
+      // the current alpha, set the decay rate to zero; alternatively, set
+      // a target alpha greater than the minimum alpha
+      // [to decrease cooling time].
+      // .alphaDecay(0.015)
       // The most important force, attraction derived from our relations.
       .force(
         "link",
@@ -490,7 +558,6 @@ class GraphV4 extends React.PureComponent<Props> {
     }
 
     // D3 RENDERING starts here
-
     // LINKS rendering
     var linkGroup = d3.select(this.gLinks.current);
     var links = linkGroup.selectAll("g").data(
@@ -687,47 +754,21 @@ class GraphV4 extends React.PureComponent<Props> {
       // .attr("transform", d => nodeTranslate(d as any) + " scale(0,0)")
       .remove();
 
-    const isLabelOnTheLeft = (d: V4NodeDatum) => !bigGraph && d.x < width / 2;
+    this.isLabelOnTheLeft = (d: V4NodeDatum) => !bigGraph && d.x < width / 2;
+
+    this.d3_nodes = nodes;
+    this.d3_nodes2 = nodes2;
+    this.d3_labels = labels;
+    this.d3_linksInteraction = linksInteraction;
+    this.d3_linksVisual = linksVisual;
+    this.d3_allIndicators = allIndicators;
+    this.rRelations = rRelations;
+    this.rEntities = rEntities;
+    this.linkPositions = linkPositions;
 
     // Update the positions from the simulation
     this.simulation.on("tick", () => {
-      // First compute the starting and ending positions of the links, as
-      // they'll be reused multiple times.
-      for (let rRelation of rRelations) {
-        computeLinkPosition(linkPositions[rRelation.relationId], rRelation);
-      }
-
-      for (let rEntity of rEntities) {
-        rEntity.isLabelOnTheLeft = isLabelOnTheLeft(rEntity);
-      }
-
-      linksVisual
-        .attr("x1", d => linkPositions[d.relationId].x1)
-        .attr("y1", d => linkPositions[d.relationId].y1)
-        .attr("x2", d => linkPositions[d.relationId].x2)
-        .attr("y2", d => linkPositions[d.relationId].y2);
-      linksInteraction
-        .attr("x1", d => linkPositions[d.relationId].x1)
-        .attr("y1", d => linkPositions[d.relationId].y1)
-        .attr("x2", d => linkPositions[d.relationId].x2)
-        .attr("y2", d => linkPositions[d.relationId].y2);
-
-      allIndicators.attr(
-        "transform",
-        d =>
-          `
-          translate(${getIndicatorX(
-            d,
-            linkPositions[d.relationId]
-          )},${getIndicatorY(d, linkPositions[d.relationId])})
-          rotate(${linkPositions[d.relationId].degAngle +
-            (d.direction === LinkDir.Invert ? 180 : 0)})`
-      );
-      // .attr("cx", d => getIndicatorX(d, linkPositions[d.relationId]))
-      // .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
-
-      nodes2.attr("transform", nodeTranslate);
-      labels.attr("text-anchor", labelAnchor).attr("dx", labelDx);
+      if (!this.running) this.onFrame();
     });
 
     // Update the data in the simulation.
@@ -753,6 +794,81 @@ class GraphV4 extends React.PureComponent<Props> {
     this.props.history.push(
       `${this.props.match.url}/${ROUTES.relation}/${d.sourceKey}/${d.targetKey}`
     );
+  };
+
+  onFrame = () => {
+    if (!this) {
+      console.log("this is null");
+      return;
+    }
+    const { rEntities, rRelations, linkPositions } = this;
+    const nodes2 = this.d3_nodes2;
+    const labels = this.d3_labels;
+    const linksInteraction = this.d3_linksInteraction;
+    const allIndicators = this.d3_allIndicators;
+    const linksVisual = this.d3_linksVisual;
+    if (
+      !rEntities ||
+      !rRelations ||
+      !linkPositions ||
+      !labels ||
+      !nodes2 ||
+      !linksInteraction ||
+      !linksVisual
+    ) {
+      console.log("null arg, stopping animation frame");
+      this.running = false;
+      return;
+    }
+
+    // First compute the starting and ending positions of the links, as
+    // they'll be reused multiple times.
+    let totalDiff = 0;
+    for (let rEntity of rEntities) {
+      const diffX = rEntity.x - rEntity.displayX;
+      const diffY = rEntity.y - rEntity.displayY;
+      totalDiff += diffX + diffY;
+      rEntity.displayX += diffX * 0.03;
+      rEntity.displayY += diffY * 0.03;
+    }
+    for (let rRelation of rRelations) {
+      computeLinkPosition(linkPositions[rRelation.relationId], rRelation);
+    }
+
+    for (let rEntity of rEntities) {
+      rEntity.isLabelOnTheLeft = this.isLabelOnTheLeft(rEntity);
+    }
+
+    linksVisual
+      .attr("x1", d => linkPositions[d.relationId].x1)
+      .attr("y1", d => linkPositions[d.relationId].y1)
+      .attr("x2", d => linkPositions[d.relationId].x2)
+      .attr("y2", d => linkPositions[d.relationId].y2);
+    linksInteraction
+      .attr("x1", d => linkPositions[d.relationId].x1)
+      .attr("y1", d => linkPositions[d.relationId].y1)
+      .attr("x2", d => linkPositions[d.relationId].x2)
+      .attr("y2", d => linkPositions[d.relationId].y2);
+
+    allIndicators.attr(
+      "transform",
+      d =>
+        `
+            translate(${getIndicatorX(
+              d,
+              linkPositions[d.relationId]
+            )},${getIndicatorY(d, linkPositions[d.relationId])})
+            rotate(${linkPositions[d.relationId].degAngle +
+              (d.direction === LinkDir.Invert ? 180 : 0)})`
+    );
+    // .attr("cx", d => getIndicatorX(d, linkPositions[d.relationId]))
+    // .attr("cy", d => getIndicatorY(d, linkPositions[d.relationId]));
+
+    nodes2.attr("transform", nodeTranslate);
+    labels.attr("text-anchor", labelAnchor).attr("dx", labelDx);
+
+    this.running = totalDiff > 10;
+    if (this.running) requestAnimationFrame(this.onFrame);
   };
 
   render() {
