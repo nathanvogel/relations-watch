@@ -27,7 +27,7 @@ const Container = styled.div`
 const LogoWrapper = styled.div`
   background: ${props => props.theme.mainTextColor};
   color: ${props => props.theme.lightTextColor};
-  padding-left: ${props => props.theme.marginLR};
+  padding-left: 20px;
   height: 100%;
   width: 100%;
   max-height: 100%;
@@ -51,7 +51,7 @@ const LogoWrapper = styled.div`
 const StyledAppIcon = styled(AppIcon)`
   height: 40px;
   width: 40px;
-  margin-right: 10px;
+  margin-right: 8px;
 `;
 
 const HomeLink = styled(Link)`

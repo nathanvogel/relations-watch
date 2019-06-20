@@ -36,7 +36,7 @@ const Bar = styled.div`
 `;
 
 const Header = styled.header`
-  margin-top: 12vh;
+  margin-top: 9vh;
 `;
 
 const Article = styled.article`
