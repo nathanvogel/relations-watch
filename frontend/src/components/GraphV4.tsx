@@ -210,7 +210,7 @@ const clusters: Clusters = {
   [RelZone.Participates]: null,
 };
 const clusterOrigins = {
-  [RelZone.Default]: { x: 0, y: 0.5 },
+  [RelZone.Default]: { x: 0.5, y: 0.5 },
   [RelZone.Main]: { x: 0.5, y: 0.5 },
   [RelZone.IsControlled]: { x: 0.5, y: 0 },
   [RelZone.DoesControl]: { x: 0.5, y: 1 },
@@ -253,7 +253,7 @@ type Props = ReturnType<typeof mapStateToProps> &
  * Draws an SVG graph of the given size for the given relations and nodes.
  */
 class GraphV4 extends React.PureComponent<Props> {
-  static whyDidYouRender = true;
+  static whyDidYouRender = false;
 
   private svgEl: React.RefObject<SVGSVGElement>;
   private gLinks: React.RefObject<SVGGElement>;
@@ -274,7 +274,7 @@ class GraphV4 extends React.PureComponent<Props> {
     {}
   >;
   private d3_nodes2: d3.Selection<
-    d3.BaseType,
+    SVGGElement,
     V4NodeDatum,
     SVGGElement | null,
     {}
@@ -637,7 +637,7 @@ class GraphV4 extends React.PureComponent<Props> {
       (d: V4NodeDatum | {}) => (d as V4NodeDatum).entityKey
     );
     // Add nodes for the first time and define one-time attribute.
-    var nodes2 = nodes
+    var nodesNewG = nodes
       .enter()
       .append("g")
       .classed("node", true)
@@ -674,23 +674,24 @@ class GraphV4 extends React.PureComponent<Props> {
           .duration(200)
           .attr("transform", "scale(1)");
         hoverEntity("");
-      })
-      // Add the text background
-      // .append("rect")
-      // .attr("opacity", 0.1)
-      // .select(goToParent)
-      // Add the image child
-      .append("image")
-      .attr("href", nodeImage)
-      .select(goToParent)
+      });
+    // Add the text background
+    // .append("rect")
+    // .attr("opacity", 0.1)
+
+    // Add the image child
+    var nodesNewImg = nodesNewG.append("image").attr("href", nodeImage);
+    var nodesNewText = nodesNewG
       // Add the text child
       .append("text")
-      .text(d => getShortString(d.entity.name))
-      .select(goToParent)
-      .merge(nodes as any);
+      .text(d => getShortString(d.entity.name));
+
+    var nodes2 = nodesNewG.merge(nodes as any);
     // Update dynamic attributes for all nodes:
     var labels = nodes2
       .select("text")
+      // Needed now by the browser for the alignment calc, for some reason
+      .attr("transform", "scale(1.1)")
       .attr("font-size", fontSize)
       .attr("dy", d => iconSize(d) * 0.8)
       .attr("fill", d =>
@@ -701,6 +702,8 @@ class GraphV4 extends React.PureComponent<Props> {
     // .attr("transform", d => `translate(${size(d) / 2},${size(d)})`);
     nodes2
       .select("image")
+      // Needed now by the browser for the alignment calc, for some reason
+      .attr("transform", "scale(1)")
       // .attr("y", d => iconSize(d) * 0.0)
       // .attr("x", 0)
       .attr(
@@ -733,19 +736,41 @@ class GraphV4 extends React.PureComponent<Props> {
     */
 
     // Transition IN
-    // nodes2
-    //   .select("image")
-    //   .transition()
-    //   .duration(300)
-    //   .attr("transform", "scale(1, 1)");
+    // If we don't have too many element, add a transition.
+    // Adding too many would create lag.
+    if (nodesNewText.size() < 32) {
+      nodesNewText
+        .attr("transform", "scale(0.1)")
+        .transition()
+        .duration(250)
+        .attr("transform", "scale(1.1)");
+
+      nodesNewImg
+        .attr("transform", "scale(0.1)")
+        .transition()
+        .duration(250)
+        .attr("transform", "scale(1)");
+    }
+
     // Transition OUT
-    nodes
-      .exit()
-      // .transition()
-      // .duration(300)
-      // .attr("opacity", 0)
-      // .attr("transform", d => nodeTranslate(d as any) + " scale(0,0)")
-      .remove();
+    var nodesExit = nodes.exit();
+    if (nodesExit.size() < 32) {
+      // Dummy transition to do a delayed remove
+      nodesExit
+        .transition()
+        .duration(250)
+        .remove();
+      nodesExit
+        .select("text")
+        .transition()
+        .duration(250)
+        .attr("transform", "scale(0)");
+      nodesExit
+        .select("image")
+        .transition()
+        .duration(250)
+        .attr("transform", "scale(0)");
+    } else nodesExit.remove();
 
     this.isLabelOnTheLeft = (d: V4NodeDatum) => !bigGraph && d.x < width / 2;
 
