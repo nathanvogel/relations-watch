@@ -260,11 +260,10 @@ class GraphV4 extends React.PureComponent<Props> {
   private gNodes: React.RefObject<SVGGElement>;
   private gIndicators: React.RefObject<SVGGElement>;
   private simulation: d3.Simulation<V4NodeDatum, V4LinkDatum>;
-  private running: boolean = false;
+  private frameRequestId: number = -1;
+  private displayPhysics: boolean = false;
   private nodesData: { [entityKey: string]: V4NodeDatum } = {};
   private linksData: { [relationId: string]: V4LinkDatum } = {};
-  // private dotsData: { [key: string]: V4IndicatorDatum } = {};
-  //
   private rEntities: V4NodeDatum[] = [];
   private rRelations: V4LinkDatum[] = [];
   private linkPositions: { [relationId: string]: V4LinkPosDatum } = {};
@@ -325,11 +324,15 @@ class GraphV4 extends React.PureComponent<Props> {
 
   componentDidMount() {
     this.updateGraph();
-    // this.onFrame();
   }
 
   componentDidUpdate() {
     this.updateGraph();
+  }
+
+  componentWillUnmount() {
+    this.simulation.stop();
+    cancelAnimationFrame(this.frameRequestId);
   }
 
   updateGraph() {
@@ -455,18 +458,8 @@ class GraphV4 extends React.PureComponent<Props> {
     this.simulation = d3
       .forceSimulation<V4NodeDatum, V4LinkDatum>()
       .velocityDecay(network ? 0.5 : 0.9) // Akin to atmosphere friction (velocity multiplier)
-      .alphaTarget(-0.03) // Stop mini-pixel-step-motion early
-      // The alpha decay rate determines how quickly the current alpha
-      // interpolates towards the desired target alpha; since the default
-      // target alpha is zero, by default this controls how quickly the
-      // simulation cools. Higher decay rates cause the simulation to
-      // stabilize more quickly, but risk getting stuck in a local minimum;
-      // lower values cause the simulation to take longer to run, but typically
-      // converge on a better layout. To have the simulation run forever at
-      // the current alpha, set the decay rate to zero; alternatively, set
-      // a target alpha greater than the minimum alpha
-      // [to decrease cooling time].
-      // .alphaDecay(0.015)
+      .alphaTarget(-0.05) // Stop mini-pixel-step-motion early
+      .alphaDecay(network ? 0.018 : 0.05)
       // The most important force, attraction derived from our relations.
       .force(
         "link",
@@ -767,9 +760,7 @@ class GraphV4 extends React.PureComponent<Props> {
     this.linkPositions = linkPositions;
 
     // Update the positions from the simulation
-    this.simulation.on("tick", () => {
-      if (!this.running) this.onFrame();
-    });
+    this.simulation.on("tick", this.onFrame);
 
     // Update the data in the simulation.
     this.simulation.nodes(rEntities);
@@ -798,9 +789,15 @@ class GraphV4 extends React.PureComponent<Props> {
 
   onFrame = () => {
     if (!this) {
-      console.log("this is null");
+      console.warn("this is null");
       return;
     }
+    // always cancel the last request, we'll request another one if there's
+    // still some distance to animate anyway.
+    // This way, we can call onFrame() whenever we feel like it. (mostly
+    // for simulation.on("tick"))
+    cancelAnimationFrame(this.frameRequestId);
+
     const { rEntities, rRelations, linkPositions } = this;
     const nodes2 = this.d3_nodes2;
     const labels = this.d3_labels;
@@ -816,20 +813,26 @@ class GraphV4 extends React.PureComponent<Props> {
       !linksInteraction ||
       !linksVisual
     ) {
-      console.log("null arg, stopping animation frame");
-      this.running = false;
+      console.warn("null arg, stopping animation frame");
       return;
     }
 
     // First compute the starting and ending positions of the links, as
     // they'll be reused multiple times.
     let totalDiff = 0;
-    for (let rEntity of rEntities) {
-      const diffX = rEntity.x - rEntity.displayX;
-      const diffY = rEntity.y - rEntity.displayY;
-      totalDiff += diffX + diffY;
-      rEntity.displayX += diffX * 0.03;
-      rEntity.displayY += diffY * 0.03;
+    if (this.displayPhysics) {
+      for (let rEntity of rEntities) {
+        rEntity.displayX = rEntity.x;
+        rEntity.displayY = rEntity.y;
+      }
+    } else {
+      for (let rEntity of rEntities) {
+        const diffX = rEntity.x - rEntity.displayX;
+        const diffY = rEntity.y - rEntity.displayY;
+        totalDiff += Math.abs(diffX) + Math.abs(diffY);
+        rEntity.displayX += diffX * 0.05;
+        rEntity.displayY += diffY * 0.05;
+      }
     }
     for (let rRelation of rRelations) {
       computeLinkPosition(linkPositions[rRelation.relationId], rRelation);
@@ -867,8 +870,11 @@ class GraphV4 extends React.PureComponent<Props> {
     nodes2.attr("transform", nodeTranslate);
     labels.attr("text-anchor", labelAnchor).attr("dx", labelDx);
 
-    this.running = totalDiff > 10;
-    if (this.running) requestAnimationFrame(this.onFrame);
+    if (totalDiff > 3) {
+      this.frameRequestId = requestAnimationFrame(this.onFrame);
+    } else {
+      console.log("stop");
+    }
   };
 
   render() {
