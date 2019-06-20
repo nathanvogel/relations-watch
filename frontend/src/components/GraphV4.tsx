@@ -558,10 +558,19 @@ class GraphV4 extends React.PureComponent<Props> {
       // Key function to preserve the relation between DOM and rRelations
       (d: V4LinkDatum | {}) => (d as V4LinkDatum).relationId
     );
-    var allLinks = links
+
+    const newLinkG = links
       .enter()
       .append("g")
-      .attr("class", "relation")
+      .attr("class", "relation");
+    if (newLinkG.size() < 32) {
+      newLinkG
+        .attr("opacity", 0)
+        .transition()
+        .duration(350)
+        .attr("opacity", 1);
+    }
+    var allLinks = newLinkG
       .append("line")
       .classed("visual", true)
       .attr("stroke-width", linkStrokeWidth)
@@ -613,7 +622,7 @@ class GraphV4 extends React.PureComponent<Props> {
         (d: V4IndicatorDatum | {}) => (d as V4IndicatorDatum).indicatorId
       );
 
-    const allIndicators = indicators
+    const newIndicators = indicators
       .enter()
       .append("path")
       .classed("indicator", true)
@@ -622,11 +631,17 @@ class GraphV4 extends React.PureComponent<Props> {
         "M10 1.78814e-07C4.97333 1.66477 2.70397 2.54868 -1 6C0.283061 1.23629 0.200861 -1.0839 -1 -6C2.67854 -3.13956 5.08208 -1.82966 10 1.78814e-07Z"
       )
       .attr("r", 5)
-      .attr("fill", d => RELATION_COLORS[d.type])
-      // .attr("stroke-width", 1)
-      // .attr("stroke", "white")
-      .attr("opacity", d => linkOpacity(this.linksData[d.relationId]))
-      .merge(indicators as any);
+      .attr("fill", d => RELATION_COLORS[d.type]);
+    // .attr("stroke-width", 1)
+    // .attr("stroke", "white")
+    if (newIndicators.size() < 32) {
+      newIndicators
+        .attr("opacity", 0)
+        .transition()
+        .duration(350)
+        .attr("opacity", d => linkOpacity(this.linksData[d.relationId]));
+    }
+    const allIndicators = newIndicators.merge(indicators as any);
     indicators.exit().remove();
 
     // NODES rendering
