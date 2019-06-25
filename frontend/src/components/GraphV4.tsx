@@ -699,6 +699,7 @@ class GraphV4 extends React.PureComponent<Props> {
     var nodesNewText = nodesNewG
       // Add the text child
       .append("text")
+      .attr("transform", "scale(1)")
       .text(d => getShortString(d.entity.name));
 
     var nodes2 = nodesNewG.merge(nodes as any);
@@ -758,7 +759,7 @@ class GraphV4 extends React.PureComponent<Props> {
         .attr("transform", "scale(0.1)")
         .transition()
         .duration(250)
-        .attr("transform", "scale(1.1)");
+        .attr("transform", "scale(1)");
 
       nodesNewImg
         .attr("transform", "scale(0.1)")
