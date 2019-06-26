@@ -60,7 +60,7 @@ const theme = {
   hoverBoxHeight: "150px",
   appMaxWidth: "1024px",
   appSidebarWidth: "250px",
-  appMiniSidebarWidth: "135px",
+  appMiniSidebarWidth: "140px",
   appPaddingLR: "24px",
   appPaddingTB: "12px",
   longFieldHeight: "3em",

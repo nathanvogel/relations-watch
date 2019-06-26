@@ -12,6 +12,7 @@ const GlobalStyleCSS = css`
     line-height: ${props => props.theme.lineHeight}
     color: ${props => props.theme.mainTextColor};
     font-size: ${props => props.theme.fontSizeM};
+    background-color: ${props => props.theme.appBG};
   }
 
   #modals {
@@ -115,7 +116,7 @@ const GlobalStyleCSS = css`
     ::-webkit-scrollbar-track {
         background-color: ${props => props.theme.appBG};
     }
-  } 
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`

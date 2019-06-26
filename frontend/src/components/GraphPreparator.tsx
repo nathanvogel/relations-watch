@@ -59,7 +59,7 @@ type Props = {
 };
 
 class GraphPreparator extends React.PureComponent<Props> {
-  static whyDidYouRender = true;
+  static whyDidYouRender = false;
 
   componentDidMount() {
     this.updateDisplayedEntities();

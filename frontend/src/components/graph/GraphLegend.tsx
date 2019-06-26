@@ -12,6 +12,7 @@ const EdgeLegend = styled.div`
     font-weight: normal;
     font-size: ${props => props.theme.fontSizeS};
     width: fit-content;
+    white-space: nowrap;
     position: relative;
     z-index: 1;
     transition: all ${props => props.theme.shortAnim} ease-in-out;
