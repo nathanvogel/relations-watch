@@ -217,6 +217,7 @@ export const entityTypeMap: { [key: number]: Array<string> } = {
     "Q1807108", // shipping line
     "Q1144170", // ministère publique en France
     "Q670113", // centre de service aéronautiques
+    "Q22923920", // collectivité territoriale française à statut particulier
   ],
   [EntityType.Group]: [
     "Q7278",
