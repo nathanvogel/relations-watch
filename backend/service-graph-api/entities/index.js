@@ -117,14 +117,25 @@ router
 // GET entity suggestions for autocomplete
 router
   .get("/autocomplete/:searchTerm", function(req, res) {
+    const str = req.pathParams.searchTerm;
+    const search = str
+      .replace("-", " ")
+      .replace(",", " ")
+      .replace(".", " ")
+      .trim()
+      .split(" ")
+      .map(function(word) {
+        return "prefix:" + word;
+      })
+      .join(",");
     const entities = db._query(
       `
-          FOR entity IN FULLTEXT(@@collection, "name", CONCAT("prefix:", @searchTerm),  30)
+          FOR entity IN FULLTEXT(@@collection, "name", @searchTerm,  30)
             RETURN KEEP(entity, "_key", "name", "type", "text")
         `,
       {
         "@collection": entColl.name(),
-        searchTerm: req.pathParams.searchTerm
+        searchTerm: search
       }
     );
     res.send(entities);
