@@ -56,7 +56,6 @@ export const DirectedLinks = [
   RelationType.IsControlled,
   RelationType.JobDependsOn,
   RelationType.IsInfluenced,
-  RelationType.GroupMember,
 ];
 
 export const DirectedFamilialLinks = [FamilialLink.childOf];
