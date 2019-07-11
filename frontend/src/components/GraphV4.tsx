@@ -69,7 +69,7 @@ function nodeTranslate(d: V4NodeDatum): string {
 function fontSize(d: V4NodeDatum): number {
   switch (d.type) {
     case NodeRenderType.Primary:
-      return fontSizeM;
+      return fontSizeS;
     case NodeRenderType.Secondary:
       return fontSizeS;
     case NodeRenderType.Tertiary:
@@ -665,13 +665,12 @@ class GraphV4 extends React.PureComponent<Props> {
           .text(d.entity.name)
           .transition()
           .duration(120)
-          .attr("dx", labelDx(d) + (d.isLabelOnTheLeft ? -3 : 3))
-          .attr("transform", "scale(1.1)");
+          .attr("transform", "scale(1.2)");
         d3.select(this)
           .select("image")
           .transition()
           .duration(120)
-          .attr("transform", "scale(1.4)");
+          .attr("transform", "scale(1.2)");
         hoverEntity(d.entityKey);
       })
       .on("mouseout", function(d) {
@@ -681,7 +680,6 @@ class GraphV4 extends React.PureComponent<Props> {
           .text(getShortString(d.entity.name))
           .transition()
           .duration(200)
-          .attr("dx", labelDx(d))
           .attr("transform", "scale(1)");
         d3.select(this)
           .select("image")
@@ -707,7 +705,7 @@ class GraphV4 extends React.PureComponent<Props> {
     var labels = nodes2
       .select("text")
       // Needed now by the browser for the alignment calc, for some reason
-      .attr("transform", "scale(1.1)")
+      .attr("transform", "scale(1)")
       .attr("font-size", fontSize)
       .attr("dy", d => iconSize(d) * 0.8)
       .attr("fill", d =>
