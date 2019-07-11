@@ -115,7 +115,7 @@ const History: React.FunctionComponent<Props> = props => {
       <Switch>
         <Route
           path={`/${ROUTES.history}`}
-          render={props => <SecondaryTitle>Recently seen</SecondaryTitle>}
+          render={props => <TertiaryTitle>Recently seen</TertiaryTitle>}
         />
         <Route
           render={props => (
@@ -136,8 +136,10 @@ const History: React.FunctionComponent<Props> = props => {
       </Switch>
       {props.entitySelection.length <= 0 ? (
         <p>
-          You haven't explored yet, so there's nothing to display. If you're
-          lost, go to the <Link to="/">homepage</Link>.
+          Your 'Recently seen' history is empty, so there're no entities to
+          display.
+          <br />
+          You can search an entity or go to the <Link to="/">homepage</Link>.
         </p>
       ) : (
         <List>
