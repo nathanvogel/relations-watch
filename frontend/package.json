@@ -22,7 +22,7 @@
     "@types/styled-components": "^4.1.13",
     "@types/validator": "^10.11.0",
     "@welldone-software/why-did-you-render": "^3.1.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "cuid": "^2.1.6",
     "cwait": "^1.1.2",
     "d3": "^5.9.2",
