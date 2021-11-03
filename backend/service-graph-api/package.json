@@ -26,6 +26,6 @@
     "@types/validator": "^10.11.0",
     "immutability-helper": "^3.0.0",
     "url-parse": "^1.4.6",
-    "validator": "^10.11.0"
+    "validator": "^13.7.0"
   }
 }
