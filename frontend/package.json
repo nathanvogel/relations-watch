@@ -52,7 +52,7 @@
     "reselect": "^4.0.0",
     "styled-components": "^4.2.0",
     "typescript": "3.4.2",
-    "validator": "^10.11.0",
+    "validator": "^13.7.0",
     "wikidata-sdk": "^6.4.0"
   },
   "scripts": {
